@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js: node
+
+cache:
+  yarn: true
+  directories: 
+    - $HOME/.npm
+
+before_install: npm install --global lerna
+
+install:
+  - yarn install
+  - lerna bootstrap
+
+script:
+  - lerna run test
