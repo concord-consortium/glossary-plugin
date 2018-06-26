@@ -1,0 +1,19 @@
+sudo: false
+language: node_js
+node_js: node
+
+cache:
+  yarn
+  # directories:
+  # — $HOME/.npm
+  # - node_modules
+  # — packages/text-decorator/node_modules
+
+before_install: npm install --global lerna
+
+install:
+  - yarn install
+  - lerna bootstrap
+
+script:
+  - lerna run test
