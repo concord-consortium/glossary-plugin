@@ -3,11 +3,9 @@ language: node_js
 node_js: node
 
 cache:
-  yarn
-  # directories:
-  # — $HOME/.npm
-  # - node_modules
-  # — packages/text-decorator/node_modules
+  yarn: true
+  directories: 
+    - $HOME/.npm
 
 before_install: npm install --global lerna
 
