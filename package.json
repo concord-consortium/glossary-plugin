@@ -10,7 +10,10 @@
     "url": "https://github.com/concord-consortium/text-plugins"
   },
   "license": "MIT",
-	"workspaces": [ "packages/*" ],
+  "workspaces": [ "packages/*" ],
+  "scripts": {
+    "report-coverage": "cat ./packages/text-decorator/coverage/lcov.info | coveralls"
+  },
 	"devDependencies": {
 		"lerna": "^2.11.0"
 	}

@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/concord-consortium/text-plugins.svg?branch=master)](https://travis-ci.org/concord-consortium/text-plugins)
+[![Coverage Status](https://coveralls.io/repos/github/concord-consortium/text-plugins/badge.svg?branch=master)](https://coveralls.io/github/concord-consortium/text-plugins?branch=master)
 
 # Text Plugins
 
