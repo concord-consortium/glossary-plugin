@@ -13,8 +13,13 @@ install:
   - yarn install
   - lerna bootstrap
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
   - lerna run test
 
 after_script:
-  - npm run report_coverage
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
