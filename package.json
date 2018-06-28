@@ -12,6 +12,7 @@
   "license": "MIT",
   "workspaces": [ "packages/*" ],
   "scripts": {
+    "deploy:gh-pages": "lerna run build && ./script/deploy-gh-pages.js",
     "report-coverage": "cat ./packages/text-decorator/coverage/lcov.info | coveralls"
   },
 	"devDependencies": {
