@@ -12,7 +12,6 @@ node_modules/zoid/src/types.js
 flow-typed
 [options]
 module.name_mapper='^src\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
-unsafe.enable_getters_and_setters=true
 experimental.const_params=false
 esproposal.export_star_as=enable
 esproposal.decorators=ignore

@@ -39,6 +39,7 @@ export let LoginXComponent = create({
         popup:  __POPUP_SUPPORT__
     },
 
+    // eslint-disable-next-line no-unused-vars
     prerenderTemplate({ jsxDom }) : HTMLElement {
         return (
             <html>
