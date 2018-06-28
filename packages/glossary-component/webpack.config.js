@@ -8,13 +8,13 @@ import webpack from 'webpack';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 
-const FILE_NAME = 'xcomponent-demo';
-const MODULE_NAME = 'xclogin';
+const FILE_NAME = 'xc-glossary';
+const MODULE_NAME = 'xcGlossary';
 
 const DEFAULT_VARS = {
     __TEST__:                           false,
     __MIN__:                            false,
-    __IE_POPUP_SUPPORT__:               false,
+    __IE_POPUP_SUPPORT__:               true,
     __CHILD_WINDOW_ENFORCE_LOG_LEVEL__: false,
     __SEND_POPUP_LOGS_TO_OPENER__:      false,
     __POPUP_SUPPORT__:                  false,
