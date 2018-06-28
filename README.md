@@ -20,3 +20,6 @@ To run unit tests:
 ```
 lerna run test
 ```
+## TextDecorator Library
+
+The [TextDecorator](packages/text-decorator/README.md) library provides text decoration capabilities for HTML and React apps. Can be used to apply appropriate `<span>` tags and classes to application text to support the glossary.
