@@ -31,8 +31,8 @@
 
         // Pre-polulate the email field, if we're passed an email
 
-        if (window.xprops.prefilledEmail) {
-            document.querySelector('#email').value = window.xprops.prefilledEmail;
+        if (window.xprops.wordToDefine) {
+            document.querySelector('#email').value = window.xprops.wordToDefine;
         }
 
         // Handle the button click to log the user in
@@ -58,7 +58,7 @@
 
                 // Since we had a successful login, call-back the parent page to let them know which user logged in:
 
-                window.xprops.onLogin(email);
+                window.xprops.onSubmit(email);
                 window.xchild.close();
 
             }, 2000);

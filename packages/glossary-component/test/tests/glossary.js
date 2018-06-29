@@ -12,9 +12,9 @@ describe('button cases', () => {
 
             env: 'test',
 
-            prefilledEmail: email,
+            wordToDefine: email,
 
-            onLogin(loginEmail : string) : void {
+            onSubmit(loginEmail : string) : void {
 
                 if (loginEmail !== email) {
                     return done(new Error(`Expected ${ loginEmail } to be ${ email }`));

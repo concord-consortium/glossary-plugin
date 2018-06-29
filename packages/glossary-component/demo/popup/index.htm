@@ -8,11 +8,11 @@
 
 <body>
 
-    <h3>Log in</h3>
+    <h3>Glossary Test</h3>
 
     <!-- Button to open the popup -->
 
-    <button id="popupLogin" class="btn btn-primary">Popup Log In</button>
+    <button id="popupLogin" class="btn btn-primary">Popup Glossary</button>
 
     <!-- Container to display the result of the login call -->
 
@@ -34,15 +34,15 @@
 
                 env: 'demo',
 
-                prefilledEmail: 'foo@bar.com',
+                wordToDefine: 'cloud',
 
-                // When the iframe window calls `window.xprops.onLogin(email)` this callback will be called
+                // When the iframe window calls `window.xprops.onSubmit(email)` this callback will be called
 
-                onLogin: function(email) {
+                onSubmit: function(definition) {
 
                     // Display the email address that was used to log in
 
-                    document.querySelector('#result').innerText = email + ' logged in!';
+                    document.querySelector('#result').innerText = 'Your definition: ' + definition;
                 }
 
             });
@@ -71,9 +71,9 @@
     
                 MyGlossaryXComponent.render({
     
-                    prefilledEmail: 'foo@bar.com',
+                    wordToDefine: 'foo@bar.com',
     
-                    onLogin: function(email) {
+                    onSubmit: function(email) {
                         console.log('User logged in with email:', email);
                         document.querySelector('#result').innerText = email + ' logged in!';
                     }

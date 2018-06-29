@@ -10,23 +10,28 @@ export let GlossaryXComponent = create({
     defaultEnv: 'demo',
 
     url: {
-        demo:       './login.htm',
-        test:       '/base/test/windows/login/index.htm',
-        production: 'https://my-site.com/login'
+        demo:       './glossary.htm',
+        test:       '/base/test/windows/glossary/index.htm',
+        production: 'https://glossary.concord.org/glossary'
     },
 
     domain: {
-        test: 'mock://www.my-site.com'
+        test: 'mock://glossary.concord.org'
+    },
+
+    dimensions: {
+        width:  '640px',
+        height: '480px'
     },
 
     props: {
 
-        prefilledEmail: {
+        wordToDefine: {
             type:     'string',
             required: true
         },
 
-        onLogin: {
+        onSubmit: {
             type:     'function',
             required: true
         }
