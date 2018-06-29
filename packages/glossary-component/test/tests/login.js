@@ -1,6 +1,6 @@
 /* @flow */
 
-import { LoginXComponent } from '../../src';
+import { GlossaryXComponent } from '../../src';
 
 describe('button cases', () => {
 
@@ -8,7 +8,7 @@ describe('button cases', () => {
 
         let email = 'foo@bar.com';
 
-        LoginXComponent.render({
+        GlossaryXComponent.render({
 
             env: 'test',
 

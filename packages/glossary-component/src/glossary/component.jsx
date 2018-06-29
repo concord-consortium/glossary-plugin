@@ -3,9 +3,9 @@
 
 import { create } from 'zoid';
 
-export let LoginXComponent = create({
+export let GlossaryXComponent = create({
 
-    tag: 'login-xcomponent',
+    tag: 'glossary-xcomponent',
 
     defaultEnv: 'demo',
 
