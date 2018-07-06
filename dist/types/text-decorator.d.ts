@@ -10,6 +10,7 @@ export interface IDecorateHtmlOptions extends IDecorateOptions {
 export interface IDecorateReactOptions extends IDecorateOptions {
     replace: string | ReactElement;
 }
+export declare function decorateDOMClasses(textClasses: string | string[], options: IDecorateHtmlOptions, wordClass?: string, listeners?: IEventListeners, container?: Element | Document): void;
 export declare function decorateHtml(input: string, options: IDecorateHtmlOptions): string;
 interface IEventListener {
     type: string;
