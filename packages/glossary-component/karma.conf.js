@@ -22,7 +22,7 @@ export default function configKarma(config : Object) {
 
         files: [
             {
-                pattern:  'node_modules/babel-polyfill/dist/polyfill.js',
+                pattern:  '../../node_modules/babel-polyfill/dist/polyfill.js',
                 included: true,
                 served:   true
             },

@@ -3,16 +3,16 @@
 
 import { create } from 'zoid';
 
-export let GlossaryXComponent = create({
+export let GlossaryZoid = create({
 
-    tag: 'glossary-xcomponent',
+    tag: 'glossary-zoid',
 
     defaultEnv: 'demo',
 
     url: {
         demo:       './glossary.htm',
         test:       '/base/test/windows/glossary/index.htm',
-        production: 'https://glossary.concord.org/glossary'
+        production: 'https://glossary.concord.org'
     },
 
     domain: {
@@ -27,12 +27,12 @@ export let GlossaryXComponent = create({
     props: {
 
         wordToDefine: {
-            type:     'string',
+            type: 'string',
             required: true
         },
 
         onSubmit: {
-            type:     'function',
+            type: 'function',
             required: true
         }
     },

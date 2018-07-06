@@ -1,6 +1,6 @@
 /* @flow */
 
-import { GlossaryXComponent } from '../../src';
+import { GlossaryZoid } from '../../src';
 
 describe('button cases', () => {
 
@@ -8,7 +8,7 @@ describe('button cases', () => {
 
         let email = 'foo@bar.com';
 
-        GlossaryXComponent.render({
+        GlossaryZoid.render({
 
             env: 'test',
 

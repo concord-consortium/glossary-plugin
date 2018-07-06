@@ -196,7 +196,7 @@ module.exports = {
         'id-match': 'off',
         'indent': [ 'error', 4],
         'jsx-quotes': 'off',
-        'key-spacing': [ 'error', { 'afterColon': true, 'mode': 'minimum', 'align': { 'beforeColon': false, 'afterColon': true, 'on': 'value', 'mode': 'minimum' } } ],
+        'key-spacing': [ 'error', { 'afterColon': true, 'mode': 'minimum' } ],
         'keyword-spacing': 'error',
         'linebreak-style': [ 'error', 'unix' ],
         'lines-around-comment': 'off',
