@@ -8,8 +8,8 @@ import webpack from 'webpack';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 
-const FILE_NAME = 'xc-glossary';
-const MODULE_NAME = 'xcGlossary';
+const FILE_NAME = 'glossary-zoid';
+const MODULE_NAME = 'glossaryZoid';
 
 const DEFAULT_VARS = {
     __TEST__:                           false,

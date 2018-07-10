@@ -2,21 +2,21 @@
 <head>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.css" />
-    <link rel="stylesheet" href="./glossary.css" />
+    <link rel="stylesheet" href="./login.css" />
 
     <!-- Pull in xcomponent and the login component we defined -->
 
-    <script src="../../dist/xc-glossary.popup.js"></script>
+    <script src="../../dist/glossary-zoid.frame.js"></script>
 </head>
 
 <body>
 
-    <!-- Set up a glossary entry form -->
+    <!-- Set up a login form -->
 
-    <form id="glossaryForm">
-        <label id="glossaryWord"></label><br>
-        <input id="definition" type="text" placeholder="your definition" /><br>
-        <button id="submitButton" class="btn btn-primary">Submit</button>
+    <form id="loginForm">
+        <input id="email" type="text" placeholder="email" /><br>
+        <input id="password" type="password" placeholder="password" /><br>
+        <button id="loginButton" class="btn btn-primary">Log In</button>
     </form>
 
     <svg id="spinner" class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
@@ -32,24 +32,24 @@
         // Pre-polulate the email field, if we're passed an email
 
         if (window.xprops.wordToDefine) {
-            document.querySelector('#glossaryWord').textContent = 'Glossary Word: ' + window.xprops.wordToDefine;
+            document.querySelector('#email').value = window.xprops.wordToDefine;
         }
 
         // Handle the button click to log the user in
 
-        document.querySelector('#submitButton').addEventListener('click', function(event) {
+        document.querySelector('#loginButton').addEventListener('click', function(event) {
             event.preventDefault();
 
-            var glossaryWord = document.querySelector('#glossaryWord').value;
-            var definition = document.querySelector('#definition').value;
+            var email    = document.querySelector('#email').value;
+            var password = document.querySelector('#password').value;
 
-            if (!definition) {
-                return alert('Please enter a definition');
+            if (!email || !password) {
+                return alert('Please enter both an email and a password');
             }
 
             // Hide the login form and replace it with a spinner
 
-            document.querySelector('#glossaryForm').style.display = 'none';
+            document.querySelector('#loginForm').style.display = 'none';
             document.querySelector('#spinner').style.display = 'inline-block';
 
             // Pretend to make an ajax call to log the user in
@@ -58,7 +58,7 @@
 
                 // Since we had a successful login, call-back the parent page to let them know which user logged in:
 
-                window.xprops.onSubmit(definition);
+                window.xprops.onSubmit(email);
                 window.xchild.close();
 
             }, 2000);

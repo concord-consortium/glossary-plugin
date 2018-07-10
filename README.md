@@ -3,7 +3,7 @@
 
 # Text Plugins
 
-Concord Consortium's Text Plugins is a set of interacting libraries which supports highlighting words in a page that launch a popup glossary when clicked. The project is divided into two packages, the [Text Decorator](packages/text-decorator) which decorates application text with appropriate `<span>` tags and classes, and the [Glossary Component](packages/glossary-component) itself, which communicates with the Text Decorator and opens the glossary when appropriate.
+Concord Consortium's Text Plugins is a set of interacting libraries which supports highlighting words in a page that launch a popup glossary when clicked. The project is divided into two packages, the [Text Decorator](packages/text-decorator) which decorates application text with appropriate `<span>` tags and classes, and the [Glossary Zoid](packages/glossary-zoid) itself, which communicates with the Text Decorator and opens the glossary when appropriate.
 
 ## Development
 

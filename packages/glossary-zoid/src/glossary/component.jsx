@@ -3,7 +3,7 @@
 
 import { create } from 'zoid';
 
-export let GlossaryZoid = create({
+export const Glossary = create({
 
     tag: 'glossary-zoid',
 
@@ -26,9 +26,19 @@ export let GlossaryZoid = create({
 
     props: {
 
-        wordToDefine: {
+        word: {
             type: 'string',
             required: true
+        },
+
+        authorDefinition: {
+            type: 'string',
+            required: true
+        },
+
+        userDefinition: {
+            type: 'string',
+            required: false
         },
 
         onSubmit: {

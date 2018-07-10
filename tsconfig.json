@@ -1,6 +1,6 @@
 {
   "exclude": [
       "node_modules",
-      "packages/glossary-component"
+      "packages/glossary-zoid"
   ]
 }

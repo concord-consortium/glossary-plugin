@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.css" />
     <link rel="stylesheet" href="./index.css" />
 
-    <script src="../../dist/xc-glossary.popup.js"></script>
+    <script src="../../dist/glossary-zoid.popup.js"></script>
 </head>
 
 <body>
@@ -30,11 +30,15 @@
 
             // Render the component and pass down props to the popup
 
-            xcGlossary.GlossaryZoid.render({
+            glossaryZoid.Glossary.render({
 
                 env: 'demo',
 
-                wordToDefine: 'cloud',
+                word: 'cloud',
+
+                authorDefinition: 'condensed humidity',
+
+                userDefinition: 'wet air',
 
                 // When the iframe window calls `window.xprops.onSubmit(email)` this callback will be called
 
@@ -69,7 +73,7 @@
     
                 // Render the component
     
-                MyGlossaryZoid.render({
+                MyGlossary.render({
     
                     wordToDefine: 'foo@bar.com',
     
