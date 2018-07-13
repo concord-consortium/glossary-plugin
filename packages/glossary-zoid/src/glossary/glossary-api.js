@@ -39,16 +39,14 @@ export function initGlossary(params: IInitParams)
 {
   const { authorGlossary, userGlossary } = params;
   let encodedGlossary: IAuthorGlossary = {};
-  for (let word in authorGlossary) {
-    if (authorGlossary.hasOwnProperty(word)) {
-      const { definition, ...others } = authorGlossary[word];
-      encodedGlossary[word] = {
-        // base64-encode author definitions so they're not trivially hackable
-        definition: window.btoa(definition),
-        ...others
-      };
-    }
-  }
+  Object.keys(authorGlossary).forEach((word) => {
+    const { definition, ...others } = authorGlossary[word];
+    encodedGlossary[word] = {
+      // base64-encode author definitions so they're not trivially hackable
+      definition: window.btoa(definition),
+      ...others
+    };
+  });
   gInitParams = { authorGlossary: encodedGlossary, userGlossary };
 }
 
@@ -64,35 +62,33 @@ export function launchGlossary(params: ILaunchParams) {
   let { userGlossary } = gInitParams;
   const env = params.env || 'production';
   const container = params.container || document.body;
-  for (let word in authorGlossary) {
-    if (authorGlossary.hasOwnProperty(word)) {
-      const entry = authorGlossary[word];
-      if ((new RegExp(entry.regex)).test(params.word)) {
-        const authorDefinition = entry.definition;
-        let userDefinitions = userGlossary[word];
-        // pass last user definition to glossary component
-        const userDefinitionEntry = userDefinitions && userDefinitions.length &&
-                                    userDefinitions[userDefinitions.length - 1];
-        const userDefinition = userDefinitionEntry ? userDefinitionEntry.definition : undefined;
-        const onSubmit = (submission: IUserSubmission): void => {
-          const timeStamp = new Date();
-          if (!userDefinitions) {
-            userDefinitions = userGlossary[word] = [];
-          }
-          userDefinitions.push({
-            word: submission.word,
-            definition: submission.userDefinition,
-            timeStamp: timeStamp.getTime(),
-            timeZoneOffset: timeStamp.getTimezoneOffset()
-          });
-          if (params.onSubmit) {
-            params.onSubmit(submission);
-          }
-        };
-        Glossary.render({ env, word, authorDefinition, userDefinition, onSubmit }, container);
-      }
+  Object.keys(authorGlossary).forEach((word) => {
+    const entry = authorGlossary[word];
+    if ((new RegExp(entry.regex)).test(params.word)) {
+      const authorDefinition = entry.definition;
+      let userDefinitions = userGlossary[word];
+      // pass last user definition to glossary component
+      const userDefinitionEntry = userDefinitions && userDefinitions.length &&
+                                  userDefinitions[userDefinitions.length - 1];
+      const userDefinition = userDefinitionEntry ? userDefinitionEntry.definition : undefined;
+      const onSubmit = (submission: IUserSubmission): void => {
+        const timeStamp = new Date();
+        if (!userDefinitions) {
+          userDefinitions = userGlossary[word] = [];
+        }
+        userDefinitions.push({
+          word: submission.word,
+          definition: submission.userDefinition,
+          timeStamp: timeStamp.getTime(),
+          timeZoneOffset: timeStamp.getTimezoneOffset()
+        });
+        if (params.onSubmit) {
+          params.onSubmit(submission);
+        }
+      };
+      Glossary.render({ env, word, authorDefinition, userDefinition, onSubmit }, container);
     }
-  }
+  });
 }
 
 export function getAuthorGlossary(): IAuthorGlossary {
