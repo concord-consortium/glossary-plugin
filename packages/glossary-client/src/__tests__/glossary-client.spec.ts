@@ -6,15 +6,16 @@ import {
   decorateDOM,
   initGlossary,
   launchGlossary,
+  IAuthorGlossary,
   IUserSubmission,
 } from '../../src';
-import { dispatchSimulatedEvent } from '../test-utils.ts';
+import { dispatchSimulatedEvent } from '../test-utils';
 
 describe('Glossary client', () => {
   // tslint:disable:no-shadowed-variable
   // tslint:disable:no-magic-numbers
 
-  function isEqualAuthorGlossary(expectedAuthorGlossary) {
+  function isEqualAuthorGlossary(expectedAuthorGlossary: IAuthorGlossary) {
     const actualAuthorGlossary = getAuthorGlossary();
     const decodedAuthorGlossary = {};
     for (const word in actualAuthorGlossary) {
@@ -45,6 +46,10 @@ describe('Glossary client', () => {
   const word = 'cloud';
   const authorDefinition = 'aerobatic fog';
   const userDefinition = 'high flying humidity';
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   it(`should initGlossary with empty glossary`, () => {
     expect(getAuthorGlossary()).toBeUndefined();
@@ -88,9 +93,8 @@ describe('Glossary client', () => {
     const wordElt = wordElts[0];
 
     const spy = mockGlossaryRender();
-    dispatchSimulatedEvent(wordElt, 'click');
+    dispatchSimulatedEvent(wordElt as HTMLElement, 'click');
     expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
   });
 
   it(`should launchGlossary`, (done) => {
@@ -110,7 +114,6 @@ describe('Glossary client', () => {
     const spy = mockGlossaryRender();
     launchGlossary({ env: 'test', word: 'cloud', userDefinition, onSubmit });
     expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
   });
 
   it(`should launchGlossary again`, (done) => {
@@ -131,14 +134,12 @@ describe('Glossary client', () => {
     const spy = mockGlossaryRender();
     launchGlossary({ env: 'test', word: 'cloud', userDefinition, onSubmit });
     expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
   });
 
   it(`should launchGlossary with default arguments`, () => {
     const spy = mockGlossaryRender();
     launchGlossary({ word: 'cloud', container: document.body });
     expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
   });
 
   it(`should handle clicks on empty words`, () => {
@@ -154,8 +155,7 @@ describe('Glossary client', () => {
     const wordElt = wordElts[0];
 
     const spy = mockGlossaryRender();
-    dispatchSimulatedEvent(wordElt, 'click');
+    dispatchSimulatedEvent(wordElt as HTMLElement, 'click');
     expect(spy).not.toHaveBeenCalled();
-    spy.mockRestore();
   });
 });

@@ -7,7 +7,7 @@ type IAuthorDefinition = {
   definition: string;
 };
 
-type IAuthorGlossary = {
+export type IAuthorGlossary = {
   [word: string]: IAuthorDefinition;
 };
 
@@ -18,7 +18,7 @@ type IUserDefinition = {
   timeZoneOffset: number;
 };
 
-type IUserGlossary = {
+export type IUserGlossary = {
   [word: string]: IUserDefinition[];
 };
 
@@ -51,6 +51,8 @@ export function initGlossary(params: IInitParams) {
 type ILaunchParams = {
   word: string;
   env?: string;
+  userDefinition?: string,
+  authorDefinition?: string,
   onSubmit?: (submission: IUserSubmission) => void;
   container?: HTMLElement;
 };
@@ -58,7 +60,7 @@ type ILaunchParams = {
 export function decorateDOM(classNames: string | string[], container?: HTMLElement) {
   const { authorGlossary } = gInitParams;
   const wordClass = 'cc-glossary-word';
-  const words = [];
+  const words: string[] = [];
   Object.keys(authorGlossary).forEach((word) => {
     const entry = authorGlossary[word];
     words.push(entry.regex);

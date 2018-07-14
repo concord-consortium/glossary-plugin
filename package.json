@@ -15,6 +15,7 @@
    "packages/*"
   ],
   "nohoist": [
+    "**/@types/parse5",
     "**/jest",
     "**/jest-*",
     "**/karma",

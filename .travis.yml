@@ -7,14 +7,20 @@ cache:
   directories: 
     - $HOME/.npm
 
-before_install: npm install --global lerna
+before_install:
+  - travis_retry npm install --global lerna
+  - travis_retry npm install --global yarn@1.7.0
 
 install:
-  - yarn install
+  - travis_retry yarn install
   - lerna bootstrap
 
 script:
-  - lerna run test
+  - lerna run build --scope=@concord-consortium/text-decorator
+  - lerna run build --scope=@concord-consortium/glossary-zoid
+  - lerna run build --scope=@concord-consortium/glossary-client
+  - lerna run build --scope=@concord-consortium/glossary-component
+  - yarn test
 
 after_script:
-  - npm run report_coverage
+  - yarn run report_coverage

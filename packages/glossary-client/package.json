@@ -78,6 +78,7 @@
     "typescript": ">=2.9.0"
   },
   "devDependencies": {
+    "@types/deep-equal": "^1.0.1",
     "@types/jest": "23.1.2",
     "@types/node": "10.3.6",
     "@types/prettier": "1.13.1",
