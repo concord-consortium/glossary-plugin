@@ -54,9 +54,9 @@ cd text-plugins
 yarn install
 lerna bootstrap
 ```
-To run unit tests for all packages:
+To run unit tests for all packages, from the top-level text-plugins directory, run :
 ```
-lerna run test
+npm test  # or 'yarn test'
 ```
 
 To run unit tests for a single package, e.g. `text-decorator`:
