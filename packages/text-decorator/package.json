@@ -1,5 +1,5 @@
 {
-  "name": "text-decorator",
+  "name": "@concord-consortium/text-decorator",
   "version": "0.0.1",
   "description": "Part of Concord Consortium's text-plugins which can be used to apply <span> tags and classes to text",
   "keywords": [],
@@ -33,9 +33,7 @@
     "commit": "git-cz",
     "semantic-release": "semantic-release",
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
-    "precommit": "lint-staged",
-    "lerna:remove:usage": "echo 'Usage: npm run lerna:remove -- module-to-remove \n cf. https://github.com/lerna/lerna/issues/833#issuecomment-396462481 \n cf. https://github.com/npm/npm/issues/9627#issuecomment-319449695 '",
-    "lerna:remove": "bash -c 'lerna exec -- yarn remove \"$0\" || lerna bootstrap'"
+    "precommit": "lint-staged"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -53,7 +51,7 @@
     }
   },
   "jest": {
-    "setupTestFrameworkScriptFile": "../../node_modules/jest-enzyme/lib/index.js",
+    "setupTestFrameworkScriptFile": "./node_modules/jest-enzyme/lib/index.js",
     "testEnvironment": "enzyme",
     "transform": {
       ".(ts|tsx)": "../../node_modules/ts-jest/preprocessor.js"
@@ -88,7 +86,7 @@
     "@types/jest": "^22.0.0",
     "@types/node": "^10.0.3",
     "@types/parse5": "^5.0.0",
-    "@types/react": "^16.4.1",
+    "@types/react": "16.4.1",
     "@types/react-dom": "^16.0.6",
     "colors": "^1.1.2",
     "commitizen": "^2.9.6",
@@ -99,11 +97,10 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "gh-pages": "^1.2.0",
     "husky": "^0.14.0",
-    "jest": "^22.0.2",
+    "jest": "^23.4.0",
     "jest-environment-enzyme": "^6.0.2",
     "jest-enzyme": "^6.0.2",
     "lint-staged": "^7.0.0",
-    "lodash.camelcase": "^4.3.0",
     "prettier": "^1.4.4",
     "prompt": "^1.0.0",
     "react": "^16.4.1",

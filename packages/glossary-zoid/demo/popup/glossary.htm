@@ -1,0 +1,68 @@
+
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.css" />
+    <link rel="stylesheet" href="./glossary.css" />
+
+    <!-- Pull in xcomponent and the login component we defined -->
+
+    <script src="../../dist/glossary-zoid.popup.js"></script>
+</head>
+
+<body>
+
+    <!-- Set up a glossary entry form -->
+
+    <form id="glossaryForm">
+        <label id="glossaryWord"></label><br>
+        <input id="definition" type="text" placeholder="your definition" /><br>
+        <button id="submitButton" class="btn btn-primary">Submit</button>
+    </form>
+
+    <svg id="spinner" class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+
+    <script>
+
+        // Hide the loading spinner by default
+
+        document.querySelector('#spinner').style.display = 'none';
+
+        // Pre-polulate the email field, if we're passed an email
+
+        if (window.xprops.word) {
+            document.querySelector('#glossaryWord').textContent = 'Glossary Word: ' + window.xprops.word;
+        }
+
+        // Handle the button click to log the user in
+
+        document.querySelector('#submitButton').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            var glossaryWord = document.querySelector('#glossaryWord').value;
+            var definition = document.querySelector('#definition').value;
+
+            if (!definition) {
+                return alert('Please enter a definition');
+            }
+
+            // Hide the login form and replace it with a spinner
+
+            document.querySelector('#glossaryForm').style.display = 'none';
+            document.querySelector('#spinner').style.display = 'inline-block';
+
+            // Pretend to make an ajax call to log the user in
+
+            setTimeout(function() {
+
+                // Since we had a successful login, call-back the parent page to let them know which user logged in:
+
+                window.xprops.onSubmit(definition);
+                window.xchild.close();
+
+            }, 2000);
+        });
+    </script>
+
+</body>
