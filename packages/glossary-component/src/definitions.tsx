@@ -8,7 +8,9 @@ interface IProps {
   authorDefinition: string;
   userDidSubmit: boolean;
   onSubmit: (definition?: string) => void;
+  onDefinitionChange: (definition: string) => void;
 }
+
 interface IState {
   userDefinition: string | undefined;
 }
@@ -43,7 +45,7 @@ class Definitions extends React.Component<IProps, IState> {
       this.inputElt.select();
     }
   }
-  
+
   public render() {
     const { classes } = this.props;
     return (
@@ -75,6 +77,7 @@ class Definitions extends React.Component<IProps, IState> {
 
   private handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ userDefinition: evt.target.value });
+    this.props.onDefinitionChange(evt.target.value);
   }
 
   private handleKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
@@ -93,11 +96,10 @@ class Definitions extends React.Component<IProps, IState> {
 
   private renderAuthorDefinition() {
     const { classes, authorDefinition, userDidSubmit } = this.props;
-    const decodedAuthorDefinition = window.atob(authorDefinition);
     return(
       userDidSubmit
         ? <p className={classes.prompt}>
-            {decodedAuthorDefinition}
+            {authorDefinition}
           </p>
         : null
     );

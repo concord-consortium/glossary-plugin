@@ -38,6 +38,15 @@ npm run build
 npm run demo
 ```
 
+Note that the only demo working now is popup version.
+To make it work, you need to make sure that glossary-component local development server is running too.
+Go to `../glossary-component` and run:
+
+```
+npm run start
+```
+
+
 #### Deploying
 
 - Host your bundled xcomponent script somewhere, e.g. `https://mysite.com/login.xcomponent.js`
