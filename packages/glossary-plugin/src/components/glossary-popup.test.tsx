@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import App from './App';
+import GlossaryPopup from './glossary-popup';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+  ReactDOM.render(<GlossaryPopup word='test' definition='test definition' askForUserDefinition={false} />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

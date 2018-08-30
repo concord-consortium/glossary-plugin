@@ -1,0 +1,40 @@
+.popup {
+  width: 300px;
+}
+
+.content {
+  width: 270px;
+  margin: 10px auto;
+}
+
+.user-definition {
+  margin-top: 20px;
+  padding: 5px;
+  width: 260px;
+  height: 80px;
+  font-size: 1em;
+  border-radius: 5px;
+}
+
+.button {
+  display: inline-block;
+  background: #bbb;
+  padding: 10px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.buttons {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background: #aaa;
+}
+
+.user-definitions {
+  margin-top: 20px;
+}
