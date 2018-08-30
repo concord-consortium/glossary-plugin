@@ -13,7 +13,6 @@ before_install:
   - travis_retry npm install --global lerna
 
 install:
-  - travys_retry npm install
   - lerna bootstrap
 
 script:

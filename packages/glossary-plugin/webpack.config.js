@@ -11,10 +11,13 @@ module.exports = (env, argv) => {
   return {
     context: __dirname, // to automatically find tsconfig.json
     devtool: 'source-map',
-    entry: './src/index.tsx',
+    entry: {
+      demo: './src/demo.tsx',
+      plugin: './src/plugin.tsx'
+    },
     mode: devMode ? 'development' : 'production',
     output: {
-      filename: 'assets/index.[hash].js'
+      filename: '[name].js',
     },
     performance: { hints: false },
     module: {
@@ -39,8 +42,19 @@ module.exports = (env, argv) => {
         {
           test: /\.(sa|sc|c)ss$/i,
           use: [
-            devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            // For now, always bundle CSS into JS to keep plugin development simple. In the future, we might
+            // want to create a separate CSS file. Then, we we'll use following config instead:
+            // devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                sourceMap: true,
+                importLoaders: 1,
+                localIdentName: '[name]--[local]--[hash:base64:8]'
+              }
+            },
             'postcss-loader',
             'sass-loader'
           ]
@@ -58,11 +72,11 @@ module.exports = (env, argv) => {
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: devMode ? "assets/index.css" : "assets/index.[hash].css"
+        filename: "plugin.css"
       }),
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: 'src/index.html'
+        template: 'src/demo.html'
       }),
       new CopyWebpackPlugin([
         {from: 'src/public'}

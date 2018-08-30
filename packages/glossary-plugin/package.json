@@ -1,7 +1,7 @@
 {
-  "name": "collaborative-learning",
+  "name": "@concord-consortium/glossary-plugin",
   "version": "0.0.1",
-  "description": "Collaborative Learning environment",
+  "description": "Glossary LARA plugin",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --content-base dist/",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/concord-consortium/collaborative-learning.git"
+    "url": "git+https://github.com/concord-consortium/glossary-plugin.git"
   },
   "author": "Concord Consortium",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/concord-consortium/collaborative-learning/issues"
+    "url": "https://github.com/concord-consortium/glossary-plugin/issues"
   },
-  "homepage": "https://github.com/concord-consortium/collaborative-learning#readme",
+  "homepage": "https://github.com/concord-consortium/glossary-plugin#readme",
   "devDependencies": {
     "@types/chai": "^4.1.4",
     "@types/lodash": "^4.14.116",
