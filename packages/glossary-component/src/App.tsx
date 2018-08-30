@@ -28,10 +28,12 @@ interface IProps {
   speechPart: string;
   userDefinition?: string;
   authorDefinition: string;
+  onUserSubmit: (userDefinition?: string) => void;
 }
 
+
 interface IState {
-  userDefinition?: string | undefined,
+  userDefinition: string | undefined,
   userDidSubmit: boolean,
   userDidClose: boolean
 }
@@ -39,6 +41,7 @@ interface IState {
 class App extends React.Component<IProps, IState> {
 
   public state: IState = {
+    userDefinition: '',
     userDidSubmit: false,
     userDidClose: false
   }
@@ -59,7 +62,7 @@ class App extends React.Component<IProps, IState> {
             label={!userDidSubmit ? "Submit" : "Close"}
             show={!userDidClose}
             onSetButtonRef={this.handleSetButtonRef}
-            onClick={!userDidSubmit ? this.handleSubmit : this.handleClose} />
+            onClick={!userDidSubmit ? this.handleButtonSubmit : this.handleClose} />
         </div>
       </MuiThemeProvider>
     );
@@ -69,8 +72,19 @@ class App extends React.Component<IProps, IState> {
     this.buttonRef = elt;
   }
 
-  private handleSubmit = () => {
+  private handleSubmit = (userDefinition: string) => {
     this.setState({ userDidSubmit: true });
+    this.props.onUserSubmit(userDefinition || '');
+    this.buttonRef.focus();
+  }
+
+  private handleUserDefChange = (userDefinition: string) => {
+    this.setState({ userDefinition });
+  }
+
+  private handleButtonSubmit = () => {
+    this.setState({ userDidSubmit: true });
+    this.props.onUserSubmit(this.state.userDefinition || '');
     this.buttonRef.focus();
   }
 
@@ -95,11 +109,11 @@ class App extends React.Component<IProps, IState> {
       <Definitions
         userDefinition={userDidSubmit ? userDefinition : this.props.userDefinition}
         authorDefinition={this.props.authorDefinition}
+        onDefinitionChange={this.handleUserDefChange}
         userDidSubmit={userDidSubmit}
         onSubmit={this.handleSubmit}/>
     );
   }
-
 }
 
 export default App;

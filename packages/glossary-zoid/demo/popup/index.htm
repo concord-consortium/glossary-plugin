@@ -43,9 +43,7 @@
                 // When the iframe window calls `window.xprops.onSubmit(email)` this callback will be called
 
                 onSubmit: function(definition) {
-
-                    // Display the email address that was used to log in
-
+                    console.log('new user submission:', definition);
                     document.querySelector('#result').innerText = 'Your definition: ' + definition;
                 }
 
@@ -58,30 +56,30 @@
 
 
     <!-- <button id="popupLogin" class="btn btn-primary">Popup Log In</button>
-    
+
         <div id="result"></div>
-    
+
         <script>
-    
+
             // To render a popup we need to wait for a click event
-    
+
             document.querySelector('#popupLogin').addEventListener('click', function() {
-    
+
                 // Hide the button
-    
+
                 document.querySelector('#popupLogin').style.display = 'none';
-    
+
                 // Render the component
-    
+
                 MyGlossary.render({
-    
+
                     wordToDefine: 'foo@bar.com',
-    
+
                     onSubmit: function(email) {
                         console.log('User logged in with email:', email);
                         document.querySelector('#result').innerText = email + ' logged in!';
                     }
                 });
             });
-    
+
         </script> -->

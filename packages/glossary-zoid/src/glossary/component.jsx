@@ -10,7 +10,7 @@ export const Glossary = create({
     defaultEnv: 'demo',
 
     url: {
-        demo:       './glossary.htm',
+        demo:       'http://localhost:3000/',
         test:       '/base/test/windows/glossary/index.htm',
         production: 'https://glossary.concord.org'
     },
