@@ -6,7 +6,7 @@ interface IExternalScriptContext {
   div: any;
 }
 
-class GlossaryPlugin {
+export class GlossaryPlugin {
   constructor(authoredState: any, context: IExternalScriptContext) {
     const div = document.getElementById(context.div.selector);
     // div itself is hidden, so go higher up. It's just a little hack to present rendering,
@@ -24,8 +24,7 @@ class GlossaryPlugin {
   }
 }
 
-// Init
-(() => {
+export const initPlugin = () => {
   const PluginAPI = (window as any).ExternalScripts;
   if (!PluginAPI) {
     // LARA Plugin API not available. Nothing to do.
@@ -35,4 +34,6 @@ class GlossaryPlugin {
   // tslint:disable-next-line:no-console
   console.log("LARA Plugin API available, GlossaryPlugin initialization");
   PluginAPI.register("glossary", GlossaryPlugin);
-})();
+};
+
+initPlugin();
