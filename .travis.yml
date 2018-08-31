@@ -3,24 +3,19 @@ language: node_js
 node_js: node
 
 cache:
-  yarn: true
-  directories: 
+  directories:
     - $HOME/.npm
 
 before_install:
   - travis_retry npm install --global lerna
-  - travis_retry npm install --global yarn@1.7.0
 
 install:
-  - travis_retry yarn install
   - lerna bootstrap
 
 script:
   - lerna run build --scope=@concord-consortium/text-decorator
-  - lerna run build --scope=@concord-consortium/glossary-zoid
-  - lerna run build --scope=@concord-consortium/glossary-client
-  - lerna run build --scope=@concord-consortium/glossary-component
-  - yarn test
+  - lerna run build --scope=@concord-consortium/glossary-plugin
+  - npm test
 
 after_script:
   - yarn run report_coverage
