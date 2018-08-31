@@ -1,6 +1,6 @@
 #!/bin/bash
 SRC_DIR='dist'
-DISTRIBUTION_ID='E3OZCLVQCPVM2C'
+DISTRIBUTION_ID='E1RHB7EP0JONNQ'
 
 # this will deploy the current public folder to a subfolder in the s3 bucket
 # the subfolder is the name of the TRAVIS_BRANCH
