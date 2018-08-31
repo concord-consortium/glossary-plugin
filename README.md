@@ -28,7 +28,7 @@ To get started:
 git clone https://github.com/concord-consortium/text-plugins.git
 cd text-plugins
 npm install
-lerna bootstrap
+npx lerna bootstrap
 ```
 To run unit tests for all packages, from the top-level text-plugins directory, run:
 ```
