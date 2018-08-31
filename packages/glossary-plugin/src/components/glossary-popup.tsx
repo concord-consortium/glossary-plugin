@@ -15,7 +15,7 @@ interface IGlossaryPopupState {
   userDefinitions: string[];
 }
 
-class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupState> {
+export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupState> {
   public state: IGlossaryPopupState = {
     currentUserDefinition: "",
     questionVisible: this.props.askForUserDefinition || false,
@@ -50,7 +50,7 @@ class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupS
                     Submit
                   </div>
                   <div className={css.button} onClick={this.handleIDontKnow}>
-                    I don"t know yet
+                    I don't know yet
                   </div>
                 </div>
               }
@@ -124,5 +124,3 @@ class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupS
     this.setState({ questionVisible: true });
   }
 }
-
-export default GlossaryPopup;

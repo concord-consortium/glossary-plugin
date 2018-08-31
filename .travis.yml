@@ -21,5 +21,4 @@ script:
   - npm test
 
 after_script:
-  - yarn run report_coverage
-  - ./packages/glossary-plugin/s3_deploy.sh
+  - cd ./packages/glossary-plugin && ./s3_deploy.sh
