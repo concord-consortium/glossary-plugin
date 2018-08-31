@@ -1,5 +1,17 @@
-import "./plugin";
+import { initPlugin, GlossaryPlugin } from "./plugin";
 
-it("loads without crashing", () => {
-  // import itself shoudn't cause problems, e.g. make sure it's not trying to use undefined global variables and so on.
+describe("LARA plugin", () => {
+  // Mock LARA API.
+  const LARA = {
+    register: jest.fn()
+  };
+
+  beforeEach(() => {
+    (window as any).ExternalScripts = LARA;
+  });
+
+  it("loads without crashing and calls LARA.register", () => {
+    initPlugin();
+    expect(LARA.register).toBeCalledWith("glossary", GlossaryPlugin);
+  });
 });
