@@ -5,8 +5,11 @@ node_js: node
 cache:
   directories:
     - $HOME/.npm
+    - node_modules
 
 before_install:
+  - travis_retry gem install s3_website -v 3.4.0
+  - travis_retry pip install awscli --upgrade --user
   - travis_retry npm install --global lerna
 
 install:
@@ -18,4 +21,4 @@ script:
   - npm test
 
 after_script:
-  - yarn run report_coverage
+  - cd ./packages/glossary-plugin && ./s3_deploy.sh
