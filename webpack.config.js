@@ -68,6 +68,10 @@ module.exports = (env, argv) => {
       // suppress "export not found" warnings about re-exported types
       warningsFilter: /export .* was not found in/
     },
+    externals: {
+      'react': 'React',
+      'react-dom': 'ReactDOM'
+    },
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
       new MiniCssExtractPlugin({
