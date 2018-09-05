@@ -27,9 +27,9 @@ You *do not* need to build to deploy the code, that is automatic.  See more info
 Production releases to S3 are based on the contents of the /dist folder and are built automatically by Travis
 for each branch pushed to GitHub and each merge into production.
 
-Merges into production are deployed to http://glossary.concord.org.
+Merges into production are deployed to http://glossary-plugin.concord.org.
 
-Other branches are deployed to http://glossary.concord.org/branch/<name>.
+Other branches are deployed to http://glossary-plugin.concord.org/branch/<name>.
 
 You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/collaborative-learning/branches).
 
