@@ -3,15 +3,15 @@ import { initPlugin, GlossaryPlugin } from "./plugin";
 describe("LARA plugin", () => {
   // Mock LARA API.
   const LARA = {
-    register: jest.fn()
+    registerPlugin: jest.fn()
   };
 
   beforeEach(() => {
-    (window as any).ExternalScripts = LARA;
+    (window as any).LARA = LARA;
   });
 
   it("loads without crashing and calls LARA.register", () => {
     initPlugin();
-    expect(LARA.register).toBeCalledWith("glossary", GlossaryPlugin);
+    expect(LARA.registerPlugin).toBeCalledWith("glossary", GlossaryPlugin);
   });
 });
