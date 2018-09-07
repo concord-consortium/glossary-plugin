@@ -15,8 +15,8 @@ Can be used to apply appropriate `<span>` tags and classes to application text t
 
 ### GlossaryClient
 
-The [GlossaryPlugin](packages/glossary-plugin/README.md) package in an implementation of LARA Plugin.
-It consists of React components used to provide necessary UI and `lara-plugin.js` file that uses LARA Plugin API
+The [GlossaryPlugin](packages/glossary-plugin/README.md) package in an implementation of LARA PluginApp.
+It consists of React components used to provide necessary UI and `lara-plugin.js` file that uses LARA PluginApp API
 to initialize this UI and communicate with LARA.
 
 ## Development
