@@ -4,27 +4,25 @@ import * as css from "./glossary-popup.scss";
 interface IGlossaryPopupProps {
   word: string;
   definition: string;
+  userDefinitions: string[];
   askForUserDefinition?: boolean;
-  initialUserDefinitions?: string[];
-  onUserDefinitionsUpdate?: (userDefinitions: string[]) => void;
+  onUserDefinitionsUpdate?: (userDefinitions: string) => void;
 }
 
 interface IGlossaryPopupState {
   currentUserDefinition: string;
   questionVisible: boolean;
-  userDefinitions: string[];
 }
 
 export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupState> {
   public state: IGlossaryPopupState = {
     currentUserDefinition: "",
-    questionVisible: this.props.askForUserDefinition || false,
-    userDefinitions: this.props.initialUserDefinitions || [],
+    questionVisible: this.props.askForUserDefinition && this.props.userDefinitions.length === 0 || false,
   };
 
   public render() {
-    const { word, definition } = this.props;
-    const { questionVisible, userDefinitions, currentUserDefinition } = this.state;
+    const { word, definition, userDefinitions } = this.props;
+    const { questionVisible, currentUserDefinition } = this.state;
     // The logic below is a bit scattered, but at least we don't have to repeat markup too much. And generally
     // it's not a rocket science, so I wouldn't worry about it too much. The most important is to handle
     // input and output (calling onUserDefinitionsUpdate) correctly as that's what the plugin code cares about.
@@ -92,14 +90,11 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
   }
 
   private addUserDefinition = (userDefinition: string) => {
-    const { userDefinitions } = this.state;
-    const newUserDefinitions: string[] = userDefinitions.concat(userDefinition);
     this.setState({
-      questionVisible: false,
-      userDefinitions: newUserDefinitions
+      questionVisible: false
     });
     if (this.props.onUserDefinitionsUpdate) {
-      this.props.onUserDefinitionsUpdate(newUserDefinitions);
+      this.props.onUserDefinitionsUpdate(userDefinition);
     }
   }
 
