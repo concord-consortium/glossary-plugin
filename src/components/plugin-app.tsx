@@ -14,6 +14,10 @@ interface IPluginProps {
 interface IWordDefinition {
   word: string;
   definition: string;
+  image: string;
+  video: string;
+  imageCaption: string;
+  videoCaption: string;
 }
 
 interface ILearnerState {
@@ -59,6 +63,10 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
         <GlossaryPopup
           word={word}
           definition={this.definitionsByWord[word].definition}
+          imageUrl={this.definitionsByWord[word].image}
+          videoUrl={this.definitionsByWord[word].video}
+          imageCaption={this.definitionsByWord[word].imageCaption}
+          videoCaption={this.definitionsByWord[word].videoCaption}
           userDefinitions={learnerState.definitions[word] || []}
           askForUserDefinition={askForUserDefinition}
           onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
