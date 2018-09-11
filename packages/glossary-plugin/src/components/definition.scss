@@ -1,0 +1,38 @@
+.userDefinitions {
+  margin-top: 20px;
+}
+
+.icons {
+  display: inline-block;
+  margin-top: 6px;
+  vertical-align: middle;
+}
+
+.iconButton {
+  font-size: 1.3em;
+  color: #999;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-top: 3px;
+  &:hover {
+    color: #444;
+  }
+}
+
+.imageContainer {
+  max-width: 256px;
+  margin: 10px auto;
+  img {
+    max-width: 256px;
+    max-height: 144px;
+  }
+  video {
+    max-width: 256px;
+    max-height: 144px
+  }
+  .caption {
+    margin-top: 5px;
+    max-width: 256px;
+    font-size: 0.7em;
+  }
+}

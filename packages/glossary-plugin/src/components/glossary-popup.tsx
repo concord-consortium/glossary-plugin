@@ -1,4 +1,5 @@
 import * as React from "react";
+import Definition from "./definition";
 import * as css from "./glossary-popup.scss";
 
 interface IGlossaryPopupProps {
@@ -7,6 +8,10 @@ interface IGlossaryPopupProps {
   userDefinitions: string[];
   askForUserDefinition?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
+  imageUrl?: string;
+  videoUrl?: string;
+  imageCaption?: string;
+  videoCaption?: string;
 }
 
 interface IGlossaryPopupState {
@@ -21,69 +26,66 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
   };
 
   public render() {
-    const { word, definition, userDefinitions } = this.props;
-    const { questionVisible, currentUserDefinition } = this.state;
-    // The logic below is a bit scattered, but at least we don't have to repeat markup too much. And generally
-    // it's not a rocket science, so I wouldn't worry about it too much. The most important is to handle
-    // input and output (calling onUserDefinitionsUpdate) correctly as that's what the plugin code cares about.
+    const { questionVisible } = this.state;
+    return questionVisible ? this.renderQuestion() : this.renderDefinition();
+  }
+
+  private renderDefinition() {
+    const { definition, userDefinitions, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
+    const anyUserDef = userDefinitions.length > 0;
     return (
-      <div className={css.popup}>
-        <div className={css.content}>
-          {!questionVisible && definition}
-          {
-            questionVisible &&
+      <div>
+        <Definition
+          definition={definition}
+          userDefinitions={userDefinitions}
+          imageUrl={imageUrl}
+          videoUrl={videoUrl}
+          imageCaption={imageCaption}
+          videoCaption={videoCaption}
+        />
+        {
+          anyUserDef &&
+          <div className={css.buttons}>
+            <div className={css.button} onClick={this.handleRevise}>
+              Revise my definition
+            </div>
+          </div>
+        }
+      </div>
+    );
+  }
+
+  private renderQuestion() {
+    const { word, userDefinitions } = this.props;
+    const { currentUserDefinition } = this.state;
+    const anyUserDef = userDefinitions.length > 0;
+    return (
+      <div>
+        What do you think "{word}" means?
+        <textarea
+          className={css.userDefinitionTextarea}
+          placeholder="Write your definition here"
+          onChange={this.handleTextareaChange}
+          value={currentUserDefinition}
+        />
+        {
+          // If user already provided some answer, display them below.
+          anyUserDef &&
+          <div className={css.userDefinitions}>
             <div>
-              What do you think "{word}" means?
-              <textarea
-                className={css.userDefinition}
-                placeholder="Write your definition here"
-                onChange={this.handleTextareaChange}
-                value={currentUserDefinition}
-              />
-              {
-                // Special case when there are no user definition yet. There's a "I don't know yet" button.
-                userDefinitions.length === 0 &&
-                <div className={css.buttons}>
-                  <div className={css.button} onClick={this.handleSubmit}>
-                    Submit
-                  </div>
-                  <div className={css.button} onClick={this.handleIDontKnow}>
-                    I don't know yet
-                  </div>
-                </div>
-              }
+              <b>My previous definition:</b>
             </div>
-          }
-          {
-            // If user already provided some answer, display them below. Note that it's also visible when
-            // the question is active. There are some differences in buttons below this section, headers, and so on.
-            userDefinitions.length > 0 &&
-            <div className={css.userDefinitions}>
-              {!questionVisible && <hr/>}
-              <div>
-                {questionVisible ? <b>My previous definition:</b> : <b>My definition:</b>}
-              </div>
-              {userDefinitions[userDefinitions.length - 1]}
-              <div className={css.buttons}>
-                {!questionVisible &&
-                <div className={css.button} onClick={this.handleRevise}>
-                  Revise my definition
-                </div>
-                }
-                {
-                  questionVisible &&
-                  <div>
-                    <div className={css.button} onClick={this.handleSubmit}>
-                      Submit
-                    </div>
-                    <div className={css.button} onClick={this.handleCancel}>
-                      Cancel
-                    </div>
-                  </div>
-                }
-              </div>
-            </div>
-          }
+            {userDefinitions[userDefinitions.length - 1]}
+          </div>
+        }
+        <div className={css.buttons}>
+          <div className={css.button} onClick={this.handleSubmit}>
+            Submit
+          </div>
+          {/* Button is different depending whether user sees the question for the fist time or not */}
+          <div className={css.button} onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}>
+            {anyUserDef ? "Cancel" : "I don't know yet"}
+          </div>
         </div>
       </div>
     );
