@@ -26,6 +26,7 @@
     "build": "tsc --module commonjs && webpack --mode production --devtool false && typedoc --out docs --target es6 --theme minimal --mode file src",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
     "deploy-docs": "ts-node tools/gh-pages-publish",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",

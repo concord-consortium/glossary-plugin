@@ -1,6 +1,6 @@
 import { initPlugin, GlossaryPlugin } from "./plugin";
 
-describe("LARA plugin", () => {
+describe("LARA plugin initialization", () => {
   // Mock LARA API.
   const LARA = {
     registerPlugin: jest.fn()
@@ -13,5 +13,19 @@ describe("LARA plugin", () => {
   it("loads without crashing and calls LARA.register", () => {
     initPlugin();
     expect(LARA.registerPlugin).toBeCalledWith("glossary", GlossaryPlugin);
+  });
+});
+
+describe("GlossaryPlugin", () => {
+  it("renders PluginApp component", () => {
+    const context = {
+      authoredState: null,
+      learnerState: null,
+      div: document.createElement("div")
+    };
+    document.body.appendChild(context.div);
+    const plugin = new GlossaryPlugin(context);
+
+    expect(plugin.pluginAppComponent).not.toBeNull();
   });
 });
