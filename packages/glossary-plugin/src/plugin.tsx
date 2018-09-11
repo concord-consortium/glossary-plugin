@@ -17,7 +17,12 @@ export class GlossaryPlugin {
     const authoredState = context.authoredState ? JSON.parse(context.authoredState) : {};
     const definitions = authoredState.definitions || [];
     const askForUserDefinition = authoredState.askForUserDefinition || false;
-    const initialLearnerState = context.learnerState || { definitions: {} };
+    let initialLearnerState = context.learnerState;
+    try {
+      initialLearnerState = JSON.parse(context.learnerState);
+    } catch (error) {
+      initialLearnerState = { definitions: {} };
+    }
 
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
