@@ -46,7 +46,7 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
         {
           anyUserDef &&
           <div className={css.buttons}>
-            <div className={css.button} onClick={this.handleRevise}>
+            <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
               Revise my definition
             </div>
           </div>
@@ -79,7 +79,7 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
           </div>
         }
         <div className={css.buttons}>
-          <div className={css.button} onClick={this.handleSubmit}>
+          <div className={css.button} data-cy="submit" onClick={this.handleSubmit}>
             Submit
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
