@@ -24,7 +24,8 @@ describe("GlossaryPopup component", () => {
           definition={definition}
           userDefinitions={[]}
           askForUserDefinition={true}
-          onUserDefinitionsUpdate={onUserSubmit}/>
+          onUserDefinitionsUpdate={onUserSubmit}
+        />
       );
       expect(wrapper.find(Definition).length).toEqual(0);
       expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));

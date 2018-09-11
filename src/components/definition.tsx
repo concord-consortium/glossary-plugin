@@ -48,7 +48,7 @@ export default class Definition extends React.Component<IDefinitionProps, IDefin
         {
           videoVisible &&
           <div className={css.imageContainer}>
-            <video src={videoUrl} controls/>
+            <video src={videoUrl} controls={true}/>
             <div className={css.caption}>{videoCaption}</div>
           </div>
         }
