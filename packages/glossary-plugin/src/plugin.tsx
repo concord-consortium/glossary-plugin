@@ -11,15 +11,23 @@ interface IExternalScriptContext {
 let PluginAPI: any;
 
 export class GlossaryPlugin {
+  public pluginAppComponent: any;
+
   constructor(context: IExternalScriptContext) {
     const authoredState = context.authoredState ? JSON.parse(context.authoredState) : {};
     const definitions = authoredState.definitions || [];
     const askForUserDefinition = authoredState.askForUserDefinition || false;
-    const initialLearnerState = context.learnerState || { definitions: {} };
+    let initialLearnerState = context.learnerState;
+    try {
+      initialLearnerState = JSON.parse(context.learnerState);
+    } catch (error) {
+      initialLearnerState = { definitions: {} };
+    }
 
-    ReactDOM.render(
+    this.pluginAppComponent = ReactDOM.render(
       <PluginApp
         PluginAPI={PluginAPI}
+        plugin={this}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}

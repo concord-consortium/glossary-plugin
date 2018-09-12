@@ -6,6 +6,7 @@ import * as css from "./plugin-app.scss";
 
 interface IPluginProps {
   PluginAPI: any;
+  plugin: any; // plugin instance that needs to be passed to LARA.saveLearnerState
   definitions: IWordDefinition[];
   initialLearnerState: ILearnerState;
   askForUserDefinition: boolean;
@@ -14,6 +15,10 @@ interface IPluginProps {
 interface IWordDefinition {
   word: string;
   definition: string;
+  image?: string;
+  video?: string;
+  imageCaption?: string;
+  videoCaption?: string;
 }
 
 interface ILearnerState {
@@ -53,12 +58,18 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
     const { askForUserDefinition } = this.props;
     const { openPopups, learnerState } = this.state;
 
-    return openPopups.map((desc: IOpenPopupDesc) => {
+    // `openPopups.length === 0 ? null` seems not necessary but it fixes the tests.
+    // Apparently, Enzyme or React get confused when [] is returned.
+    return openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
       const { word, container } = desc;
       return ReactDOM.createPortal(
         <GlossaryPopup
           word={word}
           definition={this.definitionsByWord[word].definition}
+          imageUrl={this.definitionsByWord[word].image}
+          videoUrl={this.definitionsByWord[word].video}
+          imageCaption={this.definitionsByWord[word].imageCaption}
+          videoCaption={this.definitionsByWord[word].videoCaption}
           userDefinitions={learnerState.definitions[word] || []}
           askForUserDefinition={askForUserDefinition}
           onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
@@ -68,10 +79,23 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
     });
   }
 
+  public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
+    const { PluginAPI, plugin } = this.props;
+    const { learnerState } = this.state;
+    // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
+    const newLearnerState = Object.assign({}, learnerState);
+    if (!newLearnerState.definitions[word]) {
+      newLearnerState.definitions[word] = [];
+    }
+    newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
+    this.setState({ learnerState: newLearnerState });
+    PluginAPI.saveLearnerState(plugin, JSON.stringify(newLearnerState));
+  }
+
   private decorate() {
     const { definitions, PluginAPI } = this.props;
     const words = definitions.map(entry => entry.word);
-    const replace = `<span class=${css.ccGlossaryWord}>$1</span>`;
+    const replace = `<span class="${css.ccGlossaryWord}">$1</span>`;
     const listener = {
       type: "click",
       listener: this.wordClicked
@@ -106,18 +130,5 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
     const { openPopups } = this.state;
     const newOpenPopups = openPopups.filter((desc: IOpenPopupDesc) => desc.container !== container);
     this.setState({ openPopups: newOpenPopups });
-  }
-
-  private learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { PluginAPI } = this.props;
-    const { learnerState } = this.state;
-    // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
-    const newLearnerState = Object.assign({}, learnerState);
-    if (!newLearnerState.definitions[word]) {
-      newLearnerState.definitions[word] = [];
-    }
-    newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
-    this.setState({ learnerState: newLearnerState });
-    PluginAPI.saveUserState(this, JSON.stringify(newLearnerState));
   }
 }
