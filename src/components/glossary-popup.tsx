@@ -5,7 +5,7 @@ import * as css from "./glossary-popup.scss";
 interface IGlossaryPopupProps {
   word: string;
   definition: string;
-  userDefinitions: string[];
+  userDefinitions: string[] | undefined;
   askForUserDefinition?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
   imageUrl?: string;
@@ -22,7 +22,9 @@ interface IGlossaryPopupState {
 export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupState> {
   public state: IGlossaryPopupState = {
     currentUserDefinition: "",
-    questionVisible: this.props.askForUserDefinition && this.props.userDefinitions.length === 0 || false,
+    questionVisible:
+      this.props.askForUserDefinition && (!this.props.userDefinitions || this.props.userDefinitions.length === 0)
+      || false,
   };
 
   public render() {
@@ -32,7 +34,7 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
 
   private renderDefinition() {
     const { definition, userDefinitions, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
-    const anyUserDef = userDefinitions.length > 0;
+    const anyUserDef = userDefinitions && userDefinitions.length > 0;
     return (
       <div>
         <Definition
@@ -58,7 +60,7 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
   private renderQuestion() {
     const { word, userDefinitions } = this.props;
     const { currentUserDefinition } = this.state;
-    const anyUserDef = userDefinitions.length > 0;
+    const anyUserDef = userDefinitions && userDefinitions.length > 0;
     return (
       <div>
         What do you think "{word}" means?
@@ -70,7 +72,7 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
         />
         {
           // If user already provided some answer, display them below.
-          anyUserDef &&
+          userDefinitions && userDefinitions.length > 0 &&
           <div className={css.userDefinitions}>
             <div>
               <b>My previous definition:</b>

@@ -4,7 +4,7 @@ import * as icons from "./icons.scss";
 
 interface IDefinitionProps {
   definition: string;
-  userDefinitions: string[];
+  userDefinitions: string[] | undefined;
   imageUrl?: string;
   videoUrl?: string;
   imageCaption?: string;
@@ -54,7 +54,7 @@ export default class Definition extends React.Component<IDefinitionProps, IDefin
         }
         {
           // If user already provided some answer, display them below.
-          userDefinitions.length > 0 &&
+          userDefinitions && userDefinitions.length > 0 &&
           <div className={css.userDefinitions}>
             <hr/>
             <div>
