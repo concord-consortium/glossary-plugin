@@ -4,11 +4,14 @@ import PluginApp from "./components/plugin-app";
 
 interface IExternalScriptContext {
   div: any;
-  authoredState: any;
-  learnerState: any;
+  authoredState: string;
+  learnerState: string;
+  pluginId: string;
 }
 
 let PluginAPI: any;
+
+const fallbackLearnerState = { definitions: {} };
 
 export class GlossaryPlugin {
   public pluginAppComponent: any;
@@ -17,17 +20,23 @@ export class GlossaryPlugin {
     const authoredState = context.authoredState ? JSON.parse(context.authoredState) : {};
     const definitions = authoredState.definitions || [];
     const askForUserDefinition = authoredState.askForUserDefinition || false;
-    let initialLearnerState = context.learnerState;
-    try {
-      initialLearnerState = JSON.parse(context.learnerState);
-    } catch (error) {
-      initialLearnerState = { definitions: {} };
+    let initialLearnerState;
+    if (!context.learnerState) {
+      initialLearnerState = fallbackLearnerState;
+    } else {
+      try {
+        initialLearnerState = JSON.parse(context.learnerState);
+      } catch (error) {
+        // tslint:disable-next-line:no-console
+        console.warn("Unexpected learnerState:", context.learnerState);
+        initialLearnerState = fallbackLearnerState;
+      }
     }
 
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
         PluginAPI={PluginAPI}
-        plugin={this}
+        pluginId={context.pluginId}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}
