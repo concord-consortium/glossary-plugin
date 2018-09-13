@@ -7,21 +7,8 @@ import { IWordDefinition, ILearnerDefinitions } from "./types";
 import * as css from "./plugin-app.scss";
 import * as icons from "./icons.scss";
 
-interface IPluginProps {
-  PluginAPI: any;
-  plugin: any; // plugin instance that needs to be passed to LARA.saveLearnerState
-  definitions: IWordDefinition[];
-  initialLearnerState: ILearnerState;
-  askForUserDefinition: boolean;
-}
-
 interface ILearnerState {
   definitions: ILearnerDefinitions;
-}
-
-interface IPluginState {
-  openPopups: IOpenPopupDesc[];
-  learnerState: ILearnerState;
 }
 
 interface IOpenPopupDesc {
@@ -30,8 +17,21 @@ interface IOpenPopupDesc {
   popupController: any; // provided by LARA
 }
 
-export default class PluginApp extends React.Component<IPluginProps, IPluginState> {
-  public state: IPluginState = {
+interface IPluginAppProps {
+  PluginAPI: any;
+  pluginId: string; // plugin instance ID that needs to be passed to LARA.saveLearnerState
+  definitions: IWordDefinition[];
+  initialLearnerState: ILearnerState;
+  askForUserDefinition: boolean;
+}
+
+interface IPluginAppState {
+  openPopups: IOpenPopupDesc[];
+  learnerState: ILearnerState;
+}
+
+export default class PluginApp extends React.Component<IPluginAppProps, IPluginAppState> {
+  public state: IPluginAppState = {
     openPopups: [],
     learnerState: this.props.initialLearnerState
   };
@@ -101,7 +101,7 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
   }
 
   public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { PluginAPI, plugin } = this.props;
+    const { PluginAPI, pluginId } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
     const newLearnerState = Object.assign({}, learnerState);
@@ -110,7 +110,7 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
     }
     newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
     this.setState({ learnerState: newLearnerState });
-    PluginAPI.saveLearnerState(plugin, JSON.stringify(newLearnerState));
+    PluginAPI.saveLearnerState(pluginId, JSON.stringify(newLearnerState));
   }
 
   private decorate() {
@@ -130,7 +130,9 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
       return;
     }
     PluginAPI.addSidebar({
-      title: "Glossary",
+      handle: "Glossary",
+      titleBar: "Glossary",
+      titleBarColor: "#bbb",
       handleColor: "#777",
       width: 450,
       height: 500,
