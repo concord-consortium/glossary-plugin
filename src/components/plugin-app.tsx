@@ -66,10 +66,12 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
       <div>
         {
           // Render sidebar into portal.
+          // Do not render user definitions if askForUserDefinition mode is disabled.
+          // Note that they might be available if previously this mode was enabled.
           ReactDOM.createPortal(
             <GlossarySidebar
               definitions={definitions}
-              learnerDefinitions={learnerState.definitions}
+              learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
             />,
             this.sidebarContainer
           )
@@ -83,6 +85,8 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
         }
         {
           // Render popups into portals.
+          // Do not render user definitions if askForUserDefinition mode is disabled.
+          // Note that they might be available if previously this mode was enabled.
           openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
             const {word, container} = desc;
             return ReactDOM.createPortal(

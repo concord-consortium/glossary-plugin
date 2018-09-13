@@ -33,20 +33,21 @@ export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, 
   }
 
   private renderDefinition() {
-    const { definition, userDefinitions, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
+    const { askForUserDefinition, definition, userDefinitions, imageUrl,
+      videoUrl, imageCaption, videoCaption } = this.props;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
     return (
       <div>
         <Definition
           definition={definition}
-          userDefinitions={userDefinitions}
+          userDefinitions={askForUserDefinition ? userDefinitions : []}
           imageUrl={imageUrl}
           videoUrl={videoUrl}
           imageCaption={imageCaption}
           videoCaption={videoCaption}
         />
         {
-          anyUserDef &&
+          askForUserDefinition && anyUserDef &&
           <div className={css.buttons}>
             <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
               Revise my definition
