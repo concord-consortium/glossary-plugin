@@ -30,6 +30,11 @@ interface IPluginAppState {
   learnerState: ILearnerState;
 }
 
+interface ISidebarController {
+  open: () => void;
+  close: () => void;
+}
+
 export default class PluginApp extends React.Component<IPluginAppProps, IPluginAppState> {
   public state: IPluginAppState = {
     openPopups: [],
@@ -38,6 +43,7 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
   private definitionsByWord: { [word: string]: IWordDefinition };
   private sidebarContainer: HTMLElement = document.createElement("div");
   private sidebarIconContainer: HTMLElement = document.createElement("div");
+  private sidebarController: ISidebarController = this.addSidebar();
 
   public componentDidMount() {
     const { definitions } = this.props;
@@ -47,7 +53,6 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
     });
     if (definitions.length > 0) {
       this.decorate();
-      this.setupSidebar();
     }
   }
 
@@ -124,12 +129,9 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
     PluginAPI.decorateContent(words, replace, css.ccGlossaryWord, [listener]);
   }
 
-  private setupSidebar() {
+  private addSidebar(): ISidebarController {
     const { PluginAPI } = this.props;
-    if (!PluginAPI.addSidebar) {
-      return;
-    }
-    PluginAPI.addSidebar({
+    return PluginAPI.addSidebar({
       handle: "Glossary",
       titleBar: "Glossary",
       titleBarColor: "#bbb",
@@ -169,6 +171,8 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
     });
     const newOpenPopups = openPopups.concat({ word, container, popupController });
     this.setState({ openPopups: newOpenPopups });
+    // Finally, close sidebar in case it's open.
+    this.sidebarController.close();
   }
 
   private popupClosed(container: HTMLElement) {
