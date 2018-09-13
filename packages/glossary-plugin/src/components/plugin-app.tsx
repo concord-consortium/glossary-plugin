@@ -115,7 +115,7 @@ export default class PluginApp extends React.Component<IPluginAppProps, IPluginA
     }
     newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
     this.setState({ learnerState: newLearnerState });
-    PluginAPI.saveLearnerState(pluginId, JSON.stringify(newLearnerState));
+    PluginAPI.saveLearnerPluginState(pluginId, JSON.stringify(newLearnerState));
   }
 
   private decorate() {
