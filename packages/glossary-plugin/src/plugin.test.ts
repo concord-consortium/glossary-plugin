@@ -19,8 +19,9 @@ describe("LARA plugin initialization", () => {
 describe("GlossaryPlugin", () => {
   it("renders PluginApp component", () => {
     const context = {
-      authoredState: null,
-      learnerState: null,
+      authoredState: "{}",
+      learnerState: "",
+      pluginId: "123",
       div: document.createElement("div")
     };
     document.body.appendChild(context.div);
