@@ -59,8 +59,8 @@ export default class GlossarySidebar extends React.Component<IGlossarySidebarPro
               return true;
             })
             .map((entry: IWordDefinition) =>
-            <div className={css.entry}>
-              <div className={css.word}>{ entry.word }</div>
+            <div key={entry.word} className={css.entry}>
+              <div className={css.word}>{entry.word}</div>
               <div className={css.definition}>
                 <Definition
                   definition={entry.definition}
