@@ -17,7 +17,18 @@ export class GlossaryPlugin {
   public pluginAppComponent: any;
 
   constructor(context: IExternalScriptContext) {
-    const authoredState = context.authoredState ? JSON.parse(context.authoredState) : {};
+    let authoredState;
+    if (!context.authoredState) {
+      authoredState = {};
+    } else {
+      try {
+        authoredState = JSON.parse(context.authoredState);
+      } catch (error) {
+        // tslint:disable-next-line:no-console
+        console.warn("Unexpected authoredState:", context.authoredState);
+        authoredState = {};
+      }
+    }
     const definitions = authoredState.definitions || [];
     const askForUserDefinition = authoredState.askForUserDefinition || false;
     let initialLearnerState;

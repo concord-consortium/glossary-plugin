@@ -10,6 +10,8 @@ describe("GlossaryPopup component", () => {
         <GlossaryPopup word="test" definition="test" userDefinitions={[]} askForUserDefinition={false}/>
       );
       expect(wrapper.find(Definition).length).toEqual(1);
+      const reviseButton = wrapper.find("[data-cy='revise']");
+      expect(reviseButton.length).toEqual(0);
     });
   });
 
@@ -42,6 +44,26 @@ describe("GlossaryPopup component", () => {
       expect(onUserSubmit).toBeCalledWith(userDef);
 
       expect(wrapper.find(Definition).length).toEqual(1);
+    });
+
+    it("user can click 'I don't know' button", () => {
+      const word = "test";
+      const definition = "test def";
+      const onUserSubmit = jest.fn();
+      const wrapper = shallow(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          userDefinitions={[]}
+          askForUserDefinition={true}
+          onUserDefinitionsUpdate={onUserSubmit}
+        />
+      );
+      const IDontKnow = wrapper.find("[data-cy='cancel']");
+      IDontKnow.simulate("click");
+
+      expect(onUserSubmit).toHaveBeenCalledTimes(1);
+      expect(onUserSubmit).toBeCalledWith("I don't know yet");
     });
 
     describe("when user already answered a question", () => {

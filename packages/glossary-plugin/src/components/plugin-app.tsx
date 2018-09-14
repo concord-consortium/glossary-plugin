@@ -140,10 +140,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   private addSidebar() {
     const { PluginAPI } = this.props;
-    if (!PluginAPI.addSidebar) {
-      // Most likely use case - test environment. So it's easier to mock LARA API.
-      return null;
-    }
     this.sidebarContainer = document.createElement("div");
     this.sidebarIconContainer = document.createElement("div");
     this.sidebarController = PluginAPI.addSidebar({

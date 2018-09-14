@@ -86,7 +86,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             Submit
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
-          <div className={css.button} onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}>
+          <div
+            className={css.button}
+            data-cy="cancel"
+            onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}
+          >
             {anyUserDef ? "Cancel" : "I don't know yet"}
           </div>
         </div>
