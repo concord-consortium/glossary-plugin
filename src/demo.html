@@ -16,10 +16,16 @@
     .example {
       margin-bottom: 20px;
     }
-    .demo-content {
+    .popup-content {
       display: inline-block;
       border: 1px solid gray;
       width: 300px;
+      padding: 10px;
+    }
+    .sidebar-content {
+      display: inline-block;
+      border: 1px solid gray;
+      width: 450px;
       padding: 10px;
     }
   </style>
@@ -30,13 +36,19 @@
   <div class="example">
     <p>1. Glossary popup (author definition only):</p>
     <div>
-      <div id="popup1" class="demo-content"></div>
+      <div id="popup1" class="popup-content"></div>
     </div>
   </div>
   <div class="example">
     <p>2. Glossary popup (user definition):</p>
     <div>
-      <div id="popup2" class="demo-content"></div>
+      <div id="popup2" class="popup-content"></div>
+    </div>
+  </div>
+  <div class="example">
+    <p>3. Glossary sidebar:</p>
+    <div>
+      <div id="sidebar" class="sidebar-content"></div>
     </div>
   </div>
 </body>
