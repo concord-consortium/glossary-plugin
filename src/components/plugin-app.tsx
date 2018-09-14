@@ -17,7 +17,12 @@ interface IOpenPopupDesc {
   popupController: any; // provided by LARA
 }
 
-interface IPluginAppProps {
+interface ISidebarController {
+  open: () => void;
+  close: () => void;
+}
+
+interface IProps {
   PluginAPI: any;
   pluginId: string; // plugin instance ID that needs to be passed to LARA.saveLearnerState
   definitions: IWordDefinition[];
@@ -25,18 +30,13 @@ interface IPluginAppProps {
   askForUserDefinition: boolean;
 }
 
-interface IPluginAppState {
+interface IState {
   openPopups: IOpenPopupDesc[];
   learnerState: ILearnerState;
 }
 
-interface ISidebarController {
-  open: () => void;
-  close: () => void;
-}
-
-export default class PluginApp extends React.Component<IPluginAppProps, IPluginAppState> {
-  public state: IPluginAppState = {
+export default class PluginApp extends React.Component<IProps, IState> {
+  public state: IState = {
     openPopups: [],
     learnerState: this.props.initialLearnerState
   };

@@ -2,10 +2,10 @@ import * as React from "react";
 import Definition from "./definition";
 import * as css from "./glossary-popup.scss";
 
-interface IGlossaryPopupProps {
+interface IProps {
   word: string;
   definition: string;
-  userDefinitions: string[] | undefined;
+  userDefinitions?: string[];
   askForUserDefinition?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
   imageUrl?: string;
@@ -14,13 +14,13 @@ interface IGlossaryPopupProps {
   videoCaption?: string;
 }
 
-interface IGlossaryPopupState {
+interface IState {
   currentUserDefinition: string;
   questionVisible: boolean;
 }
 
-export default class GlossaryPopup extends React.Component<IGlossaryPopupProps, IGlossaryPopupState> {
-  public state: IGlossaryPopupState = {
+export default class GlossaryPopup extends React.Component<IProps, IState> {
+  public state: IState = {
     currentUserDefinition: "",
     questionVisible:
       this.props.askForUserDefinition && (!this.props.userDefinitions || this.props.userDefinitions.length === 0)
