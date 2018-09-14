@@ -2,22 +2,22 @@ import * as React from "react";
 import * as css from "./definition.scss";
 import * as icons from "./icons.scss";
 
-interface IDefinitionProps {
+interface IProps {
   definition: string;
-  userDefinitions: string[] | undefined;
+  userDefinitions?: string[];
   imageUrl?: string;
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
 }
 
-interface IDefinitionState {
+interface IState {
   imageVisible: boolean;
   videoVisible: boolean;
 }
 
-export default class Definition extends React.Component<IDefinitionProps, IDefinitionState> {
-  public state: IDefinitionState = {
+export default class Definition extends React.Component<IProps, IState> {
+  public state: IState = {
     imageVisible: false,
     videoVisible: false
   };

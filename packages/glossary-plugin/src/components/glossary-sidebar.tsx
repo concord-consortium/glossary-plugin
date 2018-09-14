@@ -4,26 +4,26 @@ import { IWordDefinition, ILearnerDefinitions } from "./types";
 
 import * as css from "./glossary-sidebar.scss";
 
-interface IGlossarySidebarProps {
-  definitions: IWordDefinition[];
-  learnerDefinitions: ILearnerDefinitions;
-}
-
 enum Filter {
   AllWords,
   WithUserDefinitionOnly
-}
-
-interface IGlossarySidebarState {
-  filter: Filter;
 }
 
 const nonEmptyHash = (hash: any) => {
   return Object.keys(hash).length > 0;
 };
 
-export default class GlossarySidebar extends React.Component<IGlossarySidebarProps, IGlossarySidebarState> {
-  public state: IGlossarySidebarState = {
+interface IProps {
+  definitions: IWordDefinition[];
+  learnerDefinitions: ILearnerDefinitions;
+}
+
+interface IState {
+  filter: Filter;
+}
+
+export default class GlossarySidebar extends React.Component<IProps, IState> {
+  public state: IState = {
     // Show words that have user definition by default. Note that this filter will be ignored if user hasn't defined
     // anything yet.
     filter: Filter.WithUserDefinitionOnly
