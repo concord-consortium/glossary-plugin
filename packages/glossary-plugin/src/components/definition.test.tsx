@@ -28,6 +28,41 @@ describe("Definition component", () => {
     expect(wrapper.text()).toEqual(expect.stringContaining(lastUserDefinition));
   });
 
+  it("doesn't render text-to-speech icon if browser doesn't supports necessary API", () => {
+    // e.g. IE11
+    (window as any).speechSynthesis = undefined;
+    (window as any).SpeechSynthesisUtterance = undefined;
+    const wrapper = shallow(
+      <Definition
+        definition="test definition"
+        userDefinitions={[]}
+      />
+    );
+    const icon = wrapper.find("." + icons.iconAudio);
+    expect(icon.length).toEqual(0);
+  });
+
+  it("renders text-to-speech icon if browser supports necessary API", () => {
+    const speechSynthesisMock = {
+      speak: jest.fn()
+    };
+    const SpeechSynthesisUtteranceMock = jest.fn();
+    (window as any).speechSynthesis = speechSynthesisMock;
+    (window as any).SpeechSynthesisUtterance = SpeechSynthesisUtteranceMock;
+    const wrapper = shallow(
+      <Definition
+        definition="test definition"
+        userDefinitions={[]}
+      />
+    );
+
+    const icon = wrapper.find("." + icons.iconAudio);
+    expect(icon.length).toEqual(1);
+    icon.simulate("click");
+    expect(SpeechSynthesisUtteranceMock).toHaveBeenCalledTimes(1);
+    expect(speechSynthesisMock.speak).toHaveBeenCalledTimes(1);
+  });
+
   it("renders image icon if imageUrl is provided and opens image when the icon is clicked", () => {
     const src = "http://test-image.png";
     const caption = "test image caption";

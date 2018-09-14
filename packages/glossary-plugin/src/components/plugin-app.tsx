@@ -33,17 +33,19 @@ interface IProps {
 interface IState {
   openPopups: IOpenPopupDesc[];
   learnerState: ILearnerState;
+  sidebarPresent: boolean;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
   public state: IState = {
     openPopups: [],
-    learnerState: this.props.initialLearnerState
+    learnerState: this.props.initialLearnerState,
+    sidebarPresent: false
   };
   private definitionsByWord: { [word: string]: IWordDefinition };
-  private sidebarContainer: HTMLElement = document.createElement("div");
-  private sidebarIconContainer: HTMLElement = document.createElement("div");
-  private sidebarController: ISidebarController | null = this.addSidebar();
+  private sidebarContainer: HTMLElement;
+  private sidebarIconContainer: HTMLElement;
+  private sidebarController: ISidebarController;
 
   public componentDidMount() {
     const { definitions } = this.props;
@@ -51,14 +53,17 @@ export default class PluginApp extends React.Component<IProps, IState> {
     definitions.forEach(entry => {
       this.definitionsByWord[entry.word] = entry;
     });
-    if (definitions.length > 0) {
-      this.decorate();
+    if (definitions.length === 0) {
+      // Nothing to do.
+      return;
     }
+    this.decorate();
+    this.addSidebar();
   }
 
   public render() {
     const { askForUserDefinition, definitions } = this.props;
-    const { openPopups, learnerState } = this.state;
+    const { openPopups, learnerState, sidebarPresent } = this.state;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
@@ -68,7 +73,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
           // Render sidebar into portal.
           // Do not render user definitions if askForUserDefinition mode is disabled.
           // Note that they might be available if previously this mode was enabled.
-          ReactDOM.createPortal(
+          sidebarPresent && ReactDOM.createPortal(
             <GlossarySidebar
               definitions={definitions}
               learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
@@ -78,7 +83,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
         }
         {
           // Render sidebar icon into portal.
-          ReactDOM.createPortal(
+          sidebarPresent && ReactDOM.createPortal(
             <span className={css.sidebarIcon + " " + icons.iconBook}/>,
             this.sidebarIconContainer
           )
@@ -133,13 +138,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
     PluginAPI.decorateContent(words, replace, css.ccGlossaryWord, [listener]);
   }
 
-  private addSidebar(): ISidebarController | null {
+  private addSidebar() {
     const { PluginAPI } = this.props;
-    if (!PluginAPI.addSidebar) {
-      // Most likely use case - test environment. So it's easier to mock LARA API.
-      return null;
-    }
-    return PluginAPI.addSidebar({
+    this.sidebarContainer = document.createElement("div");
+    this.sidebarIconContainer = document.createElement("div");
+    this.sidebarController = PluginAPI.addSidebar({
       handle: "Glossary",
       titleBar: "Glossary",
       titleBarColor: "#bbb",
@@ -150,6 +153,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
       content: this.sidebarContainer,
       onOpen: this.sidebarOpened
     });
+    // Let now React that it should actually render Sidebar UI components.
+    this.setState({ sidebarPresent: true });
   }
 
   private sidebarOpened = () => {

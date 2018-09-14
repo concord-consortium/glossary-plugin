@@ -1,5 +1,38 @@
 # Glossary LARA plugin
 
+## Authored state format
+
+Example: 
+
+```json
+{
+  "askForUserDefinition": true,
+  "definitions": [
+    {
+      "word": "eardrum",
+      "definition": "An eardrum is a membrane, or thin piece of skin, stretched tight like a drum.",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Blausen_0328_EarAnatomy.png/500px-Blausen_0328_EarAnatomy.png",
+      "video": "https://upload.wikimedia.org/wikipedia/commons/e/e3/View_of_Cape_Town_from_Table_mountain_01.mp4",
+      "imageCaption": "Source: Wikipedia. This is a test caption. This is a test caption. This is a test caption.",
+      "videoCaption": "Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
+    },
+    {
+      "word": "cloud",
+      "definition": "A visible mass of condensed watery vapour floating in the atmosphere, typically high above the general level of the ground."
+    }
+  ]
+}
+```
+
+## LARA Plugin URL:
+
+- `http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
+
+E.g.:
+
+- http://glossary-plugin.concord.org/version/1.0.0-pre.1/plugin.js
+- http://glossary-plugin.concord.org/version/1.0.0/plugin.js
+
 ## Development
 
 ### Initial steps
@@ -31,7 +64,7 @@ Merges into production are deployed to http://glossary-plugin.concord.org.
 
 Other branches are deployed to http://glossary-plugin.concord.org/branch/<name>.
 
-You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/collaborative-learning/branches).
+You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/text-plugins/branches).
 
 ### Testing
 

@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./components/glossary-popup";
+import GlossarySidebar from "./components/glossary-sidebar";
 
 // tslint:disable-next-line:no-console
 const newUserDefinition = (userDefinition: string) => { console.log("User definition:", userDefinition); };
@@ -34,4 +35,25 @@ ReactDOM.render(
     onUserDefinitionsUpdate={newUserDefinition}
   />,
   document.getElementById("popup2") as HTMLElement
+);
+
+ReactDOM.render(
+  <GlossarySidebar
+    definitions={[
+      {
+        word: "eardrum",
+        definition: "An eardrum is a membrane, or thin piece of skin, stretched tight like a drum.",
+        image: img,
+        imageCaption: "Source: Wikipedia. This is a test caption. This is a test caption. This is a test caption.",
+        video,
+        videoCaption: "Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
+      },
+      {
+        word: "cloud",
+        definition: "A visible mass of condensed watery vapour floating in the atmosphere.",
+      }
+    ]}
+    learnerDefinitions={{cloud: ["white fluffy thing"]}}
+  />,
+  document.getElementById("sidebar") as HTMLElement
 );

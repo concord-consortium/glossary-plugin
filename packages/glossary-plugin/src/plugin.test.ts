@@ -24,9 +24,20 @@ describe("GlossaryPlugin", () => {
       pluginId: "123",
       div: document.createElement("div")
     };
-    document.body.appendChild(context.div);
     const plugin = new GlossaryPlugin(context);
-
     expect(plugin.pluginAppComponent).not.toBeNull();
+  });
+
+  it("provides reasonable fallback state if provided values are malformed", () => {
+    const context = {
+      authoredState: "some old unsupported format",
+      learnerState: "some old unsupported format",
+      pluginId: "123",
+      div: document.createElement("div")
+    };
+    const plugin = new GlossaryPlugin(context);
+    expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
+    expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(false);
+    expect(plugin.pluginAppComponent.props.initialLearnerState).toEqual({ definitions: {} });
   });
 });

@@ -16,6 +16,11 @@ interface IState {
   videoVisible: boolean;
 }
 
+// IE11 doesn't support this API.
+const textToSpeechAvailable = () => {
+  return typeof SpeechSynthesisUtterance === "function" && typeof speechSynthesis === "object";
+};
+
 export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
     imageVisible: false,
@@ -33,7 +38,10 @@ export default class Definition extends React.Component<IProps, IState> {
           <div>
             {definition}
             <span className={css.icons}>
-              <span className={css.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
+              {
+                textToSpeechAvailable() &&
+                <span className={css.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
+              }
               {imageUrl && <span className={css.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
               {videoUrl && <span className={css.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
             </span>

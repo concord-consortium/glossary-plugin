@@ -43,7 +43,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
           <div>
             <div className={css.toggles}>
               <div className={wordsIHaveDefinedClass} onClick={this.ownWordsClicked}>Words I Have Defined</div>
-              <div className={allWordsClass} onClick={this.allWordsClicked}>All Words</div>
+              <div className={allWordsClass} data-cy="all-words-filter" onClick={this.allWordsClicked}>All Words</div>
             </div>
             <hr/>
           </div>
