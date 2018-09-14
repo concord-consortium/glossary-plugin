@@ -1,6 +1,6 @@
 {
   "name": "@concord-consortium/glossary-plugin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Glossary LARA plugin",
   "main": "index.js",
   "scripts": {
