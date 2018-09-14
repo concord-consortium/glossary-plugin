@@ -1,0 +1,38 @@
+.entry {
+  margin-bottom: 30px;
+}
+
+.word {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.definition {
+  margin-left: 20px;
+}
+
+.toggles {
+  text-align: center;
+}
+
+.toggle {
+  display: inline-block;
+  background: #bbb;
+  padding: 7px;
+  border: 3px solid #ddd;
+  color: #fff;
+  cursor: pointer;
+
+  &:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  &:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+}
+
+.activeToggle {
+  background: #666;
+}

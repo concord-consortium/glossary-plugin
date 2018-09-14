@@ -12,7 +12,7 @@ describe("PluginApp component", () => {
     }
   ];
   const initialLearnerState = { definitions: {} };
-  const plugin = "it should be LARA plugin instance, but PluginAPP doesn't care";
+  const pluginId = "123";
 
   it("calls decorateContent on load", () => {
     const MockAPI = {
@@ -21,7 +21,7 @@ describe("PluginApp component", () => {
     shallow(
       <PluginApp
         PluginAPI={MockAPI}
-        plugin={plugin}
+        pluginId={pluginId}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
@@ -53,7 +53,7 @@ describe("PluginApp component", () => {
     const wrapper = shallow(
       <PluginApp
         PluginAPI={MockAPI}
-        plugin={plugin}
+        pluginId={pluginId}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
@@ -74,16 +74,16 @@ describe("PluginApp component", () => {
     expect(wrapper.find(GlossaryPopup).length).toEqual(0);
   });
 
-  it("calls saveLearnerState when learner state is updated", () => {
+  it("calls saveLearnerPluginState when learner state is updated", () => {
     const MockAPI = {
       decorateContent: jest.fn(),
-      saveLearnerState: jest.fn(),
+      saveLearnerPluginState: jest.fn(),
     };
 
     const wrapper = shallow(
       <PluginApp
         PluginAPI={MockAPI}
-        plugin={plugin}
+        pluginId={pluginId}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
@@ -94,15 +94,15 @@ describe("PluginApp component", () => {
     const word = "test";
     const definition1 = "user definition 1";
     (component as PluginApp).learnerDefinitionUpdated(word, definition1);
-    expect(MockAPI.saveLearnerState).toHaveBeenCalledTimes(1);
-    expect(MockAPI.saveLearnerState).toHaveBeenCalledWith(plugin, JSON.stringify({
+    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledTimes(1);
+    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledWith(pluginId, JSON.stringify({
       definitions: {[word]: [ definition1 ]}
     }));
 
     const definition2 = "user definition 2";
     (component as PluginApp).learnerDefinitionUpdated(word, definition2);
-    expect(MockAPI.saveLearnerState).toHaveBeenCalledTimes(2);
-    expect(MockAPI.saveLearnerState).toHaveBeenCalledWith(plugin, JSON.stringify({
+    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledTimes(2);
+    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledWith(pluginId, JSON.stringify({
       definitions: {[word]: [ definition1, definition2 ]}
     }));
   });

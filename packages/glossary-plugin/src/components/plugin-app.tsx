@@ -1,33 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
+import GlossarySidebar from "./glossary-sidebar";
+import { IWordDefinition, ILearnerDefinitions } from "./types";
 
 import * as css from "./plugin-app.scss";
-
-interface IPluginProps {
-  PluginAPI: any;
-  plugin: any; // plugin instance that needs to be passed to LARA.saveLearnerState
-  definitions: IWordDefinition[];
-  initialLearnerState: ILearnerState;
-  askForUserDefinition: boolean;
-}
-
-interface IWordDefinition {
-  word: string;
-  definition: string;
-  image?: string;
-  video?: string;
-  imageCaption?: string;
-  videoCaption?: string;
-}
+import * as icons from "./icons.scss";
 
 interface ILearnerState {
-  definitions: { [word: string]: string[] };
-}
-
-interface IPluginState {
-  openPopups: IOpenPopupDesc[];
-  learnerState: ILearnerState;
+  definitions: ILearnerDefinitions;
 }
 
 interface IOpenPopupDesc {
@@ -36,12 +17,33 @@ interface IOpenPopupDesc {
   popupController: any; // provided by LARA
 }
 
-export default class PluginApp extends React.Component<IPluginProps, IPluginState> {
-  public state: IPluginState = {
+interface ISidebarController {
+  open: () => void;
+  close: () => void;
+}
+
+interface IProps {
+  PluginAPI: any;
+  pluginId: string; // plugin instance ID that needs to be passed to LARA.saveLearnerState
+  definitions: IWordDefinition[];
+  initialLearnerState: ILearnerState;
+  askForUserDefinition: boolean;
+}
+
+interface IState {
+  openPopups: IOpenPopupDesc[];
+  learnerState: ILearnerState;
+}
+
+export default class PluginApp extends React.Component<IProps, IState> {
+  public state: IState = {
     openPopups: [],
     learnerState: this.props.initialLearnerState
   };
   private definitionsByWord: { [word: string]: IWordDefinition };
+  private sidebarContainer: HTMLElement = document.createElement("div");
+  private sidebarIconContainer: HTMLElement = document.createElement("div");
+  private sidebarController: ISidebarController | null = this.addSidebar();
 
   public componentDidMount() {
     const { definitions } = this.props;
@@ -55,32 +57,60 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
   }
 
   public render() {
-    const { askForUserDefinition } = this.props;
+    const { askForUserDefinition, definitions } = this.props;
     const { openPopups, learnerState } = this.state;
 
-    // `openPopups.length === 0 ? null` seems not necessary but it fixes the tests.
-    // Apparently, Enzyme or React get confused when [] is returned.
-    return openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
-      const { word, container } = desc;
-      return ReactDOM.createPortal(
-        <GlossaryPopup
-          word={word}
-          definition={this.definitionsByWord[word].definition}
-          imageUrl={this.definitionsByWord[word].image}
-          videoUrl={this.definitionsByWord[word].video}
-          imageCaption={this.definitionsByWord[word].imageCaption}
-          videoCaption={this.definitionsByWord[word].videoCaption}
-          userDefinitions={learnerState.definitions[word] || []}
-          askForUserDefinition={askForUserDefinition}
-          onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
-        />,
-        container
-      );
-    });
+    // Note that returned div will be empty in fact. We render only into React Portals.
+    // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
+    return (
+      <div>
+        {
+          // Render sidebar into portal.
+          // Do not render user definitions if askForUserDefinition mode is disabled.
+          // Note that they might be available if previously this mode was enabled.
+          ReactDOM.createPortal(
+            <GlossarySidebar
+              definitions={definitions}
+              learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
+            />,
+            this.sidebarContainer
+          )
+        }
+        {
+          // Render sidebar icon into portal.
+          ReactDOM.createPortal(
+            <span className={css.sidebarIcon + " " + icons.iconBook}/>,
+            this.sidebarIconContainer
+          )
+        }
+        {
+          // Render popups into portals.
+          // Do not render user definitions if askForUserDefinition mode is disabled.
+          // Note that they might be available if previously this mode was enabled.
+          openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
+            const {word, container} = desc;
+            return ReactDOM.createPortal(
+              <GlossaryPopup
+                word={word}
+                definition={this.definitionsByWord[word].definition}
+                imageUrl={this.definitionsByWord[word].image}
+                videoUrl={this.definitionsByWord[word].video}
+                imageCaption={this.definitionsByWord[word].imageCaption}
+                videoCaption={this.definitionsByWord[word].videoCaption}
+                userDefinitions={learnerState.definitions[word]}
+                askForUserDefinition={askForUserDefinition}
+                onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
+              />,
+              container
+            );
+          })
+        }
+      </div>
+    );
   }
 
   public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { PluginAPI, plugin } = this.props;
+    const { PluginAPI, pluginId } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
     const newLearnerState = Object.assign({}, learnerState);
@@ -89,7 +119,7 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
     }
     newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
     this.setState({ learnerState: newLearnerState });
-    PluginAPI.saveLearnerState(plugin, JSON.stringify(newLearnerState));
+    PluginAPI.saveLearnerPluginState(pluginId, JSON.stringify(newLearnerState));
   }
 
   private decorate() {
@@ -101,6 +131,33 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
       listener: this.wordClicked
     };
     PluginAPI.decorateContent(words, replace, css.ccGlossaryWord, [listener]);
+  }
+
+  private addSidebar(): ISidebarController | null {
+    const { PluginAPI } = this.props;
+    if (!PluginAPI.addSidebar) {
+      // Most likely use case - test environment. So it's easier to mock LARA API.
+      return null;
+    }
+    return PluginAPI.addSidebar({
+      handle: "Glossary",
+      titleBar: "Glossary",
+      titleBarColor: "#bbb",
+      handleColor: "#777",
+      width: 450,
+      height: 500,
+      icon: this.sidebarIconContainer,
+      content: this.sidebarContainer,
+      onOpen: this.sidebarOpened
+    });
+  }
+
+  private sidebarOpened = () => {
+    // Close all the popups.
+    const { openPopups } = this.state;
+    openPopups.forEach((desc: IOpenPopupDesc) => {
+      desc.popupController.close();
+    });
   }
 
   private wordClicked = (evt: Event) => {
@@ -118,13 +175,17 @@ export default class PluginApp extends React.Component<IPluginProps, IPluginStat
       title: "Glossary",
       resizable: false,
       position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
-      onClose: this.popupClosedByUser.bind(this, container)
+      onClose: this.popupClosed.bind(this, container)
     });
     const newOpenPopups = openPopups.concat({ word, container, popupController });
     this.setState({ openPopups: newOpenPopups });
+    // Finally, close sidebar in case it's available and open.
+    if (this.sidebarController) {
+      this.sidebarController.close();
+    }
   }
 
-  private popupClosedByUser(container: HTMLElement) {
+  private popupClosed(container: HTMLElement) {
     // Keep state in sync. Popup can be closed using X sign in LARA. We don't control that.
     // Remove popup from list of opened popups. It will also ensure that Popup component will unmount correctly.
     const { openPopups } = this.state;
