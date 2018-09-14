@@ -31,7 +31,7 @@ Merges into production are deployed to http://glossary-plugin.concord.org.
 
 Other branches are deployed to http://glossary-plugin.concord.org/branch/<name>.
 
-You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/collaborative-learning/branches).
+You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/text-plugins/branches).
 
 ### Testing
 
