@@ -1,9 +1,13 @@
 import { initPlugin, GlossaryPlugin } from "./plugin";
+import * as fetch from "jest-fetch-mock";
+(global as any).fetch = fetch;
 
 describe("LARA plugin initialization", () => {
   // Mock LARA API.
   const LARA = {
-    registerPlugin: jest.fn()
+    registerPlugin: jest.fn(),
+    decorateContent: jest.fn(),
+    addSidebar: jest.fn()
   };
 
   beforeEach(() => {
@@ -17,7 +21,7 @@ describe("LARA plugin initialization", () => {
 });
 
 describe("GlossaryPlugin", () => {
-  it("renders PluginApp component", () => {
+  it("renders PluginApp component", async () => {
     const context = {
       authoredState: "{}",
       learnerState: "",
@@ -25,10 +29,13 @@ describe("GlossaryPlugin", () => {
       div: document.createElement("div")
     };
     const plugin = new GlossaryPlugin(context);
-    expect(plugin.pluginAppComponent).not.toBeNull();
+    // Note that this function doesn't have to be called manually in most cases. Constructor does it,
+    // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+    await plugin.renderPluginApp();
+    expect(plugin.pluginAppComponent).not.toBeUndefined();
   });
 
-  it("provides reasonable fallback state if provided values are malformed", () => {
+  it("provides reasonable fallback state if provided values are malformed", async () => {
     const context = {
       authoredState: "some old unsupported format",
       learnerState: "some old unsupported format",
@@ -36,8 +43,55 @@ describe("GlossaryPlugin", () => {
       div: document.createElement("div")
     };
     const plugin = new GlossaryPlugin(context);
+    // Note that this function doesn't have to be called manually in most cases. Constructor does it,
+    // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+    await plugin.renderPluginApp();
     expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
     expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(false);
     expect(plugin.pluginAppComponent.props.initialLearnerState).toEqual({ definitions: {} });
+  });
+
+  describe("when authored state contains `url` property", () => {
+    beforeEach(() => {
+      fetch.resetMocks();
+    });
+
+    it("fetches JSON at this URL and uses it as an authored state", async () => {
+      const definitions = [{word: "test1", definition: "test 1"}];
+      fetch.mockResponse(JSON.stringify({
+        definitions,
+        askForUserDefinition: true,
+      }));
+      const context = {
+        authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
+        learnerState: "",
+        pluginId: "123",
+        div: document.createElement("div")
+      };
+      const plugin = new GlossaryPlugin(context);
+      // Note that this function doesn't have to be called manually in most cases. Constructor does it,
+      // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+      await plugin.renderPluginApp();
+      expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
+      expect(plugin.pluginAppComponent.props.definitions).toEqual(definitions);
+      expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(true);
+    });
+
+    it("it provides default authored state if response at given URL is malformed", async () => {
+      fetch.mockResponse("malformed response, maybe 404 error");
+      const context = {
+        authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
+        learnerState: "",
+        pluginId: "123",
+        div: document.createElement("div")
+      };
+      const plugin = new GlossaryPlugin(context);
+      // Note that this function doesn't have to be called manually in most cases. Constructor does it,
+      // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+      await plugin.renderPluginApp();
+      expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
+      expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
+      expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(false);
+    });
   });
 });
