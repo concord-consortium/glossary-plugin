@@ -65,6 +65,9 @@ export class GlossaryPlugin {
     this.renderPluginApp();
   }
 
+  // This method is public so tests can call it directly and wait for it to finish.
+  // Note that in such case it will be called twice - by constructor and by test code directly.
+  // It needs to be idempotent.
   public renderPluginApp = async () => {
     const authoredState = await getAuthoredState(this.context);
     const definitions = authoredState.definitions || [];
