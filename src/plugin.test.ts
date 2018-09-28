@@ -56,21 +56,24 @@ describe("GlossaryPlugin", () => {
       fetch.resetMocks();
     });
 
+    const context = {
+      authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
+      learnerState: "",
+      pluginId: "123",
+      div: document.createElement("div")
+    };
+
     it("fetches JSON at this URL and uses it as an authored state", async () => {
       const definitions = [{word: "test1", definition: "test 1"}];
       fetch.mockResponse(JSON.stringify({
         definitions,
         askForUserDefinition: true,
       }));
-      const context = {
-        authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
-        learnerState: "",
-        pluginId: "123",
-        div: document.createElement("div")
-      };
       const plugin = new GlossaryPlugin(context);
       // Note that this function doesn't have to be called manually in most cases. Constructor does it,
       // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+      // Also, it means that this function is being called twice - once by constructor and once here.
+      // But it's designed to be idempotent, so that's fine.
       await plugin.renderPluginApp();
       expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
       expect(plugin.pluginAppComponent.props.definitions).toEqual(definitions);
@@ -79,15 +82,11 @@ describe("GlossaryPlugin", () => {
 
     it("it provides default authored state if response at given URL is malformed", async () => {
       fetch.mockResponse("malformed response, maybe 404 error");
-      const context = {
-        authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
-        learnerState: "",
-        pluginId: "123",
-        div: document.createElement("div")
-      };
       const plugin = new GlossaryPlugin(context);
       // Note that this function doesn't have to be called manually in most cases. Constructor does it,
       // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
+      // Also, it means that this function is being called twice - once by constructor and once here.
+      // But it's designed to be idempotent, so that's fine.
       await plugin.renderPluginApp();
       expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
       expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
