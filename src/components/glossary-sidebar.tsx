@@ -3,6 +3,7 @@ import Definition from "./definition";
 import { IWordDefinition, ILearnerDefinitions } from "./types";
 
 import * as css from "./glossary-sidebar.scss";
+import UserDefinitions from "./user-definitions";
 
 enum Filter {
   AllWords,
@@ -36,7 +37,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
       + (filter === Filter.WithUserDefinitionOnly ? " " + css.activeToggle : "");
     const allWordsClass = css.toggle + (filter === Filter.AllWords ? " " + css.activeToggle : "");
     return (
-      <div>
+      <div className={css.glossarySidebar}>
         {
           // Show toggles only if there's anything to toggle between.
           nonEmptyHash(learnerDefinitions) &&
@@ -64,12 +65,17 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
               <div className={css.definition}>
                 <Definition
                   definition={entry.definition}
-                  userDefinitions={learnerDefinitions[entry.word]}
                   imageUrl={entry.image}
                   videoUrl={entry.video}
                   imageCaption={entry.imageCaption}
                   videoCaption={entry.videoCaption}
                 />
+                {
+                  learnerDefinitions[entry.word] &&
+                  <div className={css.userDefs}>
+                    <UserDefinitions userDefinitions={learnerDefinitions[entry.word]} />
+                  </div>
+                }
               </div>
             </div>
           )

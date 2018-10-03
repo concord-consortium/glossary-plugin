@@ -31,33 +31,59 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  // Custom tweaks
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.5s;
 }
 
-.iconAudio:before {
-  @extend %icon;
-  content: "\e900";
+
+.iconButton {
+  font-size: 1.2em;
+  color: #999;
+  cursor: pointer;
+  margin-left: 10px;
+  &:hover {
+    color: #444;
+  }
 }
-.iconImage:before {
+
+.iconAudio {
   @extend %icon;
-  content: "\e901";
+  &:before {
+    content: "\e900";
+  }
 }
-.iconVideo:before {
+.iconImage {
   @extend %icon;
-  content: "\e902";
+  &:before {
+    content: "\e901";
+  }
 }
-.iconCaret:before {
+.iconVideo {
   @extend %icon;
-  content: "\e904";
+  &:before {
+    content: "\e902";
+  }
 }
-.iconBook:before {
+.iconCaret {
   @extend %icon;
-  content: "\e903";
+  &:before {
+    content: "\e904";
+  }
+  transform: rotate(0);
 }
-.iconRead:before {
+.iconCaretExpanded {
   @extend %icon;
-  content: "\e903";
+  &:before {
+    content: "\e904";
+  }
+  transform: rotate(90deg);
 }
-.iconReading:before {
+.iconBook {
   @extend %icon;
-  content: "\e903";
+  &:before {
+    content: "\e903";
+  }
 }

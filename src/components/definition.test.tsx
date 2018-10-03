@@ -9,23 +9,9 @@ describe("Definition component", () => {
     const wrapper = shallow(
       <Definition
         definition={definition}
-        userDefinitions={[]}
       />
     );
     expect(wrapper.text()).toEqual(expect.stringContaining(definition));
-  });
-
-  it("renders the last user definitions if provided", () => {
-    const fistUserDefinition = "first user definition";
-    const lastUserDefinition = "last user definition";
-    const wrapper = shallow(
-      <Definition
-        definition="test definition"
-        userDefinitions={[ lastUserDefinition ]}
-      />
-    );
-    expect(wrapper.text()).not.toEqual(expect.stringContaining(fistUserDefinition));
-    expect(wrapper.text()).toEqual(expect.stringContaining(lastUserDefinition));
   });
 
   it("doesn't render text-to-speech icon if browser doesn't supports necessary API", () => {
@@ -35,7 +21,6 @@ describe("Definition component", () => {
     const wrapper = shallow(
       <Definition
         definition="test definition"
-        userDefinitions={[]}
       />
     );
     const icon = wrapper.find("." + icons.iconAudio);
@@ -52,7 +37,6 @@ describe("Definition component", () => {
     const wrapper = shallow(
       <Definition
         definition="test definition"
-        userDefinitions={[]}
       />
     );
 
@@ -69,7 +53,6 @@ describe("Definition component", () => {
     const wrapper = shallow(
       <Definition
         definition="test definition"
-        userDefinitions={[]}
         imageUrl={src}
         imageCaption={caption}
       />
@@ -88,7 +71,6 @@ describe("Definition component", () => {
     const wrapper = shallow(
       <Definition
         definition="test definition"
-        userDefinitions={[]}
         videoUrl={"http://test-video.mp4"}
         imageCaption={caption}
       />

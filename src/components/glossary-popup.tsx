@@ -1,5 +1,6 @@
 import * as React from "react";
 import Definition from "./definition";
+import UserDefinitions from "./user-definitions";
 import * as css from "./glossary-popup.scss";
 
 interface IProps {
@@ -29,28 +30,34 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
-    return questionVisible ? this.renderQuestion() : this.renderDefinition();
+    return (
+      <div className={css.glossaryPopup}>
+        {questionVisible ? this.renderQuestion() : this.renderDefinition()}
+      </div>
+    );
   }
 
   private renderDefinition() {
     const { askForUserDefinition, definition, userDefinitions, imageUrl,
       videoUrl, imageCaption, videoCaption } = this.props;
-    const anyUserDef = userDefinitions && userDefinitions.length > 0;
     return (
       <div>
         <Definition
           definition={definition}
-          userDefinitions={askForUserDefinition ? userDefinitions : []}
           imageUrl={imageUrl}
           videoUrl={videoUrl}
           imageCaption={imageCaption}
           videoCaption={videoCaption}
         />
         {
-          askForUserDefinition && anyUserDef &&
-          <div className={css.buttons}>
-            <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
-              Revise my definition
+          askForUserDefinition && userDefinitions && userDefinitions.length > 0 &&
+          <div className={css.userDefs}>
+            <hr />
+            <UserDefinitions userDefinitions={userDefinitions} />
+            <div className={css.buttons}>
+              <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
+                Revise my definition
+              </div>
             </div>
           </div>
         }
@@ -74,11 +81,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         {
           // If user already provided some answer, display them below.
           userDefinitions && userDefinitions.length > 0 &&
-          <div className={css.userDefinitions}>
-            <div>
-              <b>My previous definition:</b>
-            </div>
-            {userDefinitions[userDefinitions.length - 1]}
+          <div className={css.userDefs}>
+            <UserDefinitions userDefinitions={userDefinitions} />
           </div>
         }
         <div className={css.buttons}>
