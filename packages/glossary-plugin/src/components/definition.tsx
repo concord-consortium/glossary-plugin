@@ -4,7 +4,6 @@ import * as icons from "./icons.scss";
 
 interface IProps {
   definition: string;
-  userDefinitions?: string[];
   imageUrl?: string;
   videoUrl?: string;
   imageCaption?: string;
@@ -24,15 +23,12 @@ const textToSpeechAvailable = () => {
 export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
     imageVisible: false,
-    videoVisible: false
+    videoVisible: false,
   };
 
   public render() {
-    const { definition, userDefinitions, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
+    const { definition, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
     const { imageVisible, videoVisible } = this.state;
-    // The logic below is a bit scattered, but at least we don't have to repeat markup too much. And generally
-    // it's not a rocket science, so I wouldn't worry about it too much. The most important is to handle
-    // input and output (calling onUserDefinitionsUpdate) correctly as that's what the plugin code cares about.
     return (
       <div>
           <div>
@@ -40,10 +36,10 @@ export default class Definition extends React.Component<IProps, IState> {
             <span className={css.icons}>
               {
                 textToSpeechAvailable() &&
-                <span className={css.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
+                <span className={icons.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
               }
-              {imageUrl && <span className={css.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
-              {videoUrl && <span className={css.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
+              {imageUrl && <span className={icons.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
+              {videoUrl && <span className={icons.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
             </span>
           </div>
         {
@@ -58,17 +54,6 @@ export default class Definition extends React.Component<IProps, IState> {
           <div className={css.imageContainer}>
             <video src={videoUrl} controls={true}/>
             <div className={css.caption}>{videoCaption}</div>
-          </div>
-        }
-        {
-          // If user already provided some answer, display them below.
-          userDefinitions && userDefinitions.length > 0 &&
-          <div className={css.userDefinitions}>
-            <hr/>
-            <div>
-              <b>My definition:</b>
-            </div>
-            {userDefinitions[userDefinitions.length - 1]}
           </div>
         }
       </div>

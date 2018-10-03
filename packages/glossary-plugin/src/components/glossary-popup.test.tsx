@@ -70,12 +70,12 @@ describe("GlossaryPopup component", () => {
       it("renders user button allowing user to revise his answer", () => {
         const word = "test";
         const definition = "test def";
-        const userDef = "user definition";
+        const userDefinitions = ["user definition"];
         const wrapper = shallow(
           <GlossaryPopup
             word={word}
             definition={definition}
-            userDefinitions={[ userDef ]}
+            userDefinitions={userDefinitions}
             askForUserDefinition={true}
           />
         );
@@ -86,7 +86,8 @@ describe("GlossaryPopup component", () => {
         reviseButton.simulate("click");
         expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));
         expect(wrapper.find("textarea").length).toEqual(1);
-        expect(wrapper.text()).toEqual(expect.stringContaining(userDef));
+        // Finds a component with given properties (UserDefinitions)
+        expect(wrapper.find({userDefinitions}).length).toEqual(1);
       });
     });
   });
