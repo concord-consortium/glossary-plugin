@@ -24,6 +24,14 @@ Example:
 }
 ```
 
+Note that you can define glossary inline or specify URL to a JSON that contains it:
+
+```json
+{
+  "url": "https://example.concord.org/glossary-definiton.json"
+}
+```
+
 ## LARA Plugin URL:
 
 - `http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
