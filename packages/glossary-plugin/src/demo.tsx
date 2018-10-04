@@ -30,7 +30,7 @@ ReactDOM.render(
     imageUrl={img}
     videoUrl={video}
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
-    userDefinitions={["I don't know"]}
+    userDefinitions={["I don't know", "Still not sure", "Something in the ear", "A membrane"]}
     askForUserDefinition={true}
     onUserDefinitionsUpdate={newUserDefinition}
   />,
@@ -53,7 +53,7 @@ ReactDOM.render(
         definition: "A visible mass of condensed watery vapour floating in the atmosphere.",
       }
     ]}
-    learnerDefinitions={{cloud: ["white fluffy thing"]}}
+    learnerDefinitions={{cloud: ["I don't know", "Still not sure", "Something in the air", "White fluffy thing"]}}
   />,
   document.getElementById("sidebar") as HTMLElement
 );

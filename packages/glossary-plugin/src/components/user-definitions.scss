@@ -1,0 +1,21 @@
+.userDefinitions {
+  margin-top: 15px;
+}
+
+.userDefinition {
+  margin-top: 5px;
+}
+
+.userDefinitionHeader {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.remainingUserDefs {
+  transition: max-height 0.5s;
+  max-height: 0;
+  &.expanded {
+    max-height: 1000px;
+    overflow: auto;
+  }
+}
