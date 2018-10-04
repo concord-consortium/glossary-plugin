@@ -152,6 +152,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
       handleColor: "#777",
       width: 450,
       height: 500,
+      padding: 0,
       icon: this.sidebarIconContainer,
       content: this.sidebarContainer,
       onOpen: this.sidebarOpened
