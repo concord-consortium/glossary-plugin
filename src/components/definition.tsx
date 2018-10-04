@@ -23,7 +23,7 @@ const textToSpeechAvailable = () => {
 export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
     imageVisible: false,
-    videoVisible: false,
+    videoVisible: false
   };
 
   public render() {
