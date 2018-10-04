@@ -51,7 +51,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     const { definitions } = this.props;
     this.definitionsByWord = {};
     definitions.forEach(entry => {
-      this.definitionsByWord[entry.word] = entry;
+      this.definitionsByWord[entry.word.toLowerCase()] = entry;
     });
     if (definitions.length === 0) {
       // Nothing to do.
@@ -171,7 +171,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private wordClicked = (evt: Event) => {
     const { PluginAPI } = this.props;
     const wordElement = evt.srcElement;
-    const word = wordElement && wordElement.textContent || "";
+    const word = (wordElement && wordElement.textContent || "").toLowerCase();
     if (!this.definitionsByWord[word]) {
       // Ignore, nothing to do.
       return;
