@@ -98,6 +98,25 @@ describe("PluginApp component", () => {
     expect(wrapper.find(GlossaryPopup).length).toEqual(0);
   });
 
+  it("calls addPopup when a word is clicked, even if starts with a capital letter", () => {
+    const wrapper = shallow(
+      <PluginApp
+        PluginAPI={MockAPI}
+        pluginId={pluginId}
+        definitions={definitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+      />
+    );
+
+    const event = { srcElement: { textContent: testWord.toUpperCase() }};
+    onWordClicked(event);
+
+    expect(MockAPI.addPopup).toHaveBeenCalledTimes(1);
+    expect((wrapper.state("openPopups") as any).length).toEqual(1);
+    expect(wrapper.find(GlossaryPopup).length).toEqual(1);
+  });
+
   it("calls saveLearnerPluginState when learner state is updated", () => {
     const wrapper = shallow(
       <PluginApp
