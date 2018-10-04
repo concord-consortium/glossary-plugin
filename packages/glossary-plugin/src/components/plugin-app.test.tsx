@@ -137,6 +137,9 @@ describe("PluginApp component", () => {
       />
     );
     expect(MockAPI.addSidebar).toHaveBeenCalledTimes(1);
+    // This is important for correct styling when there're many entries in the sidebar. And it's easy
+    // to break / change this style by accident and don't notice any issue. So, add an explicit test.
+    expect(MockAPI.addSidebar.mock.calls[0][0].content.style.maxHeight).toEqual("inherit");
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 

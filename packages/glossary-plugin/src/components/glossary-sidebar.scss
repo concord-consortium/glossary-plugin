@@ -1,5 +1,8 @@
 .glossarySidebar {
   font-size: 16px;
+  max-height: inherit;
+  display: flex;
+  flex-direction: column;
 }
 
 .entry {
@@ -43,4 +46,26 @@
 
 .activeToggle {
   background: #666;
+}
+
+.wordsContainer {
+  overflow: auto;
+}
+
+.groups {
+  text-align: center;
+}
+
+.groupBtn {
+  background: #bbb;
+  color: #fff;
+  cursor: pointer;
+  padding: 2px 5px;
+  display: inline-block;
+  margin: 0 5px;
+  border-radius: 6px;
+
+  &:hover {
+    background: #666;
+  }
 }

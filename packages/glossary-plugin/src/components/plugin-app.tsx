@@ -141,6 +141,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private addSidebar() {
     const { PluginAPI } = this.props;
     this.sidebarContainer = document.createElement("div");
+    // This is important for sidebar UI. Max height enables scrolling of the definitions container.
+    // Exact value is inherited from the container provided by LARA.
+    this.sidebarContainer.style.maxHeight = "inherit";
     this.sidebarIconContainer = document.createElement("div");
     this.sidebarController = PluginAPI.addSidebar({
       handle: "Glossary",
