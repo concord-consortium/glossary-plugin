@@ -15,7 +15,7 @@
   transition: max-height 0.5s;
   max-height: 0;
   &.expanded {
-    max-height: 1000px;
+    max-height: 250px;
     overflow: auto;
   }
 }
