@@ -12,7 +12,8 @@ module.exports = (env, argv) => {
     devtool: 'source-map',
     entry: {
       demo: './src/demo.tsx',
-      plugin: './src/plugin.tsx'
+      plugin: './src/plugin.tsx',
+      authoring: './src/authoring.tsx'
     },
     mode: devMode ? 'development' : 'production',
     output: {
@@ -80,6 +81,10 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         filename: 'index.html',
         template: 'src/demo.html'
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'authoring.html',
+        template: 'src/authoring.html'
       })
     ]
   };

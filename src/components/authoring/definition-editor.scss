@@ -1,0 +1,22 @@
+.editor {
+  width: 600px;
+  background: #f2f2f2;
+  padding: 10px;
+  border-radius: 5px;
+
+  input[type="text"] {
+    width: 300px;
+    font-size: 15px;
+  }
+  textarea {
+    width: 300px;
+    height: 40px;
+    font-size: 15px;
+  }
+}
+
+.error {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: #b4130c;
+}

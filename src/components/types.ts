@@ -1,3 +1,8 @@
+export interface IGlossaryDefinition {
+  askForUserDefinition: boolean;
+  definitions: IWordDefinition[];
+}
+
 export interface IWordDefinition {
   word: string;
   definition: string;
