@@ -1,4 +1,4 @@
-export interface IGlossaryDefinition {
+export interface IGlossary {
   askForUserDefinition: boolean;
   definitions: IWordDefinition[];
 }

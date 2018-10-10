@@ -46,6 +46,7 @@
   },
   "homepage": "https://github.com/concord-consortium/glossary-plugin#readme",
   "devDependencies": {
+    "@types/clone": "^0.1.30",
     "@types/enzyme": "^3.1.13",
     "@types/jest": "^23.3.2",
     "@types/jsdom": "^11.0.6",
@@ -87,6 +88,7 @@
     "react-dom": "^16.4.2"
   },
   "dependencies": {
+    "clone": "^2.1.2",
     "react-json-editor-ajrm": "^2.5.6"
   }
 }
