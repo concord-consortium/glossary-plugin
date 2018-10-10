@@ -85,5 +85,8 @@
   "peerDependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2"
+  },
+  "dependencies": {
+    "react-json-editor-ajrm": "^2.5.6"
   }
 }

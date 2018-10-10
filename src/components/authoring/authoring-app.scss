@@ -15,11 +15,6 @@
     max-width: 500px;
   }
 
-  .help {
-    color: #666;
-    font-size: 0.85em;
-  }
-
   .definitionsTable {
     width: 600px;
     table-layout: fixed;
@@ -60,23 +55,41 @@
 }
 
 .jsonSection {
+  width: 600px;
   display: inline-block;
   vertical-align: top;
-
-  .json {
-    width: 600px;
-    font-family: monospace;
-  }
+  margin-right: 50px;
 }
 
 .preview {
   display: inline-block;
   vertical-align: top;
 
+  .handle {
+    display: inline-block;
+    vertical-align: top;
+    width: 80px;
+    height: 70px;
+    background: #aaa;
+    color: #fff;
+    text-align: center;
+
+    span {
+      margin-top: 7px;
+      font-size: 40px;
+    }
+  }
+
   .sidebar {
+    display: inline-block;
+    vertical-align: top;
     width: 450px;
     max-height: 600px;
-    border: 1px solid #666;
+    border: 1px solid #aaa;
   }
 }
 
+.help {
+  color: #666;
+  font-size: 0.85em;
+}

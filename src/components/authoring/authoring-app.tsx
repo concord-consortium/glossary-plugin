@@ -3,6 +3,8 @@ import DefinitionEditor from "./definition-editor";
 import Button from "./button";
 import {IWordDefinition, IGlossaryDefinition} from "../types";
 import GlossarySidebar from "../glossary-sidebar";
+import JSONEditor from "./json-editor";
+
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
 
@@ -21,6 +23,7 @@ export default class PluginApp extends React.Component<{}, IState> {
 
   public render() {
     const { newDefEditor, askForUserDefinition, definitions, definitionEditors } = this.state;
+
     return (
       <div>
         <div className={css.authoring}>
@@ -76,12 +79,24 @@ export default class PluginApp extends React.Component<{}, IState> {
         </div>
         <div className={css.jsonSection}>
           <h2>Glossary JSON</h2>
-          <pre className={css.json}>
-            {this.getJSON()}
-          </pre>
+          <p><Button label="Copy JSON to Clipboard" onClick={this.copyJSON} /></p>
+          <div className={css.help}>
+            Note that the editor below accepts and displays JS object syntax instead of the JSON notation.
+            Always use button above to copy correctly formatted JSON string.
+          </div>
+          <JSONEditor
+            placeholder={this.getJSON()}
+            onChange={this.handleJSONChange}
+            width="600px"
+            height="400px"
+          />
         </div>
         <div className={css.preview}>
           <h2>Preview</h2>
+          <div className={css.handle}>
+            <span className={icons.iconBook}/>
+            <div>Glossary</div>
+          </div>
           <div className={css.sidebar}>
             <GlossarySidebar
               definitions={definitions}
@@ -94,10 +109,24 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   private getJSON = () => {
-    const { askForUserDefinition, definitions } = this.state
-    return JSON.stringify({
-      askForUserDefinition, definitions
-    }, null, 2);
+    const { askForUserDefinition, definitions } = this.state;
+    return { askForUserDefinition, definitions };
+  }
+
+  private copyJSON = () => {
+    const fakeInput = document.createElement("textarea");
+    fakeInput.value = JSON.stringify(this.getJSON(), null, 2);
+    document.body.appendChild(fakeInput);
+    fakeInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(fakeInput);
+  }
+
+  private handleJSONChange = (data: any) => {
+    this.setState({
+      askForUserDefinition: data.askForUserDefinition,
+      definitions: data.definitions
+    });
   }
 
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
