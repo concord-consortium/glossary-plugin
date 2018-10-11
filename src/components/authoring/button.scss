@@ -1,0 +1,20 @@
+.button {
+  background: #cecece;
+  border-radius: 6px;
+  padding: 5px;
+  cursor: pointer;
+  .icon {
+    margin-right: 5px;
+  }
+  .label {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  &:hover {
+    background: #bebebe;
+  }
+
+  & + & {
+    margin-left: 20px;
+  }
+}

@@ -1,0 +1,95 @@
+.authoring {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 50px;
+  width: 700px;
+
+  input {
+    display: inline-block;
+  }
+
+  label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    max-width: 500px;
+  }
+
+  .definitionsTable {
+    width: 600px;
+    table-layout: fixed;
+    margin-bottom: 20px;
+
+    .wordRow {
+      height: 30px;
+
+      .definitionTxt, .definitionWord {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .definitionWord {
+        width: 100px;
+      }
+
+      .definitionTxt {
+        color: #666;
+        width: 250px;
+      }
+
+      .definitionIcons {
+        width: 80px;
+        span {
+          margin: 5px;
+          font-size: 25px;
+          color: #777;
+        }
+      }
+
+      .definitionButtons {
+        width: 140px;
+      }
+    }
+  }
+}
+
+.jsonSection {
+  width: 600px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 50px;
+}
+
+.preview {
+  display: inline-block;
+  vertical-align: top;
+
+  .handle {
+    display: inline-block;
+    vertical-align: top;
+    width: 80px;
+    height: 70px;
+    background: #aaa;
+    color: #fff;
+    text-align: center;
+
+    span {
+      margin-top: 7px;
+      font-size: 40px;
+    }
+  }
+
+  .sidebar {
+    display: inline-block;
+    vertical-align: top;
+    width: 450px;
+    max-height: 600px;
+    border: 1px solid #aaa;
+  }
+}
+
+.help {
+  color: #666;
+  font-size: 0.85em;
+}

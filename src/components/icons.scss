@@ -87,3 +87,15 @@
     content: "\e903";
   }
 }
+.iconPlus {
+  @extend %icon;
+  &:before {
+    content: "\ea0a";
+  }
+}
+.iconCross {
+  @extend %icon;
+  &:before {
+    content: "\ea0f";
+  }
+}
