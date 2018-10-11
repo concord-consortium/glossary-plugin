@@ -7,7 +7,7 @@ import schema from "../../glossary-definition-schema";
 import * as css from "./json-editor.scss";
 
 interface IProps {
-  placeholder?: object;
+  initialValue?: object;
   onChange?: (jsObject: object) => void;
   width: string;
   height: string;
@@ -31,20 +31,20 @@ export default class JSONEditor extends React.Component<IProps, IState> {
   private validateSchema = this.ajv.compile(schema);
 
   public componentDidUpdate(prevProps: IProps) {
-    if (prevProps.placeholder !== this.props.placeholder) {
-      this.validate(this.props.placeholder);
+    if (prevProps.initialValue !== this.props.initialValue) {
+      this.validate(this.props.initialValue);
     }
   }
 
   public render() {
-    const { placeholder, width, height } = this.props;
+    const { initialValue, width, height } = this.props;
     const { schemaError } = this.state;
     return (
       <div className={css.jsonEditor}>
         {schemaError && <div className={css.schemaError}>{schemaError}</div>}
         <JSONInput
           id={this.id}
-          placeholder={placeholder}
+          placeholder={initialValue}
           locale={locale}
           onChange={this.handleJSONChange}
           width={width}

@@ -38,6 +38,9 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
               <td>{initialDefinition ? "Edit word" : "Word"}</td>
               <td>
                 {
+                  // When `initialDefinition` is present, it means that user is editing existing definition.
+                  // Otherwise, he's adding a new one. Let users edit "word" only while they're adding a new one.
+                  // If they could edit "word", duplicate entries and conflicts could happen.
                   initialDefinition ?
                     initialDefinition.word :
                     <input type="text" name="word" value={definition.word} onChange={this.handleInputChange}/>

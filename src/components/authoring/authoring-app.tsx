@@ -89,7 +89,7 @@ export default class PluginApp extends React.Component<{}, IState> {
             Always use button above to copy correctly formatted JSON string.
           </div>
           <JSONEditor
-            placeholder={glossary}
+            initialValue={glossary}
             onChange={this.handleJSONChange}
             width="600px"
             height="400px"
@@ -147,9 +147,7 @@ export default class PluginApp extends React.Component<{}, IState> {
     const glossary: IGlossary = clone(this.state.glossary);
     const definitionEditors = clone(this.state.definitionEditors);
     const existingDefIdx = glossary.definitions.map(d => d.word).indexOf(newDef.word);
-    if (existingDefIdx !== -1) {
-      glossary.definitions.splice(existingDefIdx, 1, newDef);
-    }
+    glossary.definitions.splice(existingDefIdx, 1, newDef);
     // Disable editor.
     definitionEditors[newDef.word] = false;
     this.setState({ glossary, definitionEditors });
