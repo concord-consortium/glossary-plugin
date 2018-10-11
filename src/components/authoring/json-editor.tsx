@@ -32,7 +32,7 @@ export default class JSONEditor extends React.Component<IProps, IState> {
 
   public componentDidUpdate(prevProps: IProps) {
     if (prevProps.initialValue !== this.props.initialValue) {
-      this.validate(this.props.initialValue);
+      this.validateAndNotify(this.props.initialValue);
     }
   }
 
@@ -55,17 +55,18 @@ export default class JSONEditor extends React.Component<IProps, IState> {
   }
 
   private handleJSONChange = (data: any) => {
-    const { onChange } = this.props;
-    if (!onChange) {
-      return;
-    }
     if (!data.jsObject) {
       // There is some syntax error. Docs:
       // https://github.com/AndrewRedican/react-json-editor-ajrm#content-values
       return;
     }
-    if (this.validate(data.jsObject)) {
-      onChange(data.jsObject);
+    this.validateAndNotify(data.jsObject);
+  }
+
+  private validateAndNotify = (data: any) => {
+    const { onChange } = this.props;
+    if (this.validate(data) && onChange) {
+      onChange(data);
     }
   }
 
