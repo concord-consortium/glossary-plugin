@@ -65,30 +65,44 @@ export default class PluginApp extends React.Component<{}, IState> {
     const { askForUserDefinition, definitions } = glossary;
     return (
       <div>
-        <table className={css.s3Details}>
-          <tbody>
-          <tr>
-            <td>Glossary Name</td>
-            <td><input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/></td>
-          </tr>
-          <tr>
-            <td>S3 Access Key</td>
-            <td><input value={s3AccessKey} type="text" name="s3AccessKey" onChange={this.handleInputChange}/></td>
-          </tr>
-          <tr>
-            <td>S3 Secret Key</td>
-            <td><input value={s3SecretKey} type="text" name="s3SecretKey" onChange={this.handleInputChange}/></td>
-          </tr>
-          </tbody>
-        </table>
-        <p>
-          <Button label="Save" disabled={!this.s3FeaturesAvailable} onClick={this.uploadJSONToS3}/>
-          <Button label="Load" disabled={!this.s3FeaturesAvailable} onClick={this.loadJSONFromS3}/>
-        </p>
-        <div className={css.s3Status}>
-          {s3Status}
+        <div>
+          <table className={css.s3Details}>
+            <tbody>
+            <tr>
+              <td>Glossary Name</td>
+              <td><input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/></td>
+            </tr>
+            <tr>
+              <td>S3 Access Key</td>
+              <td><input value={s3AccessKey} type="text" name="s3AccessKey" onChange={this.handleInputChange}/></td>
+            </tr>
+            <tr>
+              <td>S3 Secret Key</td>
+              <td><input value={s3SecretKey} type="text" name="s3SecretKey" onChange={this.handleInputChange}/></td>
+            </tr>
+            </tbody>
+          </table>
+          <p>
+            <Button label="Save" disabled={!this.s3FeaturesAvailable} onClick={this.uploadJSONToS3}/>
+            <Button label="Load" disabled={!this.s3FeaturesAvailable} onClick={this.loadJSONFromS3}/>
+          </p>
+          <div className={css.s3Status}>
+            {s3Status}
+          </div>
+          <br/>
         </div>
-        <br/>
+        {
+          glossaryName &&
+          <div>
+            <h2>LARA Plugin State</h2>
+            <div className={css.help}>
+              Copy this snippet into LARA Plugin Authored state field. Remember to save your changes.
+            </div>
+            <div className={css.laraPluginState}>
+              {this.LARAPluginState}
+            </div>
+          </div>
+        }
         <div className={css.authoring}>
           <h2>Glossary Authoring</h2>
           <input type="checkbox" checked={askForUserDefinition} onChange={this.handleAskForUserDefChange}/>
@@ -184,6 +198,10 @@ export default class PluginApp extends React.Component<{}, IState> {
   private get glossaryJSON() {
     const { glossary } = this.state;
     return JSON.stringify(glossary, null, 2);
+  }
+
+  private get LARAPluginState() {
+    return JSON.stringify({ url: s3Url({filename: this.glossaryFilename, dir: JSON_S3_DIR })}, null, 2);
   }
 
   private copyJSON = () => {
