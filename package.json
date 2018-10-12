@@ -88,7 +88,8 @@
     "react-dom": "^16.4.2"
   },
   "dependencies": {
-    "amazon-s3-uri": "0.0.3",
+    "ajv": "^6.5.4",
+    "ajv-keywords": "^3.2.0",
     "aws-sdk": "^2.332.0",
     "clone": "^2.1.2",
     "react-json-editor-ajrm": "^2.5.6"

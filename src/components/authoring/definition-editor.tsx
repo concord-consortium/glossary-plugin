@@ -2,6 +2,7 @@ import * as React from "react";
 import * as css from "./definition-editor.scss";
 import { IWordDefinition } from "../types";
 import Button from "./button";
+import { validateDefinition } from "../../utils/validate-glossary";
 
 interface IProps {
   onSave: (definition: IWordDefinition) => void;
@@ -14,15 +15,25 @@ interface IState {
   error: string;
 }
 
+const removeEmptyProps = (obj: any) => {
+  const result: any = {};
+  Object.keys(obj).forEach(key => {
+    if (obj[key] !== "") {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+};
+
 export default class DefinitionEditor extends React.Component<IProps, IState> {
   public state: IState = {
-    definition: this.props.initialDefinition || {
-      word: "",
-      definition: "",
-      image: "",
-      imageCaption: "",
-      video: "",
-      videoCaption: ""
+    definition: {
+      word: this.props.initialDefinition && this.props.initialDefinition.word || "",
+      definition: this.props.initialDefinition && this.props.initialDefinition.definition || "",
+      image: this.props.initialDefinition && this.props.initialDefinition.image || "",
+      imageCaption: this.props.initialDefinition && this.props.initialDefinition.imageCaption || "",
+      video: this.props.initialDefinition && this.props.initialDefinition.video || "",
+      videoCaption: this.props.initialDefinition && this.props.initialDefinition.videoCaption || ""
     },
     error: ""
   };
@@ -95,14 +106,13 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
 
   private handleSave = () => {
     const { definition } = this.state;
-    if (!definition.word) {
-      this.setState({error: 'Missing "word" property'});
+    // Note that we don't want empty strings to be present in definition. JSON Schema validation would fail.
+    const processedDef = removeEmptyProps(definition);
+    const validation = validateDefinition(processedDef);
+    if (!validation.valid) {
+      this.setState({error: validation.error});
       return;
     }
-    if (!definition.definition) {
-      this.setState({error: 'Missing "definition" property'});
-      return;
-    }
-    this.props.onSave(definition);
+    this.props.onSave(processedDef);
   }
 }
