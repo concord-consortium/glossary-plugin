@@ -39,13 +39,17 @@ const DEFAULT_GLOSSARY = {
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
 
+const getNewGlossaryName = () => {
+  return `New_Glossary_${new Date().getTime()}`;
+}
+
 export default class PluginApp extends React.Component<{}, IState> {
   public state: IState = {
     glossary: DEFAULT_GLOSSARY,
     jsonEditorContent: DEFAULT_GLOSSARY,
     newDefEditor: false,
     definitionEditors: {},
-    glossaryName: getURLParam(GLOSSARY_NAME) || localStorage.getItem(GLOSSARY_NAME) || "",
+    glossaryName: getURLParam(GLOSSARY_NAME) || localStorage.getItem(GLOSSARY_NAME) || getNewGlossaryName(),
     s3AccessKey: getURLParam(S3_ACCESS) || localStorage.getItem(S3_ACCESS) || "",
     // Don't let users set S3 Secret Key using URL, so they don't share it by accident.
     s3SecretKey: localStorage.getItem(S3_SECRET) || "",
@@ -69,8 +73,9 @@ export default class PluginApp extends React.Component<{}, IState> {
           <table className={css.s3Details}>
             <tbody>
             <tr>
-              <td>Glossary Name</td>
-              <td><input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/></td>
+              <td colSpan={2} className={css.title}>
+                <input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/>
+              </td>
             </tr>
             <tr>
               <td>S3 Access Key</td>
@@ -89,7 +94,6 @@ export default class PluginApp extends React.Component<{}, IState> {
           <div className={css.s3Status}>
             {s3Status}
           </div>
-          <br/>
         </div>
         {
           glossaryName &&

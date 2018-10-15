@@ -27,14 +27,14 @@ const removeEmptyProps = (obj: any) => {
 
 export default class DefinitionEditor extends React.Component<IProps, IState> {
   public state: IState = {
-    definition: {
-      word: this.props.initialDefinition && this.props.initialDefinition.word || "",
-      definition: this.props.initialDefinition && this.props.initialDefinition.definition || "",
-      image: this.props.initialDefinition && this.props.initialDefinition.image || "",
-      imageCaption: this.props.initialDefinition && this.props.initialDefinition.imageCaption || "",
-      video: this.props.initialDefinition && this.props.initialDefinition.video || "",
-      videoCaption: this.props.initialDefinition && this.props.initialDefinition.videoCaption || ""
-    },
+    definition: Object.assign({
+      word: "",
+      definition: "",
+      image: "",
+      imageCaption: "",
+      video: "",
+      videoCaption: ""
+    }, this.props.initialDefinition),
     error: ""
   };
 
