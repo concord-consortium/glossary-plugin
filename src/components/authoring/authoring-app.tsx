@@ -39,9 +39,7 @@ const DEFAULT_GLOSSARY = {
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
 
-const getNewGlossaryName = () => {
-  return `New_Glossary_${new Date().getTime()}`;
-}
+const getNewGlossaryName = () => `New_Glossary_${new Date().getTime()}`;
 
 export default class PluginApp extends React.Component<{}, IState> {
   public state: IState = {

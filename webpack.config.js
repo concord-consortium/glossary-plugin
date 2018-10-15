@@ -2,7 +2,7 @@
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production';
@@ -78,14 +78,9 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: "plugin.css"
       }),
-      new HtmlWebpackPlugin({
-        filename: 'index.html',
-        template: 'src/demo.html'
-      }),
-      new HtmlWebpackPlugin({
-        filename: 'authoring.html',
-        template: 'src/authoring.html'
-      })
+      new CopyWebpackPlugin([
+        {from: 'src/public'}
+      ])
     ]
   };
 };
