@@ -125,6 +125,8 @@ export default class PluginApp extends React.Component<{}, IState> {
                       <DefinitionEditor
                         key={def.word}
                         initialDefinition={def}
+                        s3AccessKey={s3AccessKey}
+                        s3SecretKey={s3SecretKey}
                         onSave={this.editDef}
                         onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
                       />
@@ -153,6 +155,8 @@ export default class PluginApp extends React.Component<{}, IState> {
             <DefinitionEditor
               onCancel={this.toggleNewDef}
               onSave={this.addNewDef}
+              s3AccessKey={s3AccessKey}
+              s3SecretKey={s3SecretKey}
             />
           }
         </div>
