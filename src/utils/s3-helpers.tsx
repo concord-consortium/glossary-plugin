@@ -3,7 +3,8 @@ import * as AWS from "aws-sdk";
 const S3_BUCKET = "models-resources";
 const S3_DIR_PREFIX = "glossary-resources";
 const S3_REGION = "us-east-1";
-const CLOUDFRONT = "https://models-resources.concord.org";
+const CLOUDFRONT_URL = "https://models-resources.concord.org";
+const CLOUDFRONT_DISTRIBUTION = "E1QHTGVGYD1DWZ";
 
 interface IParams {
   dir: string;
@@ -21,9 +22,10 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
     });
+    const key = `${S3_DIR_PREFIX}/${dir}/${filename}`;
     s3.upload({
       Bucket: S3_BUCKET,
-      Key: `${S3_DIR_PREFIX}/${dir}/${filename}`,
+      Key: key,
       Body: body,
       ACL: "public-read",
       ContentType: contentType
@@ -32,7 +34,31 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
         reject(err.message);
       } else {
         // Construct custom Cloudfront URL instead of the direct S3 URL.
-        resolve(`${CLOUDFRONT}/${data.Key}`);
+        resolve(`${CLOUDFRONT_URL}/${data.Key}`);
+      }
+    });
+    // Invalidate Cloudfront path too.
+    const cf = new AWS.CloudFront({
+      accessKeyId: accessKey,
+      secretAccessKey: secretKey
+    });
+    cf.createInvalidation({
+      DistributionId: CLOUDFRONT_DISTRIBUTION,
+      InvalidationBatch: {
+        CallerReference: new Date().getTime().toString(),
+        Paths: {
+          Quantity: 1,
+          Items: [
+            "/" + key
+          ]
+        }
+      }
+    }, (err) => {
+      if (err) {
+        // Invalidation problem (unlikely) doesn't seem to be so important to fail the whole saving process.
+        // Just log an error.
+        // tslint:disable-next-line:no-console
+        console.error("Cloudfront invalidation failed", err);
       }
     });
   });
@@ -40,5 +66,5 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
 
 // In fact it returns Cloudfront URL pointing to a given object in S3 bucket.
 export function s3Url({ filename, dir }: { filename: string; dir: string}) {
-  return `${CLOUDFRONT}/${S3_DIR_PREFIX}/${dir}/${filename}`;
+  return `${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/${dir}/${filename}`;
 }

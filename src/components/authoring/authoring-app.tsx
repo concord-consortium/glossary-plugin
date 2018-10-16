@@ -39,15 +39,13 @@ const DEFAULT_GLOSSARY = {
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
 
-const getNewGlossaryName = () => `New_Glossary_${new Date().getTime()}`;
-
 export default class PluginApp extends React.Component<{}, IState> {
   public state: IState = {
     glossary: DEFAULT_GLOSSARY,
     jsonEditorContent: DEFAULT_GLOSSARY,
     newDefEditor: false,
     definitionEditors: {},
-    glossaryName: getURLParam(GLOSSARY_NAME) || localStorage.getItem(GLOSSARY_NAME) || getNewGlossaryName(),
+    glossaryName: getURLParam(GLOSSARY_NAME) || "",
     s3AccessKey: getURLParam(S3_ACCESS) || localStorage.getItem(S3_ACCESS) || "",
     // Don't let users set S3 Secret Key using URL, so they don't share it by accident.
     s3SecretKey: localStorage.getItem(S3_SECRET) || "",
@@ -70,8 +68,9 @@ export default class PluginApp extends React.Component<{}, IState> {
         <div>
           <table className={css.s3Details}>
             <tbody>
-            <tr>
-              <td colSpan={2} className={css.title}>
+            <tr className={css.name}>
+              <td>Glossary Name</td>
+              <td>
                 <input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/>
               </td>
             </tr>
@@ -280,8 +279,15 @@ export default class PluginApp extends React.Component<{}, IState> {
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Loading JSON...")
     });
+    const response = await fetch(s3Url({ dir: JSON_S3_DIR, filename: this.glossaryFilename }));
+    if (response.status !== 200) {
+      this.setState({
+        s3ActionInProgress: false,
+        s3Status: getStatusTxt("Loading JSON failed" )
+      });
+      return;
+    }
     try {
-      const response = await fetch(s3Url({ dir: JSON_S3_DIR, filename: this.glossaryFilename }));
       const textResponse = await response.text();
       const json = JSON.parse(textResponse);
       this.setState({
@@ -289,6 +295,8 @@ export default class PluginApp extends React.Component<{}, IState> {
         s3Status: getStatusTxt("Loading JSON: success!"),
         jsonEditorContent: json
       });
+      // Update glossary definition only if it's valid. Otherwise, only JSON editor is updated and
+      // an author can fix possible errors.
       if (validateGlossary(json).valid) {
         this.setState({
           glossary: json
@@ -297,7 +305,7 @@ export default class PluginApp extends React.Component<{}, IState> {
     } catch (error) {
       this.setState({
         s3ActionInProgress: false,
-        s3Status: getStatusTxt("Loading JSON failed: unexpected/malformed content"),
+        s3Status: getStatusTxt("Loading JSON failed: unexpected/malformed content")
       });
     }
   }
