@@ -171,14 +171,20 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     if (!files[0]) {
       return;
     }
-    this.setState({ imageFile: files[0] });
+    const { definition } = this.state;
+    // Cleanup anything that user typed into "Image URL" field before to avoid subtle bugs (e.g. when this string
+    // doesn't pass validation).
+    this.setState({ imageFile: files[0], definition: Object.assign({}, definition, {image: ""}) });
   }
 
   private handleVideoDrop = (files: File[]) => {
     if (!files[0]) {
       return;
     }
-    this.setState({ videoFile: files[0] });
+    const { definition } = this.state;
+    // Cleanup anything that user typed into "Video URL" field before to avoid subtle bugs (e.g. when this string
+    // doesn't pass validation).
+    this.setState({ videoFile: files[0], definition: Object.assign({}, definition, {video: ""}) });
   }
 
   private handleSave = async () => {
@@ -232,7 +238,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
           accessKey: s3AccessKey,
           secretKey: s3SecretKey,
           body: file,
-          contentType: file.type
+          contentType: file.type,
+          cache: true
         });
         this.setState({
           uploadInProgress: false,
