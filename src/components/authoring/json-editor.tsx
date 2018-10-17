@@ -51,7 +51,7 @@ export default class JSONEditor extends React.Component<IProps, IState> {
     );
   }
 
-  private handleJSONChange = (data: any) => {
+  public handleJSONChange = (data: any) => {
     if (!data.jsObject) {
       // There is some syntax error. Docs:
       // https://github.com/AndrewRedican/react-json-editor-ajrm#content-values

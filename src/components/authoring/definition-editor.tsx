@@ -7,7 +7,7 @@ import Dropzone from "react-dropzone";
 import { v1 as uuid } from "uuid";
 import { s3Upload } from "../../utils/s3-helpers";
 
-const MEDIA_S3_DIR = "media";
+export const MEDIA_S3_DIR = "media";
 
 interface IProps {
   onSave: (definition: IWordDefinition) => void;
@@ -154,10 +154,43 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
           <div>{uploadStatus}</div>
           <div>{error}</div>
         </div>
-        <Button disabled={uploadInProgress} label="Save" onClick={this.handleSave}/>
-        <Button disabled={uploadInProgress} label="Cancel" onClick={onCancel}/>
+        <Button disabled={uploadInProgress} data-cy="save" label="Save" onClick={this.handleSave}/>
+        <Button disabled={uploadInProgress} data-cy="cancel" label="Cancel" onClick={onCancel}/>
       </div>
     );
+  }
+
+  // Type is either "image" or "video".
+  public uploadMedia =  async (file: File) => {
+    const { s3AccessKey, s3SecretKey } = this.props;
+    this.setState({
+      uploadInProgress: true,
+      uploadStatus: `Uploading ${file.name}... Please wait.`
+    });
+    try {
+      const url = await s3Upload({
+        dir: MEDIA_S3_DIR,
+        filename: uuid() + "-" + file.name,
+        accessKey: s3AccessKey,
+        secretKey: s3SecretKey,
+        body: file,
+        contentType: file.type,
+        cacheControl: "max-age=31536000" // 1 year
+      });
+      this.setState({
+        uploadInProgress: false,
+        uploadStatus: ""
+      });
+      return url;
+    } catch (e) {
+      // Cleanup state managed by this helper.
+      this.setState({
+        uploadInProgress: false,
+        uploadStatus: `Uploading ${file.name} failed. Please try again.`
+      });
+      // Rethrow error, so we can interrupt saving too.
+      throw e;
+    }
   }
 
   private handleInputChange = (event: React.ChangeEvent) => {
@@ -190,7 +223,7 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
   private handleSave = async () => {
     // Hide old errors first.
     this.setState({error: ""});
-    const { definition } = this.state;
+    const { definition, videoFile, imageFile } = this.state;
     // Definition passed to a parent has a bit different format that internally stored object that is used
     // to control text inputs.
     let finalDefinition = Object.assign({}, definition);
@@ -202,60 +235,26 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       return;
     }
     // Now, handle media upload if necessary.
-    let image;
-    let video;
-    try {
-      image = await this.uploadMedia("image");
-      video = await this.uploadMedia("video");
-    } catch (e) {
-      // Upload failed. Interrupt saving process.
-      this.setState({error: e});
-      return;
-    }
-    if (image) {
-      finalDefinition = Object.assign(finalDefinition, { image });
-    }
-    if (video) {
-      finalDefinition = Object.assign(finalDefinition, { video });
-    }
-    this.props.onSave(finalDefinition);
-  }
-
-  // Type is either "image" or "video".
-  private uploadMedia =  async (type: string) => {
-    const { imageFile, videoFile } = this.state;
-    const { s3AccessKey, s3SecretKey } = this.props;
-    const file = type === "image" ? imageFile : videoFile;
-    if (file) {
-      this.setState({
-        uploadInProgress: true,
-        uploadStatus: `Uploading ${type}... Please wait.`
-      });
+    if (imageFile) {
       try {
-        const url = await s3Upload({
-          dir: MEDIA_S3_DIR,
-          filename: uuid() + "-" + file.name,
-          accessKey: s3AccessKey,
-          secretKey: s3SecretKey,
-          body: file,
-          contentType: file.type,
-          cacheControl: "max-age=31536000" // 1 year
-        });
-        this.setState({
-          uploadInProgress: false,
-          uploadStatus: ""
-        });
-        return url;
+        const image = await this.uploadMedia(imageFile);
+        finalDefinition = Object.assign(finalDefinition, { image });
       } catch (e) {
-        // Cleanup state managed by this helper.
-        this.setState({
-          uploadInProgress: false,
-          uploadStatus: `Uploading ${type} failed. Please try again.`
-        });
-        // Rethrow error, so we can interrupt saving too.
-        throw e;
+        // Upload failed. Interrupt saving process.
+        this.setState({error: e});
+        return;
       }
     }
-    return null;
+    if (videoFile) {
+      try {
+        const video = await this.uploadMedia(videoFile);
+        finalDefinition = Object.assign(finalDefinition, { video });
+      } catch (e) {
+        // Upload failed. Interrupt saving process.
+        this.setState({error: e});
+        return;
+      }
+    }
+    this.props.onSave(finalDefinition);
   }
 }
