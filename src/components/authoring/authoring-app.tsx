@@ -261,7 +261,7 @@ export default class PluginApp extends React.Component<{}, IState> {
       secretKey: s3SecretKey,
       body: this.glossaryJSON,
       contentType: "application/json",
-      cache: false
+      cacheControl: "no-cache"
     }).then(() => {
       this.setState({
         s3ActionInProgress: false,

@@ -12,10 +12,10 @@ interface IParams {
   secretKey: string;
   body: AWS.S3.Types.Body;
   contentType?: string;
-  cache?: boolean;
+  cacheControl?: string;
 }
 
-export function s3Upload({ dir, filename, accessKey, secretKey, body, contentType = "", cache = false }: IParams) {
+export function s3Upload({ dir, filename, accessKey, secretKey, body, contentType = "", cacheControl = "" }: IParams) {
   const s3 = new AWS.S3({
     region: S3_REGION,
     accessKeyId: accessKey,
@@ -27,10 +27,11 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
     Key: key,
     Body: body,
     ACL: "public-read",
-    ContentType: contentType
+    ContentType: contentType,
+    CacheControl: cacheControl
   }).promise()
     .then(data => {
-      return cache ? `${CLOUDFRONT_URL}/${data.Key}` : data.Location;
+      return `${CLOUDFRONT_URL}/${data.Key}`;
     })
     .catch(error => {
       throw(error.message);
@@ -38,8 +39,6 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
 }
 
 // In fact it returns Cloudfront URL pointing to a given object in S3 bucket.
-export function s3Url({ filename, dir, cache = false }: { filename: string; dir: string; cache?: boolean }) {
-  return cache ?
-    `${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/${dir}/${filename}` :
-    `https://${S3_BUCKET}.s3.amazonaws.com/${S3_DIR_PREFIX}/${dir}/${filename}`;
+export function s3Url({ filename, dir }: { filename: string; dir: string; }) {
+  return `${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/${dir}/${filename}`;
 }

@@ -239,7 +239,7 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
           secretKey: s3SecretKey,
           body: file,
           contentType: file.type,
-          cache: true
+          cacheControl: "max-age=31536000" // 1 year
         });
         this.setState({
           uploadInProgress: false,
