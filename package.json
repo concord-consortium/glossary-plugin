@@ -27,6 +27,7 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "testURL": "https://glossary-test.unexisting.url.com",
     "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.js",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"

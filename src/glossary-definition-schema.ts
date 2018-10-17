@@ -1,6 +1,7 @@
 // Generated using https://www.jsonschema.net/
 // It can infer schema from the example. Then, it's easy to modify initial schema.
 
+/* tslint:disable */
 export default {
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -101,4 +102,4 @@ export default {
       }
     }
   }
-}
+};

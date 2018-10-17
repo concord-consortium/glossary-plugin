@@ -1,11 +1,11 @@
 import * as AWS from "aws-sdk";
 
-const S3_BUCKET = "models-resources";
-const S3_DIR_PREFIX = "glossary-resources";
-const S3_REGION = "us-east-1";
-const CLOUDFRONT_URL = "https://models-resources.concord.org";
+export const S3_BUCKET = "models-resources";
+export const S3_DIR_PREFIX = "glossary-resources";
+export const S3_REGION = "us-east-1";
+export const CLOUDFRONT_URL = "https://models-resources.concord.org";
 
-interface IParams {
+export interface IParams {
   dir: string;
   filename: string;
   accessKey: string;
