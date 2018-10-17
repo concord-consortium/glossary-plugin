@@ -4,6 +4,17 @@ import * as icons from "./icons.scss";
 import { shallow } from "enzyme";
 
 describe("Definition component", () => {
+  const speechSynthesisMock = {
+    speak: jest.fn()
+  };
+  const SpeechSynthesisUtteranceMock = jest.fn();
+  beforeEach(() => {
+    speechSynthesisMock.speak.mockClear();
+    SpeechSynthesisUtteranceMock.mockClear();
+    (window as any).speechSynthesis = speechSynthesisMock;
+    (window as any).SpeechSynthesisUtterance = SpeechSynthesisUtteranceMock;
+  });
+
   it("renders provided definition", () => {
     const definition = "test definition";
     const wrapper = shallow(
@@ -28,18 +39,11 @@ describe("Definition component", () => {
   });
 
   it("renders text-to-speech icon if browser supports necessary API", () => {
-    const speechSynthesisMock = {
-      speak: jest.fn()
-    };
-    const SpeechSynthesisUtteranceMock = jest.fn();
-    (window as any).speechSynthesis = speechSynthesisMock;
-    (window as any).SpeechSynthesisUtterance = SpeechSynthesisUtteranceMock;
     const wrapper = shallow(
       <Definition
         definition="test definition"
       />
     );
-
     const icon = wrapper.find("." + icons.iconAudio);
     expect(icon.length).toEqual(1);
     icon.simulate("click");
@@ -63,6 +67,8 @@ describe("Definition component", () => {
     icon.simulate("click");
     expect(wrapper.find(`img[src='${src}']`).length).toEqual(1);
     expect(wrapper.text()).toEqual(expect.stringContaining(caption));
+    // Audio: definition + image caption.
+    expect(wrapper.find("." + icons.iconAudio).length).toEqual(2);
   });
 
   it("renders video icon if videoUrl is provided and opens video when the icon is clicked", () => {
@@ -72,7 +78,7 @@ describe("Definition component", () => {
       <Definition
         definition="test definition"
         videoUrl={"http://test-video.mp4"}
-        imageCaption={caption}
+        videoCaption={caption}
       />
     );
     const icon = wrapper.find("." + icons.iconVideo);
@@ -80,5 +86,7 @@ describe("Definition component", () => {
     expect(wrapper.find(`video[src='${src}']`).length).toEqual(0);
     icon.simulate("click");
     expect(wrapper.find(`video[src='${src}']`).length).toEqual(1);
+    // Audio: definition + video caption.
+    expect(wrapper.find("." + icons.iconAudio).length).toEqual(2);
   });
 });
