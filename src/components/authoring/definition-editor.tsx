@@ -2,34 +2,68 @@ import * as React from "react";
 import * as css from "./definition-editor.scss";
 import { IWordDefinition } from "../types";
 import Button from "./button";
+import { validateDefinition } from "../../utils/validate-glossary";
+import Dropzone from "react-dropzone";
+import { v1 as uuid } from "uuid";
+import { s3Upload } from "../../utils/s3-helpers";
+
+const MEDIA_S3_DIR = "media";
 
 interface IProps {
   onSave: (definition: IWordDefinition) => void;
   onCancel: () => void;
+  s3AccessKey: string;
+  s3SecretKey: string;
   initialDefinition?: IWordDefinition;
 }
 
 interface IState {
   definition: IWordDefinition;
+  imageFile: File | null;
+  videoFile: File | null;
+  uploadInProgress: boolean;
+  uploadStatus: string;
   error: string;
 }
 
+const removeEmptyProps = (obj: any) => {
+  const result: any = {};
+  Object.keys(obj).forEach(key => {
+    if (obj[key] !== "") {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+};
+
+const wrongFileTypeAlert = (rejected: File[]) => {
+  alert(`File ${rejected[0].name} can't be uploaded. Please use one of the supported file types.`);
+};
+
 export default class DefinitionEditor extends React.Component<IProps, IState> {
   public state: IState = {
-    definition: this.props.initialDefinition || {
+    definition: Object.assign({
       word: "",
       definition: "",
       image: "",
       imageCaption: "",
       video: "",
       videoCaption: ""
-    },
+    }, this.props.initialDefinition),
+    imageFile: null,
+    videoFile: null,
+    uploadInProgress: false,
+    uploadStatus: "",
     error: ""
   };
 
   public render() {
     const { onCancel, initialDefinition } = this.props;
-    const { definition, error } = this.state;
+    const { definition, error, imageFile, videoFile, uploadStatus, uploadInProgress } = this.state;
+    // imageFile is a custom file selected by user.
+    const image = imageFile ? `[file to upload]: ${imageFile.name}` : definition.image;
+    // videoFile is a custom file selected by user.
+    const video = videoFile ? `[file to upload]: ${videoFile.name}` : definition.video;
     return (
       <div className={css.editor}>
         <table>
@@ -53,7 +87,26 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
             </tr>
             <tr>
               <td>Image URL</td>
-              <td><input type="text" value={definition.image} name="image" onChange={this.handleInputChange}/></td>
+              <td><input type="text" value={image} name="image" onChange={this.handleInputChange}/></td>
+            </tr>
+            <tr>
+              <td/>
+              <td>
+                <Dropzone
+                  className={css.dropzone}
+                  activeClassName={css.dropzoneActive}
+                  rejectClassName={css.dropzoneReject}
+                  accept="image/png, image/jpeg, image/gif, image/svg+xml, image/webp"
+                  multiple={false}
+                  onDropAccepted={this.handleImageDrop}
+                  onDropRejected={wrongFileTypeAlert}
+                >
+                  Drop an image here, or click to select a file to upload. Only popular image formats are supported
+                  (e.g. png, jpeg, gif, svg, webp).
+                </Dropzone>
+                {/* If user selects a new local file to upload, clear preview to avoid confusion */}
+                {image && !imageFile && <img src={image}/>}
+              </td>
             </tr>
             <tr>
               <td>Image caption</td>
@@ -66,7 +119,25 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
             </tr>
             <tr>
               <td>Video URL</td>
-              <td><input type="text" value={definition.video} name="video" onChange={this.handleInputChange}/></td>
+              <td><input type="text" value={video} name="video" onChange={this.handleInputChange}/></td>
+            </tr>
+            <tr>
+              <td/>
+              <td>
+                <Dropzone
+                  className={css.dropzone}
+                  activeClassName={css.dropzoneActive}
+                  rejectClassName={css.dropzoneReject}
+                  accept="video/mp4, video/ogg, video/webm"
+                  multiple={false}
+                  onDropAccepted={this.handleVideoDrop}
+                  onDropRejected={wrongFileTypeAlert}
+                >
+                  Drop a video here, or click to select a file to upload. Supported formats: mp4, ogg, webm.
+                </Dropzone>
+                {/* If user selects a new local file to upload, clear preview to avoid confusion */}
+                {video && !videoFile && <video src={video} controls={true}/>}
+              </td>
             </tr>
             <tr>
               <td>Video caption</td>
@@ -79,9 +150,12 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
             </tr>
           </tbody>
         </table>
-        <div className={css.error}>{error}</div>
-        <Button label="Save" onClick={this.handleSave}/>
-        <Button label="Cancel" onClick={onCancel}/>
+        <div className={css.info}>
+          <div>{uploadStatus}</div>
+          <div>{error}</div>
+        </div>
+        <Button disabled={uploadInProgress} label="Save" onClick={this.handleSave}/>
+        <Button disabled={uploadInProgress} label="Cancel" onClick={onCancel}/>
       </div>
     );
   }
@@ -93,16 +167,95 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     this.setState({ definition: Object.assign({}, definition, {[name]: value}) });
   }
 
-  private handleSave = () => {
+  private handleImageDrop = (files: File[]) => {
+    if (!files[0]) {
+      return;
+    }
     const { definition } = this.state;
-    if (!definition.word) {
-      this.setState({error: 'Missing "word" property'});
+    // Cleanup anything that user typed into "Image URL" field before to avoid subtle bugs (e.g. when this string
+    // doesn't pass validation).
+    this.setState({ imageFile: files[0], definition: Object.assign({}, definition, {image: ""}) });
+  }
+
+  private handleVideoDrop = (files: File[]) => {
+    if (!files[0]) {
       return;
     }
-    if (!definition.definition) {
-      this.setState({error: 'Missing "definition" property'});
+    const { definition } = this.state;
+    // Cleanup anything that user typed into "Video URL" field before to avoid subtle bugs (e.g. when this string
+    // doesn't pass validation).
+    this.setState({ videoFile: files[0], definition: Object.assign({}, definition, {video: ""}) });
+  }
+
+  private handleSave = async () => {
+    // Hide old errors first.
+    this.setState({error: ""});
+    const { definition } = this.state;
+    // Definition passed to a parent has a bit different format that internally stored object that is used
+    // to control text inputs.
+    let finalDefinition = Object.assign({}, definition);
+    // Note that we don't want empty strings to be present in the final definition. JSON Schema validation would fail.
+    finalDefinition = removeEmptyProps(finalDefinition);
+    const validation = validateDefinition(finalDefinition);
+    if (!validation.valid) {
+      this.setState({error: validation.error});
       return;
     }
-    this.props.onSave(definition);
+    // Now, handle media upload if necessary.
+    let image;
+    let video;
+    try {
+      image = await this.uploadMedia("image");
+      video = await this.uploadMedia("video");
+    } catch (e) {
+      // Upload failed. Interrupt saving process.
+      this.setState({error: e});
+      return;
+    }
+    if (image) {
+      finalDefinition = Object.assign(finalDefinition, { image });
+    }
+    if (video) {
+      finalDefinition = Object.assign(finalDefinition, { video });
+    }
+    this.props.onSave(finalDefinition);
+  }
+
+  // Type is either "image" or "video".
+  private uploadMedia =  async (type: string) => {
+    const { imageFile, videoFile } = this.state;
+    const { s3AccessKey, s3SecretKey } = this.props;
+    const file = type === "image" ? imageFile : videoFile;
+    if (file) {
+      this.setState({
+        uploadInProgress: true,
+        uploadStatus: `Uploading ${type}... Please wait.`
+      });
+      try {
+        const url = await s3Upload({
+          dir: MEDIA_S3_DIR,
+          filename: uuid() + "-" + file.name,
+          accessKey: s3AccessKey,
+          secretKey: s3SecretKey,
+          body: file,
+          contentType: file.type,
+          cacheControl: "max-age=31536000" // 1 year
+        });
+        this.setState({
+          uploadInProgress: false,
+          uploadStatus: ""
+        });
+        return url;
+      } catch (e) {
+        // Cleanup state managed by this helper.
+        this.setState({
+          uploadInProgress: false,
+          uploadStatus: `Uploading ${type} failed. Please try again.`
+        });
+        // Rethrow error, so we can interrupt saving too.
+        throw e;
+      }
+    }
+    return null;
   }
 }

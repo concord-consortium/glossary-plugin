@@ -89,7 +89,27 @@
   }
 }
 
+.laraPluginState {
+  width: 600px;
+  font-family: monospace;
+}
+
 .help {
   color: #666;
+  font-size: 0.85em;
+  margin-bottom: 7px;
+}
+
+.s3Details {
+  .name, .name input {
+    font-size: 1.3em;
+  }
+  input {
+    width: 470px;
+  }
+}
+
+.s3Status {
+  font-weight: bold;
   font-size: 0.85em;
 }

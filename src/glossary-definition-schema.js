@@ -25,6 +25,9 @@ export default {
       "$id": "#/properties/definitions",
       "type": "array",
       "title": "The Definitions Schema",
+      "uniqueItemProperties": [
+        "word"
+      ],
       "items": {
         "$id": "#/properties/definitions/items",
         "type": "object",
@@ -62,7 +65,7 @@ export default {
             "examples": [
               ""
             ],
-            "pattern": "^(.*)$"
+            "regexp": "/^https?\:\/\/(.*)$/i",
           },
           "imageCaption": {
             "$id": "#/properties/definitions/items/properties/imageCaption",
@@ -82,7 +85,7 @@ export default {
             "examples": [
               ""
             ],
-            "pattern": "^(.*)$"
+            "regexp": "/^https?\:\/\/(.*)$/i"
           },
           "videoCaption": {
             "$id": "#/properties/definitions/items/properties/videoCaption",

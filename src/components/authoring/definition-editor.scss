@@ -13,10 +13,41 @@
     height: 40px;
     font-size: 15px;
   }
+
+  img, video {
+    width: 120px;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 6px;
+  }
 }
 
-.error {
+.info {
+  margin-left: 2px;
   margin-top: 10px;
   margin-bottom: 10px;
   color: #b4130c;
+}
+
+.dropzone {
+  display: inline-block;
+  font-size: 13px;
+  width: 160px;
+  height: 75px;
+  border-width: 2px;
+  border-color: #666666;
+  border-style: dashed;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: justify;
+}
+
+.dropzoneActive {
+  border-color: green;
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.dropzoneReject {
+  border-color: red;
+  background: rgba(255, 0, 0, 0.1);
 }

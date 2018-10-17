@@ -1,20 +1,19 @@
 import * as React from "react";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
-import * as Ajv from "ajv";
-import schema from "../../glossary-definition-schema";
 
 import * as css from "./json-editor.scss";
 
 interface IProps {
   initialValue?: object;
   onChange?: (jsObject: object) => void;
+  validate?: (jsObject: object) => { valid: boolean; error: string; };
   width: string;
   height: string;
 }
 
 interface IState {
-  schemaError: string | null;
+  customValidationError: string | null;
 }
 
 let ID = 0;
@@ -24,24 +23,22 @@ const getID = () => {
 
 export default class JSONEditor extends React.Component<IProps, IState> {
   public state: IState = {
-    schemaError: null
+    customValidationError: null
   };
   private id = getID();
-  private ajv = new Ajv({allErrors: true});
-  private validateSchema = this.ajv.compile(schema);
 
   public componentDidUpdate(prevProps: IProps) {
     if (prevProps.initialValue !== this.props.initialValue) {
-      this.validate(this.props.initialValue);
+      this.customValidation(this.props.initialValue);
     }
   }
 
   public render() {
     const { initialValue, width, height } = this.props;
-    const { schemaError } = this.state;
+    const { customValidationError } = this.state;
     return (
       <div className={css.jsonEditor}>
-        {schemaError && <div className={css.schemaError}>{schemaError}</div>}
+        {customValidationError && <div className={css.customValidationError}>{customValidationError}</div>}
         <JSONInput
           id={this.id}
           placeholder={initialValue}
@@ -55,27 +52,28 @@ export default class JSONEditor extends React.Component<IProps, IState> {
   }
 
   private handleJSONChange = (data: any) => {
-    const { onChange } = this.props;
-    if (!onChange) {
-      return;
-    }
     if (!data.jsObject) {
       // There is some syntax error. Docs:
       // https://github.com/AndrewRedican/react-json-editor-ajrm#content-values
       return;
     }
-    if (this.validate(data.jsObject)) {
+    const { onChange } = this.props;
+    if (this.customValidation(data.jsObject) && onChange) {
       onChange(data.jsObject);
     }
   }
 
-  private validate(jsObject: any) {
-    if (!this.validateSchema(jsObject)) {
-      // JSON is incorrect, not matching schema.
-      this.setState({schemaError: this.ajv.errorsText(this.validateSchema.errors)});
+  private customValidation(jsObject: any) {
+    const { validate } = this.props;
+    if (!validate) {
+      return true;
+    }
+    const validationResult = validate(jsObject);
+    if (!validationResult.valid) {
+      this.setState({customValidationError: validationResult.error});
       return false;
     }
-    this.setState({schemaError: null});
+    this.setState({customValidationError: null});
     return true;
   }
 }
