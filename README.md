@@ -23,6 +23,11 @@ They can be used to set the initial value of text inputs. E.g.:
 
 https://glossary-plugin.concord.org/authoring.html?glossaryName=test&username=joe&s3AccessKey=ABCXYZ
 
+Authors should use IAM account that belongs this group:
+
+https://console.aws.amazon.com/iam/home#/groups/Glossary-S3-Access
+
+It limits access to their own directory based on the username (IAM username and username on the authoring page have to match).
 
 ## Authored state format
 
