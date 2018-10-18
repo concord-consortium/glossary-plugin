@@ -20,6 +20,18 @@ const textToSpeechAvailable = () => {
   return typeof SpeechSynthesisUtterance === "function" && typeof speechSynthesis === "object";
 };
 
+const renderTextToSpeech = (onClick: () => void) => {
+  if (!textToSpeechAvailable()) {
+    return null;
+  }
+  return <span className={icons.iconButton + " " + icons.iconAudio} onClick={onClick}/>;
+};
+
+const read = (text: string) => {
+  const msg = new SpeechSynthesisUtterance(text);
+  window.speechSynthesis.speak(msg);
+};
+
 export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
     imageVisible: false,
@@ -34,10 +46,7 @@ export default class Definition extends React.Component<IProps, IState> {
           <div>
             {definition}
             <span className={css.icons}>
-              {
-                textToSpeechAvailable() &&
-                <span className={icons.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
-              }
+              {renderTextToSpeech(this.readDefinition)}
               {imageUrl && <span className={icons.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
               {videoUrl && <span className={icons.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
             </span>
@@ -46,14 +55,26 @@ export default class Definition extends React.Component<IProps, IState> {
           imageVisible &&
           <div className={css.imageContainer}>
             <img src={imageUrl} />
-            <div className={css.caption}>{imageCaption}</div>
+            {
+              imageCaption &&
+              <div className={css.caption}>
+                {imageCaption}
+                {renderTextToSpeech(this.readImageCaption)}
+              </div>
+            }
           </div>
         }
         {
           videoVisible &&
           <div className={css.imageContainer}>
             <video src={videoUrl} controls={true}/>
-            <div className={css.caption}>{videoCaption}</div>
+            {
+              videoCaption &&
+              <div className={css.caption}>
+                {videoCaption}
+                {renderTextToSpeech(this.readVideoCaption)}
+              </div>
+            }
           </div>
         }
       </div>
@@ -62,8 +83,21 @@ export default class Definition extends React.Component<IProps, IState> {
 
   private readDefinition = () => {
     const { definition } = this.props;
-    const msg = new SpeechSynthesisUtterance(definition);
-    window.speechSynthesis.speak(msg);
+    read(definition);
+  }
+
+  private readImageCaption = () => {
+    const { imageCaption } = this.props;
+    if (imageCaption) {
+      read(imageCaption);
+    }
+  }
+
+  private readVideoCaption = () => {
+    const { videoCaption } = this.props;
+    if (videoCaption) {
+      read(videoCaption);
+    }
   }
 
   private toggleImage = () => {
