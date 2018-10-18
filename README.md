@@ -1,8 +1,22 @@
 # Glossary LARA plugin
 
+## LARA Plugin URL:
+
+- `http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
+
+E.g.:
+
+- http://glossary-plugin.concord.org/version/1.0.0-pre.1/plugin.js
+- http://glossary-plugin.concord.org/version/1.0.0/plugin.js
+- http://glossary-plugin.concord.org/version/1.1.0/plugin.js
+
+## Authoring page
+
+http://glossary-plugin.concord.org/authoring.html
+
 ## Authored state format
 
-Example: 
+Authoring page UI should always generate a correct JSON. Existing format example:
 
 ```json
 {
@@ -31,15 +45,6 @@ Note that you can define glossary inline or specify URL to a JSON that contains 
   "url": "https://example.concord.org/glossary-definiton.json"
 }
 ```
-
-## LARA Plugin URL:
-
-- `http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
-
-E.g.:
-
-- http://glossary-plugin.concord.org/version/1.0.0-pre.1/plugin.js
-- http://glossary-plugin.concord.org/version/1.0.0/plugin.js
 
 ## Development
 
