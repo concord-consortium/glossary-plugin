@@ -1,5 +1,5 @@
 import * as React from "react";
-import AuthoringApp, { DEFAULT_GLOSSARY, JSON_S3_DIR } from "./authoring-app";
+import AuthoringApp, { DEFAULT_GLOSSARY } from "./authoring-app";
 import JSONEditor from "./json-editor";
 import GlossarySidebar from "../glossary-sidebar";
 import DefinitionEditor from "./definition-editor";
@@ -24,6 +24,7 @@ describe("AuthoringApp component", () => {
       <AuthoringApp/>
     );
     expect(wrapper.find("input[name='glossaryName']").length).toEqual(1);
+    expect(wrapper.find("input[name='username']").length).toEqual(1);
     expect(wrapper.find("input[name='s3AccessKey']").length).toEqual(1);
     expect(wrapper.find("input[name='s3SecretKey']").length).toEqual(1);
     expect(wrapper.find("[data-cy='save']").length).toEqual(1);
@@ -130,16 +131,17 @@ describe("AuthoringApp component", () => {
     expect(wrapper.find("." + icons.iconVideo).length).toEqual(1);
   });
 
-  it("sets glossary name and S3 access key if they are provided in URL", () => {
-    history.replaceState({}, "Test", "/authoring.html?glossaryName=testName&s3AccessKey=testS3Key");
+  it("sets glossary name, username, and S3 access key if they are provided in URL", () => {
+    history.replaceState({}, "Test", "/authoring.html?glossaryName=testName&username=user&s3AccessKey=testS3Key");
     const wrapper = shallow(
       <AuthoringApp/>
     );
     expect(wrapper.find("input[name='glossaryName']").props().value).toEqual("testName");
+    expect(wrapper.find("input[name='username']").props().value).toEqual("user");
     expect(wrapper.find("input[name='s3AccessKey']").props().value).toEqual("testS3Key");
   });
 
-  it("should let user load JSON file if glossary name is provided", () => {
+  it("should let user load JSON file if glossary name and username are provided", () => {
     const glossary = {
       definitions: [{word: "test1", definition: "test 1"}],
       askForUserDefinition: false,
@@ -157,10 +159,14 @@ describe("AuthoringApp component", () => {
     wrapper.find("input[name='glossaryName']").simulate("change", {
       target: { name: "glossaryName", value: "testName" }
     });
+    wrapper.find("input[name='username']").simulate("change", {
+      target: { name: "username", value: "username" }
+    });
     const load = wrapper.find("[data-cy='load']");
     expect(load.props().disabled).toEqual(false);
     load.simulate("click");
     expect(instance.loadJSONFromS3).toHaveBeenCalled();
+    wrapper.unmount();
   });
 
   it("should let user save JSON file if glossary name and S3 details are provided", () => {
@@ -173,6 +179,9 @@ describe("AuthoringApp component", () => {
     expect(wrapper.find("[data-cy='save']").props().disabled).toEqual(true);
     wrapper.find("input[name='glossaryName']").simulate("change", {
       target: { name: "glossaryName", value: "testName" }
+    });
+    wrapper.find("input[name='username']").simulate("change", {
+      target: { name: "username", value: "username" }
     });
     wrapper.find("input[name='s3AccessKey']").simulate("change", {
       target: { name: "s3AccessKey", value: "s3 access key" }
@@ -213,16 +222,18 @@ describe("AuthoringApp component", () => {
         <AuthoringApp/>
       );
       const glossaryName = "test";
+      const username = "user";
       const s3AccessKey = "s3AK";
       const s3SecretKey = "s3SK";
       wrapper.setState({
         glossaryName,
+        username,
         s3AccessKey,
         s3SecretKey
       });
       await (wrapper.instance() as AuthoringApp).uploadJSONToS3();
       expect(s3Upload).toHaveBeenCalledWith({
-        dir: JSON_S3_DIR,
+        dir: username,
         filename: glossaryName + ".json",
         accessKey: s3AccessKey,
         secretKey: s3SecretKey,

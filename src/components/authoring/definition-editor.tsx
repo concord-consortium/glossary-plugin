@@ -12,8 +12,11 @@ export const MEDIA_S3_DIR = "media";
 interface IProps {
   onSave: (definition: IWordDefinition) => void;
   onCancel: () => void;
+  // For media upload.
+  username: string;
   s3AccessKey: string;
   s3SecretKey: string;
+  // If initialDefinition is provided, user is editing an existing definition. Otherwise, adding a new one.
   initialDefinition?: IWordDefinition;
 }
 
@@ -162,14 +165,19 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
 
   // Type is either "image" or "video".
   public uploadMedia =  async (file: File) => {
-    const { s3AccessKey, s3SecretKey } = this.props;
+    const { username, s3AccessKey, s3SecretKey } = this.props;
+    if (!username || !s3AccessKey || !s3SecretKey) {
+      return new Promise((resolve, reject) =>
+        reject("Can't upload media files without username and credentials.")
+      );
+    }
     this.setState({
       uploadInProgress: true,
       uploadStatus: `Uploading ${file.name}... Please wait.`
     });
     try {
       const url = await s3Upload({
-        dir: MEDIA_S3_DIR,
+        dir: `${username}/${MEDIA_S3_DIR}`,
         filename: uuid() + "-" + file.name,
         accessKey: s3AccessKey,
         secretKey: s3SecretKey,
