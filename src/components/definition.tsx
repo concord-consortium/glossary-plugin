@@ -20,6 +20,13 @@ const textToSpeechAvailable = () => {
   return typeof SpeechSynthesisUtterance === "function" && typeof speechSynthesis === "object";
 };
 
+const renderTextToSpeech = (onClick: () => void) => {
+  if (!textToSpeechAvailable()) {
+    return null;
+  }
+  return <span className={icons.iconButton + " " + icons.iconAudio} onClick={onClick}/>;
+};
+
 const read = (text: string) => {
   const msg = new SpeechSynthesisUtterance(text);
   window.speechSynthesis.speak(msg);
@@ -39,10 +46,7 @@ export default class Definition extends React.Component<IProps, IState> {
           <div>
             {definition}
             <span className={css.icons}>
-              {
-                textToSpeechAvailable() &&
-                <span className={icons.iconButton + " " + icons.iconAudio} onClick={this.readDefinition}/>
-              }
+              {renderTextToSpeech(this.readDefinition)}
               {imageUrl && <span className={icons.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
               {videoUrl && <span className={icons.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
             </span>
@@ -55,10 +59,7 @@ export default class Definition extends React.Component<IProps, IState> {
               imageCaption &&
               <div className={css.caption}>
                 {imageCaption}
-                {
-                  textToSpeechAvailable() &&
-                  <span className={icons.iconButton + " " + icons.iconAudio} onClick={this.readImageCaption}/>
-                }
+                {renderTextToSpeech(this.readImageCaption)}
               </div>
             }
           </div>
@@ -71,10 +72,7 @@ export default class Definition extends React.Component<IProps, IState> {
               videoCaption &&
               <div className={css.caption}>
                 {videoCaption}
-                {
-                  textToSpeechAvailable() &&
-                  <span className={icons.iconButton + " " + icons.iconAudio} onClick={this.readVideoCaption}/>
-                }
+                {renderTextToSpeech(this.readVideoCaption)}
               </div>
             }
           </div>
