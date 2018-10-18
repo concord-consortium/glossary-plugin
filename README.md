@@ -14,6 +14,16 @@ E.g.:
 
 https://glossary-plugin.concord.org/authoring.html
 
+Authoring page supports following URL parameters:
+ - glossaryName
+ - username
+ - s3AccessKey
+ 
+They can be used to set the initial value of text inputs. E.g.:
+
+https://glossary-plugin.concord.org/authoring.html?glossaryName=test&username=joe&s3AccessKey=ABCXYZ
+
+
 ## Authored state format
 
 Authoring page UI should always generate a correct JSON. Existing format example:
