@@ -27,6 +27,7 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "testURL": "https://glossary-test.unexisting.url.com",
     "setupTestFrameworkScriptFile": "<rootDir>src/setupTests.js",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
@@ -93,7 +94,7 @@
     "ajv-keywords": "^3.2.0",
     "aws-sdk": "^2.332.0",
     "clone": "^2.1.2",
-    "react-dropzone": "^6.2.2",
+    "react-dropzone": "^6.2.4",
     "react-json-editor-ajrm": "^2.5.6",
     "uuid": "^3.3.2"
   }

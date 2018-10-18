@@ -1,9 +1,21 @@
-.authoring {
+.authoringApp {
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.authoringColumn {
   display: inline-block;
   vertical-align: top;
-  margin-bottom: 50px;
-  width: 700px;
+  width: 600px;
+  margin-right: 70px;
 
+  & > * {
+    margin-bottom: 30px;
+  }
+}
+
+.authoring {
   input {
     display: inline-block;
   }
@@ -55,15 +67,13 @@
 }
 
 .jsonSection {
-  width: 600px;
-  display: inline-block;
-  vertical-align: top;
-  margin-right: 50px;
+
 }
 
 .preview {
   display: inline-block;
   vertical-align: top;
+  width: 600px;
 
   .handle {
     display: inline-block;
@@ -90,8 +100,10 @@
 }
 
 .laraPluginState {
-  width: 600px;
-  font-family: monospace;
+  .laraPluginStateJSON {
+    width: 600px;
+    font-family: monospace;
+  }
 }
 
 .help {
@@ -105,7 +117,7 @@
     font-size: 1.3em;
   }
   input {
-    width: 470px;
+    width: 440px;
   }
 }
 
