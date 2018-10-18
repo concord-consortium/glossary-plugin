@@ -2,17 +2,17 @@
 
 ## LARA Plugin URL:
 
-`http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
+`https://glossary-plugin.concord.org/version/<version_number>/plugin.js`
 
 E.g.:
 
-- http://glossary-plugin.concord.org/version/1.0.0-pre.1/plugin.js
-- http://glossary-plugin.concord.org/version/1.0.0/plugin.js
-- http://glossary-plugin.concord.org/version/1.1.0/plugin.js
+- https://glossary-plugin.concord.org/version/1.0.0-pre.1/plugin.js
+- https://glossary-plugin.concord.org/version/1.0.0/plugin.js
+- https://glossary-plugin.concord.org/version/1.1.0/plugin.js
 
 ## Authoring page
 
-http://glossary-plugin.concord.org/authoring.html
+https://glossary-plugin.concord.org/authoring.html
 
 ## Authored state format
 
@@ -73,9 +73,9 @@ You *do not* need to build to deploy the code, that is automatic.  See more info
 Production releases to S3 are based on the contents of the /dist folder and are built automatically by Travis
 for each branch pushed to GitHub and each merge into production.
 
-Merges into production are deployed to http://glossary-plugin.concord.org.
+Merges into production are deployed to https://glossary-plugin.concord.org.
 
-Other branches are deployed to http://glossary-plugin.concord.org/branch/<name>.
+Other branches are deployed to https://glossary-plugin.concord.org/branch/<name>.
 
 You can view the status of all the branch deploys [here](https://travis-ci.org/concord-consortium/glossary-plugin/branches).
 
