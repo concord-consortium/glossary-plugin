@@ -20,6 +20,7 @@ jest.mock("react-dropzone", () => {
 const noop = () => undefined;
 
 describe("DefinitionEditor component", () => {
+  const username = "username";
   const s3AccessKey = "s3-access";
   const s3SecretKey = "s3-secret";
   const file = new File(["test"], "test-media.jpg", { type: "image/jpg" });
@@ -29,6 +30,7 @@ describe("DefinitionEditor component", () => {
       <DefinitionEditor
         onSave={noop}
         onCancel={noop}
+        username={username}
         s3AccessKey={s3AccessKey}
         s3SecretKey={s3SecretKey}
       />
@@ -50,6 +52,7 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
+          username={username}
           s3AccessKey={s3AccessKey}
           s3SecretKey={s3SecretKey}
         />
@@ -77,6 +80,7 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
+          username={username}
           s3AccessKey={s3AccessKey}
           s3SecretKey={s3SecretKey}
         />
@@ -108,6 +112,7 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
+          username={username}
           s3AccessKey={s3AccessKey}
           s3SecretKey={s3SecretKey}
         />
@@ -133,11 +138,29 @@ describe("DefinitionEditor component", () => {
   });
 
   describe(".uploadMedia() method", () => {
+    it("returns an error when username is missing", async () => {
+      const wrapper = shallow(
+        <DefinitionEditor
+          onSave={noop}
+          onCancel={noop}
+          username={""}
+          s3AccessKey={s3AccessKey}
+          s3SecretKey={s3SecretKey}
+        />
+      );
+      try {
+        await (wrapper.instance() as DefinitionEditor).uploadMedia(file);
+      } catch (e) {
+        expect(e).toEqual("Can't upload media files without username and credentials.");
+      }
+    });
+
     it("uploads a file to S3 bucket", async () => {
       const wrapper = shallow(
         <DefinitionEditor
           onSave={noop}
           onCancel={noop}
+          username={username}
           s3AccessKey={s3AccessKey}
           s3SecretKey={s3SecretKey}
         />
@@ -146,7 +169,7 @@ describe("DefinitionEditor component", () => {
       const url = await (wrapper.instance() as DefinitionEditor).uploadMedia(file);
 
       expect(s3Upload).toHaveBeenCalledWith({
-        dir: MEDIA_S3_DIR,
+        dir: `${username}/${MEDIA_S3_DIR}`,
         filename: uuid() + "-" + file.name,
         accessKey: s3AccessKey,
         secretKey: s3SecretKey,
@@ -155,7 +178,7 @@ describe("DefinitionEditor component", () => {
         cacheControl: "max-age=31536000" // 1 year
       });
       expect(url).toEqual(
-        `https://test-resources.mock.concord.org/test-resources/${MEDIA_S3_DIR}/mock-uuid-${file.name}`
+        `https://test-resources.mock.concord.org/test-resources/${username}/${MEDIA_S3_DIR}/mock-uuid-${file.name}`
       );
     });
   });

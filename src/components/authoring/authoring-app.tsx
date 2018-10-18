@@ -13,13 +13,13 @@ import { validateGlossary } from "../../utils/validate-glossary";
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
 
-export const JSON_S3_DIR = "json";
 export const DEFAULT_GLOSSARY = {
   askForUserDefinition: true,
   definitions: []
 };
 // Keys used to obtain dat from URL or local storage.
 const GLOSSARY_NAME = "glossaryName";
+const USERNAME = "username";
 const S3_ACCESS = "s3AccessKey";
 const S3_SECRET = "s3SecretKey";
 
@@ -29,6 +29,7 @@ interface IState {
   newDefEditor: boolean;
   definitionEditors: {[word: string]: boolean};
   glossaryName: string;
+  username: string;
   s3AccessKey: string;
   s3SecretKey: string;
   s3ActionInProgress: boolean;
@@ -44,6 +45,7 @@ export default class PluginApp extends React.Component<{}, IState> {
     newDefEditor: false,
     definitionEditors: {},
     glossaryName: getURLParam(GLOSSARY_NAME) || "",
+    username: getURLParam(USERNAME) || localStorage.getItem(USERNAME) || "",
     s3AccessKey: getURLParam(S3_ACCESS) || localStorage.getItem(S3_ACCESS) || "",
     // Don't let users set S3 Secret Key using URL, so they don't share it by accident.
     s3SecretKey: localStorage.getItem(S3_SECRET) || "",
@@ -59,7 +61,7 @@ export default class PluginApp extends React.Component<{}, IState> {
 
   public render() {
     const { newDefEditor, glossary, jsonEditorContent, definitionEditors,
-      glossaryName, s3AccessKey, s3SecretKey, s3Status } = this.state;
+      glossaryName, username, s3AccessKey, s3SecretKey, s3Status } = this.state;
     const { askForUserDefinition, definitions } = glossary;
     return (
       <div className={css.authoringApp}>
@@ -70,8 +72,17 @@ export default class PluginApp extends React.Component<{}, IState> {
               <tr className={css.name}>
                 <td>Glossary Name</td>
                 <td>
-                  <input value={glossaryName} type="text" name="glossaryName" onChange={this.handleInputChange}/>
+                  <input
+                    value={glossaryName}
+                    type="text"
+                    name="glossaryName"
+                    onChange={this.handleInputChange}
+                  />
                 </td>
+              </tr>
+              <tr>
+                <td>Username</td>
+                <td><input value={username} type="text" name="username" onChange={this.handleInputChange}/></td>
               </tr>
               <tr>
                 <td>S3 Access Key</td>
@@ -85,7 +96,7 @@ export default class PluginApp extends React.Component<{}, IState> {
             </table>
             <p>
               <Button label="Save" disabled={!this.s3FeaturesAvailable} data-cy="save" onClick={this.uploadJSONToS3}/>
-              <Button label="Load" disabled={!glossaryName} data-cy="load" onClick={this.loadJSONFromS3}/>
+              <Button label="Load" disabled={!username || !glossaryName} data-cy="load" onClick={this.loadJSONFromS3}/>
             </p>
             <div className={css.s3Status}>
               {s3Status}
@@ -115,6 +126,7 @@ export default class PluginApp extends React.Component<{}, IState> {
                         <DefinitionEditor
                           key={def.word}
                           initialDefinition={def}
+                          username={username}
                           s3AccessKey={s3AccessKey}
                           s3SecretKey={s3SecretKey}
                           onSave={this.editDef}
@@ -148,6 +160,7 @@ export default class PluginApp extends React.Component<{}, IState> {
               <DefinitionEditor
                 onCancel={this.toggleNewDef}
                 onSave={this.addNewDef}
+                username={username}
                 s3AccessKey={s3AccessKey}
                 s3SecretKey={s3SecretKey}
               />
@@ -198,6 +211,11 @@ export default class PluginApp extends React.Component<{}, IState> {
     );
   }
 
+  public get glossaryFileName() {
+    const { glossaryName } = this.state;
+    return glossaryName.endsWith(".json") ? glossaryName : `${glossaryName}.json`;
+  }
+
   public addNewDef = (newDef: IWordDefinition) => {
     const glossary: IGlossary = clone(this.state.glossary);
     const definitionEditors = clone(this.state.definitionEditors);
@@ -225,11 +243,12 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   public loadJSONFromS3 = async () => {
+    const { username } = this.state;
     this.setState({
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Loading JSON...")
     });
-    const response = await fetch(s3Url({ dir: JSON_S3_DIR, filename: this.glossaryFilename }));
+    const response = await fetch(s3Url({ dir: username, filename: this.glossaryFileName }));
     if (response.status !== 200) {
       this.setState({
         s3ActionInProgress: false,
@@ -261,14 +280,15 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   public uploadJSONToS3 = () => {
+    const { username } = this.state;
     this.setState({
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Uploading JSON to S3...")
     });
     const { s3AccessKey, s3SecretKey } = this.state;
     s3Upload({
-      dir: JSON_S3_DIR,
-      filename: this.glossaryFilename,
+      dir: username,
+      filename: this.glossaryFileName,
       accessKey: s3AccessKey,
       secretKey: s3SecretKey,
       body: this.glossaryJSON,
@@ -287,13 +307,9 @@ export default class PluginApp extends React.Component<{}, IState> {
     });
   }
 
-  private get glossaryFilename() {
-    return this.state.glossaryName + ".json";
-  }
-
   private get s3FeaturesAvailable() {
-    const { s3ActionInProgress, glossaryName, s3AccessKey, s3SecretKey } = this.state;
-    return !s3ActionInProgress && glossaryName && s3AccessKey && s3SecretKey;
+    const { s3ActionInProgress, glossaryName, username, s3AccessKey, s3SecretKey } = this.state;
+    return !s3ActionInProgress && glossaryName && username && s3AccessKey && s3SecretKey;
   }
 
   private get glossaryJSON() {
@@ -302,7 +318,8 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   private get LARAPluginState() {
-    return JSON.stringify({ url: s3Url({filename: this.glossaryFilename, dir: JSON_S3_DIR })}, null, 2);
+    const { username } = this.state;
+    return JSON.stringify({ url: s3Url({filename: this.glossaryFileName, dir: username })}, null, 2);
   }
 
   private copyJSON = () => {
@@ -321,6 +338,10 @@ export default class PluginApp extends React.Component<{}, IState> {
       case "glossaryName":
         this.setState({ glossaryName: value });
         localStorage.setItem(GLOSSARY_NAME, value);
+        break;
+      case "username":
+        this.setState({ username: value });
+        localStorage.setItem(USERNAME, value);
         break;
       case "s3AccessKey":
         this.setState({ s3AccessKey: value });
