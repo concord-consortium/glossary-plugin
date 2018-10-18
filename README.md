@@ -2,7 +2,7 @@
 
 ## LARA Plugin URL:
 
-- `http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
+`http://glossary-plugin.concord.org/version/<version_number>/plugin.js`
 
 E.g.:
 
