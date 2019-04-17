@@ -1,14 +1,10 @@
 import { initPlugin, GlossaryPlugin } from "./plugin";
 import * as fetch from "jest-fetch-mock";
-import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 (global as any).fetch = fetch;
-
 // Mock LARA API.
-jest.mock("@concord-consortium/lara-plugin-api", () => ({
-  registerPlugin: jest.fn(),
-  decorateContent: jest.fn(),
-  addSidebar: jest.fn()
-}));
+jest.mock("@concord-consortium/lara-plugin-api");
+
+import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 
 describe("LARA plugin initialization", () => {
   it("loads without crashing and calls LARA.register", () => {
@@ -18,12 +14,13 @@ describe("LARA plugin initialization", () => {
 });
 
 describe("GlossaryPlugin", () => {
-  const defaultContext = {
+  const defaultContext: PluginAPI.IPluginRuntimeContext = {
     name: "test",
     url: "http://123.com",
     runId: 123,
     remoteEndpoint: null,
     userEmail: null,
+    saveLearnerPluginState: (state: string) => new Promise<string>(() => null),
     getClassInfo: () => null,
     getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>(() => null),
     authoredState: null,

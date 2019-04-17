@@ -73,8 +73,7 @@ export class GlossaryPlugin {
 
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
-        PluginAPI={PluginAPI}
-        pluginId={this.context.pluginId.toString()}
+        saveState={this.context.saveLearnerPluginState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}

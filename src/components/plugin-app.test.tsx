@@ -4,6 +4,12 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { shallow } from "enzyme";
 import * as css from "./plugin-app.scss";
+import * as MockPluginAPI from "../__mocks__/@concord-consortium/lara-plugin-api";
+
+// Mock LARA API.
+jest.mock("@concord-consortium/lara-plugin-api");
+
+const saveState = jest.fn();
 
 describe("PluginApp component", () => {
   const testWord = "test";
@@ -14,60 +20,24 @@ describe("PluginApp component", () => {
     }
   ];
   const initialLearnerState = { definitions: {} };
-  const pluginId = "123";
 
-  let onWordClicked: (e: any) => null;
-  let onPopupClosed: () => null;
-  let onSidebarOpen: () => null;
-
-  let MockAPI: any;
-  let mockSidebarController: any;
-  let mockPopupController: any;
-
-  const simulateTestWordClick = () => {
-    const event = { srcElement: { textContent: testWord }};
-    onWordClicked(event);
-  };
-
-  // Setup MockAPI before each test to reset mock function counters (jest.fn()).
+  // Setup MockPluginAPI before each test to reset mock function counters (jest.fn()).
   beforeEach(() => {
-    mockSidebarController = {
-      close: jest.fn()
-    };
-    mockPopupController = {
-      close: jest.fn()
-    };
-
-    MockAPI = {
-      decorateContent: jest.fn((_1: any, _2: any, _3: any, listeners: any) => {
-        // Save provided listener function.
-        onWordClicked = listeners[0].listener;
-      }),
-      addPopup: jest.fn(options => {
-        onPopupClosed = options.onClose;
-        return mockPopupController;
-      }),
-      addSidebar: jest.fn(options => {
-        onSidebarOpen = options.onOpen;
-        return mockSidebarController;
-      }),
-      saveLearnerPluginState: jest.fn()
-    };
+    jest.clearAllMocks();
   });
 
   it("calls decorateContent on load", () => {
     shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
       />
     );
 
-    expect(MockAPI.decorateContent).toHaveBeenCalledTimes(1);
-    expect(MockAPI.decorateContent).toHaveBeenCalledWith(
+    expect(MockPluginAPI.decorateContent).toHaveBeenCalledTimes(1);
+    expect(MockPluginAPI.decorateContent).toHaveBeenCalledWith(
       ["test"],
       `<span class="${css.ccGlossaryWord}">$1</span>`,
       css.ccGlossaryWord,
@@ -78,22 +48,21 @@ describe("PluginApp component", () => {
   it("calls addPopup when a word is clicked and renders popup content", () => {
     const wrapper = shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
       />
     );
 
-    simulateTestWordClick();
+    MockPluginAPI.simulateTestWordClick(testWord);
 
-    expect(MockAPI.addPopup).toHaveBeenCalledTimes(1);
+    expect(MockPluginAPI.addPopup).toHaveBeenCalledTimes(1);
     expect((wrapper.state("openPopups") as any).length).toEqual(1);
     expect(wrapper.find(GlossaryPopup).length).toEqual(1);
 
     // Test if we cleanup things after popup is closed.
-    onPopupClosed();
+    MockPluginAPI.onPopupClosed();
     expect((wrapper.state("openPopups") as any).length).toEqual(0);
     expect(wrapper.find(GlossaryPopup).length).toEqual(0);
   });
@@ -101,27 +70,24 @@ describe("PluginApp component", () => {
   it("calls addPopup when a word is clicked, even if starts with a capital letter", () => {
     const wrapper = shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
       />
     );
 
-    const event = { srcElement: { textContent: testWord.toUpperCase() }};
-    onWordClicked(event);
+    MockPluginAPI.simulateTestWordClick(testWord.toUpperCase());
 
-    expect(MockAPI.addPopup).toHaveBeenCalledTimes(1);
+    expect(MockPluginAPI.addPopup).toHaveBeenCalledTimes(1);
     expect((wrapper.state("openPopups") as any).length).toEqual(1);
     expect(wrapper.find(GlossaryPopup).length).toEqual(1);
   });
 
-  it("calls saveLearnerPluginState when learner state is updated", () => {
+  it("calls saveState when learner state is updated", () => {
     const wrapper = shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
@@ -132,52 +98,50 @@ describe("PluginApp component", () => {
     const word = "test";
     const definition1 = "user definition 1";
     (component as PluginApp).learnerDefinitionUpdated(word, definition1);
-    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledTimes(1);
-    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledWith(pluginId, JSON.stringify({
+    expect(saveState).toHaveBeenCalledTimes(1);
+    expect(saveState).toHaveBeenCalledWith(JSON.stringify({
       definitions: {[word]: [ definition1 ]}
     }));
 
     const definition2 = "user definition 2";
     (component as PluginApp).learnerDefinitionUpdated(word, definition2);
-    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledTimes(2);
-    expect(MockAPI.saveLearnerPluginState).toHaveBeenCalledWith(pluginId, JSON.stringify({
+    expect(saveState).toHaveBeenCalledTimes(2);
+    expect(saveState).toHaveBeenCalledWith(JSON.stringify({
       definitions: {[word]: [ definition1, definition2 ]}
     }));
   });
 
-  it("adds sidebar and render its content if PluginAPI provides this possibility", () => {
+  it("adds sidebar and render its content if MockPluginAPI provides this possibility", () => {
     const wrapper = shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
       />
     );
-    expect(MockAPI.addSidebar).toHaveBeenCalledTimes(1);
+    expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
     // This is important for correct styling when there're many entries in the sidebar. And it's easy
     // to break / change this style by accident and don't notice any issue. So, add an explicit test.
-    expect(MockAPI.addSidebar.mock.calls[0][0].content.style.maxHeight).toEqual("inherit");
+    expect(MockPluginAPI.addSidebar.mock.calls[0][0].content.style.maxHeight).toEqual("inherit");
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 
   it("ensures that popup and sidebar can't be visible at the same time", () => {
     shallow(
       <PluginApp
-        PluginAPI={MockAPI}
-        pluginId={pluginId}
+        saveState={saveState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
       />
     );
 
-    simulateTestWordClick();
-    expect(mockSidebarController.close).toHaveBeenCalledTimes(1);
+    MockPluginAPI.simulateTestWordClick(testWord);
+    expect(MockPluginAPI.mockSidebarController.close).toHaveBeenCalledTimes(1);
 
     // Simulate sidebar opening.
-    onSidebarOpen();
-    expect(mockPopupController.close).toHaveBeenCalledTimes(1);
+    MockPluginAPI.onSidebarOpen();
+    expect(MockPluginAPI.mockPopupController.close).toHaveBeenCalledTimes(1);
   });
 });
