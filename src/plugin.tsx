@@ -2,17 +2,9 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
+import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 
-interface IExternalScriptContext {
-  div: any;
-  authoredState: string;
-  learnerState: string;
-  pluginId: string;
-}
-
-let PluginAPI: any;
-
-const getAuthoredState = async (context: IExternalScriptContext) => {
+const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
     return {};
   }
@@ -40,7 +32,7 @@ const getAuthoredState = async (context: IExternalScriptContext) => {
   }
 };
 
-const getLearnerState = (context: IExternalScriptContext) => {
+const getLearnerState = (context: PluginAPI.IPluginRuntimeContext) => {
   const fallbackLearnerState = { definitions: {} };
   if (!context.learnerState) {
     return fallbackLearnerState;
@@ -55,10 +47,10 @@ const getLearnerState = (context: IExternalScriptContext) => {
 };
 
 export class GlossaryPlugin {
-  public context: IExternalScriptContext;
+  public context: PluginAPI.IPluginRuntimeContext;
   public pluginAppComponent: any;
 
-  constructor(context: IExternalScriptContext) {
+  constructor(context: PluginAPI.IPluginRuntimeContext) {
     this.context = context;
     // Note renderPluginApp is an async function. Constructor can't be async, as it needs to return immediately.
     // It also means that component won't be rendered immediately. That's fine.
@@ -75,14 +67,13 @@ export class GlossaryPlugin {
     const initialLearnerState = getLearnerState(this.context);
 
     if (this.pluginAppComponent) {
-      ReactDOM.unmountComponentAtNode(this.context.div);
+      ReactDOM.unmountComponentAtNode(this.context.container);
       this.pluginAppComponent = undefined;
     }
 
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
-        PluginAPI={PluginAPI}
-        pluginId={this.context.pluginId}
+        saveState={this.context.saveLearnerPluginState}
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}
@@ -90,12 +81,11 @@ export class GlossaryPlugin {
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div
       // or anything else that we provide here.
-      this.context.div);
+      this.context.container);
   }
 }
 
 export const initPlugin = () => {
-  PluginAPI = (window as any).LARA;
   if (!PluginAPI || !PluginAPI.registerPlugin) {
     // tslint:disable-next-line:no-console
     console.warn("LARA Plugin API not available, GlossaryPlugin terminating");

@@ -1,34 +1,37 @@
 import { initPlugin, GlossaryPlugin } from "./plugin";
 import * as fetch from "jest-fetch-mock";
 (global as any).fetch = fetch;
+// Mock LARA API.
+jest.mock("@concord-consortium/lara-plugin-api");
+
+import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 
 describe("LARA plugin initialization", () => {
-  // Mock LARA API.
-  const LARA = {
-    registerPlugin: jest.fn(),
-    decorateContent: jest.fn(),
-    addSidebar: jest.fn()
-  };
-
-  beforeEach(() => {
-    (window as any).LARA = LARA;
-  });
-
   it("loads without crashing and calls LARA.register", () => {
     initPlugin();
-    expect(LARA.registerPlugin).toBeCalledWith("glossary", GlossaryPlugin);
+    expect(PluginAPI.registerPlugin).toBeCalledWith("glossary", GlossaryPlugin);
   });
 });
 
 describe("GlossaryPlugin", () => {
+  const defaultContext: PluginAPI.IPluginRuntimeContext = {
+    name: "test",
+    url: "http://123.com",
+    runId: 123,
+    remoteEndpoint: null,
+    userEmail: null,
+    saveLearnerPluginState: (state: string) => new Promise<string>(() => null),
+    getClassInfo: () => null,
+    getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>(() => null),
+    authoredState: null,
+    learnerState: null,
+    pluginId: 123,
+    container: document.createElement("div"),
+    wrappedEmbeddable: null
+  };
+
   it("renders PluginApp component", async () => {
-    const context = {
-      authoredState: "{}",
-      learnerState: "",
-      pluginId: "123",
-      div: document.createElement("div")
-    };
-    const plugin = new GlossaryPlugin(context);
+    const plugin = new GlossaryPlugin(defaultContext);
     // Note that this function doesn't have to be called manually in most cases. Constructor does it,
     // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
     await plugin.renderPluginApp();
@@ -36,12 +39,7 @@ describe("GlossaryPlugin", () => {
   });
 
   it("provides reasonable fallback state if provided values are malformed", async () => {
-    const context = {
-      authoredState: "some old unsupported format",
-      learnerState: "some old unsupported format",
-      pluginId: "123",
-      div: document.createElement("div")
-    };
+    const context = Object.assign({}, defaultContext, {authoredState: "foo", learnerState: "bar"});
     const plugin = new GlossaryPlugin(context);
     // Note that this function doesn't have to be called manually in most cases. Constructor does it,
     // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
@@ -56,12 +54,9 @@ describe("GlossaryPlugin", () => {
       fetch.resetMocks();
     });
 
-    const context = {
-      authoredState: JSON.stringify({url: "http://test.url.com/state.json"}),
-      learnerState: "",
-      pluginId: "123",
-      div: document.createElement("div")
-    };
+    const context = Object.assign({}, defaultContext, {
+      authoredState: JSON.stringify({url: "http://test.url.com/state.json"})
+    });
 
     it("fetches JSON at this URL and uses it as an authored state", async () => {
       const definitions = [{word: "test1", definition: "test 1"}];

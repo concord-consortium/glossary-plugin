@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions } from "./types";
+import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "./icons.scss";
@@ -23,8 +24,7 @@ interface ISidebarController {
 }
 
 interface IProps {
-  PluginAPI: any;
-  pluginId: string; // plugin instance ID that needs to be passed to LARA.saveLearnerState
+  saveState: (state: string) => any;
   definitions: IWordDefinition[];
   initialLearnerState: ILearnerState;
   askForUserDefinition: boolean;
@@ -115,7 +115,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { PluginAPI, pluginId } = this.props;
+    const { saveState } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
     const newLearnerState = Object.assign({}, learnerState);
@@ -124,11 +124,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
     }
     newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
     this.setState({ learnerState: newLearnerState });
-    PluginAPI.saveLearnerPluginState(pluginId, JSON.stringify(newLearnerState));
+    saveState(JSON.stringify(newLearnerState));
   }
 
   private decorate() {
-    const { definitions, PluginAPI } = this.props;
+    const { definitions } = this.props;
     const words = definitions.map(entry => entry.word);
     const replace = `<span class="${css.ccGlossaryWord}">$1</span>`;
     const listener = {
@@ -139,7 +139,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private addSidebar() {
-    const { PluginAPI } = this.props;
     this.sidebarContainer = document.createElement("div");
     // This is important for sidebar UI. Max height enables scrolling of the definitions container.
     // Exact value is inherited from the container provided by LARA.
@@ -151,7 +150,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
       titleBarColor: "#bbb",
       handleColor: "#777",
       width: 450,
-      height: 500,
       padding: 0,
       icon: this.sidebarIconContainer,
       content: this.sidebarContainer,
@@ -170,9 +168,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private wordClicked = (evt: Event) => {
-    const { PluginAPI } = this.props;
     const wordElement = evt.srcElement;
-    const word = (wordElement && wordElement.textContent || "").toLowerCase();
+    if (!wordElement) {
+      return;
+    }
+    const word = (wordElement.textContent || "").toLowerCase();
     if (!this.definitionsByWord[word]) {
       // Ignore, nothing to do.
       return;
@@ -185,7 +185,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
       resizable: false,
       position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
       onClose: this.popupClosed.bind(this, container)
-    });
+    } );
     const newOpenPopups = openPopups.concat({ word, container, popupController });
     this.setState({ openPopups: newOpenPopups });
     // Finally, close sidebar in case it's available and open.

@@ -90,6 +90,7 @@
     "react-dom": "^16.4.2"
   },
   "dependencies": {
+    "@concord-consortium/lara-plugin-api": "3.0.0-pre.7",
     "ajv": "^6.5.4",
     "ajv-keywords": "^3.2.0",
     "aws-sdk": "^2.332.0",
