@@ -72,7 +72,7 @@ module.exports = (env, argv) => {
     externals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
-      '@concord-consortium/lara-plugin-api': 'LARA_V3'
+      '@concord-consortium/lara-plugin-api': 'LARA.PluginAPI_V3'
     },
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
