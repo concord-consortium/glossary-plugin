@@ -10,7 +10,7 @@ describe("S3 helpers", () => {
             resolve({ Key: `${params.Key}`});
           })
         };
-      });
+      }) as any;
     });
 
     it("should call AWS.S3.upload with correct arguments and return Cloudfront URL", async () => {

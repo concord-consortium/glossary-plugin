@@ -168,7 +168,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private wordClicked = (evt: Event) => {
-    const wordElement = evt.srcElement;
+    const wordElement = evt.srcElement as HTMLElement;
     if (!wordElement) {
       return;
     }
