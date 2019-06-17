@@ -3,6 +3,7 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
+import InlineAuthoringForm from "./components/authoring/inline-authoring-form";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
@@ -85,6 +86,31 @@ export class GlossaryPlugin {
   }
 }
 
+export class GlossaryAuthoringPlugin {
+  public context: PluginAPI.IPluginAuthoringContext;
+  public pluginAppComponent: any;
+
+  constructor(context: PluginAPI.IPluginAuthoringContext) {
+    this.context = context;
+    this.renderPluginApp();
+  }
+
+  // This method is public so tests can call it directly and wait for it to finish.
+  // Note that in such case it will be called twice - by constructor and by test code directly.
+  // It needs to be idempotent.
+  public renderPluginApp = () => {
+    const authoredState = this.context.authoredState ? JSON.parse(this.context.authoredState) : {};
+    const s3Url = authoredState.url ? authoredState.url : "";
+
+    this.pluginAppComponent = ReactDOM.render(
+      <InlineAuthoringForm
+        s3Url={s3Url}
+        saveAuthoredPluginState={this.context.saveAuthoredPluginState}
+      />,
+      this.context.container);
+  }
+}
+
 export const initPlugin = () => {
   if (!PluginAPI || !PluginAPI.registerPlugin) {
     // tslint:disable-next-line:no-console
@@ -93,7 +119,10 @@ export const initPlugin = () => {
   }
   // tslint:disable-next-line:no-console
   console.log("LARA Plugin API available, GlossaryPlugin initialization");
-  PluginAPI.registerPlugin("glossary", GlossaryPlugin);
+  PluginAPI.registerPlugin({
+    runtimeClass: GlossaryPlugin,
+    authoringClass: GlossaryAuthoringPlugin
+  });
 };
 
 initPlugin();

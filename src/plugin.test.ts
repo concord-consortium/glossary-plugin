@@ -1,15 +1,19 @@
-import { initPlugin, GlossaryPlugin } from "./plugin";
+import { initPlugin, GlossaryPlugin, GlossaryAuthoringPlugin } from "./plugin";
 import * as fetch from "jest-fetch-mock";
 (global as any).fetch = fetch;
 // Mock LARA API.
 jest.mock("@concord-consortium/lara-plugin-api");
 
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
+import { ILogData } from "@concord-consortium/lara-plugin-api";
 
 describe("LARA plugin initialization", () => {
   it("loads without crashing and calls LARA.register", () => {
     initPlugin();
-    expect(PluginAPI.registerPlugin).toBeCalledWith("glossary", GlossaryPlugin);
+    expect(PluginAPI.registerPlugin).toBeCalledWith({
+      runtimeClass: GlossaryPlugin,
+      authoringClass: GlossaryAuthoringPlugin
+    });
   });
 });
 
@@ -27,7 +31,8 @@ describe("GlossaryPlugin", () => {
     learnerState: null,
     pluginId: 123,
     container: document.createElement("div"),
-    wrappedEmbeddable: null
+    wrappedEmbeddable: null,
+    log: (logData: string | ILogData) => { /** null */ }
   };
 
   it("renders PluginApp component", async () => {

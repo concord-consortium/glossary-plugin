@@ -4,6 +4,29 @@
   }
 }
 
+.inlineAuthoring {
+  max-width: 650px;
+
+  .scrollForm {
+    max-height: 550px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+
+  div, p, tr {
+    padding: 10px;
+  }
+
+  .s3Details {
+    input {
+      margin: 2px;
+    }
+    .name, .name input {
+      font-size: 1em;
+    }
+  }
+}
+
 .authoringColumn {
   display: inline-block;
   vertical-align: top;
@@ -120,4 +143,19 @@
 .s3Status {
   font-weight: bold;
   font-size: 0.85em;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
+
+.inlineFormButtons {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.2em;
+
+  button {
+    margin: 5px;
+  }
 }

@@ -42,3 +42,19 @@ export function s3Upload({ dir, filename, accessKey, secretKey, body, contentTyp
 export function s3Url({ filename, dir }: { filename: string; dir: string; }) {
   return `${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/${dir}/${filename}`;
 }
+
+export function parseS3Url(url: string) {
+  let dir;
+  let filename;
+  const filenameRegex = /\/([^\/]*)\.json/;
+  const dirRegex = /([^\/]*)\/[^\/]*\.json/;
+  let matches = filenameRegex.exec(url);
+  if (matches && matches[1]) {
+    filename = matches[1];
+  }
+  matches = dirRegex.exec(url);
+  if (matches && matches[1]) {
+    dir = matches[1];
+  }
+  return {dir, filename};
+}
