@@ -9,7 +9,8 @@
       {
         "label": "glossary",
         "name": "Activity",
-        "scope": "activity"
+        "scope": "activity",
+        "guiAuthoring": true
       }
     ]
   }

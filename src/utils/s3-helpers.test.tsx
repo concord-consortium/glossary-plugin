@@ -1,4 +1,4 @@
-import {s3Upload, s3Url, CLOUDFRONT_URL, S3_BUCKET, S3_DIR_PREFIX} from "./s3-helpers";
+import {s3Upload, s3Url, CLOUDFRONT_URL, S3_BUCKET, S3_DIR_PREFIX, parseS3Url} from "./s3-helpers";
 import * as AWS from "aws-sdk";
 
 describe("S3 helpers", () => {
@@ -41,6 +41,22 @@ describe("S3 helpers", () => {
   describe("s3Url", () => {
     describe("it should return Cloudfront URL for a given file and directory", () => {
       expect(s3Url({filename: "test.abc", dir: "dir"})).toEqual(`${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/dir/test.abc`);
+    });
+  });
+
+  describe("parseS3Url", () => {
+    describe("it should parse a valid Cloudfront URL for the file and directory", () => {
+      // tslint:disable-next-line:max-line-length
+      const {dir, filename} = parseS3Url("https://models-resources.concord.org/glossary-resources/precipitating_change_glossary/V2PluginTestGlossary.json");
+      expect(dir).toEqual("precipitating_change_glossary");
+      expect(filename).toEqual("V2PluginTestGlossary");
+    });
+
+    describe("it should fail to parse an invalid Cloudfront URL", () => {
+      // tslint:disable-next-line:max-line-length
+      const {dir, filename} = parseS3Url("https://models-resources.concord.org/glossary-resources/precipitating_change_glossary/V2PluginTestGlossary");
+      expect(dir).toBeUndefined();
+      expect(filename).toBeUndefined();
     });
   });
 });
