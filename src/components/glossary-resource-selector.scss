@@ -1,0 +1,36 @@
+.glossaryResourceSelector {
+  font-size: 16px;
+}
+
+.loading {
+  font-style: italic;
+}
+
+.error {
+  color: #f00;
+  font-weight: bold;
+}
+
+.status {
+  font-weight: bold;
+}
+
+.selectedResource {
+  font-weight: bold;
+}
+
+.userSuppliedJWTForm {
+  margin: 10px;
+}
+
+.promptForSelectOrCreateResource {
+  margin: 10px;
+}
+
+.selectResource {
+  margin: 10px;
+}
+
+.createResource {
+  margin: 10px;
+}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as css from "./button.scss";
-import * as icons from "../icons.scss";
+import * as icons from "./icons.scss";
 
 interface IProps {
   onClick: (e: React.MouseEvent) => void;
