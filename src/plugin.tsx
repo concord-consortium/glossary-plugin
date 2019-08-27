@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import InlineAuthoringForm from "./components/authoring/inline-authoring-form";
+import InlineAuthoringForm, { IGlossaryAuthoredState } from "./components/authoring/inline-authoring-form";
 import { IGlossary } from "./components/types";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
@@ -102,13 +102,14 @@ export class GlossaryAuthoringPlugin {
   // Note that in such case it will be called twice - by constructor and by test code directly.
   // It needs to be idempotent.
   public renderPluginApp = () => {
-    const authoredState = this.context.authoredState ? JSON.parse(this.context.authoredState) : {};
-    const s3Url = authoredState.url ? authoredState.url : "";
+    const authoredState: IGlossaryAuthoredState =
+      this.context.authoredState ? JSON.parse(this.context.authoredState) : {};
 
     this.pluginAppComponent = ReactDOM.render(
       <InlineAuthoringForm
-        s3Url={s3Url}
+        authoredState={authoredState}
         saveAuthoredPluginState={this.context.saveAuthoredPluginState}
+        getFirebaseJwt={this.context.getFirebaseJwt}
       />,
       this.context.container);
   }

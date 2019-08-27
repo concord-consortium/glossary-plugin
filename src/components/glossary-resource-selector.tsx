@@ -3,6 +3,7 @@ import Button from "./button";
 import { TokenServiceClient } from "@concord-consortium/token-service";
 import * as css from "./glossary-resource-selector.scss";
 import { Resource, S3Resource } from "@concord-consortium/token-service/lib/resource-types";
+import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 enum UIState {
   Start,
@@ -17,9 +18,11 @@ enum UIState {
 
 interface IProps {
   inlineAuthoring: boolean;
-  setClientAndResource: (client: TokenServiceClient, glossaryResource: S3Resource) => void;
+  glossaryResourceId?: string | null;
+  setClientAndResource: (client: TokenServiceClient, glossaryResource: S3Resource) => Promise<void>;
   uploadJSONToS3: () => void;
   loadJSONFromS3: () => void;
+  getFirebaseJwt?: (appName: string) => Promise<IJwtResponse>;
 }
 
 interface IState {
@@ -56,10 +59,29 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
   }
 
   public componentDidMount() {
-    if (this.props.inlineAuthoring) {
-      // TODO: use plugin api to get jwt and save in state
+    if (this.props.inlineAuthoring && this.props.getFirebaseJwt) {
       this.setStatus("Requesting JWT from portal...");
-      // TODO: check plugin state for glossary id and load it if present
+      this.props.getFirebaseJwt(TokenServiceClient.FirebaseAppName)
+        .then((jwt) => {
+          this.setState({jwt: jwt.token}, () => {
+            const {glossaryResourceId} = this.props;
+            if (glossaryResourceId) {
+              const client = this.getClient();
+              if (client) {
+                this.setStatus("Requesting glossary...");
+                client.getResource(glossaryResourceId)
+                  .then((glossaryResource) => {
+                    this.setGlossary(glossaryResource);
+                  })
+                  .catch(this.setError);
+              }
+            }
+            else {
+              this.setUIState(UIState.PromptForSelectOrCreateResource);
+            }
+          });
+        })
+        .catch(this.setError);
     }
     else {
       this.setUIState(UIState.UserSuppliesJWT);
@@ -233,8 +255,14 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
   }
 
   private setError = (error: any) => {
+    if (error && error.message) {
+      error = error.message;
+    }
+    else {
+      error = error.toString();
+    }
     // tslint:disable-next-line:no-console
-    console.log(error);
+    console.error(error);
     this.setState({error, uiState: UIState.Error});
   }
 
@@ -251,7 +279,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     this.setState({glossary}, () => {
       const client = this.getClient();
       if (client) {
-        this.props.setClientAndResource(client, glossary);
+        this.props.setClientAndResource(client, glossary).then(() => this.props.loadJSONFromS3());
         this.setUIState(UIState.SelectedResource);
       }
       else {

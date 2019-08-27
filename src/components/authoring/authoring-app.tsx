@@ -324,6 +324,8 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   private setClientAndResource = (client: TokenServiceClient, glossaryResource: S3Resource) => {
-    this.setState({client, glossaryResource});
+    return new Promise<void>((resolve, reject) => {
+      this.setState({client, glossaryResource}, () => resolve());
+    });
   }
 }

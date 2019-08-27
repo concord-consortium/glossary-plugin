@@ -13,6 +13,7 @@ import * as icons from "../icons.scss";
 import { TokenServiceClient } from "@concord-consortium/token-service";
 import { S3Resource } from "@concord-consortium/token-service/lib/resource-types";
 import GlossaryResourceSelector from "../glossary-resource-selector";
+import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
@@ -20,9 +21,14 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   definitions: []
 };
 
+export interface IGlossaryAuthoredState {
+  glossaryResourceId?: string | null;
+}
+
 interface IProps {
-  s3Url: string;
+  authoredState: IGlossaryAuthoredState;
   saveAuthoredPluginState: (json: string) => void;
+  getFirebaseJwt: (appName: string) => Promise<IJwtResponse>;
 }
 
 interface IState {
@@ -43,15 +49,6 @@ export default class InlineAuthoringForm extends React.Component<IProps, IState>
   constructor(props: IProps) {
     super(props);
 
-    let glossaryName = "";
-    let username = "";
-
-    if (props.s3Url) {
-      const {dir, filename} = parseS3Url(props.s3Url);
-      username = dir ? dir : "";
-      glossaryName = filename ? filename : "";
-    }
-
     this.state = {
       glossary: DEFAULT_GLOSSARY,
       newDefEditor: false,
@@ -64,11 +61,8 @@ export default class InlineAuthoringForm extends React.Component<IProps, IState>
     };
   }
 
-  public componentDidMount() {
-    // TODO: load if in plugin state
-  }
-
   public render() {
+    const { authoredState } = this.props;
     const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
     const { askForUserDefinition, definitions, showSideBar } = glossary;
     return (
@@ -77,10 +71,12 @@ export default class InlineAuthoringForm extends React.Component<IProps, IState>
           <div className={css.authoringColumn}>
             <div className={css.s3Details}>
               <GlossaryResourceSelector
-                inlineAuthoring={false}
+                inlineAuthoring={true}
+                glossaryResourceId={authoredState && authoredState.glossaryResourceId}
                 uploadJSONToS3={this.uploadJSONToS3}
                 loadJSONFromS3={this.loadJSONFromS3}
                 setClientAndResource={this.setClientAndResource}
+                getFirebaseJwt={this.props.getFirebaseJwt}
               />
               <div className={css.s3Status}>
                 {s3Status}
@@ -352,12 +348,15 @@ export default class InlineAuthoringForm extends React.Component<IProps, IState>
 
   private saveAuthoredState = () => {
     const { glossaryResource } = this.state;
-    this.props.saveAuthoredPluginState(JSON.stringify({
+    const authoredState: IGlossaryAuthoredState = {
       glossaryResourceId: glossaryResource ? glossaryResource.id : null
-    }));
+    };
+    this.props.saveAuthoredPluginState(JSON.stringify(authoredState));
   }
 
   private setClientAndResource = (client: TokenServiceClient, glossaryResource: S3Resource) => {
-    this.setState({client, glossaryResource});
+    return new Promise<void>((resolve, reject) => {
+      this.setState({client, glossaryResource}, () => resolve());
+    });
   }
 }
