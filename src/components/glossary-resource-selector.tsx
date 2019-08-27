@@ -7,8 +7,6 @@ import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 enum UIState {
   Start,
-  Error,
-  Status,
   UserSuppliesJWT,
   PromptForSelectOrCreateResource,
   SelectResource,
@@ -39,7 +37,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     uiState: UIState.Start,
     jwt: null,
     error: null,
-    status: null,
+    status: "Loading...",
     glossary: null,
     resources: null
   };
@@ -60,7 +58,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
 
   public componentDidMount() {
     if (this.props.inlineAuthoring && this.props.getFirebaseJwt) {
-      this.setStatus("Requesting JWT from portal...");
+      this.setState({status: "Requesting JWT from portal..."});
       this.props.getFirebaseJwt(TokenServiceClient.FirebaseAppName)
         .then((jwt) => {
           this.setState({jwt: jwt.token}, () => {
@@ -68,29 +66,34 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
             if (glossaryResourceId) {
               const client = this.getClient();
               if (client) {
-                this.setStatus("Requesting glossary...");
+                this.setState({status: "Requesting glossary..."});
                 client.getResource(glossaryResourceId)
                   .then((glossaryResource) => {
-                    this.setGlossary(glossaryResource);
+                    this.setState({status: null}, () => this.setGlossary(glossaryResource));
                   })
-                  .catch(this.setError);
+                  .catch((error) => {
+                    this.setState({error, uiState: UIState.PromptForSelectOrCreateResource});
+                  });
               }
             }
             else {
-              this.setUIState(UIState.PromptForSelectOrCreateResource);
+              this.setState({status: null, uiState: UIState.PromptForSelectOrCreateResource});
             }
           });
         })
-        .catch(this.setError);
+        .catch((error) => this.setState({error}));
     }
     else {
-      this.setUIState(UIState.UserSuppliesJWT);
+      this.setState({uiState: UIState.UserSuppliesJWT});
     }
   }
 
   public render() {
+    const {status, error} = this.state;
     return (
       <div className={css.glossaryResourceSelector}>
+        {error ? <div className={css.error}>{error.message || error.toString()}</div> : null}
+        {status ? <div className={css.status}>{status.toString()}</div> : null}
         {this.renderUI()}
       </div>
     );
@@ -99,11 +102,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
   private renderUI(): JSX.Element {
     switch (this.state.uiState) {
       case UIState.Start:
-        return <div className={css.loading}>Loading...</div>;
-      case UIState.Error:
-        return <div className={css.error}>{this.state.error.toString()}</div>;
-      case UIState.Status:
-        return <div className={css.status}>{this.state.status}</div>;
+        return <div/>;
       case UIState.UserSuppliesJWT:
         return this.renderUserSuppliedJWTForm();
       case UIState.PromptForSelectOrCreateResource:
@@ -114,14 +113,17 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         return this.renderCreateResource();
       case UIState.SelectedResource:
         return this.renderSelectedResource();
-    }
+
+      }
   }
 
   private handleSubmitUserSuppliedJWTForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (this.userSuppliedJWTFieldRef.current) {
       const jwt = this.userSuppliedJWTFieldRef.current.value.trim();
       if (jwt.length > 0) {
-        this.setState({jwt}, () => this.setUIState(UIState.PromptForSelectOrCreateResource));
+        this.setState({jwt}, () => this.setState({uiState: UIState.PromptForSelectOrCreateResource}));
       }
     }
   }
@@ -131,30 +133,49 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       <form className={css.userSuppliedJWTForm} onSubmit={this.handleSubmitUserSuppliedJWTForm}>
         <p>Please enter a valid portal generated Firebase JWT (this is not needed in the inline authoring)</p>
         JWT: <input type="text" ref={this.userSuppliedJWTFieldRef} />
-        <input type="submit" />
+        <Button label="Use JWT" onClick={this.handleSubmitUserSuppliedJWTForm} />
       </form>
     );
   }
 
   private handleSelectExistingGlossary = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const client = this.getClient();
-    if (client) {
-      this.setStatus("Loading glossaries...");
-      client.listResources({type: "s3Folder", tool: "glossary"})
-        .then((resources) => {
-          this.setState({resources}, () => {
-            this.setUIState(resources.length === 0 ? UIState.PromptForSelectOrCreateResource : UIState.SelectResource);
-          });
-        })
-        .catch(this.setError);
+    e.preventDefault();
+    e.stopPropagation();
+
+    const saveResources = (resources: Resource[]) => {
+      this.setState({
+        status: null,
+        resources,
+        uiState: resources.length === 0 ? UIState.PromptForSelectOrCreateResource : UIState.SelectResource
+      });
+    };
+    if (this.state.resources) {
+      saveResources(this.state.resources);
     }
     else {
-      this.setError("No client available");
+      const client = this.getClient();
+      if (client) {
+        this.setState({glossary: null, uiState: UIState.Start, status: "Loading glossaries..."});
+        client.listResources({type: "s3Folder", tool: "glossary"})
+          .then((resources) => {
+            this.setState({
+              status: null,
+              resources,
+              uiState: resources.length === 0 ? UIState.PromptForSelectOrCreateResource : UIState.SelectResource
+            });
+          })
+          .catch((error) => this.setState({error}));
+      }
+      else {
+        this.setState({error: "No client available"});
+      }
     }
   }
 
   private handleCreateNewGlossary = (e: React.MouseEvent<HTMLButtonElement>) => {
-    this.setUIState(UIState.CreateResource);
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({uiState: UIState.CreateResource});
   }
 
   private renderPromptForSelectOrCreateResource() {
@@ -164,14 +185,16 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       <div className={css.promptForSelectOrCreateResource}>
         {noResources
           ? "No glossaries found!"
-          : <button onClick={this.handleSelectExistingGlossary}>Select Existing Glossary</button>
+          : <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
         }
-        <button onClick={this.handleCreateNewGlossary}>Create New Glossary</button>
+        <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
       </div>
     );
   }
 
   private handleSelectResource = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (this.glossarySelectFieldRef.current) {
       const id = this.glossarySelectFieldRef.current.value;
       const resource = (this.state.resources || []).find((r) => r.id === id);
@@ -185,32 +208,38 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     const resources = this.state.resources || [];
     return (
       <form className={css.selectResource} onSubmit={this.handleSelectResource}>
-        <div>
-          Glossary: <select ref={this.glossarySelectFieldRef}>{resources.map((resource) => {
-            return <option key={resource.id} value={resource.id}>{resource.name}</option>;
-          })}</select>
-        </div>
-        <input type="submit" />
+        Glossary: <select ref={this.glossarySelectFieldRef}>{resources.map((resource) => {
+          return <option key={resource.id} value={resource.id}>{resource.name}</option>;
+        })}</select>
+        <p>
+          <Button label="Select Glossary" onClick={this.handleSelectResource} />
+          <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
+        </p>
       </form>
     );
   }
 
   private handleCreateResource = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (this.glossaryNameFieldRef.current && this.glossaryDescriptionFieldRef.current) {
       const name = this.glossaryNameFieldRef.current.value.trim();
       const description = this.glossaryDescriptionFieldRef.current.value.trim();
       if ((name.length > 0) && (description.length > 0)) {
         const client = this.getClient();
         if (client) {
-          this.setStatus("Creating glossary...");
+          this.setState({status: "Creating glossary..."});
           client.createResource({
             name, description, type: "s3Folder", tool: "glossary", accessRuleType: "user", accessRuleRole: "owner"
           })
-          .then(this.setGlossary)
-          .catch(this.setError);
+          .then((glossary) => {
+            // clear resources to force a load of the new resource if requested later
+            this.setState({status: null, resources: null}, () => this.setGlossary(glossary));
+          })
+          .catch((error) => this.setState({error}));
         }
         else {
-          this.setError("No client available");
+          this.setState({error: "No client available"});
         }
       }
     }
@@ -219,59 +248,48 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
   private renderCreateResource() {
     return (
       <form className={css.createResource} onSubmit={this.handleCreateResource}>
-        <div>
-          Name: <input type="text" ref={this.glossaryNameFieldRef} />
-        </div>
-        <div>
-          Description: <input type="text" ref={this.glossaryDescriptionFieldRef} />
-        </div>
-        <input type="submit" />
+        <p>
+          Name:<br/><input type="text" ref={this.glossaryNameFieldRef} />
+        </p>
+        <p>
+          Description:<br/><input type="text" ref={this.glossaryDescriptionFieldRef} />
+        </p>
+        <p>
+          <Button label="Create Glossary" onClick={this.handleCreateResource} />
+          <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
+        </p>
       </form>
     );
   }
 
   private handleSave = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     this.props.uploadJSONToS3();
   }
 
   private handleLoad = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     this.props.loadJSONFromS3();
   }
 
   private renderSelectedResource() {
     const {glossary} = this.state;
-    const label = glossary ? `${glossary.name} (#${glossary.id})` : "No glossary selected!";
     return (
       <div className={css.selectedResource}>
         <p>
-          {label}
+          <h1>{glossary ? glossary.name : "No glossary selected!"}</h1>
+          {glossary ? <h2>id: {glossary.id}</h2> : null}
         </p>
         <p>
           <Button label="Save" data-cy="save" onClick={this.handleSave}/>
-          <Button label="Load" data-cy="load" onClick={this.handleLoad}/>
+          <Button label="Reload" data-cy="load" onClick={this.handleLoad}/>
+          <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
+          <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
         </p>
       </div>
     );
-  }
-
-  private setError = (error: any) => {
-    if (error && error.message) {
-      error = error.message;
-    }
-    else {
-      error = error.toString();
-    }
-    // tslint:disable-next-line:no-console
-    console.error(error);
-    this.setState({error, uiState: UIState.Error});
-  }
-
-  private setStatus = (status: string) => {
-    this.setState({status, uiState: UIState.Status});
-  }
-
-  private setUIState = (uiState: UIState) => {
-    this.setState({uiState});
   }
 
   private setGlossary = (glossaryResource: Resource) => {
@@ -280,10 +298,10 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       const client = this.getClient();
       if (client) {
         this.props.setClientAndResource(client, glossary).then(() => this.props.loadJSONFromS3());
-        this.setUIState(UIState.SelectedResource);
+        this.setState({uiState: UIState.SelectedResource});
       }
       else {
-        this.setError("No client available");
+        this.setState({error: "No client available"});
       }
     });
   }
