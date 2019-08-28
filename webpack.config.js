@@ -9,6 +9,11 @@ module.exports = (env, argv) => {
 
   return {
     context: __dirname, // to automatically find tsconfig.json
+    devServer: {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    },
     devtool: 'source-map',
     entry: {
       demo: './src/demo.tsx',
