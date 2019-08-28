@@ -4,6 +4,7 @@ import PluginApp from "./components/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import InlineAuthoringForm from "./components/authoring/inline-authoring-form";
+import { IGlossary } from "./components/types";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
@@ -62,8 +63,9 @@ export class GlossaryPlugin {
   // Note that in such case it will be called twice - by constructor and by test code directly.
   // It needs to be idempotent.
   public renderPluginApp = async () => {
-    const authoredState = await getAuthoredState(this.context);
+    const authoredState: IGlossary = await getAuthoredState(this.context);
     const definitions = authoredState.definitions || [];
+    const showSideBar = authoredState.showSideBar || false;
     const askForUserDefinition = authoredState.askForUserDefinition || false;
     const initialLearnerState = getLearnerState(this.context);
 
@@ -78,6 +80,7 @@ export class GlossaryPlugin {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}
+        showSideBar={showSideBar}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div

@@ -33,6 +33,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
 
@@ -52,6 +53,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
 
@@ -74,6 +76,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
 
@@ -91,6 +94,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
 
@@ -118,6 +122,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -134,6 +139,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        showSideBar={true}
       />
     );
 
