@@ -200,6 +200,7 @@ describe("AuthoringApp component", () => {
       const glossary = {
         definitions: [{word: "test1", definition: "test 1"}],
         askForUserDefinition: false,
+        showSideBar: true
       };
 
       fetch.mockResponse(JSON.stringify(glossary));

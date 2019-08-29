@@ -15,7 +15,7 @@ import * as icons from "../icons.scss";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
-  showSideBar: false,
+  showSideBar: true,
   definitions: []
 };
 // Keys used to obtain dat from URL or local storage.
