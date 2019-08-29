@@ -35,6 +35,16 @@ describe("AuthoringApp component", () => {
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 
+  describe("When `showSideBar` is unchecked", () => {
+    it("Should hide the sideBar", () => {
+      const wrapper = shallow(
+        <AuthoringApp />
+      );
+      wrapper.find("[data-cy='showSideBar']").simulate("change", { target: { checked: false }});
+      expect(wrapper.find(GlossarySidebar).length).toEqual(0);
+    });
+  });
+
   it("lets user add a new definition", () => {
     const wrapper = shallow(
       <AuthoringApp/>

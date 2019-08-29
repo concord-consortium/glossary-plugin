@@ -150,4 +150,16 @@ describe("PluginApp component", () => {
     MockPluginAPI.onSidebarOpen();
     expect(MockPluginAPI.mockPopupController.close).toHaveBeenCalledTimes(1);
   });
+  it("hides the sidebar when showSideBar is false", () => {
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={definitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        showSideBar={false}
+      />
+    );
+    expect(wrapper.find(GlossarySidebar).length).toEqual(0);
+  });
 });
