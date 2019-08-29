@@ -69,12 +69,24 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     const { word, userDefinitions } = this.props;
     const { currentUserDefinition } = this.state;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
+
+    const strings = {
+      whatDoYouThink: `What do you think "${word}" means?`,
+      writeDef:       "Write the definition in your own words here.",
+      writeNewDef:    "Write your new definition in your own words here.",
+      cancel:         "Cancel",
+      dontKnow:       "I don't know yet",
+      submit:         "Submit"
+    };
+
+    const placeholder = anyUserDef ? strings.writeNewDef : strings.writeDef;
+
     return (
       <div>
-        What do you think "{word}" means?
+        {strings.whatDoYouThink}
         <textarea
           className={css.userDefinitionTextarea}
-          placeholder="Write your definition here"
+          placeholder={placeholder}
           onChange={this.handleTextareaChange}
           value={currentUserDefinition}
         />
@@ -87,7 +99,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         }
         <div className={css.buttons}>
           <div className={css.button} data-cy="submit" onClick={this.handleSubmit}>
-            Submit
+            {strings.submit}
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
           <div
@@ -95,7 +107,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             data-cy="cancel"
             onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}
           >
-            {anyUserDef ? "Cancel" : "I don't know yet"}
+            {anyUserDef ? strings.cancel : strings.dontKnow }
           </div>
         </div>
       </div>
