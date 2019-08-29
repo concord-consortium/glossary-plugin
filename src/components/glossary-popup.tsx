@@ -107,7 +107,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             data-cy="cancel"
             onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}
           >
-            {anyUserDef ? strings.cancel : strings.dontKnow }
+            {anyUserDef ? strings.cancel : strings.dontKnow}
           </div>
         </div>
       </div>
