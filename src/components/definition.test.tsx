@@ -3,6 +3,10 @@ import Definition from "./definition";
 import * as icons from "./icons.scss";
 import { shallow } from "enzyme";
 
+const expectToolTip = (wrapper: any, tip: string) => {
+  expect(wrapper.find(`[title="${tip}"]`)).toHaveLength(1);
+};
+
 describe("Definition component", () => {
   const speechSynthesisMock = {
     speak: jest.fn()
@@ -46,6 +50,7 @@ describe("Definition component", () => {
     );
     const icon = wrapper.find("." + icons.iconAudio);
     expect(icon.length).toEqual(1);
+    expectToolTip(wrapper, "Read aloud");
     icon.simulate("click");
     expect(SpeechSynthesisUtteranceMock).toHaveBeenCalledTimes(1);
     expect(speechSynthesisMock.speak).toHaveBeenCalledTimes(1);
@@ -63,6 +68,7 @@ describe("Definition component", () => {
     );
     const icon = wrapper.find("." + icons.iconImage);
     expect(icon.length).toEqual(1);
+    expectToolTip(wrapper, "View photo");
     expect(wrapper.find(`img[src='${src}']`).length).toEqual(0);
     icon.simulate("click");
     expect(wrapper.find(`img[src='${src}']`).length).toEqual(1);
@@ -83,6 +89,7 @@ describe("Definition component", () => {
     );
     const icon = wrapper.find("." + icons.iconVideo);
     expect(icon.length).toEqual(1);
+    expectToolTip(wrapper, "View movie");
     expect(wrapper.find(`video[src='${src}']`).length).toEqual(0);
     icon.simulate("click");
     expect(wrapper.find(`video[src='${src}']`).length).toEqual(1);
