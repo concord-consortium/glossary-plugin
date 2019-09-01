@@ -34,6 +34,7 @@ describe("GlossaryPopup component", () => {
       const textarea = wrapper.find("textarea");
       const submit = wrapper.find("[data-cy='submit']");
       expect(textarea.length).toEqual(1);
+      expect(textarea.props().placeholder).toEqual("Write the definition in your own words here.");
       expect(submit.length).toEqual(1);
 
       const userDef = "user definition";
@@ -82,10 +83,11 @@ describe("GlossaryPopup component", () => {
 
         const reviseButton = wrapper.find("[data-cy='revise']");
         expect(reviseButton.length).toEqual(1);
-
         reviseButton.simulate("click");
+        const textarea = wrapper.find("textarea");
         expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));
         expect(wrapper.find("textarea").length).toEqual(1);
+        expect(textarea.props().placeholder).toEqual("Write your new definition in your own words here.");
         // Finds a component with given properties (UserDefinitions)
         expect(wrapper.find({userDefinitions}).length).toEqual(1);
       });
