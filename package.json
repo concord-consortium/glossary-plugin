@@ -45,7 +45,12 @@
       "jsx",
       "json",
       "node"
-    ]
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    }
   },
   "homepage": "https://github.com/concord-consortium/glossary-plugin#readme",
   "devDependencies": {

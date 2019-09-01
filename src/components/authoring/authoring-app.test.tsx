@@ -1,8 +1,8 @@
 import * as React from "react";
 import AuthoringApp, { DEFAULT_GLOSSARY } from "./authoring-app";
-import JSONEditor from "./json-editor";
 import GlossarySidebar from "../glossary-sidebar";
 import DefinitionEditor from "./definition-editor";
+import GlossaryResourceSelector from "../glossary-resource-selector";
 import { shallow } from "enzyme";
 import * as icons from "../icons.scss";
 import { s3Upload } from "../../utils/s3-helpers";
@@ -23,15 +23,9 @@ describe("AuthoringApp component", () => {
     const wrapper = shallow(
       <AuthoringApp/>
     );
-    expect(wrapper.find("input[name='glossaryName']").length).toEqual(1);
-    expect(wrapper.find("input[name='username']").length).toEqual(1);
-    expect(wrapper.find("input[name='s3AccessKey']").length).toEqual(1);
-    expect(wrapper.find("input[name='s3SecretKey']").length).toEqual(1);
-    expect(wrapper.find("[data-cy='save']").length).toEqual(1);
-    expect(wrapper.find("[data-cy='load']").length).toEqual(1);
+    expect(wrapper.find(GlossaryResourceSelector).length).toEqual(1);
     expect(wrapper.find("[data-cy='askForUserChange']").length).toEqual(1);
     expect(wrapper.find("[data-cy='addDef']").length).toEqual(1);
-    expect(wrapper.find(JSONEditor).length).toEqual(1);
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 
@@ -66,37 +60,15 @@ describe("AuthoringApp component", () => {
 
     // GlossarySidebar component.
     expect(wrapper.find({ definitions: [ definition ]}).length).toEqual(1);
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: true,
-        definitions: [ definition ]
-      }
-    }).length).toEqual(1);
 
     // Now, remove it.
     component.removeDef(definition.word);
 
     // GlossarySidebar component.
     expect(wrapper.find({ definitions: []}).length).toEqual(1);
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: true,
-        definitions: []
-      }
-    }).length).toEqual(1);
 
     // Toggle askForUserDefinition.
     wrapper.find("[data-cy='askForUserChange']").simulate("change", { target: { checked: false }});
-
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: false,
-        definitions: []
-      }
-    }).length).toEqual(1);
   });
 
   it("renders buttons that let you edit or remove an existing definition", () => {
@@ -139,16 +111,6 @@ describe("AuthoringApp component", () => {
     expect(wrapper.text()).toEqual(expect.stringContaining(definition.word));
     expect(wrapper.find("." + icons.iconImage).length).toEqual(1);
     expect(wrapper.find("." + icons.iconVideo).length).toEqual(1);
-  });
-
-  it("sets glossary name, username, and S3 access key if they are provided in URL", () => {
-    history.replaceState({}, "Test", "/authoring.html?glossaryName=testName&username=user&s3AccessKey=testS3Key");
-    const wrapper = shallow(
-      <AuthoringApp/>
-    );
-    expect(wrapper.find("input[name='glossaryName']").props().value).toEqual("testName");
-    expect(wrapper.find("input[name='username']").props().value).toEqual("user");
-    expect(wrapper.find("input[name='s3AccessKey']").props().value).toEqual("testS3Key");
   });
 
   it("should let user load JSON file if glossary name and username are provided", () => {
@@ -206,7 +168,7 @@ describe("AuthoringApp component", () => {
   });
 
   describe(".loadJSONFromS3() method", () => {
-    it("should download data and update JSON Editor and preview", async () => {
+    it("should download data and update preview", async () => {
       const glossary = {
         definitions: [{word: "test1", definition: "test 1"}],
         askForUserDefinition: false,
@@ -222,7 +184,6 @@ describe("AuthoringApp component", () => {
 
       expect(fetch).toHaveBeenCalled();
       expect(wrapper.text()).toEqual(expect.stringContaining("Loading JSON: success!"));
-      expect(wrapper.find(JSONEditor).props().initialValue).toEqual(glossary);
       expect(wrapper.find(GlossarySidebar).props().definitions).toEqual(glossary.definitions);
     });
   });
