@@ -15,6 +15,10 @@ interface IState {
   videoVisible: boolean;
 }
 
+const speechLabel = "Read aloud";
+const imageLabel  = "View photo";
+const videoLabel  = "View movie";
+
 // IE11 doesn't support this API.
 const textToSpeechAvailable = () => {
   return typeof SpeechSynthesisUtterance === "function" && typeof speechSynthesis === "object";
@@ -24,7 +28,13 @@ const renderTextToSpeech = (onClick: () => void) => {
   if (!textToSpeechAvailable()) {
     return null;
   }
-  return <span className={icons.iconButton + " " + icons.iconAudio} onClick={onClick}/>;
+  return(
+    <span
+      className={icons.iconButton + " " + icons.iconAudio}
+      onClick={onClick}
+      title={speechLabel}
+    />
+  );
 };
 
 const read = (text: string) => {
@@ -38,6 +48,32 @@ export default class Definition extends React.Component<IProps, IState> {
     videoVisible: false
   };
 
+  public renderImageButton(imageUrl?: string) {
+    if (imageUrl) {
+      return(
+        <span
+          className={icons.iconButton + " " + icons.iconImage}
+          onClick={this.toggleImage}
+          title={imageLabel}
+        />
+      );
+    }
+    return null;
+  }
+
+  public renderVideoButton(videoUrl?: string) {
+    if (videoUrl) {
+      return(
+        <span
+          className={icons.iconButton + " " + icons.iconVideo}
+          onClick={this.toggleVideo}
+          title={videoLabel}
+        />
+      );
+    }
+    return null;
+  }
+
   public render() {
     const { definition, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
     const { imageVisible, videoVisible } = this.state;
@@ -47,8 +83,8 @@ export default class Definition extends React.Component<IProps, IState> {
             {definition}
             <span className={css.icons}>
               {renderTextToSpeech(this.readDefinition)}
-              {imageUrl && <span className={icons.iconButton + " " + icons.iconImage} onClick={this.toggleImage}/>}
-              {videoUrl && <span className={icons.iconButton + " " + icons.iconVideo} onClick={this.toggleVideo}/>}
+              {this.renderImageButton(imageUrl)}
+              {this.renderVideoButton(videoUrl)}
             </span>
           </div>
         {
