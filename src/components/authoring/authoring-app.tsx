@@ -13,8 +13,9 @@ import { validateGlossary } from "../../utils/validate-glossary";
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
 
-export const DEFAULT_GLOSSARY = {
+export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
+  showSideBar: true,
   definitions: []
 };
 // Keys used to obtain dat from URL or local storage.
@@ -62,7 +63,7 @@ export default class PluginApp extends React.Component<{}, IState> {
   public render() {
     const { newDefEditor, glossary, jsonEditorContent, definitionEditors,
       glossaryName, username, s3AccessKey, s3SecretKey, s3Status } = this.state;
-    const { askForUserDefinition, definitions } = glossary;
+    const { askForUserDefinition, definitions, showSideBar} = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={css.authoringColumn}>
@@ -114,6 +115,20 @@ export default class PluginApp extends React.Component<{}, IState> {
               <div className={css.help}>
                 When this option is turned on, students will have to provide their own definition
                 before they can see an authored one.
+              </div>
+            </label>
+            <br/>
+            <input
+              type="checkbox"
+              checked={showSideBar}
+              data-cy="showSideBar"
+              onChange={this.handleShowSideBarChange}
+            />
+            <label>
+              Show Glossary icon in sidebar
+              <div className={css.help}>
+                When this option is turned on, students will have access to
+                the glossary at all times via the sidebar.
               </div>
             </label>
             <h3>Definitions</h3>
@@ -196,18 +211,26 @@ export default class PluginApp extends React.Component<{}, IState> {
         </div>
         <div className={css.preview}>
           <h2>Preview</h2>
-          <div className={css.handle}>
-            <span className={icons.iconBook}/>
-            <div>Glossary</div>
-          </div>
-          <div className={css.sidebar}>
-            <GlossarySidebar
-              definitions={definitions}
-              learnerDefinitions={{}}
-            />
-          </div>
+          {showSideBar && this.renderSideBar(definitions)}
         </div>
       </div>
+    );
+  }
+
+  public renderSideBar(definitions: IWordDefinition[]) {
+    return(
+      <div>
+        <div className={css.handle}>
+          <span className={icons.iconBook}/>
+          <div>Glossary</div>
+        </div>
+        <div className={css.sidebar}>
+          <GlossarySidebar
+            definitions={definitions}
+            learnerDefinitions={{}}
+          />
+        </div>
+    </div>
     );
   }
 
@@ -362,6 +385,12 @@ export default class PluginApp extends React.Component<{}, IState> {
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.askForUserDefinition = (event.target as HTMLInputElement).checked;
+    this.setState({ glossary, jsonEditorContent: glossary });
+  }
+
+  private handleShowSideBarChange = (event: React.ChangeEvent) => {
+    const glossary: IGlossary = clone(this.state.glossary);
+    glossary.showSideBar = (event.target as HTMLInputElement).checked;
     this.setState({ glossary, jsonEditorContent: glossary });
   }
 

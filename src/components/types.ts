@@ -1,5 +1,6 @@
 export interface IGlossary {
   askForUserDefinition: boolean;
+  showSideBar: boolean;
   definitions: IWordDefinition[];
 }
 

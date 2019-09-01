@@ -28,6 +28,7 @@ interface IProps {
   definitions: IWordDefinition[];
   initialLearnerState: ILearnerState;
   askForUserDefinition: boolean;
+  showSideBar: boolean;
 }
 
 interface IState {
@@ -48,7 +49,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private sidebarController: ISidebarController;
 
   public componentDidMount() {
-    const { definitions } = this.props;
+    const { definitions, showSideBar } = this.props;
     this.definitionsByWord = {};
     definitions.forEach(entry => {
       this.definitionsByWord[entry.word.toLowerCase()] = entry;
@@ -58,7 +59,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
       return;
     }
     this.decorate();
-    this.addSidebar();
+    if (showSideBar) {
+      this.addSidebar();
+    }
   }
 
   public render() {
