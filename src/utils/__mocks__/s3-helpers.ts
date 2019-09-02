@@ -1,13 +1,5 @@
-export const S3_DIR_PREFIX = "test-resources";
-export const CLOUDFRONT_URL = "https://test-resources.mock.concord.org";
-
-export const s3Upload = jest.fn(({ dir, filename }: any) => {
-  const key = `${S3_DIR_PREFIX}/${dir}/${filename}`;
+export const s3Upload = jest.fn(({ client, glossaryResource, filename }: any) => {
   return new Promise(resolve => {
-    resolve(`${CLOUDFRONT_URL}/${key}`);
+    resolve(client.getPublicS3Url(glossaryResource, filename));
   });
-});
-
-export const s3Url = jest.fn(({ filename, dir }: { filename: string; dir: string; }) => {
-  return `${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/${dir}/${filename}`;
 });

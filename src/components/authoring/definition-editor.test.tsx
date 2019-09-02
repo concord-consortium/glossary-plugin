@@ -3,6 +3,8 @@ import DefinitionEditor, { MEDIA_S3_DIR } from "./definition-editor";
 import { shallow } from "enzyme";
 import { s3Upload } from "../../utils/s3-helpers";
 import {v1 as uuid} from "uuid";
+import { TokenServiceClient } from "@concord-consortium/token-service";
+import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
 
 jest.mock("../../utils/s3-helpers");
 jest.mock("uuid", () => {
@@ -18,6 +20,31 @@ jest.mock("react-dropzone", () => {
 });
 
 const noop = () => undefined;
+const client = new TokenServiceClient({jwt: "test"});
+const glossaryResource: S3Resource = {
+  id: "test",
+  name: "glossary",
+  description: "test glossary",
+  type: "s3Folder",
+  tool: "glossary",
+  accessRules: [],
+  bucket: "test-bucket",
+  folder: "test-folder",
+  region: "test-regsion"
+};
+const credentials: Credentials = {
+  accessKeyId: "test",
+  expiration: new Date(),
+  secretAccessKey: "test",
+  sessionToken: "test",
+  bucket: "test-bucket",
+  keyPrefix: "glossary/test/"
+};
+client.getCredentials = jest.fn(() => {
+  return new Promise<Credentials>((resolve) => {
+    resolve(credentials);
+  });
+});
 
 describe("DefinitionEditor component", () => {
   const username = "username";
@@ -30,10 +57,9 @@ describe("DefinitionEditor component", () => {
       <DefinitionEditor
         onSave={noop}
         onCancel={noop}
-        username={username}
-        s3AccessKey={s3AccessKey}
-        s3SecretKey={s3SecretKey}
-      />
+        client={client}
+        glossaryResource={glossaryResource}
+    />
     );
     expect(wrapper.find("input[name='word']").length).toEqual(1);
     expect(wrapper.find("textarea[name='definition']").length).toEqual(1);
@@ -48,13 +74,13 @@ describe("DefinitionEditor component", () => {
   describe("saving", () => {
     it("does not call onSave callback if there are any validation errors", () => {
       const saveHandler = jest.fn();
+
       const wrapper = shallow(
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
-          username={username}
-          s3AccessKey={s3AccessKey}
-          s3SecretKey={s3SecretKey}
+          client={client}
+          glossaryResource={glossaryResource}
         />
       );
       wrapper.setState({
@@ -80,9 +106,8 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
-          username={username}
-          s3AccessKey={s3AccessKey}
-          s3SecretKey={s3SecretKey}
+          client={client}
+          glossaryResource={glossaryResource}
         />
       );
       wrapper.setState({
@@ -112,9 +137,8 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={saveHandler}
           onCancel={noop}
-          username={username}
-          s3AccessKey={s3AccessKey}
-          s3SecretKey={s3SecretKey}
+          client={client}
+          glossaryResource={glossaryResource}
         />
       );
       wrapper.setState({
@@ -143,9 +167,8 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={noop}
           onCancel={noop}
-          username={""}
-          s3AccessKey={s3AccessKey}
-          s3SecretKey={s3SecretKey}
+          client={client}
+          glossaryResource={glossaryResource}
         />
       );
       try {
@@ -160,26 +183,23 @@ describe("DefinitionEditor component", () => {
         <DefinitionEditor
           onSave={noop}
           onCancel={noop}
-          username={username}
-          s3AccessKey={s3AccessKey}
-          s3SecretKey={s3SecretKey}
+          client={client}
+          glossaryResource={glossaryResource}
         />
       );
 
       const url = await (wrapper.instance() as DefinitionEditor).uploadMedia(file);
 
       expect(s3Upload).toHaveBeenCalledWith({
-        dir: `${username}/${MEDIA_S3_DIR}`,
+        client,
+        credentials,
         filename: uuid() + "-" + file.name,
-        accessKey: s3AccessKey,
-        secretKey: s3SecretKey,
+        glossaryResource,
         body: file,
         contentType: file.type,
         cacheControl: "max-age=31536000" // 1 year
       });
-      expect(url).toEqual(
-        `https://test-resources.mock.concord.org/test-resources/${username}/${MEDIA_S3_DIR}/mock-uuid-${file.name}`
-      );
+      expect(url).toEqual("https://test-bucket.s3.amazonaws.com/test-folder/test/mock-uuid-test-media.jpg");
     });
   });
 });

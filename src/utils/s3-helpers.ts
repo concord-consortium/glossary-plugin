@@ -1,12 +1,11 @@
 import * as AWS from "aws-sdk";
 
-export const CLOUDFRONT_URL = "https://models-resources.concord.org";
 import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
 import { TokenServiceClient } from "@concord-consortium/token-service";
 
 export const GLOSSARY_FILENAME = "glossary.json";
 
-export interface IParams {
+export interface IS3UploadParams {
   client: TokenServiceClient;
   credentials: Credentials;
   filename: string;
@@ -17,7 +16,7 @@ export interface IParams {
 }
 
 export function s3Upload({
-  client, credentials, filename, glossaryResource, body, contentType = "", cacheControl = "" }: IParams
+  client, credentials, filename, glossaryResource, body, contentType = "", cacheControl = "" }: IS3UploadParams
 ) {
   const {bucket, region} = glossaryResource;
   const {accessKeyId, secretAccessKey, sessionToken} = credentials;
@@ -36,20 +35,4 @@ export function s3Upload({
     .catch(error => {
       throw(error.message);
     });
-}
-
-export function parseS3Url(url: string) {
-  let dir;
-  let filename;
-  const filenameRegex = /\/([^\/]*)\.json/;
-  const dirRegex = /([^\/]*)\/[^\/]*\.json/;
-  let matches = filenameRegex.exec(url);
-  if (matches && matches[1]) {
-    filename = matches[1];
-  }
-  matches = dirRegex.exec(url);
-  if (matches && matches[1]) {
-    dir = matches[1];
-  }
-  return {dir, filename};
 }

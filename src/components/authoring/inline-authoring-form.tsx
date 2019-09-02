@@ -4,7 +4,7 @@ import Button from "../button";
 import {IWordDefinition, IGlossary} from "../types";
 import GlossarySidebar from "../glossary-sidebar";
 import * as clone from "clone";
-import { s3Upload, parseS3Url, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
+import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import { validateGlossary } from "../../utils/validate-glossary";
 

@@ -113,8 +113,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         return this.renderCreateResource();
       case UIState.SelectedResource:
         return this.renderSelectedResource();
-
-      }
+    }
   }
 
   private handleSubmitUserSuppliedJWTForm = (e: React.FormEvent) => {

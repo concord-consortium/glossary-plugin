@@ -1,5 +1,7 @@
-import {s3Upload, s3Url, CLOUDFRONT_URL, S3_BUCKET, S3_DIR_PREFIX, parseS3Url} from "./s3-helpers";
+import {s3Upload, IS3UploadParams} from "./s3-helpers";
 import * as AWS from "aws-sdk";
+import { TokenServiceClient } from "@concord-consortium/token-service";
+import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
 
 describe("S3 helpers", () => {
   describe("s3Upload", () => {
@@ -14,49 +16,46 @@ describe("S3 helpers", () => {
     });
 
     it("should call AWS.S3.upload with correct arguments and return Cloudfront URL", async () => {
-      const params = {
-        dir: "test",
+      const client = new TokenServiceClient({jwt: "test"});
+      const glossaryResource: S3Resource = {
+        id: "test",
+        name: "glossary",
+        description: "test glossary",
+        type: "s3Folder",
+        tool: "glossary",
+        accessRules: [],
+        bucket: "test-bucket",
+        folder: "test-folder",
+        region: "test-regsion"
+      };
+      const credentials: Credentials = {
+        accessKeyId: "test",
+        expiration: new Date(),
+        secretAccessKey: "test",
+        sessionToken: "test",
+        bucket: "test-bucket",
+        keyPrefix: "glossary/test/"
+      };
+      const params: IS3UploadParams = {
+        client,
+        credentials,
         filename: "test.txt",
-        accessKey: "123",
-        secretKey: "abc",
+        glossaryResource,
         body: "test",
         cacheControl: "max-age=123",
         contentType: "application/test"
       };
       const url = await s3Upload(params);
       expect(AWS.S3.prototype.upload).toHaveBeenCalledTimes(1);
-      const expectedKey = `${S3_DIR_PREFIX}/${params.dir}/${params.filename}`;
+      const expectedKey = `test-folder/test/test.txt`;
       expect(AWS.S3.prototype.upload).toHaveBeenCalledWith({
-        Bucket: S3_BUCKET,
+        Bucket: "test-bucket",
         Key: expectedKey,
         Body: params.body,
-        ACL: "public-read",
         ContentType: params.contentType,
         CacheControl: params.cacheControl
       });
-      expect(url).toEqual(`${CLOUDFRONT_URL}/${expectedKey}`);
-    });
-  });
-
-  describe("s3Url", () => {
-    describe("it should return Cloudfront URL for a given file and directory", () => {
-      expect(s3Url({filename: "test.abc", dir: "dir"})).toEqual(`${CLOUDFRONT_URL}/${S3_DIR_PREFIX}/dir/test.abc`);
-    });
-  });
-
-  describe("parseS3Url", () => {
-    describe("it should parse a valid Cloudfront URL for the file and directory", () => {
-      // tslint:disable-next-line:max-line-length
-      const {dir, filename} = parseS3Url("https://models-resources.concord.org/glossary-resources/precipitating_change_glossary/V2PluginTestGlossary.json");
-      expect(dir).toEqual("precipitating_change_glossary");
-      expect(filename).toEqual("V2PluginTestGlossary");
-    });
-
-    describe("it should fail to parse an invalid Cloudfront URL", () => {
-      // tslint:disable-next-line:max-line-length
-      const {dir, filename} = parseS3Url("https://models-resources.concord.org/glossary-resources/precipitating_change_glossary/V2PluginTestGlossary");
-      expect(dir).toBeUndefined();
-      expect(filename).toBeUndefined();
+      expect(url).toEqual(`https://test-bucket.s3.amazonaws.com/${expectedKey}`);
     });
   });
 });
