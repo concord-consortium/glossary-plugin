@@ -21,6 +21,7 @@ interface IProps {
   uploadJSONToS3: () => void;
   loadJSONFromS3: () => void;
   getFirebaseJwt?: (appName: string) => Promise<IJwtResponse>;
+  testClient?: TokenServiceClient;  // for test injection
 }
 
 interface IState {
@@ -54,6 +55,10 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     this.glossaryNameFieldRef = React.createRef<HTMLInputElement>();
     this.glossaryDescriptionFieldRef = React.createRef<HTMLInputElement>();
     this.glossarySelectFieldRef = React.createRef<HTMLSelectElement>();
+
+    if (props.testClient) {
+      this.client = props.testClient;
+    }
   }
 
   public componentDidMount() {
@@ -84,7 +89,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         .catch((error) => this.setState({error}));
     }
     else {
-      this.setState({uiState: UIState.UserSuppliesJWT});
+      this.setState({status: null, uiState: UIState.UserSuppliesJWT});
     }
   }
 
@@ -131,8 +136,8 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     return (
       <form className={css.userSuppliedJWTForm} onSubmit={this.handleSubmitUserSuppliedJWTForm}>
         <p>Please enter a valid portal generated Firebase JWT (this is not needed in the inline authoring)</p>
-        JWT: <input type="text" ref={this.userSuppliedJWTFieldRef} />
-        <Button label="Use JWT" onClick={this.handleSubmitUserSuppliedJWTForm} />
+        JWT: <input type="text" name="jwt" ref={this.userSuppliedJWTFieldRef} />
+        <Button label="Use JWT" data-foo="bar" data-cy="use-jwt" onClick={this.handleSubmitUserSuppliedJWTForm} />
       </form>
     );
   }
@@ -184,9 +189,17 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       <div className={css.promptForSelectOrCreateResource}>
         {noResources
           ? "No glossaries found!"
-          : <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
+          : <Button
+              label="Select Existing Glossary"
+              data-cy="select-glossary"
+              onClick={this.handleSelectExistingGlossary}
+            />
         }
-        <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
+        <Button
+          label="Create New Glossary"
+          data-cy="create-glossary"
+          onClick={this.handleCreateNewGlossary}
+        />
       </div>
     );
   }
@@ -211,8 +224,8 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
           return <option key={resource.id} value={resource.id}>{resource.name}</option>;
         })}</select>
         <p>
-          <Button label="Select Glossary" onClick={this.handleSelectResource} />
-          <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
+          <Button label="Select Glossary" data-cy="select-glossary" onClick={this.handleSelectResource} />
+          <Button label="Create New Glossary" data-cy="create-glossary" onClick={this.handleCreateNewGlossary}/>
         </p>
       </form>
     );
@@ -254,8 +267,16 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
           Description:<br/><input type="text" ref={this.glossaryDescriptionFieldRef} />
         </p>
         <p>
-          <Button label="Create Glossary" onClick={this.handleCreateResource} />
-          <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
+          <Button
+            label="Create Glossary"
+            data-cy="create-glossary"
+            onClick={this.handleCreateResource}
+          />
+          <Button
+            label="Select Existing Glossary"
+            data-cy="select-glossary"
+            onClick={this.handleSelectExistingGlossary}
+          />
         </p>
       </form>
     );
@@ -277,15 +298,19 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     const {glossary} = this.state;
     return (
       <div className={css.selectedResource}>
-        <p>
+        <div>
           <h1>{glossary ? glossary.name : "No glossary selected!"}</h1>
           {glossary ? <h2>id: {glossary.id}</h2> : null}
-        </p>
+        </div>
         <p>
           <Button label="Save" data-cy="save" onClick={this.handleSave}/>
           <Button label="Reload" data-cy="load" onClick={this.handleLoad}/>
-          <Button label="Select Existing Glossary" onClick={this.handleSelectExistingGlossary}/>
-          <Button label="Create New Glossary" onClick={this.handleCreateNewGlossary}/>
+          <Button
+            label="Select Existing Glossary"
+            data-cy="select-glossary"
+            onClick={this.handleSelectExistingGlossary}
+          />
+          <Button label="Create New Glossary" data-cy="create-glossary" onClick={this.handleCreateNewGlossary}/>
         </p>
       </div>
     );
