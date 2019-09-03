@@ -3,8 +3,7 @@ import DefinitionEditor, { MEDIA_S3_DIR } from "./definition-editor";
 import { shallow } from "enzyme";
 import { s3Upload } from "../../utils/s3-helpers";
 import {v1 as uuid} from "uuid";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 
 jest.mock("../../utils/s3-helpers");
 jest.mock("uuid", () => {

@@ -1,8 +1,7 @@
 import * as React from "react";
 import Button from "./button";
-import { TokenServiceClient } from "@concord-consortium/token-service";
+import { TokenServiceClient, Resource, S3Resource } from "@concord-consortium/token-service";
 import * as css from "./glossary-resource-selector.scss";
-import { Resource, S3Resource } from "@concord-consortium/token-service/lib/resource-types";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 enum UIState {

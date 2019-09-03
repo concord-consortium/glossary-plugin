@@ -1,7 +1,6 @@
 import {s3Upload, IS3UploadParams} from "./s3-helpers";
 import * as AWS from "aws-sdk";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 
 describe("S3 helpers", () => {
   describe("s3Upload", () => {

@@ -10,8 +10,7 @@ import { validateGlossary } from "../../utils/validate-glossary";
 
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 import GlossaryResourceSelector from "../glossary-resource-selector";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 

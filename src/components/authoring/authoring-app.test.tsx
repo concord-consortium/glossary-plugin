@@ -8,8 +8,7 @@ import * as icons from "../icons.scss";
 import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 
 import * as fetch from "jest-fetch-mock";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 (global as any).fetch = fetch;
 
 jest.mock("../../utils/s3-helpers");

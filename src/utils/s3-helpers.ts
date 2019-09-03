@@ -1,7 +1,6 @@
 import * as AWS from "aws-sdk";
 
-import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
-import { TokenServiceClient } from "@concord-consortium/token-service";
+import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 
 export const GLOSSARY_FILENAME = "glossary.json";
 

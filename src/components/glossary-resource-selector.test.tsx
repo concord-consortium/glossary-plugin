@@ -1,10 +1,8 @@
 import * as React from "react";
 import GlossaryResourceSelector from "./glossary-resource-selector";
 import { shallow, mount } from "enzyme";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource, Resource } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, Resource } from "@concord-consortium/token-service";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
-import Button from "./button";
 
 const setClientAndResource = jest.fn(() => {
   return Promise.resolve();

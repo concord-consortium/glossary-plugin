@@ -6,8 +6,7 @@ import { validateDefinition } from "../../utils/validate-glossary";
 import Dropzone from "react-dropzone";
 import { v1 as uuid } from "uuid";
 import { s3Upload } from "../../utils/s3-helpers";
-import { TokenServiceClient } from "@concord-consortium/token-service";
-import { S3Resource, Credentials } from "@concord-consortium/token-service/lib/resource-types";
+import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 
 export const MEDIA_S3_DIR = "media";
 
