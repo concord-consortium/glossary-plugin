@@ -18,7 +18,6 @@ const getFirebaseJwtFn = () => jest.fn((appName: string) => {
   });
 });
 
-
 describe("GlossaryResourceSelector component", () => {
   describe("using standalone authoring", () => {
     it("renders UI asking for JWT", () => {
@@ -41,7 +40,7 @@ describe("GlossaryResourceSelector component", () => {
             <span className="button "><span className="label">Use JWT</span></span>
           </form>
         </div>
-      )
+      );
       expect(wrapper.html()).toEqual(output.html());
     });
   });
@@ -88,7 +87,7 @@ describe("GlossaryResourceSelector component", () => {
             folder: "test-folder",
             region: "test-regsion"
           });
-        })
+        });
       };
       const wrapper = mount(
         <GlossaryResourceSelector

@@ -58,7 +58,7 @@ describe("DefinitionEditor component", () => {
         onCancel={noop}
         client={client}
         glossaryResource={glossaryResource}
-    />
+      />
     );
     expect(wrapper.find("input[name='word']").length).toEqual(1);
     expect(wrapper.find("textarea[name='definition']").length).toEqual(1);

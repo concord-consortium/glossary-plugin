@@ -192,7 +192,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
               label="Select Existing Glossary"
               data-cy="select-glossary"
               onClick={this.handleSelectExistingGlossary}
-            />
+          />
         }
         <Button
           label="Create New Glossary"
