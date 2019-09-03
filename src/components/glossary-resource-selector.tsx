@@ -96,7 +96,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     const {status, error} = this.state;
     return (
       <div className={css.glossaryResourceSelector}>
-        {error ? <div className={css.error}>{error.message || error.toString()}</div> : null}
+        {error ? <div className={css.error}>{error.message || error.error || error.toString()}</div> : null}
         {status ? <div className={css.status}>{status.toString()}</div> : null}
         {this.renderUI()}
       </div>
