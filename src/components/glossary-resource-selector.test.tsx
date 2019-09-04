@@ -1,6 +1,6 @@
 import * as React from "react";
 import GlossaryResourceSelector from "./glossary-resource-selector";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import { TokenServiceClient, Resource } from "@concord-consortium/token-service";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
@@ -29,7 +29,6 @@ describe("GlossaryResourceSelector component", () => {
           loadJSONFromS3={loadJSONFromS3}
         />
       );
-      // tslint:disable-next-line:max-line-length
       const output = mount(
         <div className="glossaryResourceSelector">
           <form className="userSuppliedJWTForm">
@@ -85,7 +84,7 @@ describe("GlossaryResourceSelector component", () => {
             accessRules: [],
             bucket: "test-bucket",
             folder: "test-folder",
-            region: "test-regsion"
+            region: "test-region"
           });
         });
       };

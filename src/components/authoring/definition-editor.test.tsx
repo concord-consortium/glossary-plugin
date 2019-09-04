@@ -29,7 +29,7 @@ const glossaryResource: S3Resource = {
   accessRules: [],
   bucket: "test-bucket",
   folder: "test-folder",
-  region: "test-regsion"
+  region: "test-region"
 };
 const credentials: Credentials = {
   accessKeyId: "test",

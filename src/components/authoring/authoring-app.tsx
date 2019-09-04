@@ -275,20 +275,6 @@ export default class PluginApp extends React.Component<{}, IState> {
     return JSON.stringify(glossary, null, 2);
   }
 
-  private copyJSON = () => {
-    const fakeInput = document.createElement("textarea");
-    fakeInput.value = this.glossaryJSON;
-    document.body.appendChild(fakeInput);
-    fakeInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(fakeInput);
-  }
-
-  // Note that this callback is executed only if there are no validation errors (syntax, schema).
-  private handleJSONChange = (data: IGlossary) => {
-    this.setState({ glossary: data });
-  }
-
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.askForUserDefinition = (event.target as HTMLInputElement).checked;
