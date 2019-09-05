@@ -1,40 +1,33 @@
 import * as React from "react";
 import DefinitionEditor from "./definition-editor";
-import Button from "./button";
+import Button from "../button";
 import {IWordDefinition, IGlossary} from "../types";
 import GlossarySidebar from "../glossary-sidebar";
-import JSONEditor from "./json-editor";
 import * as clone from "clone";
-import getURLParam from "../../utils/get-url-param";
-import { s3Upload, s3Url } from "../../utils/s3-helpers";
+import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import { validateGlossary } from "../../utils/validate-glossary";
+import GlossaryResourceSelector from "../glossary-resource-selector";
 
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
+import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
   showSideBar: true,
   definitions: []
 };
-// Keys used to obtain dat from URL or local storage.
-const GLOSSARY_NAME = "glossaryName";
-const USERNAME = "username";
-const S3_ACCESS = "s3AccessKey";
-const S3_SECRET = "s3SecretKey";
 
 interface IState {
   glossary: IGlossary;
   jsonEditorContent: object;
   newDefEditor: boolean;
   definitionEditors: {[word: string]: boolean};
-  glossaryName: string;
-  username: string;
-  s3AccessKey: string;
-  s3SecretKey: string;
   s3ActionInProgress: boolean;
   s3Status: string;
+  client: TokenServiceClient | null;
+  glossaryResource: S3Resource | null;
 }
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
@@ -45,60 +38,26 @@ export default class PluginApp extends React.Component<{}, IState> {
     jsonEditorContent: DEFAULT_GLOSSARY,
     newDefEditor: false,
     definitionEditors: {},
-    glossaryName: getURLParam(GLOSSARY_NAME) || "",
-    username: getURLParam(USERNAME) || localStorage.getItem(USERNAME) || "",
-    s3AccessKey: getURLParam(S3_ACCESS) || localStorage.getItem(S3_ACCESS) || "",
-    // Don't let users set S3 Secret Key using URL, so they don't share it by accident.
-    s3SecretKey: localStorage.getItem(S3_SECRET) || "",
     s3ActionInProgress: false,
-    s3Status: ""
+    s3Status: "",
+    client: null,
+    glossaryResource: null
   };
 
-  public componentDidMount() {
-    if (this.s3FeaturesAvailable) {
-      this.loadJSONFromS3();
-    }
-  }
-
   public render() {
-    const { newDefEditor, glossary, jsonEditorContent, definitionEditors,
-      glossaryName, username, s3AccessKey, s3SecretKey, s3Status } = this.state;
-    const { askForUserDefinition, definitions, showSideBar} = glossary;
+    const { newDefEditor, glossary, definitionEditors,
+      s3Status, client, glossaryResource } = this.state;
+    const { askForUserDefinition, definitions, showSideBar } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={css.authoringColumn}>
           <div className={css.s3Details}>
-            <table>
-              <tbody>
-              <tr className={css.name}>
-                <td>Glossary Name</td>
-                <td>
-                  <input
-                    value={glossaryName}
-                    type="text"
-                    name="glossaryName"
-                    onChange={this.handleInputChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Username</td>
-                <td><input value={username} type="text" name="username" onChange={this.handleInputChange}/></td>
-              </tr>
-              <tr>
-                <td>S3 Access Key</td>
-                <td><input value={s3AccessKey} type="text" name="s3AccessKey" onChange={this.handleInputChange}/></td>
-              </tr>
-              <tr>
-                <td>S3 Secret Key</td>
-                <td><input value={s3SecretKey} type="text" name="s3SecretKey" onChange={this.handleInputChange}/></td>
-              </tr>
-              </tbody>
-            </table>
-            <p>
-              <Button label="Save" disabled={!this.s3FeaturesAvailable} data-cy="save" onClick={this.uploadJSONToS3}/>
-              <Button label="Load" disabled={!username || !glossaryName} data-cy="load" onClick={this.loadJSONFromS3}/>
-            </p>
+            <GlossaryResourceSelector
+              inlineAuthoring={false}
+              uploadJSONToS3={this.uploadJSONToS3}
+              loadJSONFromS3={this.loadJSONFromS3}
+              setClientAndResource={this.setClientAndResource}
+            />
             <div className={css.s3Status}>
               {s3Status}
             </div>
@@ -141,9 +100,8 @@ export default class PluginApp extends React.Component<{}, IState> {
                         <DefinitionEditor
                           key={def.word}
                           initialDefinition={def}
-                          username={username}
-                          s3AccessKey={s3AccessKey}
-                          s3SecretKey={s3SecretKey}
+                          client={client}
+                          glossaryResource={glossaryResource}
                           onSave={this.editDef}
                           onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
                         />
@@ -175,38 +133,10 @@ export default class PluginApp extends React.Component<{}, IState> {
               <DefinitionEditor
                 onCancel={this.toggleNewDef}
                 onSave={this.addNewDef}
-                username={username}
-                s3AccessKey={s3AccessKey}
-                s3SecretKey={s3SecretKey}
+                client={client}
+                glossaryResource={glossaryResource}
               />
             }
-          </div>
-          {
-            glossaryName &&
-            <div className={css.laraPluginState}>
-              <h2>LARA Plugin State</h2>
-              <div className={css.help}>
-                Copy this snippet into LARA Plugin Authored state field. Remember to save your changes.
-              </div>
-              <div className={css.laraPluginStateJSON}>
-                {this.LARAPluginState}
-              </div>
-            </div>
-          }
-          <div className={css.jsonSection}>
-            <h2>Glossary JSON</h2>
-            <p><Button label="Copy JSON to clipboard" onClick={this.copyJSON}/></p>
-            <div className={css.help}>
-              Note that the editor below accepts and displays JS object syntax instead of the JSON notation.
-              Always use button above to copy correctly formatted JSON string.
-            </div>
-            <JSONEditor
-              initialValue={jsonEditorContent}
-              onChange={this.handleJSONChange}
-              validate={validateGlossary}
-              width="600px"
-              height="400px"
-            />
           </div>
         </div>
         <div className={css.preview}>
@@ -232,11 +162,6 @@ export default class PluginApp extends React.Component<{}, IState> {
         </div>
     </div>
     );
-  }
-
-  public get glossaryFileName() {
-    const { glossaryName } = this.state;
-    return glossaryName.endsWith(".json") ? glossaryName : `${glossaryName}.json`;
   }
 
   public addNewDef = (newDef: IWordDefinition) => {
@@ -266,12 +191,16 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   public loadJSONFromS3 = async () => {
-    const { username } = this.state;
+    const {client, glossaryResource} = this.state;
+    if (!client || !glossaryResource) {
+      return;
+    }
     this.setState({
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Loading JSON...")
     });
-    const response = await fetch(s3Url({ dir: username, filename: this.glossaryFileName }));
+    const url = client.getPublicS3Url(glossaryResource, GLOSSARY_FILENAME);
+    const response = await fetch(url);
     if (response.status !== 200) {
       this.setState({
         s3ActionInProgress: false,
@@ -303,83 +232,47 @@ export default class PluginApp extends React.Component<{}, IState> {
   }
 
   public uploadJSONToS3 = () => {
-    const { username } = this.state;
+    const {client, glossaryResource} = this.state;
+    if (!client || !glossaryResource) {
+      return;
+    }
     this.setState({
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Uploading JSON to S3...")
     });
-    const { s3AccessKey, s3SecretKey } = this.state;
-    s3Upload({
-      dir: username,
-      filename: this.glossaryFileName,
-      accessKey: s3AccessKey,
-      secretKey: s3SecretKey,
-      body: this.glossaryJSON,
-      contentType: "application/json",
-      cacheControl: "no-cache"
-    }).then(() => {
-      this.setState({
-        s3ActionInProgress: false,
-        s3Status: getStatusTxt("Uploading JSON to S3: success!")
+    return client.getCredentials(glossaryResource.id)
+      .then((credentials) => {
+        return s3Upload({
+          client,
+          glossaryResource,
+          credentials,
+          filename: GLOSSARY_FILENAME,
+          body: this.glossaryJSON,
+          contentType: "application/json",
+          cacheControl: "no-cache"
+        }).then(() => {
+          this.setState({
+            s3ActionInProgress: false,
+            s3Status: getStatusTxt("Uploading JSON to S3: success!")
+          });
+        }).catch(err => {
+          this.setState({
+            s3ActionInProgress: false,
+            s3Status: getStatusTxt(err)
+          });
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          s3ActionInProgress: false,
+          s3Status: getStatusTxt(err)
+        });
       });
-    }).catch(err => {
-      this.setState({
-        s3ActionInProgress: false,
-        s3Status: getStatusTxt(err)
-      });
-    });
-  }
-
-  private get s3FeaturesAvailable() {
-    const { s3ActionInProgress, glossaryName, username, s3AccessKey, s3SecretKey } = this.state;
-    return !s3ActionInProgress && glossaryName && username && s3AccessKey && s3SecretKey;
   }
 
   private get glossaryJSON() {
     const { glossary } = this.state;
     return JSON.stringify(glossary, null, 2);
-  }
-
-  private get LARAPluginState() {
-    const { username } = this.state;
-    return JSON.stringify({ url: s3Url({filename: this.glossaryFileName, dir: username })}, null, 2);
-  }
-
-  private copyJSON = () => {
-    const fakeInput = document.createElement("textarea");
-    fakeInput.value = this.glossaryJSON;
-    document.body.appendChild(fakeInput);
-    fakeInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(fakeInput);
-  }
-
-  private handleInputChange = (event: React.ChangeEvent) => {
-    const value = (event.target as HTMLInputElement).value;
-    const name = (event.target as HTMLInputElement).name;
-    switch (name) {
-      case "glossaryName":
-        this.setState({ glossaryName: value });
-        localStorage.setItem(GLOSSARY_NAME, value);
-        break;
-      case "username":
-        this.setState({ username: value });
-        localStorage.setItem(USERNAME, value);
-        break;
-      case "s3AccessKey":
-        this.setState({ s3AccessKey: value });
-        localStorage.setItem(S3_ACCESS, value);
-        break;
-      case "s3SecretKey":
-        this.setState({ s3SecretKey: value });
-        localStorage.setItem(S3_SECRET, value);
-        break;
-    }
-  }
-
-  // Note that this callback is executed only if there are no validation errors (syntax, schema).
-  private handleJSONChange = (data: IGlossary) => {
-    this.setState({ glossary: data });
   }
 
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
@@ -413,5 +306,11 @@ export default class PluginApp extends React.Component<{}, IState> {
     // Disable editor.
     definitionEditors[newDef.word] = false;
     this.setState({ glossary, jsonEditorContent: glossary, definitionEditors });
+  }
+
+  private setClientAndResource = (client: TokenServiceClient, glossaryResource: S3Resource) => {
+    return new Promise<void>((resolve, reject) => {
+      this.setState({client, glossaryResource}, () => resolve());
+    });
   }
 }

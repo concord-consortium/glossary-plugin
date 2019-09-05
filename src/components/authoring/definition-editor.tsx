@@ -1,11 +1,12 @@
 import * as React from "react";
 import * as css from "./definition-editor.scss";
 import { IWordDefinition } from "../types";
-import Button from "./button";
+import Button from "../button";
 import { validateDefinition } from "../../utils/validate-glossary";
 import Dropzone from "react-dropzone";
 import { v1 as uuid } from "uuid";
 import { s3Upload } from "../../utils/s3-helpers";
+import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 
 export const MEDIA_S3_DIR = "media";
 
@@ -13,9 +14,8 @@ interface IProps {
   onSave: (definition: IWordDefinition) => void;
   onCancel: () => void;
   // For media upload.
-  username: string;
-  s3AccessKey: string;
-  s3SecretKey: string;
+  client: TokenServiceClient | null;
+  glossaryResource: S3Resource | null;
   // If initialDefinition is provided, user is editing an existing definition. Otherwise, adding a new one.
   initialDefinition?: IWordDefinition;
 }
@@ -165,10 +165,10 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
 
   // Type is either "image" or "video".
   public uploadMedia =  async (file: File) => {
-    const { username, s3AccessKey, s3SecretKey } = this.props;
-    if (!username || !s3AccessKey || !s3SecretKey) {
+    const { client, glossaryResource } = this.props;
+    if (!client || !glossaryResource) {
       return new Promise((resolve, reject) =>
-        reject("Can't upload media files without username and credentials.")
+        reject("Can't upload media files without glossary resource.")
       );
     }
     this.setState({
@@ -176,11 +176,12 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       uploadStatus: `Uploading ${file.name}... Please wait.`
     });
     try {
+      const credentials = await client.getCredentials(glossaryResource.id);
       const url = await s3Upload({
-        dir: `${username}/${MEDIA_S3_DIR}`,
+        client,
+        glossaryResource,
+        credentials,
         filename: uuid() + "-" + file.name,
-        accessKey: s3AccessKey,
-        secretKey: s3SecretKey,
         body: file,
         contentType: file.type,
         cacheControl: "max-age=31536000" // 1 year

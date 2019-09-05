@@ -1,16 +1,30 @@
 import * as React from "react";
 import AuthoringApp, { DEFAULT_GLOSSARY } from "./authoring-app";
-import JSONEditor from "./json-editor";
 import GlossarySidebar from "../glossary-sidebar";
 import DefinitionEditor from "./definition-editor";
+import GlossaryResourceSelector from "../glossary-resource-selector";
 import { shallow } from "enzyme";
 import * as icons from "../icons.scss";
-import { s3Upload } from "../../utils/s3-helpers";
+import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 
 import * as fetch from "jest-fetch-mock";
+import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 (global as any).fetch = fetch;
 
 jest.mock("../../utils/s3-helpers");
+
+const client = new TokenServiceClient({jwt: "test"});
+const glossaryResource: S3Resource = {
+  id: "test",
+  name: "glossary",
+  description: "test glossary",
+  type: "s3Folder",
+  tool: "glossary",
+  accessRules: [],
+  bucket: "test-bucket",
+  folder: "test-folder",
+  region: "test-region"
+};
 
 describe("AuthoringApp component", () => {
   afterEach(() => {
@@ -23,15 +37,9 @@ describe("AuthoringApp component", () => {
     const wrapper = shallow(
       <AuthoringApp/>
     );
-    expect(wrapper.find("input[name='glossaryName']").length).toEqual(1);
-    expect(wrapper.find("input[name='username']").length).toEqual(1);
-    expect(wrapper.find("input[name='s3AccessKey']").length).toEqual(1);
-    expect(wrapper.find("input[name='s3SecretKey']").length).toEqual(1);
-    expect(wrapper.find("[data-cy='save']").length).toEqual(1);
-    expect(wrapper.find("[data-cy='load']").length).toEqual(1);
+    expect(wrapper.find(GlossaryResourceSelector).length).toEqual(1);
     expect(wrapper.find("[data-cy='askForUserChange']").length).toEqual(1);
     expect(wrapper.find("[data-cy='addDef']").length).toEqual(1);
-    expect(wrapper.find(JSONEditor).length).toEqual(1);
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 
@@ -66,37 +74,15 @@ describe("AuthoringApp component", () => {
 
     // GlossarySidebar component.
     expect(wrapper.find({ definitions: [ definition ]}).length).toEqual(1);
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: true,
-        definitions: [ definition ]
-      }
-    }).length).toEqual(1);
 
     // Now, remove it.
     component.removeDef(definition.word);
 
     // GlossarySidebar component.
     expect(wrapper.find({ definitions: []}).length).toEqual(1);
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: true,
-        definitions: []
-      }
-    }).length).toEqual(1);
 
     // Toggle askForUserDefinition.
     wrapper.find("[data-cy='askForUserChange']").simulate("change", { target: { checked: false }});
-
-    // JSONEditor component.
-    expect(wrapper.find({
-      initialValue: {
-        askForUserDefinition: false,
-        definitions: []
-      }
-    }).length).toEqual(1);
   });
 
   it("renders buttons that let you edit or remove an existing definition", () => {
@@ -141,72 +127,11 @@ describe("AuthoringApp component", () => {
     expect(wrapper.find("." + icons.iconVideo).length).toEqual(1);
   });
 
-  it("sets glossary name, username, and S3 access key if they are provided in URL", () => {
-    history.replaceState({}, "Test", "/authoring.html?glossaryName=testName&username=user&s3AccessKey=testS3Key");
-    const wrapper = shallow(
-      <AuthoringApp/>
-    );
-    expect(wrapper.find("input[name='glossaryName']").props().value).toEqual("testName");
-    expect(wrapper.find("input[name='username']").props().value).toEqual("user");
-    expect(wrapper.find("input[name='s3AccessKey']").props().value).toEqual("testS3Key");
-  });
-
-  it("should let user load JSON file if glossary name and username are provided", () => {
-    const glossary = {
-      definitions: [{word: "test1", definition: "test 1"}],
-      askForUserDefinition: false,
-    };
-
-    fetch.mockResponse(JSON.stringify(glossary));
-
-    const wrapper = shallow(
-      <AuthoringApp/>
-    );
-    const instance = wrapper.instance() as AuthoringApp;
-    instance.loadJSONFromS3 = jest.fn();
-
-    expect(wrapper.find("[data-cy='load']").props().disabled).toEqual(true);
-    wrapper.find("input[name='glossaryName']").simulate("change", {
-      target: { name: "glossaryName", value: "testName" }
-    });
-    wrapper.find("input[name='username']").simulate("change", {
-      target: { name: "username", value: "username" }
-    });
-    const load = wrapper.find("[data-cy='load']");
-    expect(load.props().disabled).toEqual(false);
-    load.simulate("click");
-    expect(instance.loadJSONFromS3).toHaveBeenCalled();
-    wrapper.unmount();
-  });
-
-  it("should let user save JSON file if glossary name and S3 details are provided", () => {
-    const wrapper = shallow(
-      <AuthoringApp/>
-    );
-    const instance = wrapper.instance() as AuthoringApp;
-    instance.uploadJSONToS3 = jest.fn();
-
-    expect(wrapper.find("[data-cy='save']").props().disabled).toEqual(true);
-    wrapper.find("input[name='glossaryName']").simulate("change", {
-      target: { name: "glossaryName", value: "testName" }
-    });
-    wrapper.find("input[name='username']").simulate("change", {
-      target: { name: "username", value: "username" }
-    });
-    wrapper.find("input[name='s3AccessKey']").simulate("change", {
-      target: { name: "s3AccessKey", value: "s3 access key" }
-    });
-    wrapper.find("input[name='s3SecretKey']").simulate("change", {
-      target: { name: "s3SecretKey", value: "s3 secret key" }
-    });
-    const save = wrapper.find("[data-cy='save']");
-    expect(save.props().disabled).toEqual(false);
-    save.simulate("click");
-    expect(instance.uploadJSONToS3).toHaveBeenCalled();
-  });
+  // note: load and save buttons were moved into the GlossaryResourceSelector component
+  // and are tested there
 
   describe(".loadJSONFromS3() method", () => {
-    it("should download data and update JSON Editor and preview", async () => {
+    it("should download data and update preview", async () => {
       const glossary = {
         definitions: [{word: "test1", definition: "test 1"}],
         askForUserDefinition: false,
@@ -218,11 +143,14 @@ describe("AuthoringApp component", () => {
       const wrapper = shallow(
         <AuthoringApp/>
       );
+      wrapper.setState({
+        client,
+        glossaryResource
+      });
       await (wrapper.instance() as AuthoringApp).loadJSONFromS3();
 
       expect(fetch).toHaveBeenCalled();
       expect(wrapper.text()).toEqual(expect.stringContaining("Loading JSON: success!"));
-      expect(wrapper.find(JSONEditor).props().initialValue).toEqual(glossary);
       expect(wrapper.find(GlossarySidebar).props().definitions).toEqual(glossary.definitions);
     });
   });
@@ -232,22 +160,29 @@ describe("AuthoringApp component", () => {
       const wrapper = shallow(
         <AuthoringApp/>
       );
-      const glossaryName = "test";
-      const username = "user";
-      const s3AccessKey = "s3AK";
-      const s3SecretKey = "s3SK";
+      const credentials: Credentials = {
+        accessKeyId: "test",
+        expiration: new Date(),
+        secretAccessKey: "test",
+        sessionToken: "test",
+        bucket: "test-bucket",
+        keyPrefix: "glossary/test/"
+      };
       wrapper.setState({
-        glossaryName,
-        username,
-        s3AccessKey,
-        s3SecretKey
+        client,
+        glossaryResource
+      });
+      client.getCredentials = jest.fn(() => {
+        return new Promise<Credentials>((resolve) => {
+          resolve(credentials);
+        });
       });
       await (wrapper.instance() as AuthoringApp).uploadJSONToS3();
       expect(s3Upload).toHaveBeenCalledWith({
-        dir: username,
-        filename: glossaryName + ".json",
-        accessKey: s3AccessKey,
-        secretKey: s3SecretKey,
+        client,
+        glossaryResource,
+        credentials,
+        filename: GLOSSARY_FILENAME,
         body: JSON.stringify(DEFAULT_GLOSSARY, null, 2),
         contentType: "application/json",
         cacheControl: "no-cache"
