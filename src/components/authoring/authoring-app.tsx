@@ -19,6 +19,10 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   definitions: []
 };
 
+interface IProps {
+  accessToken: string;
+}
+
 interface IState {
   glossary: IGlossary;
   jsonEditorContent: object;
@@ -32,7 +36,7 @@ interface IState {
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
 
-export default class PluginApp extends React.Component<{}, IState> {
+export default class PluginApp extends React.Component<IProps, IState> {
   public state: IState = {
     glossary: DEFAULT_GLOSSARY,
     jsonEditorContent: DEFAULT_GLOSSARY,
