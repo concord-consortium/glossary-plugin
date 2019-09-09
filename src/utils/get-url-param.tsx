@@ -1,5 +1,5 @@
 function getParam(name: string, type: string): string | null {
-  const url = type === "?" ? (self || window).location.search : (self || window).location.hash;
+  const url = type === "?" ? window.location.search : window.location.hash;
   name = name.replace(/[[]]/g, "\\$&");
   const regex = new RegExp(`[${type}&]${name}(=([^&#]*)|&|#|$)`);
   const results = regex.exec(url);

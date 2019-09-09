@@ -20,7 +20,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
 };
 
 interface IProps {
-  accessToken: string;
+  accessToken?: string;
 }
 
 interface IState {
