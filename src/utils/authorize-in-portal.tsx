@@ -20,15 +20,15 @@ export default function authorizeInPortal(portalURL: string): Promise<ClientOAut
     return portalAuth.token.getToken(window.location.href)
       .then((token) => {
         // Remove fragment that includes access token and other data coming from server to make leak a bit less likely.
-        history.pushState("", document.title, window.location.pathname + window.location.search);
+        history.replaceState("", document.title, window.location.pathname + window.location.search);
         return token;
       });
   } else if (getQueryParam("code")) {
     // We're coming back from Portal that doesn't support implicit flow.
     // Throw an error to avoid infinite loop of redirects.
-    return new Promise((resolve, reject) => {
-      reject(new Error("Selected Portal does not support OAuth2 implicit flow. Please use another Portal."));
-    });
+    return Promise.reject(
+      new Error("Selected Portal does not support OAuth2 implicit flow. Please use another Portal.")
+    );
   } else {
     // Initial page load, no info from Portal (either access token or error). Redirect to Portal to get authorization.
     window.location.href = portalAuth.token.getUri();
