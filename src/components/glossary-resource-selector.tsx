@@ -14,7 +14,6 @@ enum UIState {
 }
 
 interface IProps {
-  inlineAuthoring: boolean;
   glossaryResourceId?: string | null;
   setClientAndResource: (client: TokenServiceClient, glossaryResource: S3Resource) => Promise<void>;
   uploadJSONToS3: () => void;
@@ -61,7 +60,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
   }
 
   public componentDidMount() {
-    if (this.props.inlineAuthoring && this.props.getFirebaseJwt) {
+    if (this.props.getFirebaseJwt) {
       this.setState({status: "Requesting JWT from portal..."});
       this.props.getFirebaseJwt(TokenServiceClient.FirebaseAppName)
         .then((jwt) => {
