@@ -12,11 +12,11 @@ describe("authorizeInPortal", () => {
     });
 
     it("should redirect to Portal", () => {
-      authorizeInPortal("https://test.portal.com");
+      authorizeInPortal("https://test.portal.com", "state123");
       expect(window.location.href).toEqual(
         "https://test.portal.com/auth/oauth_authorize?client_id=glossary-plugin&" +
         "redirect_uri=http%3A%2F%2Ftest.glossary.com%2F%3Fportal%3Dhttps%3A%2F%2Ftest.portal.com&" +
-        "scope=&response_type=token&state="
+        "scope=&response_type=token&state=state123"
       );
     });
   });

@@ -5,7 +5,7 @@ import * as ClientOAuth2 from "client-oauth2";
 const CLIENT_ID = "glossary-plugin";
 const AUTH_PATH = "/auth/oauth_authorize";
 
-export default function authorizeInPortal(portalURL: string, state: string | undefined): Promise<ClientOAuth2.Token> {
+export default function authorizeInPortal(portalURL: string, state?: string): Promise<ClientOAuth2.Token> {
   const portalAuth = new ClientOAuth2({
     clientId: CLIENT_ID,
     // Make development easier. Note that if you're using custom Portal using query param,
