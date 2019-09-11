@@ -7,154 +7,194 @@ import * as clone from "clone";
 import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import { validateGlossary } from "../../utils/validate-glossary";
-import GlossaryResourceSelector from "../glossary-resource-selector";
 import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
+import GlossaryResourceSelector from "../glossary-resource-selector";
+import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
-  showSideBar: true,
+  showSideBar: false,
   definitions: []
 };
 
-interface IProps {
-  portalUrl?: string;
-  accessToken?: string;
+export interface IGlossaryAuthoredState {
   glossaryResourceId?: string | null;
+}
+
+interface IInlineAuthoringProps {
+  authoredState: IGlossaryAuthoredState;
+  saveAuthoredPluginState: (json: string) => void;
+}
+
+interface IStandaloneAuthoringProps {
+  glossaryResourceId?: string | null;
+}
+
+interface IProps {
+  inlineAuthoring?: IInlineAuthoringProps;
+  standaloneAuthoring?: IStandaloneAuthoringProps;
+  getFirebaseJwt?: (appName: string) => Promise<IJwtResponse>;
 }
 
 interface IState {
   glossary: IGlossary;
-  jsonEditorContent: object;
   newDefEditor: boolean;
   definitionEditors: {[word: string]: boolean};
   s3ActionInProgress: boolean;
   s3Status: string;
+  glossaryDirty: boolean;
   client: TokenServiceClient | null;
   glossaryResource: S3Resource | null;
 }
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
 
-export default class PluginApp extends React.Component<IProps, IState> {
+export default class AuthoringApp extends React.Component<IProps, IState> {
   public state: IState = {
     glossary: DEFAULT_GLOSSARY,
-    jsonEditorContent: DEFAULT_GLOSSARY,
     newDefEditor: false,
     definitionEditors: {},
     s3ActionInProgress: false,
     s3Status: "",
+    glossaryDirty: false,
     client: null,
     glossaryResource: null
   };
 
-  get portalAvailable() {
-    const { portalUrl, accessToken } = this.props;
-    return portalUrl && accessToken;
+  get glossaryResourceId() {
+    const { inlineAuthoring, standaloneAuthoring } = this.props;
+    if (inlineAuthoring) {
+      return inlineAuthoring.authoredState && inlineAuthoring.authoredState.glossaryResourceId;
+    }
+    if (standaloneAuthoring) {
+      return standaloneAuthoring.glossaryResourceId;
+    }
+  }
+
+  get inlineMode() {
+    return !!this.props.inlineAuthoring;
   }
 
   public render() {
-    const { newDefEditor, glossary, definitionEditors,
-      s3Status, client, glossaryResource } = this.state;
-    const { glossaryResourceId } = this.props;
+    const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
+    const { getFirebaseJwt } = this.props;
     const { askForUserDefinition, definitions, showSideBar } = glossary;
     return (
       <div className={css.authoringApp}>
-        <div className={css.authoringColumn}>
-          <div className={css.s3Details}>
-            <GlossaryResourceSelector
-              uploadJSONToS3={this.uploadJSONToS3}
-              loadJSONFromS3={this.loadJSONFromS3}
-              setClientAndResource={this.setClientAndResource}
-              getFirebaseJwt={this.portalAvailable ? this.getFirebaseJwt : undefined}
-              glossaryResourceId={glossaryResourceId}
-            />
-            <div className={css.s3Status}>
-              {s3Status}
+        <div className={`${this.inlineMode ? css.inlineScrollForm : ""}`}>
+          <div className={css.authoringColumn}>
+            <div className={css.s3Details}>
+              <GlossaryResourceSelector
+                glossaryResourceId={this.glossaryResourceId}
+                uploadJSONToS3={this.uploadJSONToS3}
+                loadJSONFromS3={this.loadJSONFromS3}
+                setClientAndResource={this.setClientAndResource}
+                getFirebaseJwt={getFirebaseJwt}
+              />
+              <div className={css.s3Status}>
+                {s3Status}
+              </div>
+            </div>
+            <div className={css.authoring}>
+              <input
+                type="checkbox"
+                checked={askForUserDefinition}
+                data-cy="askForUserChange"
+                onChange={this.handleAskForUserDefChange}
+              />
+              <label>
+                Ask students for definition
+                <div className={css.help}>
+                  When this option is turned on, students will have to provide their own definition
+                  before they can see an authored one.
+                </div>
+              </label>
+              <br/>
+              <input
+                type="checkbox"
+                checked={showSideBar}
+                data-cy="showSideBar"
+                onChange={this.handleShowSideBarChange}
+              />
+              <label>
+                Show Glossary icon in sidebar
+                <div className={css.help}>
+                  When this option is turned on, students will have access to
+                  the glossary at all times via the sidebar.
+                </div>
+              </label>
+              <h3>Definitions</h3>
+              <table className={css.definitionsTable}>
+                <tbody>
+                  {
+                    definitions.map(def => {
+                      if (definitionEditors[def.word]) {
+                        return <tr key={def.word} className={css.wordRow}><td colSpan={3}>
+                          <DefinitionEditor
+                            key={def.word}
+                            initialDefinition={def}
+                            client={client}
+                            glossaryResource={glossaryResource}
+                            onSave={this.editDef}
+                            onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
+                          />
+                        </td></tr>;
+                      } else {
+                        return <tr key={def.word} className={css.wordRow}>
+                          <td className={css.definitionWord}>{def.word}</td>
+                          <td className={css.definitionTxt}>{def.definition}</td>
+                          <td className={css.definitionIcons}>
+                            {def.image && <span className={icons.iconImage}/>}
+                            {def.video && <span className={icons.iconVideo}/>}
+                          </td>
+                          <td className={css.definitionButtons}>
+                            <Button label="Edit" onClick={this.toggleDefinitionEditor.bind(this, def.word)}/>
+                            <Button label="Remove" onClick={this.removeDef.bind(this, def.word)}/>
+                          </td>
+                        </tr>;
+                      }
+                    })
+                  }
+                </tbody>
+              </table>
+              {
+                !newDefEditor &&
+                <Button icon="iconPlus" label="Add a new definition" data-cy="addDef" onClick={this.toggleNewDef}/>
+              }
+              {
+                newDefEditor &&
+                <DefinitionEditor
+                  onCancel={this.toggleNewDef}
+                  onSave={this.addNewDef}
+                  client={client}
+                  glossaryResource={glossaryResource}
+                />
+              }
             </div>
           </div>
-          <div className={css.authoring}>
-            <input
-              type="checkbox"
-              checked={askForUserDefinition}
-              data-cy="askForUserChange"
-              onChange={this.handleAskForUserDefChange}
-            />
-            <label>
-              Ask students for definition
-              <div className={css.help}>
-                When this option is turned on, students will have to provide their own definition
-                before they can see an authored one.
-              </div>
-            </label>
-            <br/>
-            <input
-              type="checkbox"
-              checked={showSideBar}
-              data-cy="showSideBar"
-              onChange={this.handleShowSideBarChange}
-            />
-            <label>
-              Show Glossary icon in sidebar
-              <div className={css.help}>
-                When this option is turned on, students will have access to
-                the glossary at all times via the sidebar.
-              </div>
-            </label>
-            <h3>Definitions</h3>
-            <table className={css.definitionsTable}>
-              <tbody>
-                {
-                  definitions.map(def => {
-                    if (definitionEditors[def.word]) {
-                      return <tr key={def.word} className={css.wordRow}><td colSpan={3}>
-                        <DefinitionEditor
-                          key={def.word}
-                          initialDefinition={def}
-                          client={client}
-                          glossaryResource={glossaryResource}
-                          onSave={this.editDef}
-                          onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
-                        />
-                      </td></tr>;
-                    } else {
-                      return <tr key={def.word} className={css.wordRow}>
-                        <td className={css.definitionWord}>{def.word}</td>
-                        <td className={css.definitionTxt}>{def.definition}</td>
-                        <td className={css.definitionIcons}>
-                          {def.image && <span className={icons.iconImage}/>}
-                          {def.video && <span className={icons.iconVideo}/>}
-                        </td>
-                        <td className={css.definitionButtons}>
-                          <Button label="Edit" onClick={this.toggleDefinitionEditor.bind(this, def.word)}/>
-                          <Button label="Remove" onClick={this.removeDef.bind(this, def.word)}/>
-                        </td>
-                      </tr>;
-                    }
-                  })
-                }
-              </tbody>
-            </table>
-            {
-              !newDefEditor &&
-              <Button icon="iconPlus" label="Add a new definition" data-cy="addDef" onClick={this.toggleNewDef}/>
-            }
-            {
-              newDefEditor &&
-              <DefinitionEditor
-                onCancel={this.toggleNewDef}
-                onSave={this.addNewDef}
-                client={client}
-                glossaryResource={glossaryResource}
-              />
-            }
+          <div className={css.preview}>
+            <h2>Preview</h2>
+            {showSideBar && this.renderSideBar(definitions)}
           </div>
         </div>
-        <div className={css.preview}>
-          <h2>Preview</h2>
-          {showSideBar && this.renderSideBar(definitions)}
-        </div>
+        {
+          this.inlineMode &&
+          <div>
+            <hr />
+            { glossaryDirty &&
+            <div className={css.warning}>
+              You've made changes to a remote glossary. Remember to save them to S3 using the buttons at the top
+              before pressing Save on this form.
+            </div>
+            }
+            <div className={css.inlineFormButtons}>
+              <button onClick={this.saveAuthoredState} className="embeddable-save">Save</button>
+              <button className="close">Cancel</button>
+            </div>
+          </div>
+        }
       </div>
     );
   }
@@ -176,13 +216,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
     );
   }
 
-  public getFirebaseJwt = (firebaseApp: string) => {
-    const { portalUrl, accessToken } = this.props;
-    const url = `${portalUrl}/api/v1/jwt/firebase?firebase_app=${firebaseApp}`;
-    return fetch(url, {headers: {Authorization: `Bearer ${accessToken}`}})
-      .then(response => response.json());
-  }
-
   public addNewDef = (newDef: IWordDefinition) => {
     const glossary: IGlossary = clone(this.state.glossary);
     const definitionEditors = clone(this.state.definitionEditors);
@@ -194,7 +227,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     glossary.definitions.push(newDef);
     // Also, if user was editing this word, make sure that we disable editor.
     definitionEditors[newDef.word] = false;
-    this.setState({ glossary, jsonEditorContent: glossary, definitionEditors, newDefEditor: false});
+    this.setState({ glossary, definitionEditors, newDefEditor: false, glossaryDirty: this.s3LoadFeaturesAvailable});
   }
 
   public removeDef = (word: string) => {
@@ -206,7 +239,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     }
     // Also, if user was editing this word, make sure that we disable editor (in case this word is added again later).
     definitionEditors[word] = false;
-    this.setState({ glossary, jsonEditorContent: glossary, definitionEditors });
+    this.setState({ glossary, definitionEditors, glossaryDirty: this.s3LoadFeaturesAvailable });
   }
 
   public loadJSONFromS3 = async () => {
@@ -232,8 +265,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
       const json = JSON.parse(textResponse);
       this.setState({
         s3ActionInProgress: false,
-        s3Status: getStatusTxt("Loading JSON: success!"),
-        jsonEditorContent: json
+        s3Status: getStatusTxt("Loading JSON: success!")
       });
       // Update glossary definition only if it's valid. Otherwise, only JSON editor is updated and
       // an author can fix possible errors.
@@ -289,6 +321,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
       });
   }
 
+  private get s3LoadFeaturesAvailable() {
+    const { s3ActionInProgress, client, glossaryResource } = this.state;
+    return !!(!s3ActionInProgress && client && glossaryResource);
+  }
+
   private get glossaryJSON() {
     const { glossary } = this.state;
     return JSON.stringify(glossary, null, 2);
@@ -297,13 +334,13 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.askForUserDefinition = (event.target as HTMLInputElement).checked;
-    this.setState({ glossary, jsonEditorContent: glossary });
+    this.setState({ glossary });
   }
 
   private handleShowSideBarChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.showSideBar = (event.target as HTMLInputElement).checked;
-    this.setState({ glossary, jsonEditorContent: glossary });
+    this.setState({ glossary });
   }
 
   private toggleDefinitionEditor = (word: string) => {
@@ -324,7 +361,18 @@ export default class PluginApp extends React.Component<IProps, IState> {
     glossary.definitions.splice(existingDefIdx, 1, newDef);
     // Disable editor.
     definitionEditors[newDef.word] = false;
-    this.setState({ glossary, jsonEditorContent: glossary, definitionEditors });
+    this.setState({ glossary, definitionEditors, glossaryDirty: this.s3LoadFeaturesAvailable });
+  }
+
+  private saveAuthoredState = () => {
+    if (!this.props.inlineAuthoring) {
+      return;
+    }
+    const { glossaryResource } = this.state;
+    const authoredState: IGlossaryAuthoredState = {
+      glossaryResourceId: glossaryResource ? glossaryResource.id : null
+    };
+    this.props.inlineAuthoring.saveAuthoredPluginState(JSON.stringify(authoredState));
   }
 
   private setClientAndResource = (client: TokenServiceClient, glossaryResource: S3Resource) => {

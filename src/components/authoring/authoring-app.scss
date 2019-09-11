@@ -4,25 +4,10 @@
   }
 }
 
-.inlineAuthoring {
-  .scrollForm {
-    max-height: 550px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
-
-  div, p, tr {
-    padding: 10px;
-  }
-
-  .s3Details {
-    input {
-      margin: 2px;
-    }
-    .name, .name input {
-      font-size: 1em;
-    }
-  }
+.inlineScrollForm {
+  max-height: 550px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .authoringColumn {
