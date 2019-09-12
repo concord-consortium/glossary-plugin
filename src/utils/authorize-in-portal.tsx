@@ -5,14 +5,17 @@ import * as ClientOAuth2 from "client-oauth2";
 const CLIENT_ID = "glossary-plugin";
 const AUTH_PATH = "/auth/oauth_authorize";
 
-export default function authorizeInPortal(portalURL: string): Promise<ClientOAuth2.Token> {
+export default function authorizeInPortal(portalURL: string, state?: string): Promise<ClientOAuth2.Token> {
   const portalAuth = new ClientOAuth2({
     clientId: CLIENT_ID,
     // Make development easier. Note that if you're using custom Portal using query param,
     // this query param will have to part of the redirect URI registered in Portal. E.g. for local env:
     // "http://localhost:8080/authoring.html?portal=http://app.rigse.docker"
-    redirectUri: window.location.href,
-    authorizationUri: `${portalURL}${AUTH_PATH}`
+    // Also, note that we remove all the hash parameters, as redirect_uri can't include them. We have to use
+    // state to maintain them.
+    redirectUri: window.location.origin + window.location.pathname + window.location.search,
+    authorizationUri: `${portalURL}${AUTH_PATH}`,
+    state
   });
 
   if (getHashParam("access_token") || getHashParam("error")) {

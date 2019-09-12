@@ -23,7 +23,6 @@ describe("GlossaryResourceSelector component", () => {
     it("renders UI asking for JWT", () => {
       const wrapper = mount(
         <GlossaryResourceSelector
-          inlineAuthoring={false}
           setClientAndResource={setClientAndResource}
           uploadJSONToS3={uploadJSONToS3}
           loadJSONFromS3={loadJSONFromS3}
@@ -48,7 +47,6 @@ describe("GlossaryResourceSelector component", () => {
     it("renders options to select or create glossary when no glossaryResourceId is given in the props", () => {
       const wrapper = mount(
         <GlossaryResourceSelector
-          inlineAuthoring={true}
           setClientAndResource={setClientAndResource}
           uploadJSONToS3={uploadJSONToS3}
           loadJSONFromS3={loadJSONFromS3}
@@ -90,7 +88,6 @@ describe("GlossaryResourceSelector component", () => {
       };
       const wrapper = mount(
         <GlossaryResourceSelector
-          inlineAuthoring={true}
           setClientAndResource={setClientAndResource}
           uploadJSONToS3={uploadJSONToS3}
           loadJSONFromS3={loadJSONFromS3}

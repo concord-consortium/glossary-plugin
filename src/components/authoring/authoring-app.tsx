@@ -8,10 +8,9 @@ import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import { validateGlossary } from "../../utils/validate-glossary";
 import GlossaryResourceSelector from "../glossary-resource-selector";
-
+import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
-import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
@@ -20,7 +19,9 @@ export const DEFAULT_GLOSSARY: IGlossary = {
 };
 
 interface IProps {
+  portalUrl?: string;
   accessToken?: string;
+  glossaryResourceId?: string | null;
 }
 
 interface IState {
@@ -48,19 +49,26 @@ export default class PluginApp extends React.Component<IProps, IState> {
     glossaryResource: null
   };
 
+  get portalAvailable() {
+    const { portalUrl, accessToken } = this.props;
+    return portalUrl && accessToken;
+  }
+
   public render() {
     const { newDefEditor, glossary, definitionEditors,
       s3Status, client, glossaryResource } = this.state;
+    const { glossaryResourceId } = this.props;
     const { askForUserDefinition, definitions, showSideBar } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={css.authoringColumn}>
           <div className={css.s3Details}>
             <GlossaryResourceSelector
-              inlineAuthoring={false}
               uploadJSONToS3={this.uploadJSONToS3}
               loadJSONFromS3={this.loadJSONFromS3}
               setClientAndResource={this.setClientAndResource}
+              getFirebaseJwt={this.portalAvailable ? this.getFirebaseJwt : undefined}
+              glossaryResourceId={glossaryResourceId}
             />
             <div className={css.s3Status}>
               {s3Status}
@@ -166,6 +174,13 @@ export default class PluginApp extends React.Component<IProps, IState> {
         </div>
     </div>
     );
+  }
+
+  public getFirebaseJwt = (firebaseApp: string) => {
+    const { portalUrl, accessToken } = this.props;
+    const url = `${portalUrl}/api/v1/jwt/firebase?firebase_app=${firebaseApp}`;
+    return fetch(url, {headers: {Authorization: `Bearer ${accessToken}`}})
+      .then(response => response.json());
   }
 
   public addNewDef = (newDef: IWordDefinition) => {

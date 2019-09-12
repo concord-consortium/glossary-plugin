@@ -70,7 +70,6 @@ export default class InlineAuthoringForm extends React.Component<IProps, IState>
           <div className={css.authoringColumn}>
             <div className={css.s3Details}>
               <GlossaryResourceSelector
-                inlineAuthoring={true}
                 glossaryResourceId={authoredState && authoredState.glossaryResourceId}
                 uploadJSONToS3={this.uploadJSONToS3}
                 loadJSONFromS3={this.loadJSONFromS3}
