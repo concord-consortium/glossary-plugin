@@ -96,4 +96,49 @@ describe("Definition component", () => {
     // Audio: definition + video caption.
     expect(wrapper.find("." + icons.iconAudio).length).toEqual(2);
   });
+
+  it("renders image when the imageUrl is provided and autoShowMedia is true", () => {
+    const src = "http://test-image.png";
+    const caption = "test image caption";
+    const wrapper = shallow(
+      <Definition
+        definition="test definition"
+        imageUrl={src}
+        imageCaption={caption}
+        autoShowMedia={true}
+      />
+    );
+    expect(wrapper.find(`img[src='${src}']`).length).toEqual(1);
+    expect(wrapper.text()).toEqual(expect.stringContaining(caption));
+    // Audio: definition + image caption.
+    expect(wrapper.find("." + icons.iconAudio).length).toEqual(2);
+  });
+
+  it("renders video when the imageUrl is NOT provided, videoUrl is provided, and autoShowMedia is true", () => {
+    const src = "http://test-video.mp4";
+    const caption = "test video caption";
+    const wrapper = shallow(
+      <Definition
+        definition="test definition"
+        videoUrl={src}
+        videoCaption={caption}
+        autoShowMedia={true}
+      />
+    );
+    expect(wrapper.find(`video[src='${src}']`).length).toEqual(1);
+    // Audio: definition + video caption.
+    expect(wrapper.find("." + icons.iconAudio).length).toEqual(2);
+  });
+
+  it("doesn't renders any media when the imageUrl isn't provided, videoUrl isn't provided, " +
+    "and autoShowMedia is true", () => {
+    const wrapper = shallow(
+      <Definition
+        definition="test definition"
+        autoShowMedia={true}
+      />
+    );
+    expect(wrapper.find(`img`).length).toEqual(0);
+    expect(wrapper.find(`video`).length).toEqual(0);
+  });
 });

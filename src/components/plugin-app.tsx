@@ -28,6 +28,7 @@ interface IProps {
   definitions: IWordDefinition[];
   initialLearnerState: ILearnerState;
   askForUserDefinition: boolean;
+  autoShowMediaInPopup: boolean;
   showSideBar: boolean;
 }
 
@@ -65,7 +66,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, definitions } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
     const { openPopups, learnerState, sidebarPresent } = this.state;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
@@ -107,6 +108,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                 videoCaption={this.definitionsByWord[word].videoCaption}
                 userDefinitions={learnerState.definitions[word]}
                 askForUserDefinition={askForUserDefinition}
+                autoShowMedia={autoShowMediaInPopup}
                 onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
               />,
               container

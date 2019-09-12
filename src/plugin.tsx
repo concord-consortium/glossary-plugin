@@ -67,6 +67,7 @@ export class GlossaryPlugin {
     const definitions = authoredState.definitions || [];
     const showSideBar = authoredState.showSideBar || false;
     const askForUserDefinition = authoredState.askForUserDefinition || false;
+    const autoShowMediaInPopup = authoredState.autoShowMediaInPopup || false;
     const initialLearnerState = getLearnerState(this.context);
 
     if (this.pluginAppComponent) {
@@ -80,6 +81,7 @@ export class GlossaryPlugin {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={askForUserDefinition}
+        autoShowMediaInPopup={autoShowMediaInPopup}
         showSideBar={showSideBar}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.

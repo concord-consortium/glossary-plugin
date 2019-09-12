@@ -33,6 +33,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -53,6 +54,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -76,6 +78,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -94,6 +97,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -122,6 +126,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -139,6 +144,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={true}
       />
     );
@@ -157,6 +163,7 @@ describe("PluginApp component", () => {
         definitions={definitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
+        autoShowMediaInPopup={false}
         showSideBar={false}
       />
     );
