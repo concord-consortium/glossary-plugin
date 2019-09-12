@@ -23,9 +23,7 @@ interface IState {
 export default class GlossaryPopup extends React.Component<IProps, IState> {
   public state: IState = {
     currentUserDefinition: "",
-    questionVisible:
-      this.props.askForUserDefinition && (!this.props.userDefinitions || this.props.userDefinitions.length === 0)
-      || false,
+    questionVisible: this.props.askForUserDefinition || false
   };
 
   public render() {

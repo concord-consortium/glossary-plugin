@@ -68,7 +68,7 @@ describe("GlossaryPopup component", () => {
     });
 
     describe("when user already answered a question", () => {
-      it("renders user button allowing user to revise his answer", () => {
+      it("still asks user to revise his answer", () => {
         const word = "test";
         const definition = "test def";
         const userDefinitions = ["user definition"];
@@ -80,10 +80,6 @@ describe("GlossaryPopup component", () => {
             askForUserDefinition={true}
           />
         );
-
-        const reviseButton = wrapper.find("[data-cy='revise']");
-        expect(reviseButton.length).toEqual(1);
-        reviseButton.simulate("click");
         const textarea = wrapper.find("textarea");
         expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));
         expect(wrapper.find("textarea").length).toEqual(1);
