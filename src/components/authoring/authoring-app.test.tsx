@@ -40,6 +40,7 @@ describe("AuthoringApp component", () => {
     expect(wrapper.find(GlossaryResourceSelector).length).toEqual(1);
     expect(wrapper.find("[data-cy='askForUserChange']").length).toEqual(1);
     expect(wrapper.find("[data-cy='addDef']").length).toEqual(1);
+    wrapper.find("[data-cy='showSideBar']").simulate("change", { target: { checked: true }});
     expect(wrapper.find(GlossarySidebar).length).toEqual(1);
   });
 
@@ -66,6 +67,7 @@ describe("AuthoringApp component", () => {
     const wrapper = shallow(
       <AuthoringApp/>
     );
+    wrapper.find("[data-cy='showSideBar']").simulate("change", { target: { checked: true }});
     const component = wrapper.instance() as AuthoringApp;
     const definition = { word: "test", definition: "definition" };
 

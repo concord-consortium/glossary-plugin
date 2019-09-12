@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import InlineAuthoringForm, { IGlossaryAuthoredState } from "./components/authoring/inline-authoring-form";
+import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
 import { IGlossary } from "./components/types";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
@@ -106,9 +106,11 @@ export class GlossaryAuthoringPlugin {
       this.context.authoredState ? JSON.parse(this.context.authoredState) : {};
 
     this.pluginAppComponent = ReactDOM.render(
-      <InlineAuthoringForm
-        authoredState={authoredState}
-        saveAuthoredPluginState={this.context.saveAuthoredPluginState}
+      <AuthoringApp
+        inlineAuthoring={{
+          authoredState,
+          saveAuthoredPluginState: this.context.saveAuthoredPluginState,
+        }}
         getFirebaseJwt={this.context.getFirebaseJwt}
       />,
       this.context.container);

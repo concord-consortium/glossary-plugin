@@ -17,12 +17,13 @@ if (portalUrl) {
     .then((token: Token) => {
       // After we are redirected back from Portal, we need to restore glossaryId from the state param.
       const passedState = token.data.state && JSON.parse(token.data.state);
+      const getFirebaseJwt = (firebaseApp: string) => {
+        const url = `${portalUrl}/api/v1/jwt/firebase?firebase_app=${firebaseApp}`;
+        return fetch(url, {headers: {Authorization: `Bearer ${token.accessToken}`}})
+          .then(response => response.json());
+      };
       ReactDOM.render(
-        <AuthoringApp
-          portalUrl={portalUrl}
-          accessToken={token.accessToken}
-          glossaryResourceId={passedState && passedState.glossaryId}
-        />, document.getElementById("app") as HTMLElement);
+        <AuthoringApp getFirebaseJwt={getFirebaseJwt} />, document.getElementById("app") as HTMLElement);
     })
     .catch(error => {
       // tslint:disable-next-line:no-console
