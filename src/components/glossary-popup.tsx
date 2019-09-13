@@ -8,6 +8,7 @@ interface IProps {
   definition: string;
   userDefinitions?: string[];
   askForUserDefinition?: boolean;
+  autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
   imageUrl?: string;
   videoUrl?: string;
@@ -36,7 +37,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, definition, userDefinitions, imageUrl,
+    const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl,
       videoUrl, imageCaption, videoCaption } = this.props;
     return (
       <div>
@@ -46,6 +47,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           videoUrl={videoUrl}
           imageCaption={imageCaption}
           videoCaption={videoCaption}
+          autoShowMedia={autoShowMedia}
         />
         {
           askForUserDefinition && userDefinitions && userDefinitions.length > 0 &&

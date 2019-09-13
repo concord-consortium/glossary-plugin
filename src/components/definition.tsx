@@ -8,6 +8,7 @@ interface IProps {
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
+  autoShowMedia?: boolean;
 }
 
 interface IState {
@@ -44,8 +45,9 @@ const read = (text: string) => {
 
 export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
-    imageVisible: false,
-    videoVisible: false
+    imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
+    // Video is loaded automatically only if there's no image.
+    videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia
   };
 
   public renderImageButton(imageUrl?: string) {

@@ -15,6 +15,7 @@ import * as icons from "../icons.scss";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
+  autoShowMediaInPopup: false,
   showSideBar: false,
   definitions: []
 };
@@ -80,7 +81,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   public render() {
     const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
     const { getFirebaseJwt } = this.props;
-    const { askForUserDefinition, definitions, showSideBar } = glossary;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, showSideBar } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={`${this.inlineMode ? css.inlineScrollForm : ""}`}>
@@ -125,38 +126,53 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                   the glossary at all times via the sidebar.
                 </div>
               </label>
+              <br/>
+              <input
+                type="checkbox"
+                checked={autoShowMediaInPopup}
+                data-cy="autoShowMediaInPopup"
+                onChange={this.handleAutoShowMediaInPopupChange}
+              />
+              <label>
+                Automatically show media (image or video) in definition popup
+                <div className={css.help}>
+                  When this option is turned on, students will automatically see provided image or video. If both
+                  image and video are provided, students will see the image.
+                </div>
+              </label>
+              <br/>
               <h3>Definitions</h3>
               <table className={css.definitionsTable}>
                 <tbody>
-                  {
-                    definitions.map(def => {
-                      if (definitionEditors[def.word]) {
-                        return <tr key={def.word} className={css.wordRow}><td colSpan={3}>
-                          <DefinitionEditor
-                            key={def.word}
-                            initialDefinition={def}
-                            client={client}
-                            glossaryResource={glossaryResource}
-                            onSave={this.editDef}
-                            onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
-                          />
-                        </td></tr>;
-                      } else {
-                        return <tr key={def.word} className={css.wordRow}>
-                          <td className={css.definitionWord}>{def.word}</td>
-                          <td className={css.definitionTxt}>{def.definition}</td>
-                          <td className={css.definitionIcons}>
-                            {def.image && <span className={icons.iconImage}/>}
-                            {def.video && <span className={icons.iconVideo}/>}
-                          </td>
-                          <td className={css.definitionButtons}>
-                            <Button label="Edit" onClick={this.toggleDefinitionEditor.bind(this, def.word)}/>
-                            <Button label="Remove" onClick={this.removeDef.bind(this, def.word)}/>
-                          </td>
-                        </tr>;
-                      }
-                    })
-                  }
+                {
+                  definitions.map(def => {
+                    if (definitionEditors[def.word]) {
+                      return <tr key={def.word} className={css.wordRow}><td colSpan={3}>
+                        <DefinitionEditor
+                          key={def.word}
+                          initialDefinition={def}
+                          client={client}
+                          glossaryResource={glossaryResource}
+                          onSave={this.editDef}
+                          onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
+                        />
+                      </td></tr>;
+                    } else {
+                      return <tr key={def.word} className={css.wordRow}>
+                        <td className={css.definitionWord}>{def.word}</td>
+                        <td className={css.definitionTxt}>{def.definition}</td>
+                        <td className={css.definitionIcons}>
+                          {def.image && <span className={icons.iconImage}/>}
+                          {def.video && <span className={icons.iconVideo}/>}
+                        </td>
+                        <td className={css.definitionButtons}>
+                          <Button label="Edit" onClick={this.toggleDefinitionEditor.bind(this, def.word)}/>
+                          <Button label="Remove" onClick={this.removeDef.bind(this, def.word)}/>
+                        </td>
+                      </tr>;
+                    }
+                  })
+                }
                 </tbody>
               </table>
               {
@@ -212,7 +228,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
             learnerDefinitions={{}}
           />
         </div>
-    </div>
+      </div>
     );
   }
 
@@ -334,6 +350,12 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   private handleAskForUserDefChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.askForUserDefinition = (event.target as HTMLInputElement).checked;
+    this.setState({ glossary });
+  }
+
+  private handleAutoShowMediaInPopupChange = (event: React.ChangeEvent) => {
+    const glossary: IGlossary = clone(this.state.glossary);
+    glossary.autoShowMediaInPopup = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
   }
 
