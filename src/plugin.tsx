@@ -10,7 +10,7 @@ const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
     return {};
   }
-  let authoredState;
+  let authoredState: IGlossaryAuthoredState;
   try {
     authoredState = JSON.parse(context.authoredState);
   } catch (error) {
@@ -19,14 +19,14 @@ const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
     return {};
   }
   // Authored state can contain all the necessary data already or specify only URL that points to a proper state.
-  if (typeof authoredState.url === "string") {
-    const response = await fetch(authoredState.url);
+  if (typeof authoredState.s3Url === "string") {
+    const response = await fetch(authoredState.s3Url);
     try {
       const textResponse = await response.text();
       return JSON.parse(textResponse);
     } catch (error) {
       // tslint:disable-next-line:no-console
-      console.warn("Unexpected/malformed authoredState at URL:", authoredState.url);
+      console.warn("Unexpected/malformed authoredState at URL:", authoredState.s3Url);
       return {};
     }
   } else {
