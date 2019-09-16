@@ -21,7 +21,9 @@ export const DEFAULT_GLOSSARY: IGlossary = {
 };
 
 export interface IGlossaryAuthoredState {
+  version: "1.0"; // versioning for future use
   glossaryResourceId?: string | null;
+  s3Url?: string | null; // renamed from url to ensure older authored states are not loaded
 }
 
 interface IInlineAuthoringProps {
@@ -390,10 +392,11 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     if (!this.props.inlineAuthoring) {
       return;
     }
-    const { glossaryResource } = this.state;
-    const authoredState: IGlossaryAuthoredState = {
-      glossaryResourceId: glossaryResource ? glossaryResource.id : null
-    };
+    const { glossaryResource, client } = this.state;
+    const version = "1.0";
+    const glossaryResourceId = glossaryResource ? glossaryResource.id : null;
+    const s3Url = client && glossaryResource ? client.getPublicS3Url(glossaryResource, GLOSSARY_FILENAME) : null;
+    const authoredState: IGlossaryAuthoredState = { version, glossaryResourceId, s3Url };
     this.props.inlineAuthoring.saveAuthoredPluginState(JSON.stringify(authoredState));
   }
 

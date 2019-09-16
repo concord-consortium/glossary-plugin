@@ -60,7 +60,7 @@ describe("GlossaryPlugin", () => {
     });
 
     const context = Object.assign({}, defaultContext, {
-      authoredState: JSON.stringify({url: "http://test.url.com/state.json"})
+      authoredState: JSON.stringify({s3Url: "http://test.url.com/state.json"})
     });
 
     it("fetches JSON at this URL and uses it as an authored state", async () => {
