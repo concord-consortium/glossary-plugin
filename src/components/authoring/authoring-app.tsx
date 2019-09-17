@@ -10,8 +10,10 @@ import { validateGlossary } from "../../utils/validate-glossary";
 import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 import GlossaryResourceSelector from "../glossary-resource-selector";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
+
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
+import TranslationsPanel from "./translations-panel";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
@@ -191,6 +193,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                 />
               }
             </div>
+            <TranslationsPanel glossary={glossary} onGlossaryUpdate={this.saveGlossary} />
           </div>
           <div className={css.preview}>
             <h2>Preview</h2>
@@ -386,6 +389,10 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     // Disable editor.
     definitionEditors[newDef.word] = false;
     this.setState({ glossary, definitionEditors, glossaryDirty: this.s3LoadFeaturesAvailable });
+  }
+
+  private saveGlossary = (newGlossary: IGlossary) => {
+    this.setState({ glossary: newGlossary, glossaryDirty: this.s3LoadFeaturesAvailable });
   }
 
   private saveAuthoredState = () => {
