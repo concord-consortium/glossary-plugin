@@ -5,6 +5,7 @@ import { IGlossary } from "../types";
 import { saveAs } from "file-saver";
 import * as clone from "clone";
 import { POEDITOR_LANG_CODE, POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
+import { glossaryToPOEditorTerms, isTranslationComplete } from "../../utils/translation-utils";
 
 import * as css from "./translation-panel.scss";
 
@@ -34,6 +35,7 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
         <Button label="Export POEditor terms" data-cy="exportTerms" onClick={this.exportPOEditorJSON}/>
         <div>
           <Dropzone
+            data-cy={"langUpload"}
             className={css.dropzone}
             activeClassName={css.dropzoneActive}
             rejectClassName={css.dropzoneReject}
@@ -57,7 +59,8 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
               definedLanguages.map(langCode =>
                 <tr key={langCode}>
                   <td><b>{POEDITOR_LANG_NAME[langCode]}</b></td>
-                  <td>{this.renderTranslationStatus(langCode)}</td>
+                  <td>{isTranslationComplete(glossary, langCode) ?
+                      "up to date ✓" : "some strings haven't been translated ✖"}</td>
                   <td><Button label="Remove" onClick={this.removeTranslation.bind(this, langCode)}/></td>
                 </tr>)
             }
@@ -69,35 +72,13 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
     );
   }
 
-  public renderTranslationStatus(langCode: string) {
-    const { glossary } = this.props;
-    const { definitions, translations } = glossary;
-    let upToDate = true;
-    const translation = translations![langCode];
-    definitions.forEach(def => {
-      if (def.word && !translation[`${def.word}.word`]) {
-        upToDate = false;
-      }
-      if (def.definition && !translation[`${def.word}.definition`]) {
-        upToDate = false;
-      }
-      if (def.imageCaption && !translation[`${def.word}.image_caption`]) {
-        upToDate = false;
-      }
-      if (def.videoCaption && !translation[`${def.word}.video_caption`]) {
-        upToDate = false;
-      }
-    });
-    return upToDate ? "up to date ✓" : "some strings haven't been translated ✖";
-  }
-
-  private handleLanguageUpload = (acceptedFiles: File[]) => {
+  public handleLanguageUpload = (acceptedFiles: File[]) => {
     const { glossary } = this.props;
     const newGlossary = clone(glossary);
     const fileReadPromises = acceptedFiles.map(file =>
       new Promise((resolve, reject) => {
         const error = () => reject(`Reading of ${file.name} has failed.`);
-        const reader = new FileReader();
+        const reader = new window.FileReader();
         reader.readAsBinaryString(file);
         reader.onerror = error;
         reader.onload = () => {
@@ -118,14 +99,14 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
             resolve();
           } else {
             reject(
-              `Language not detected in a filename: ${file.name}.` +
+              `Language not detected in a filename: ${file.name}. ` +
               "Please ensure that the filename hasn't been changed after exporting from POEditor."
             );
           }
         };
       })
     );
-    Promise.all(fileReadPromises)
+    return Promise.all(fileReadPromises)
       .then(() => {
         const { onGlossaryUpdate } = this.props;
         onGlossaryUpdate(newGlossary);
@@ -147,14 +128,8 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
 
   private exportPOEditorJSON = () => {
     const { glossary } = this.props;
-    const result: any = {};
-    glossary.definitions.forEach(def => {
-      result[`${def.word}.word`] = def.word;
-      result[`${def.word}.definition`] = def.definition;
-      result[`${def.word}.image_caption`] = def.imageCaption;
-      result[`${def.word}.video_caption`] = def.videoCaption;
-    });
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type: "application/json;charset=utf-8" });
-    saveAs(blob, "terms.json");
+    const terms = glossaryToPOEditorTerms(glossary);
+    const blob = new Blob([JSON.stringify(terms, null, 2)], { type: "application/json;charset=utf-8" });
+    saveAs(blob, "terms.json", { autoBom: true });
   }
 }

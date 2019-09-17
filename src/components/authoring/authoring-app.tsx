@@ -3,6 +3,7 @@ import DefinitionEditor from "./definition-editor";
 import Button from "../button";
 import {IWordDefinition, IGlossary} from "../types";
 import GlossarySidebar from "../glossary-sidebar";
+import TranslationsPanel from "./translations-panel";
 import * as clone from "clone";
 import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
@@ -13,7 +14,6 @@ import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 import * as css from "./authoring-app.scss";
 import * as icons from "../icons.scss";
-import TranslationsPanel from "./translations-panel";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
