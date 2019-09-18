@@ -3,6 +3,7 @@ import GlossarySidebar, { getWordsGrouping } from "./glossary-sidebar";
 import Definition from "./definition";
 import { shallow } from "enzyme";
 import * as css from "glossary-sidebar.scss";
+import GlossaryPopup from "./glossary-popup";
 
 describe("GlossarySidebar component", () => {
   const definitions = [
@@ -123,6 +124,23 @@ describe("GlossarySidebar component", () => {
       expect(buttons.at(4).text()).toEqual(expect.stringContaining("Q - S"));
       expect(buttons.at(5).text()).toEqual(expect.stringContaining("T - W"));
       expect(buttons.at(6).text()).toEqual(expect.stringContaining("X - Z"));
+    });
+  });
+
+  describe("when secondLanguage is provided", () => {
+    it("renders language toggle and calls provided callback on click", () => {
+      const onLangChange = jest.fn();
+      const wrapper = shallow(
+        <GlossarySidebar
+          definitions={definitions}
+          learnerDefinitions={{}}
+          secondLanguage="es"
+          onLanguageChange={onLangChange}
+        />
+      );
+      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(1);
+      wrapper.find("[data-cy='langToggle']").simulate("click");
+      expect(onLangChange).toHaveBeenCalled();
     });
   });
 });

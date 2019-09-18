@@ -1,12 +1,17 @@
-import {IGlossary} from "../components/types";
+import { IGlossary } from "../components/types";
+
+export const wordTerm = (word: string) => `${word}.word`;
+export const definitionTerm = (word: string) => `${word}.definition`;
+export const imageCaptionTerm = (word: string) => `${word}.image_caption`;
+export const videoCaptionTerm = (word: string) => `${word}.video_caption`;
 
 export const glossaryToPOEditorTerms = (glossary: IGlossary) => {
   const result: {[word: string]: string}  = {};
   glossary.definitions.forEach(def => {
-    result[`${def.word}.word`] = def.word;
-    result[`${def.word}.definition`] = def.definition;
-    result[`${def.word}.image_caption`] = def.imageCaption || "";
-    result[`${def.word}.video_caption`] = def.videoCaption || "";
+    result[wordTerm(def.word)] = def.word;
+    result[definitionTerm(def.word)] = def.definition;
+    result[imageCaptionTerm(def.word)] = def.imageCaption || "";
+    result[videoCaptionTerm(def.word)] = def.videoCaption || "";
   });
   return result;
 };
@@ -16,16 +21,16 @@ export const isTranslationComplete = (glossary: IGlossary, langCode: string) => 
   let complete = true;
   const translation = translations![langCode];
   definitions.forEach(def => {
-    if (def.word && !translation[`${def.word}.word`]) {
+    if (def.word && !translation[wordTerm(def.word)]) {
       complete = false;
     }
-    if (def.definition && !translation[`${def.word}.definition`]) {
+    if (def.definition && !translation[definitionTerm(def.word)]) {
       complete = false;
     }
-    if (def.imageCaption && !translation[`${def.word}.image_caption`]) {
+    if (def.imageCaption && !translation[imageCaptionTerm(def.word)]) {
       complete = false;
     }
-    if (def.videoCaption && !translation[`${def.word}.video_caption`]) {
+    if (def.videoCaption && !translation[videoCaptionTerm(def.word)]) {
       complete = false;
     }
   });

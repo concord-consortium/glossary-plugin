@@ -89,4 +89,23 @@ describe("GlossaryPopup component", () => {
       });
     });
   });
+
+  describe("when secondLanguage is provided", () => {
+    it("renders language toggle and calls provided callback on click", () => {
+      const onLangChange = jest.fn();
+      const wrapper = shallow(
+        <GlossaryPopup
+          word="test"
+          definition="test"
+          userDefinitions={[]}
+          askForUserDefinition={false}
+          secondLanguage="es"
+          onLanguageChange={onLangChange}
+        />
+      );
+      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(1);
+      wrapper.find("[data-cy='langToggle']").simulate("click");
+      expect(onLangChange).toHaveBeenCalled();
+    });
+  });
 });

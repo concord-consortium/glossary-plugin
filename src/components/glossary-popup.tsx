@@ -1,6 +1,8 @@
 import * as React from "react";
 import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
+import Button from "./button";
+import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
 import * as css from "./glossary-popup.scss";
 
 interface IProps {
@@ -14,6 +16,8 @@ interface IProps {
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
+  secondLanguage?: string;
+  onLanguageChange?: () => void;
 }
 
 interface IState {
@@ -29,8 +33,18 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
+    const { secondLanguage, onLanguageChange } = this.props;
     return (
       <div className={css.glossaryPopup}>
+        {
+          secondLanguage && onLanguageChange &&
+          <Button
+            data-cy="langToggle"
+            className={css.langButton}
+            label={POEDITOR_LANG_NAME[secondLanguage].replace("_", " ")}
+            onClick={onLanguageChange}
+          />
+        }
         {questionVisible ? this.renderQuestion() : this.renderDefinition()}
       </div>
     );
@@ -38,10 +52,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private renderDefinition() {
     const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl,
-      videoUrl, imageCaption, videoCaption } = this.props;
+      videoUrl, imageCaption, videoCaption, word } = this.props;
     return (
       <div>
         <Definition
+          word={word}
           definition={definition}
           imageUrl={imageUrl}
           videoUrl={videoUrl}

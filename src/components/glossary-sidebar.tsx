@@ -1,9 +1,11 @@
 import * as React from "react";
 import Definition from "./definition";
 import { IWordDefinition, ILearnerDefinitions } from "./types";
+import UserDefinitions from "./user-definitions";
+import Button from "./button";
+import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
 
 import * as css from "./glossary-sidebar.scss";
-import UserDefinitions from "./user-definitions";
 
 // Enable words grouping when number of definitions is greater than this value.
 const MIN_NUM_OF_DEFINITIONS_FOR_GROUPING = 50;
@@ -20,6 +22,8 @@ const nonEmptyHash = (hash: any) => {
 interface IProps {
   definitions: IWordDefinition[];
   learnerDefinitions: ILearnerDefinitions;
+  secondLanguage?: string;
+  onLanguageChange?: () => void;
 }
 
 interface IState {
@@ -84,7 +88,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
   private definitionsRef = React.createRef<HTMLDivElement>();
 
   public render() {
-    const { learnerDefinitions } = this.props;
+    const { learnerDefinitions, secondLanguage, onLanguageChange } = this.props;
     const { filter } = this.state;
     const wordsIHaveDefinedClass = css.toggle
       + (filter === Filter.WithUserDefinitionOnly ? " " + css.activeToggle : "");
@@ -96,6 +100,15 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
     }
     return (
       <div className={css.glossarySidebar}>
+        {
+          secondLanguage && onLanguageChange &&
+          <Button
+            data-cy="langToggle"
+            className={css.langButton}
+            label={POEDITOR_LANG_NAME[secondLanguage].replace("_", " ")}
+            onClick={onLanguageChange}
+          />
+        }
         {
           // Show toggles only if there's anything to toggle between.
           nonEmptyHash(learnerDefinitions) &&
@@ -128,6 +141,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
                 <div className={css.word + " " + classNameForLetter(entry.word[0])}>{entry.word}</div>
                 <div className={css.definition}>
                   <Definition
+                    word={entry.word}
                     definition={entry.definition}
                     imageUrl={entry.image}
                     videoUrl={entry.video}

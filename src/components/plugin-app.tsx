@@ -2,11 +2,14 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
-import { IWordDefinition, ILearnerDefinitions } from "./types";
+import { IWordDefinition, ILearnerDefinitions, ITranslation } from "./types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
+import { i18nContext } from "../i18n-context";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "./icons.scss";
+
+const DEFAULT_LANG = "en";
 
 interface ILearnerState {
   definitions: ILearnerDefinitions;
@@ -30,24 +33,37 @@ interface IProps {
   askForUserDefinition: boolean;
   autoShowMediaInPopup: boolean;
   showSideBar: boolean;
+  translations: {
+    [languageCode: string]: ITranslation
+  };
 }
 
 interface IState {
   openPopups: IOpenPopupDesc[];
   learnerState: ILearnerState;
   sidebarPresent: boolean;
+  lang: string;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
   public state: IState = {
     openPopups: [],
     learnerState: this.props.initialLearnerState,
-    sidebarPresent: false
+    sidebarPresent: false,
+    lang: "en"
   };
   private definitionsByWord: { [word: string]: IWordDefinition };
   private sidebarContainer: HTMLElement;
   private sidebarIconContainer: HTMLElement;
   private sidebarController: ISidebarController;
+
+  get secondLanguage() {
+    // Currently we pick the first available language as a second one. In the future, this information will be provided
+    // by LARA/Portal in some other way (e.g. through Plugin API).
+    const { translations } = this.props;
+    const { lang } = this.state;
+    return lang === DEFAULT_LANG ? Object.keys(translations)[0] : DEFAULT_LANG;
+  }
 
   public componentDidMount() {
     const { definitions, showSideBar } = this.props;
@@ -67,55 +83,60 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   public render() {
     const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
-    const { openPopups, learnerState, sidebarPresent } = this.state;
-
+    const { openPopups, learnerState, sidebarPresent, lang } = this.state;
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
-      <div>
-        {
-          // Render sidebar into portal.
-          // Do not render user definitions if askForUserDefinition mode is disabled.
-          // Note that they might be available if previously this mode was enabled.
-          sidebarPresent && ReactDOM.createPortal(
-            <GlossarySidebar
-              definitions={definitions}
-              learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
-            />,
-            this.sidebarContainer
-          )
-        }
-        {
-          // Render sidebar icon into portal.
-          sidebarPresent && ReactDOM.createPortal(
-            <span className={css.sidebarIcon + " " + icons.iconBook}/>,
-            this.sidebarIconContainer
-          )
-        }
-        {
-          // Render popups into portals.
-          // Do not render user definitions if askForUserDefinition mode is disabled.
-          // Note that they might be available if previously this mode was enabled.
-          openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
-            const {word, container} = desc;
-            return ReactDOM.createPortal(
-              <GlossaryPopup
-                word={word}
-                definition={this.definitionsByWord[word].definition}
-                imageUrl={this.definitionsByWord[word].image}
-                videoUrl={this.definitionsByWord[word].video}
-                imageCaption={this.definitionsByWord[word].imageCaption}
-                videoCaption={this.definitionsByWord[word].videoCaption}
-                userDefinitions={learnerState.definitions[word]}
-                askForUserDefinition={askForUserDefinition}
-                autoShowMedia={autoShowMediaInPopup}
-                onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
+      <i18nContext.Provider value={{translate: this.translate }}>
+        <div>
+          {
+            // Render sidebar into portal.
+            // Do not render user definitions if askForUserDefinition mode is disabled.
+            // Note that they might be available if previously this mode was enabled.
+            sidebarPresent && ReactDOM.createPortal(
+              <GlossarySidebar
+                definitions={definitions}
+                learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
+                secondLanguage={this.secondLanguage}
+                onLanguageChange={this.languageChanged}
               />,
-              container
-            );
-          })
-        }
-      </div>
+              this.sidebarContainer
+            )
+          }
+          {
+            // Render sidebar icon into portal.
+            sidebarPresent && ReactDOM.createPortal(
+              <span className={css.sidebarIcon + " " + icons.iconBook}/>,
+              this.sidebarIconContainer
+            )
+          }
+          {
+            // Render popups into portals.
+            // Do not render user definitions if askForUserDefinition mode is disabled.
+            // Note that they might be available if previously this mode was enabled.
+            openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
+              const {word, container} = desc;
+              return ReactDOM.createPortal(
+                <GlossaryPopup
+                  word={word}
+                  definition={this.definitionsByWord[word].definition}
+                  imageUrl={this.definitionsByWord[word].image}
+                  videoUrl={this.definitionsByWord[word].video}
+                  imageCaption={this.definitionsByWord[word].imageCaption}
+                  videoCaption={this.definitionsByWord[word].videoCaption}
+                  userDefinitions={learnerState.definitions[word]}
+                  askForUserDefinition={askForUserDefinition}
+                  autoShowMedia={autoShowMediaInPopup}
+                  onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
+                  secondLanguage={this.secondLanguage}
+                  onLanguageChange={this.languageChanged}
+                />,
+                container
+              );
+            })
+          }
+        </div>
+      </i18nContext.Provider>
     );
   }
 
@@ -205,5 +226,15 @@ export default class PluginApp extends React.Component<IProps, IState> {
     const { openPopups } = this.state;
     const newOpenPopups = openPopups.filter((desc: IOpenPopupDesc) => desc.container !== container);
     this.setState({ openPopups: newOpenPopups });
+  }
+
+  private languageChanged = () => {
+    this.setState({ lang: this.secondLanguage });
+  }
+
+  private translate = (key: string, fallback: string | null = null) => {
+    const { translations } = this.props;
+    const { lang } = this.state;
+    return translations[lang] && translations[lang][key] || fallback;
   }
 }

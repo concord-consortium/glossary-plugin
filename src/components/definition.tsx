@@ -1,8 +1,11 @@
 import * as React from "react";
 import * as css from "./definition.scss";
 import * as icons from "./icons.scss";
+import { i18nContext } from "../i18n-context";
+import { definitionTerm, imageCaptionTerm, videoCaptionTerm } from "../utils/translation-utils";
 
 interface IProps {
+  word: string;
   definition: string;
   imageUrl?: string;
   videoUrl?: string;
@@ -44,6 +47,8 @@ const read = (text: string) => {
 };
 
 export default class Definition extends React.Component<IProps, IState> {
+  public static contextType = i18nContext;
+
   public state: IState = {
     imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
     // Video is loaded automatically only if there's no image.
@@ -77,18 +82,19 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { definition, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
+    const { definition, word, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
     const { imageVisible, videoVisible } = this.state;
+    const i18n = this.context;
     return (
       <div>
-          <div>
-            {definition}
-            <span className={css.icons}>
-              {renderTextToSpeech(this.readDefinition)}
-              {this.renderImageButton(imageUrl)}
-              {this.renderVideoButton(videoUrl)}
-            </span>
-          </div>
+        <div>
+          {i18n.translate(definitionTerm(word), definition)}
+          <span className={css.icons}>
+          {renderTextToSpeech(this.readDefinition)}
+            {this.renderImageButton(imageUrl)}
+            {this.renderVideoButton(videoUrl)}
+        </span>
+        </div>
         {
           imageVisible &&
           <div className={css.imageContainer}>
@@ -96,7 +102,7 @@ export default class Definition extends React.Component<IProps, IState> {
             {
               imageCaption &&
               <div className={css.caption}>
-                {imageCaption}
+                {i18n.translate(imageCaptionTerm(word), imageCaption)}
                 {renderTextToSpeech(this.readImageCaption)}
               </div>
             }
@@ -109,7 +115,7 @@ export default class Definition extends React.Component<IProps, IState> {
             {
               videoCaption &&
               <div className={css.caption}>
-                {videoCaption}
+                {i18n.translate(videoCaptionTerm(word), videoCaption)}
                 {renderTextToSpeech(this.readVideoCaption)}
               </div>
             }
