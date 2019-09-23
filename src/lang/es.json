@@ -1,0 +1,11 @@
+{
+    "mainPrompt": "¿Qué crees que significa \"%{word}\" (\"%{wordInEnglish}\" en inglés)?",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "iDontKnowYet": "No lo se todavia",
+    "revise": "Revisar mi definición",
+    "myDefinition": "Mi definición",
+    "myPrevDefinition": "Mi definición previa",
+    "writeDefinition": "",
+    "writeNewDefinition": ""
+}
