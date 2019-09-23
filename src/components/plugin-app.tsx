@@ -5,11 +5,27 @@ import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions, ITranslation } from "./types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { i18nContext } from "../i18n-context";
+import * as enLang from "../lang/en.json";
+import * as esLang from "../lang/es.json";
+import * as ptLang from "../lang/pt.json";
+import * as arLang from "../lang/ar.json";
+import * as ruLang from "../lang/ru.json";
+import * as zhCNLang from "../lang/zh-CN.json";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "./icons.scss";
 
 const DEFAULT_LANG = "en";
+const UI_TRANSLATIONS: {
+  [languageCode: string]: ITranslation
+} = {
+  "en": enLang,
+  "es": esLang,
+  "pt": ptLang,
+  "ar": arLang,
+  "ru": ruLang,
+  "zh-CN": zhCNLang
+};
 
 interface ILearnerState {
   definitions: ILearnerDefinitions;
@@ -232,9 +248,25 @@ export default class PluginApp extends React.Component<IProps, IState> {
     this.setState({ lang: this.secondLanguage });
   }
 
-  private translate = (key: string, fallback: string | null = null) => {
+  private translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
     const { translations } = this.props;
     const { lang } = this.state;
-    return translations[lang] && translations[lang][key] || fallback;
+    // Variables look like %{testVariableName}.
+    const variableRegExp = /%\{\s*([^}\s]*)\s*\}/g;
+    // Note that `translations` consist of authored translations like terms or image captions.
+    // UI translations consists of UI elements translations that are built into the app.
+    // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
+    // of some UI elements or prompts.
+    const result = translations[lang] && translations[lang][key] ||
+      translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
+      UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
+      UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
+      fallback;
+    if (!result) {
+      return result;
+    }
+    return result.replace(variableRegExp, (match, variableKey) =>
+      variables[variableKey] || `* UNKNOWN KEY: ${variableKey} *`
+    );
   }
 }
