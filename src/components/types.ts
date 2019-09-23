@@ -3,6 +3,13 @@ export interface IGlossary {
   showSideBar: boolean;
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
+  translations?: {
+    [languageCode: string]: ITranslation
+  };
+}
+
+interface ITranslation {
+  [word: string]: string;
 }
 
 export interface IWordDefinition {

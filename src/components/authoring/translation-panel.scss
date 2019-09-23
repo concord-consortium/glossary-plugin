@@ -1,0 +1,30 @@
+.dropzone {
+  margin-top: 20px;
+  display: block;
+  width: 350px;
+  height: 90px;
+  border-width: 2px;
+  border-color: #666666;
+  border-style: dashed;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: justify;
+}
+
+.dropzoneActive {
+  border-color: green;
+  background: rgba(0, 255, 0, 0.1);
+}
+
+.dropzoneReject {
+  border-color: red;
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.availableTranslations {
+  margin-top: 20px;
+
+  table {
+    width: 600px;
+  }
+}
