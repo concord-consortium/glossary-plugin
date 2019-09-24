@@ -4,28 +4,10 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions, ITranslation } from "./types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { i18nContext } from "../i18n-context";
-import * as enLang from "../lang/en.json";
-import * as esLang from "../lang/es.json";
-import * as ptLang from "../lang/pt.json";
-import * as arLang from "../lang/ar.json";
-import * as ruLang from "../lang/ru.json";
-import * as zhCNLang from "../lang/zh-CN.json";
+import { i18nContext, UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../i18n-context";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "./icons.scss";
-
-const DEFAULT_LANG = "en";
-const UI_TRANSLATIONS: {
-  [languageCode: string]: ITranslation
-} = {
-  "en": enLang,
-  "es": esLang,
-  "pt": ptLang,
-  "ar": arLang,
-  "ru": ruLang,
-  "zh-CN": zhCNLang
-};
 
 interface ILearnerState {
   definitions: ILearnerDefinitions;
@@ -99,7 +81,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   public render() {
     const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
-    const { openPopups, learnerState, sidebarPresent, lang } = this.state;
+    const { openPopups, learnerState, sidebarPresent } = this.state;
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
@@ -251,8 +233,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
     const { translations } = this.props;
     const { lang } = this.state;
-    // Variables look like %{testVariableName}.
-    const variableRegExp = /%\{\s*([^}\s]*)\s*\}/g;
     // Note that `translations` consist of authored translations like terms or image captions.
     // UI translations consists of UI elements translations that are built into the app.
     // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
@@ -265,8 +245,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
     if (!result) {
       return result;
     }
-    return result.replace(variableRegExp, (match, variableKey) =>
-      variables[variableKey] || `* UNKNOWN KEY: ${variableKey} *`
-    );
+    return replaceVariables(result, variables);
   }
 }

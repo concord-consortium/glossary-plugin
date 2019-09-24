@@ -3,6 +3,9 @@ import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
 import Button from "./button";
 import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
+import { i18nContext } from "../i18n-context";
+import { wordTerm } from "../utils/translation-utils";
+
 import * as css from "./glossary-popup.scss";
 
 interface IProps {
@@ -26,6 +29,8 @@ interface IState {
 }
 
 export default class GlossaryPopup extends React.Component<IProps, IState> {
+  public static contextType = i18nContext;
+
   public state: IState = {
     currentUserDefinition: "",
     questionVisible: this.props.askForUserDefinition || false
@@ -53,6 +58,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   private renderDefinition() {
     const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl,
       videoUrl, imageCaption, videoCaption, word } = this.props;
+    const i18n = this.context;
     return (
       <div>
         <Definition
@@ -71,7 +77,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             <UserDefinitions userDefinitions={userDefinitions} />
             <div className={css.buttons}>
               <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
-                Revise my definition
+                {i18n.translate("revise")}
               </div>
             </div>
           </div>
@@ -83,25 +89,15 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   private renderQuestion() {
     const { word, userDefinitions } = this.props;
     const { currentUserDefinition } = this.state;
+    const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
-
-    const strings = {
-      whatDoYouThink: `What do you think "${word}" means?`,
-      writeDef:       "Write the definition in your own words here.",
-      writeNewDef:    "Write your new definition in your own words here.",
-      cancel:         "Cancel",
-      dontKnow:       "I don't know yet",
-      submit:         "Submit"
-    };
-
-    const placeholder = anyUserDef ? strings.writeNewDef : strings.writeDef;
-
+    const translatedWord = i18n.translate(wordTerm(word), word);
     return (
       <div>
-        {strings.whatDoYouThink}
+        {i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word })}
         <textarea
           className={css.userDefinitionTextarea}
-          placeholder={placeholder}
+          placeholder={anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition")}
           onChange={this.handleTextareaChange}
           value={currentUserDefinition}
         />
@@ -114,7 +110,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         }
         <div className={css.buttons}>
           <div className={css.button} data-cy="submit" onClick={this.handleSubmit}>
-            {strings.submit}
+            {i18n.translate("submit")}
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
           <div
@@ -122,7 +118,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             data-cy="cancel"
             onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}
           >
-            {anyUserDef ? strings.cancel : strings.dontKnow}
+            {anyUserDef ? i18n.translate("cancel") : i18n.translate("iDontKnowYet")}
           </div>
         </div>
       </div>

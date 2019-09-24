@@ -1,7 +1,7 @@
 import * as React from "react";
 import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
@@ -20,7 +20,7 @@ describe("GlossaryPopup component", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word={word}
           definition={definition}
@@ -51,7 +51,7 @@ describe("GlossaryPopup component", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word={word}
           definition={definition}
@@ -72,7 +72,7 @@ describe("GlossaryPopup component", () => {
         const word = "test";
         const definition = "test def";
         const userDefinitions = ["user definition"];
-        const wrapper = shallow(
+        const wrapper = mount(
           <GlossaryPopup
             word={word}
             definition={definition}
@@ -84,8 +84,6 @@ describe("GlossaryPopup component", () => {
         expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));
         expect(wrapper.find("textarea").length).toEqual(1);
         expect(textarea.props().placeholder).toEqual("Write your new definition in your own words here.");
-        // Finds a component with given properties (UserDefinitions)
-        expect(wrapper.find({userDefinitions}).length).toEqual(1);
       });
     });
   });
