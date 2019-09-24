@@ -93,7 +93,7 @@ describe("GlossarySidebar component", () => {
         return key + " in Spanish";
       };
       const wrapper = mount(
-        <i18nContext.Provider value={{ translate }}>
+        <i18nContext.Provider value={{ lang: "es", translate }}>
           <GlossarySidebar
             definitions={definitions}
             learnerDefinitions={learnerDefinitions}

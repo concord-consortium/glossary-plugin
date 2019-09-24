@@ -113,7 +113,7 @@ describe("GlossaryPopup component", () => {
       return key + " in Spanish";
     };
     const wrapper = mount(
-      <i18nContext.Provider value={{ translate }}>
+      <i18nContext.Provider value={{ lang: "es", translate }}>
         <GlossaryPopup
           word="test"
           definition="test"
