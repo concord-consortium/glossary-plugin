@@ -1,7 +1,8 @@
 import * as React from "react";
 import Definition from "./definition";
 import * as icons from "./icons.scss";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
+import { i18nContext } from "../i18n-context";
 
 const expectToolTip = (wrapper: any, tip: string) => {
   expect(wrapper.find(`[title="${tip}"]`)).toHaveLength(1);
@@ -21,8 +22,9 @@ describe("Definition component", () => {
 
   it("renders provided definition", () => {
     const definition = "test definition";
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition={definition}
       />
     );
@@ -33,8 +35,9 @@ describe("Definition component", () => {
     // e.g. IE11
     (window as any).speechSynthesis = undefined;
     (window as any).SpeechSynthesisUtterance = undefined;
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
       />
     );
@@ -43,8 +46,9 @@ describe("Definition component", () => {
   });
 
   it("renders text-to-speech icon if browser supports necessary API", () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
       />
     );
@@ -59,8 +63,9 @@ describe("Definition component", () => {
   it("renders image icon if imageUrl is provided and opens image when the icon is clicked", () => {
     const src = "http://test-image.png";
     const caption = "test image caption";
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
         imageUrl={src}
         imageCaption={caption}
@@ -80,8 +85,9 @@ describe("Definition component", () => {
   it("renders video icon if videoUrl is provided and opens video when the icon is clicked", () => {
     const src = "http://test-video.mp4";
     const caption = "test video caption";
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
         videoUrl={"http://test-video.mp4"}
         videoCaption={caption}
@@ -100,8 +106,9 @@ describe("Definition component", () => {
   it("renders image when the imageUrl is provided and autoShowMedia is true", () => {
     const src = "http://test-image.png";
     const caption = "test image caption";
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
         imageUrl={src}
         imageCaption={caption}
@@ -117,8 +124,9 @@ describe("Definition component", () => {
   it("renders video when the imageUrl is NOT provided, videoUrl is provided, and autoShowMedia is true", () => {
     const src = "http://test-video.mp4";
     const caption = "test video caption";
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
         videoUrl={src}
         videoCaption={caption}
@@ -132,13 +140,38 @@ describe("Definition component", () => {
 
   it("doesn't renders any media when the imageUrl isn't provided, videoUrl isn't provided, " +
     "and autoShowMedia is true", () => {
-    const wrapper = shallow(
+    const wrapper = mount(
       <Definition
+        word="test"
         definition="test definition"
         autoShowMedia={true}
       />
     );
     expect(wrapper.find(`img`).length).toEqual(0);
     expect(wrapper.find(`video`).length).toEqual(0);
+  });
+
+  it("supports translations", () => {
+    const translate = (key: string, fallback: string | null) => {
+      return fallback + " in Spanish";
+    };
+    const wrapper = mount(
+      <i18nContext.Provider value={{ translate }}>
+        <Definition
+          word="test"
+          definition="test definition"
+          imageUrl="http://test-image.png"
+          videoUrl="http://test-video.mp4"
+          imageCaption="image caption"
+          videoCaption="video caption"
+          autoShowMedia={false}
+        />
+      </i18nContext.Provider>
+    );
+    expect(wrapper.text()).toEqual(expect.stringContaining("test definition in Spanish"));
+    wrapper.find("." + icons.iconImage).simulate("click");
+    expect(wrapper.text()).toEqual(expect.stringContaining("image caption in Spanish"));
+    wrapper.find("." + icons.iconVideo).simulate("click");
+    expect(wrapper.text()).toEqual(expect.stringContaining("video caption in Spanish"));
   });
 });

@@ -64,11 +64,6 @@ export class GlossaryPlugin {
   // It needs to be idempotent.
   public renderPluginApp = async () => {
     const authoredState: IGlossary = await getAuthoredState(this.context);
-    const definitions = authoredState.definitions || [];
-    const showSideBar = authoredState.showSideBar || false;
-    const askForUserDefinition = authoredState.askForUserDefinition || false;
-    const autoShowMediaInPopup = authoredState.autoShowMediaInPopup || false;
-    const initialLearnerState = getLearnerState(this.context);
 
     if (this.pluginAppComponent) {
       ReactDOM.unmountComponentAtNode(this.context.container);
@@ -78,11 +73,12 @@ export class GlossaryPlugin {
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
         saveState={this.context.saveLearnerPluginState}
-        definitions={definitions}
-        initialLearnerState={initialLearnerState}
-        askForUserDefinition={askForUserDefinition}
-        autoShowMediaInPopup={autoShowMediaInPopup}
-        showSideBar={showSideBar}
+        initialLearnerState={getLearnerState(this.context)}
+        definitions={authoredState.definitions || []}
+        askForUserDefinition={authoredState.askForUserDefinition || false}
+        autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
+        translations={authoredState.translations || {}}
+        showSideBar={authoredState.showSideBar || false}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div

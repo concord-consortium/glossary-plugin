@@ -35,6 +35,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
 
@@ -56,6 +57,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
 
@@ -80,6 +82,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
 
@@ -99,6 +102,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
 
@@ -128,6 +132,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -146,6 +151,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={true}
+        translations={{}}
       />
     );
 
@@ -165,6 +171,7 @@ describe("PluginApp component", () => {
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
         showSideBar={false}
+        translations={{}}
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);

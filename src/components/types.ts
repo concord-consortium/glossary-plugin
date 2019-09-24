@@ -8,7 +8,7 @@ export interface IGlossary {
   };
 }
 
-interface ITranslation {
+export interface ITranslation {
   [word: string]: string;
 }
 

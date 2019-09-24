@@ -7,13 +7,17 @@ interface IProps {
   label?: string;
   icon?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export default class Button extends React.Component<IProps, {}> {
   public render() {
-    const { icon, label, children, disabled } = this.props;
+    const { icon, label, children, disabled, className } = this.props;
     return (
-      <span className={css.button + " " + (disabled ? css.disabled : "")} onClick={this.handleClick}>
+      <span
+        className={css.button + " " + (disabled ? css.disabled : "") + (className ? className : "")}
+        onClick={this.handleClick}
+      >
         {icon && <span className={css.icon + " " + icons[icon]}/>}
         <span className={css.label}>{label || children}</span>
       </span>
