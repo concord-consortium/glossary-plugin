@@ -9,5 +9,8 @@
   "myDefinition": "My Definition",
   "myPrevDefinition": "My Previous Definition",
   "wordsIHaveDefined": "Words I Have Defined",
-  "allWords": "All Words"
+  "allWords": "All Words",
+  "speechTitle": "Read aloud",
+  "imageTitle": "View photo",
+  "videoTitle": "View movie"
 }

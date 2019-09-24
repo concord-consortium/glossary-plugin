@@ -81,11 +81,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   public render() {
     const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
-    const { openPopups, learnerState, sidebarPresent } = this.state;
+    const { openPopups, learnerState, sidebarPresent, lang } = this.state;
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
-      <i18nContext.Provider value={{translate: this.translate }}>
+      <i18nContext.Provider value={{ lang, translate: this.translate }}>
         <div>
           {
             // Render sidebar into portal.

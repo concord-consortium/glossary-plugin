@@ -9,5 +9,8 @@
     "writeDefinition": "اكتب التعريف بكلماتك الخاصة هنا.",
     "writeNewDefinition": "اكتب تعريفك الجديد بكلماتك الخاصة هنا.",
     "wordsIHaveDefined": "الكلمات التي حددتها",
-    "allWords": "جميع الكلمات"
+    "allWords": "جميع الكلمات",
+    "speechTitle": "اقرأ بصوت عالي",
+    "imageTitle": "عرض الصورة",
+    "videoTitle": "عرض الفيلم"
 }

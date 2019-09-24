@@ -9,5 +9,8 @@
     "writeDefinition": "在这里用您自己的话写下定义。",
     "writeNewDefinition": "在这里用您自己的话写下新的定义。",
     "wordsIHaveDefined": "我定义的词",
-    "allWords": "所有的话"
+    "allWords": "所有的话",
+    "speechTitle": "大声朗读",
+    "imageTitle": "查看照片",
+    "videoTitle": "观看电影"
 }

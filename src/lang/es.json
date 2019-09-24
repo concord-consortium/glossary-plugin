@@ -9,5 +9,8 @@
     "writeDefinition": "Escriba la definición en sus propias palabras aquí.",
     "writeNewDefinition": "Escriba su nueva definición en sus propias palabras aquí.",
     "wordsIHaveDefined": "Palabras que he definido",
-    "allWords": "Todas las palabras"
+    "allWords": "Todas las palabras",
+    "speechTitle": "Leer en voz alta",
+    "imageTitle": "Ver foto",
+    "videoTitle": "Ver pelicula"
 }

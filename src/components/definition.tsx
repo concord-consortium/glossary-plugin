@@ -19,30 +19,14 @@ interface IState {
   videoVisible: boolean;
 }
 
-const speechLabel = "Read aloud";
-const imageLabel  = "View photo";
-const videoLabel  = "View movie";
-
 // IE11 doesn't support this API.
 const textToSpeechAvailable = () => {
   return typeof SpeechSynthesisUtterance === "function" && typeof speechSynthesis === "object";
 };
 
-const renderTextToSpeech = (onClick: () => void) => {
-  if (!textToSpeechAvailable()) {
-    return null;
-  }
-  return(
-    <span
-      className={icons.iconButton + " " + icons.iconAudio}
-      onClick={onClick}
-      title={speechLabel}
-    />
-  );
-};
-
-const read = (text: string) => {
+const read = (text: string, langCode: string) => {
   const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = langCode;
   window.speechSynthesis.speak(msg);
 };
 
@@ -55,13 +39,32 @@ export default class Definition extends React.Component<IProps, IState> {
     videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia
   };
 
+  public get translatedDefinition() {
+    const { definition, word } = this.props;
+    const i18n = this.context;
+    return i18n.translate(definitionTerm(word), definition);
+  }
+
+  public get translatedImageCaption() {
+    const { imageCaption, word } = this.props;
+    const i18n = this.context;
+    return i18n.translate(imageCaptionTerm(word), imageCaption);
+  }
+
+  public get translatedVideoCaption() {
+    const { videoCaption, word } = this.props;
+    const i18n = this.context;
+    return i18n.translate(videoCaptionTerm(word), videoCaption);
+  }
+
   public renderImageButton(imageUrl?: string) {
     if (imageUrl) {
+      const i18n = this.context;
       return(
         <span
           className={icons.iconButton + " " + icons.iconImage}
           onClick={this.toggleImage}
-          title={imageLabel}
+          title={i18n.translate("imageTitle")}
         />
       );
     }
@@ -70,27 +73,41 @@ export default class Definition extends React.Component<IProps, IState> {
 
   public renderVideoButton(videoUrl?: string) {
     if (videoUrl) {
+      const i18n = this.context;
       return(
         <span
           className={icons.iconButton + " " + icons.iconVideo}
           onClick={this.toggleVideo}
-          title={videoLabel}
+          title={i18n.translate("videoTitle")}
         />
       );
     }
     return null;
   }
 
-  public render() {
-    const { definition, word, imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
-    const { imageVisible, videoVisible } = this.state;
+  public renderTextToSpeech(onClick: () => void) {
+    if (!textToSpeechAvailable()) {
+      return null;
+    }
     const i18n = this.context;
+    return(
+      <span
+        className={icons.iconButton + " " + icons.iconAudio}
+        onClick={onClick}
+        title={i18n.translate("speechTitle")}
+      />
+    );
+  }
+
+  public render() {
+    const { imageUrl, videoUrl, imageCaption, videoCaption } = this.props;
+    const { imageVisible, videoVisible } = this.state;
     return (
       <div>
         <div>
-          {i18n.translate(definitionTerm(word), definition)}
+          {this.translatedDefinition}
           <span className={css.icons}>
-          {renderTextToSpeech(this.readDefinition)}
+          {this.renderTextToSpeech(this.readDefinition)}
             {this.renderImageButton(imageUrl)}
             {this.renderVideoButton(videoUrl)}
         </span>
@@ -102,8 +119,8 @@ export default class Definition extends React.Component<IProps, IState> {
             {
               imageCaption &&
               <div className={css.caption}>
-                {i18n.translate(imageCaptionTerm(word), imageCaption)}
-                {renderTextToSpeech(this.readImageCaption)}
+                {this.translatedImageCaption}
+                {this.renderTextToSpeech(this.readImageCaption)}
               </div>
             }
           </div>
@@ -115,8 +132,8 @@ export default class Definition extends React.Component<IProps, IState> {
             {
               videoCaption &&
               <div className={css.caption}>
-                {i18n.translate(videoCaptionTerm(word), videoCaption)}
-                {renderTextToSpeech(this.readVideoCaption)}
+                {this.translatedVideoCaption}
+                {this.renderTextToSpeech(this.readVideoCaption)}
               </div>
             }
           </div>
@@ -126,21 +143,23 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   private readDefinition = () => {
-    const { definition } = this.props;
-    read(definition);
+    const i18n = this.context;
+    read(this.translatedDefinition, i18n.lang);
   }
 
   private readImageCaption = () => {
     const { imageCaption } = this.props;
+    const i18n = this.context;
     if (imageCaption) {
-      read(imageCaption);
+      read(this.translatedImageCaption, i18n.lang);
     }
   }
 
   private readVideoCaption = () => {
     const { videoCaption } = this.props;
+    const i18n = this.context;
     if (videoCaption) {
-      read(videoCaption);
+      read(this.translatedVideoCaption, i18n.lang);
     }
   }
 

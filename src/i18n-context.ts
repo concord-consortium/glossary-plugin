@@ -38,4 +38,4 @@ export const defaultTranslate: ITranslateFunc = (key, fallback = null, variables
   return replaceVariables(result, variables);
 };
 
-export const i18nContext = React.createContext({ translate: defaultTranslate });
+export const i18nContext = React.createContext({ lang: DEFAULT_LANG, translate: defaultTranslate });
