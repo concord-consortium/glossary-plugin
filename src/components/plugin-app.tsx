@@ -151,6 +151,24 @@ export default class PluginApp extends React.Component<IProps, IState> {
     saveState(JSON.stringify(newLearnerState));
   }
 
+  public translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
+    const { translations } = this.props;
+    const { lang } = this.state;
+    // Note that `translations` consist of authored translations like terms or image captions.
+    // UI translations consists of UI elements translations that are built into the app.
+    // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
+    // of some UI elements or prompts.
+    const result = translations[lang] && translations[lang][key] ||
+      translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
+      UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
+      UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
+      fallback;
+    if (!result) {
+      return result;
+    }
+    return replaceVariables(result, variables);
+  }
+
   private decorate() {
     const { definitions } = this.props;
     const words = definitions.map(entry => entry.word);
@@ -228,23 +246,5 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   private languageChanged = () => {
     this.setState({ lang: this.secondLanguage });
-  }
-
-  private translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
-    const { translations } = this.props;
-    const { lang } = this.state;
-    // Note that `translations` consist of authored translations like terms or image captions.
-    // UI translations consists of UI elements translations that are built into the app.
-    // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
-    // of some UI elements or prompts.
-    const result = translations[lang] && translations[lang][key] ||
-      translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
-      UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
-      UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
-      fallback;
-    if (!result) {
-      return result;
-    }
-    return replaceVariables(result, variables);
   }
 }

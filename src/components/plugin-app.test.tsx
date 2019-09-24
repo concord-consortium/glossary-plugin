@@ -2,7 +2,7 @@ import * as React from "react";
 import PluginApp from "./plugin-app";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import * as css from "./plugin-app.scss";
 import * as MockPluginAPI from "../__mocks__/@concord-consortium/lara-plugin-api";
 
@@ -162,6 +162,7 @@ describe("PluginApp component", () => {
     MockPluginAPI.onSidebarOpen();
     expect(MockPluginAPI.mockPopupController.close).toHaveBeenCalledTimes(1);
   });
+
   it("hides the sidebar when showSideBar is false", () => {
     const wrapper = shallow(
       <PluginApp
@@ -175,5 +176,47 @@ describe("PluginApp component", () => {
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);
+  });
+
+  describe("#translate method", () => {
+    it("should pick using default internal translation strings", () => {
+      const wrapper = mount(
+        <PluginApp
+          saveState={saveState}
+          definitions={definitions}
+          initialLearnerState={initialLearnerState}
+          askForUserDefinition={true}
+          autoShowMediaInPopup={false}
+          showSideBar={false}
+          translations={{}}
+        />
+      );
+      const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
+      expect(pluginApp.translate("submit")).toEqual("Submit");
+      pluginApp.setState({ lang: "es" });
+      expect(pluginApp.translate("submit")).toEqual("Enviar");
+    });
+
+    it("should pick translations from `translations` prop when available", () => {
+      const wrapper = mount(
+        <PluginApp
+          saveState={saveState}
+          definitions={definitions}
+          initialLearnerState={initialLearnerState}
+          askForUserDefinition={true}
+          autoShowMediaInPopup={false}
+          showSideBar={false}
+          translations={{
+            es: {
+              submit: "Enviar?!!"
+            }
+          }}
+        />
+      );
+      const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
+      expect(pluginApp.translate("submit")).toEqual("Submit");
+      pluginApp.setState({ lang: "es" });
+      expect(pluginApp.translate("submit")).toEqual("Enviar?!!");
+    });
   });
 });

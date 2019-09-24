@@ -7,7 +7,7 @@ import * as arLang from "./lang/ar.json";
 import * as ruLang from "./lang/ru.json";
 import * as zhCNLang from "./lang/zh-CN.json";
 
-type ITranslateFunc = (key: string, fallback: string | null, variables: {[key: string]: string}) => string | null;
+type ITranslateFunc = (key: string, fallback?: string | null, variables?: {[key: string]: string}) => string | null;
 
 export const UI_TRANSLATIONS: {
   [languageCode: string]: ITranslation
@@ -30,7 +30,7 @@ export const replaceVariables = (input: string, variables: {[key: string]: strin
   );
 };
 
-const defaultTranslate: ITranslateFunc = (key, fallback = null, variables = {}) => {
+export const defaultTranslate: ITranslateFunc = (key, fallback = null, variables = {}) => {
   const result = UI_TRANSLATIONS[DEFAULT_LANG][key] || fallback;
   if (!result) {
     return result;

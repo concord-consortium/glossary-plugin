@@ -2,6 +2,7 @@ import * as React from "react";
 import UserDefinitions from "./user-definitions";
 import * as icons from "./icons.scss";
 import { mount } from "enzyme";
+import {i18nContext} from "../i18n-context";
 
 describe("UserDefinitions component", () => {
   describe("when there's only one user definition available", () => {
@@ -62,6 +63,24 @@ describe("UserDefinitions component", () => {
       expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #3"));
       expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #2"));
       expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #1"));
+    });
+
+    it("supports translations", () => {
+      const translate = (key: string) => {
+        return key + " in Spanish";
+      };
+      const wrapper = mount(
+        <i18nContext.Provider value={{ translate }}>
+          <UserDefinitions
+            userDefinitions={userDefinitions}
+          />
+        </i18nContext.Provider>
+      );
+      const icon = wrapper.find("." + icons.iconCaret);
+      expect(icon.length).toEqual(1);
+      icon.simulate("click");
+      expect(wrapper.text()).toEqual(expect.stringContaining("myDefinition in Spanish"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("myPrevDefinition in Spanish"));
     });
   });
 });

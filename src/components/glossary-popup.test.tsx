@@ -2,6 +2,7 @@ import * as React from "react";
 import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
+import {i18nContext} from "../i18n-context";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
@@ -105,5 +106,23 @@ describe("GlossaryPopup component", () => {
       wrapper.find("[data-cy='langToggle']").simulate("click");
       expect(onLangChange).toHaveBeenCalled();
     });
+  });
+
+  it("supports translations", () => {
+    const translate = (key: string) => {
+      return key + " in Spanish";
+    };
+    const wrapper = mount(
+      <i18nContext.Provider value={{ translate }}>
+        <GlossaryPopup
+          word="test"
+          definition="test"
+          userDefinitions={[]}
+          askForUserDefinition={true}
+        />
+      </i18nContext.Provider>
+    );
+    expect(wrapper.text()).toEqual(expect.stringContaining("mainPrompt in Spanish"));
+    expect(wrapper.text()).toEqual(expect.stringContaining("submit in Spanish"));
   });
 });
