@@ -6,6 +6,7 @@ import Button from "./button";
 import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
 
 import * as css from "./glossary-sidebar.scss";
+import {i18nContext} from "../i18n-context";
 
 // Enable words grouping when number of definitions is greater than this value.
 const MIN_NUM_OF_DEFINITIONS_FOR_GROUPING = 50;
@@ -80,6 +81,8 @@ const classNameForLetter = (letter: string) => {
 };
 
 export default class GlossarySidebar extends React.Component<IProps, IState> {
+  public static contextType = i18nContext;
+
   public state: IState = {
     // Show words that have user definition by default. Note that this filter will be ignored if user hasn't defined
     // anything yet.
@@ -90,6 +93,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
   public render() {
     const { learnerDefinitions, secondLanguage, onLanguageChange } = this.props;
     const { filter } = this.state;
+    const i18n = this.context;
     const wordsIHaveDefinedClass = css.toggle
       + (filter === Filter.WithUserDefinitionOnly ? " " + css.activeToggle : "");
     const allWordsClass = css.toggle + (filter === Filter.AllWords ? " " + css.activeToggle : "");
@@ -114,8 +118,12 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
           nonEmptyHash(learnerDefinitions) &&
           <div>
             <div className={css.toggles}>
-              <div className={wordsIHaveDefinedClass} onClick={this.ownWordsClicked}>Words I Have Defined</div>
-              <div className={allWordsClass} data-cy="all-words-filter" onClick={this.allWordsClicked}>All Words</div>
+              <div className={wordsIHaveDefinedClass} onClick={this.ownWordsClicked}>
+                {i18n.translate("wordsIHaveDefined")}
+              </div>
+              <div className={allWordsClass} data-cy="all-words-filter" onClick={this.allWordsClicked}>
+                {i18n.translate("allWords")}
+              </div>
             </div>
             <hr/>
           </div>

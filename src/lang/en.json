@@ -7,5 +7,7 @@
   "writeDefinition": "Write the definition in your own words here.",
   "writeNewDefinition": "Write your new definition in your own words here.",
   "myDefinition": "My Definition",
-  "myPrevDefinition": "My Previous Definition"
+  "myPrevDefinition": "My Previous Definition",
+  "wordsIHaveDefined": "Words I Have Defined",
+  "allWords": "All Words"
 }
