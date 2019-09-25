@@ -1,8 +1,8 @@
 import * as React from "react";
 import Definition from "./definition";
-import * as icons from "./icons.scss";
+import * as icons from "../common/icons.scss";
 import { mount } from "enzyme";
-import { i18nContext } from "../i18n-context";
+import { i18nContext } from "../../i18n-context";
 
 const expectToolTip = (wrapper: any, tip: string) => {
   expect(wrapper.find(`[title="${tip}"]`)).toHaveLength(1);

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as css from "./definition-editor.scss";
-import { IWordDefinition } from "../types";
-import Button from "../button";
+import { IWordDefinition } from "../../types";
+import Button from "../common/button";
 import { validateDefinition } from "../../utils/validate-glossary";
 import Dropzone from "react-dropzone";
 import { v1 as uuid } from "uuid";

@@ -1,12 +1,12 @@
 import * as React from "react";
 import Definition from "./definition";
-import { IWordDefinition, ILearnerDefinitions } from "./types";
+import { IWordDefinition, ILearnerDefinitions } from "../../types";
 import UserDefinitions from "./user-definitions";
-import Button from "./button";
-import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
+import Button from "../common/button";
+import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 
 import * as css from "./glossary-sidebar.scss";
-import {i18nContext} from "../i18n-context";
+import {i18nContext} from "../../i18n-context";
 
 // Enable words grouping when number of definitions is greater than this value.
 const MIN_NUM_OF_DEFINITIONS_FOR_GROUPING = 50;

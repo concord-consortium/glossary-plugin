@@ -4,7 +4,7 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { shallow, mount } from "enzyme";
 import * as css from "./plugin-app.scss";
-import * as MockPluginAPI from "../__mocks__/@concord-consortium/lara-plugin-api";
+import * as MockPluginAPI from "../../__mocks__/@concord-consortium/lara-plugin-api";
 
 // Mock LARA API.
 jest.mock("@concord-consortium/lara-plugin-api");

@@ -2,12 +2,12 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
-import { IWordDefinition, ILearnerDefinitions, ITranslation } from "./types";
+import { IWordDefinition, ILearnerDefinitions, ITranslation } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { i18nContext, UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../i18n-context";
+import { i18nContext, UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
 
 import * as css from "./plugin-app.scss";
-import * as icons from "./icons.scss";
+import * as icons from "../common/icons.scss";
 
 interface ILearnerState {
   definitions: ILearnerDefinitions;

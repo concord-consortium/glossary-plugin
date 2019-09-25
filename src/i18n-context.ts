@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ITranslation } from "./components/types";
+import { ITranslation } from "./types";
 import * as enLang from "./lang/en.json";
 import * as esLang from "./lang/es.json";
 import * as ptLang from "./lang/pt.json";

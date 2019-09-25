@@ -2,8 +2,8 @@ import * as React from "react";
 import GlossarySidebar, { getWordsGrouping } from "./glossary-sidebar";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
-import * as css from "glossary-sidebar.scss";
-import {i18nContext} from "../i18n-context";
+import * as css from "./glossary-sidebar.scss";
+import {i18nContext} from "../../i18n-context";
 
 describe("GlossarySidebar component", () => {
   const definitions = [

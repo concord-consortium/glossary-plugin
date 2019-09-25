@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as css from "./definition.scss";
-import * as icons from "./icons.scss";
-import { i18nContext } from "../i18n-context";
-import { definitionTerm, imageCaptionTerm, videoCaptionTerm } from "../utils/translation-utils";
+import * as icons from "../common/icons.scss";
+import { i18nContext } from "../../i18n-context";
+import { definitionTerm, imageCaptionTerm, videoCaptionTerm } from "../../utils/translation-utils";
 
 interface IProps {
   word: string;

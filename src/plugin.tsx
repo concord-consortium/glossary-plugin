@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import PluginApp from "./components/plugin-app";
+import PluginApp from "./components/plugin/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
-import { IGlossary } from "./components/types";
+import { IGlossary } from "./types";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
