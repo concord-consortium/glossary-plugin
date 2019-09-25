@@ -87,13 +87,25 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestion() {
-    const { word, userDefinitions } = this.props;
+    const { word, userDefinitions, imageUrl, videoUrl, autoShowMedia } = this.props;
     const { currentUserDefinition } = this.state;
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
     const translatedWord = i18n.translate(wordTerm(word), word);
     return (
       <div>
+        {
+          autoShowMedia && imageUrl &&
+          <div className={css.imageContainer}>
+            <img src={imageUrl} />
+          </div>
+        }
+        {
+          autoShowMedia && !imageUrl && videoUrl &&
+          <div className={css.imageContainer}>
+            <video src={videoUrl} controls={true}/>
+          </div>
+        }
         {i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word })}
         <textarea
           className={css.userDefinitionTextarea}

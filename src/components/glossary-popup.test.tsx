@@ -48,6 +48,42 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find(Definition).length).toEqual(1);
     });
 
+    it("shows image when autoShowMedia is true", () => {
+      const word = "test";
+      const definition = "test def";
+      const imageSrc = "http://test.image.png";
+      const videoSrc = "http://test.video.mp4";
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          askForUserDefinition={true}
+          autoShowMedia={true}
+          imageUrl={imageSrc}
+          videoUrl={videoSrc}
+        />
+      );
+      expect(wrapper.find(`img[src='${imageSrc}']`).length).toEqual(1);
+      // Video shouldn't be visible if there's an image defined.
+      expect(wrapper.find(`video[src='${videoSrc}']`).length).toEqual(0);
+    });
+
+    it("shows video when autoShowMedia is true", () => {
+      const word = "test";
+      const definition = "test def";
+      const videoSrc = "http://test.video.mp4";
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          askForUserDefinition={true}
+          autoShowMedia={true}
+          videoUrl={videoSrc}
+        />
+      );
+      expect(wrapper.find(`video[src='${videoSrc}']`).length).toEqual(1);
+    });
+
     it("user can click 'I don't know' button", () => {
       const word = "test";
       const definition = "test def";
