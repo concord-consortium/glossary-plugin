@@ -12,7 +12,9 @@ describe("Definition component", () => {
   const speechSynthesisMock = {
     speak: jest.fn()
   };
-  const SpeechSynthesisUtteranceMock = jest.fn();
+  const SpeechSynthesisUtteranceMock = jest.fn((text: string) => {
+    return { text };
+  });
   beforeEach(() => {
     speechSynthesisMock.speak.mockClear();
     SpeechSynthesisUtteranceMock.mockClear();
@@ -58,6 +60,9 @@ describe("Definition component", () => {
     icon.simulate("click");
     expect(SpeechSynthesisUtteranceMock).toHaveBeenCalledTimes(1);
     expect(speechSynthesisMock.speak).toHaveBeenCalledTimes(1);
+    const msg = speechSynthesisMock.speak.mock.calls[0][0];
+    expect(msg.text).toEqual("test definition");
+    expect(msg.lang).toEqual("en");
   });
 
   it("renders image icon if imageUrl is provided and opens image when the icon is clicked", () => {
@@ -156,7 +161,7 @@ describe("Definition component", () => {
       return fallback + " in Spanish";
     };
     const wrapper = mount(
-      <i18nContext.Provider value={{ translate }}>
+      <i18nContext.Provider value={{ lang: "es", translate }}>
         <Definition
           word="test"
           definition="test definition"
@@ -168,10 +173,25 @@ describe("Definition component", () => {
         />
       </i18nContext.Provider>
     );
+    wrapper.find("." + icons.iconAudio).first().simulate("click");
+    let msg = speechSynthesisMock.speak.mock.calls[0][0];
+    expect(msg.text).toEqual("test definition in Spanish");
+    expect(msg.lang).toEqual("es");
+
     expect(wrapper.text()).toEqual(expect.stringContaining("test definition in Spanish"));
+
     wrapper.find("." + icons.iconImage).simulate("click");
     expect(wrapper.text()).toEqual(expect.stringContaining("image caption in Spanish"));
+    wrapper.find("." + icons.iconAudio).last().simulate("click");
+    msg = speechSynthesisMock.speak.mock.calls[1][0];
+    expect(msg.text).toEqual("image caption in Spanish");
+    expect(msg.lang).toEqual("es");
+
     wrapper.find("." + icons.iconVideo).simulate("click");
     expect(wrapper.text()).toEqual(expect.stringContaining("video caption in Spanish"));
+    wrapper.find("." + icons.iconAudio).last().simulate("click");
+    msg = speechSynthesisMock.speak.mock.calls[2][0];
+    expect(msg.text).toEqual("video caption in Spanish");
+    expect(msg.lang).toEqual("es");
   });
 });

@@ -1,7 +1,8 @@
 import * as React from "react";
 import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
+import {i18nContext} from "../i18n-context";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
@@ -20,7 +21,7 @@ describe("GlossaryPopup component", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word={word}
           definition={definition}
@@ -47,11 +48,47 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find(Definition).length).toEqual(1);
     });
 
+    it("shows image when autoShowMedia is true", () => {
+      const word = "test";
+      const definition = "test def";
+      const imageSrc = "http://test.image.png";
+      const videoSrc = "http://test.video.mp4";
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          askForUserDefinition={true}
+          autoShowMedia={true}
+          imageUrl={imageSrc}
+          videoUrl={videoSrc}
+        />
+      );
+      expect(wrapper.find(`img[src='${imageSrc}']`).length).toEqual(1);
+      // Video shouldn't be visible if there's an image defined.
+      expect(wrapper.find(`video[src='${videoSrc}']`).length).toEqual(0);
+    });
+
+    it("shows video when autoShowMedia is true", () => {
+      const word = "test";
+      const definition = "test def";
+      const videoSrc = "http://test.video.mp4";
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          askForUserDefinition={true}
+          autoShowMedia={true}
+          videoUrl={videoSrc}
+        />
+      );
+      expect(wrapper.find(`video[src='${videoSrc}']`).length).toEqual(1);
+    });
+
     it("user can click 'I don't know' button", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word={word}
           definition={definition}
@@ -72,7 +109,7 @@ describe("GlossaryPopup component", () => {
         const word = "test";
         const definition = "test def";
         const userDefinitions = ["user definition"];
-        const wrapper = shallow(
+        const wrapper = mount(
           <GlossaryPopup
             word={word}
             definition={definition}
@@ -84,8 +121,6 @@ describe("GlossaryPopup component", () => {
         expect(wrapper.text()).toEqual(expect.stringContaining(`What do you think "${word}" means?`));
         expect(wrapper.find("textarea").length).toEqual(1);
         expect(textarea.props().placeholder).toEqual("Write your new definition in your own words here.");
-        // Finds a component with given properties (UserDefinitions)
-        expect(wrapper.find({userDefinitions}).length).toEqual(1);
       });
     });
   });
@@ -107,5 +142,23 @@ describe("GlossaryPopup component", () => {
       wrapper.find("[data-cy='langToggle']").simulate("click");
       expect(onLangChange).toHaveBeenCalled();
     });
+  });
+
+  it("supports translations", () => {
+    const translate = (key: string) => {
+      return key + " in Spanish";
+    };
+    const wrapper = mount(
+      <i18nContext.Provider value={{ lang: "es", translate }}>
+        <GlossaryPopup
+          word="test"
+          definition="test"
+          userDefinitions={[]}
+          askForUserDefinition={true}
+        />
+      </i18nContext.Provider>
+    );
+    expect(wrapper.text()).toEqual(expect.stringContaining("mainPrompt in Spanish"));
+    expect(wrapper.text()).toEqual(expect.stringContaining("submit in Spanish"));
   });
 });

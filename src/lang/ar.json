@@ -1,0 +1,16 @@
+{
+    "mainPrompt": "ما رأيك \"٪ {word}\" تعني؟",
+    "submit": "تقديم",
+    "cancel": "إلغاء",
+    "iDontKnowYet": "أنا لا أعرف حتى الآن",
+    "revise": "مراجعة التعريف الخاص بي",
+    "myDefinition": "التعريف الخاص بي",
+    "myPrevDefinition": "التعريف السابق",
+    "writeDefinition": "اكتب التعريف بكلماتك الخاصة هنا.",
+    "writeNewDefinition": "اكتب تعريفك الجديد بكلماتك الخاصة هنا.",
+    "wordsIHaveDefined": "الكلمات التي حددتها",
+    "allWords": "جميع الكلمات",
+    "speechTitle": "اقرأ بصوت عالي",
+    "imageTitle": "عرض الصورة",
+    "videoTitle": "عرض الفيلم"
+}

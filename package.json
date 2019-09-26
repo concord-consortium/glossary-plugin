@@ -12,7 +12,11 @@
     "lint:fix": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "strings:pull:usage": "echo 'Usage: npm run strings:pull -- -a <poeditor_api_key>'",
+    "strings:pull": "./poeditor-scripts/strings-pull-project.sh",
+    "strings:push:usage": "echo 'Usage: npm run strings:push -- -a <poeditor_api_key>'",
+    "strings:push": "./poeditor-scripts/strings-push-project.sh"
   },
   "repository": {
     "type": "git",

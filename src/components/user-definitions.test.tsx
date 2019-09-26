@@ -1,7 +1,8 @@
 import * as React from "react";
 import UserDefinitions from "./user-definitions";
 import * as icons from "./icons.scss";
-import { shallow } from "enzyme";
+import { mount } from "enzyme";
+import {i18nContext} from "../i18n-context";
 
 describe("UserDefinitions component", () => {
   describe("when there's only one user definition available", () => {
@@ -9,7 +10,7 @@ describe("UserDefinitions component", () => {
     const userDefinitions = [ userDefinition ];
 
     it("renders the this definition without expand button", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <UserDefinitions
           userDefinitions={userDefinitions}
         />
@@ -26,7 +27,7 @@ describe("UserDefinitions component", () => {
     const userDefinitions = [ fistUserDefinition, "2 def", "3 def", "4 def", lastUserDefinition ];
 
     it("renders the last user definition", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <UserDefinitions
           userDefinitions={userDefinitions}
         />
@@ -36,7 +37,7 @@ describe("UserDefinitions component", () => {
     });
 
     it("renders renders expand icon if there are multiple definitions", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <UserDefinitions
           userDefinitions={userDefinitions}
         />
@@ -49,7 +50,7 @@ describe("UserDefinitions component", () => {
     });
 
     it("renders previous user definitions using correct ordinals", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <UserDefinitions
           userDefinitions={userDefinitions}
         />
@@ -57,11 +58,29 @@ describe("UserDefinitions component", () => {
       const icon = wrapper.find("." + icons.iconCaret);
       expect(icon.length).toEqual(1);
       icon.simulate("click");
-      expect(wrapper.text()).toEqual(expect.stringContaining("My  definition"));
-      expect(wrapper.text()).toEqual(expect.stringContaining("My previous definition"));
-      expect(wrapper.text()).toEqual(expect.stringContaining("My 3rd definition"));
-      expect(wrapper.text()).toEqual(expect.stringContaining("My 2nd definition"));
-      expect(wrapper.text()).toEqual(expect.stringContaining("My 1st definition"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("My Definition"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("My Previous Definition"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #3"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #2"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("My Definition #1"));
+    });
+
+    it("supports translations", () => {
+      const translate = (key: string) => {
+        return key + " in Spanish";
+      };
+      const wrapper = mount(
+        <i18nContext.Provider value={{ lang: "es", translate }}>
+          <UserDefinitions
+            userDefinitions={userDefinitions}
+          />
+        </i18nContext.Provider>
+      );
+      const icon = wrapper.find("." + icons.iconCaret);
+      expect(icon.length).toEqual(1);
+      icon.simulate("click");
+      expect(wrapper.text()).toEqual(expect.stringContaining("myDefinition in Spanish"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("myPrevDefinition in Spanish"));
     });
   });
 });

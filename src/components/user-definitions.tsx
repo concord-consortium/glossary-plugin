@@ -1,4 +1,5 @@
 import * as React from "react";
+import { i18nContext } from "../i18n-context";
 import * as css from "./user-definitions.scss";
 import * as icons from "./icons.scss";
 
@@ -11,19 +12,15 @@ interface IState {
 }
 
 const getOrdinal = (n: number, max: number) => {
-  if (n === 0) {
-    return ""; // current
+  if (n === 0 || n === 1) {
+    return ""; // current or previous
   }
-  if (n === 1) {
-    return "previous";
-  }
-  n = max - n;
-  const s = ["th", "st", "nd", "rd"];
-  const v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  return max - n;
 };
 
 export default class UserDefinitions extends React.Component<IProps, IState> {
+  public static contextType = i18nContext;
+
   public state: IState = {
     allUserDefsVisible: false
   };
@@ -56,13 +53,16 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
   // Note that index = 0 means the most recent definition (current one).
   private renderUserDef(index: number) {
     const { userDefinitions } = this.props;
+    const i18n = this.context;
     if (!userDefinitions) {
       return;
     }
+    const ordinal = getOrdinal(index, userDefinitions.length);
+    const label = index === 1 ? i18n.translate("myPrevDefinition") : i18n.translate("myDefinition");
     return (
       <span className={css.userDefinition} key={index}>
         <div className={css.userDefinitionHeader}>
-          My {getOrdinal(index, userDefinitions.length)} definition:
+          {label}{ordinal ? ` #${ordinal}` : ""}:
         </div>
         {userDefinitions[userDefinitions.length - 1 - index]}
       </span>

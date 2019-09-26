@@ -1,9 +1,9 @@
 import * as React from "react";
 import GlossarySidebar, { getWordsGrouping } from "./glossary-sidebar";
 import Definition from "./definition";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import * as css from "glossary-sidebar.scss";
-import GlossaryPopup from "./glossary-popup";
+import {i18nContext} from "../i18n-context";
 
 describe("GlossarySidebar component", () => {
   const definitions = [
@@ -50,7 +50,7 @@ describe("GlossarySidebar component", () => {
     };
 
     it("renders filter toggle", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
@@ -60,7 +60,7 @@ describe("GlossarySidebar component", () => {
     });
 
     it("shows words that have learner definitions by default", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
@@ -73,7 +73,7 @@ describe("GlossarySidebar component", () => {
     });
 
     it("lets user change filtering to show all the words", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
@@ -86,6 +86,22 @@ describe("GlossarySidebar component", () => {
       // This finds components with following properties subset:
       expect(wrapper.find({definition: "test definition 1"}).length).toEqual(1);
       expect(wrapper.find({definition: "test definition 2"}).length).toEqual(1);
+    });
+
+    it("supports translations", () => {
+      const translate = (key: string) => {
+        return key + " in Spanish";
+      };
+      const wrapper = mount(
+        <i18nContext.Provider value={{ lang: "es", translate }}>
+          <GlossarySidebar
+            definitions={definitions}
+            learnerDefinitions={learnerDefinitions}
+          />
+        </i18nContext.Provider>
+      );
+      expect(wrapper.text()).toEqual(expect.stringContaining("wordsIHaveDefined in Spanish"));
+      expect(wrapper.text()).toEqual(expect.stringContaining("allWords in Spanish"));
     });
   });
 
