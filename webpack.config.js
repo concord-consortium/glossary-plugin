@@ -18,7 +18,8 @@ module.exports = (env, argv) => {
     entry: {
       demo: './src/demo.tsx',
       plugin: './src/plugin.tsx',
-      authoring: './src/authoring.tsx'
+      authoring: './src/authoring.tsx',
+      dashboard: './src/dashboard.tsx'
     },
     mode: devMode ? 'development' : 'production',
     output: {

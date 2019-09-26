@@ -20,6 +20,8 @@ export const UI_TRANSLATIONS: {
   "zh-CN": zhCNLang
 };
 
+export const SUPPORTED_LANGUAGES = Object.keys(UI_TRANSLATIONS);
+
 export const DEFAULT_LANG = "en";
 
 export const replaceVariables = (input: string, variables: {[key: string]: string} = {}) => {
