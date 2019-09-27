@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IClassInfo, IStudentSettings, IStudent } from "../../types";
-import { watchStudentSettings, saveStudentSettings } from "../../db";
+import { watchClassSettings, saveStudentSettings } from "../../db";
 import { SUPPORTED_LANGUAGES } from "../../i18n-context";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 
@@ -22,7 +22,7 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     const { classInfo } = this.props;
-    watchStudentSettings(classInfo.source, classInfo.contextId, this.onSettingsUpdate);
+    watchClassSettings(classInfo.source, classInfo.contextId, this.onSettingsUpdate);
   }
 
   public render() {

@@ -40,3 +40,9 @@ export interface IStudentSettings {
   userId: string;
   preferredLanguage: string;
 }
+
+export interface IStudentInfo {
+  source: string;
+  contextId: string;
+  userId: string;
+}

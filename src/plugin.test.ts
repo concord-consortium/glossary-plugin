@@ -26,7 +26,7 @@ describe("GlossaryPlugin", () => {
     userEmail: null,
     saveLearnerPluginState: (state: string) => new Promise<string>(() => null),
     getClassInfo: () => null,
-    getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>(() => null),
+    getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>((resolve, reject) => reject(null)),
     authoredState: null,
     learnerState: null,
     pluginId: 123,

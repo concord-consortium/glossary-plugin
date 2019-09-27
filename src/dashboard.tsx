@@ -2,17 +2,9 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import "whatwg-fetch";
 import DashboardApp from "./components/dashboard/dashboard-app";
-import { signInWithToken } from "./db";
-import { getQueryParam } from "./utils/get-url-param";
+import { FIREBASE_APP, signInWithToken } from "./db";
+import { getQueryParam, parseUrl } from "./utils/get-url-param";
 import { IClassInfo } from "./types";
-
-const FIREBASE_APP = "glossary-plugin";
-
-const parseUrl = (url: string) => {
-  const a = document.createElement("a");
-  a.href = url;
-  return a;
-};
 
 const getClassInfoUrl = () => getQueryParam("class");
 

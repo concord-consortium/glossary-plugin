@@ -3,8 +3,11 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
+import { FIREBASE_APP, signInWithToken } from "./db";
 import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
 import { IGlossary } from "./types";
+import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
+import { parseUrl } from "./utils/get-url-param";
 
 const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
   if (!context.authoredState) {
@@ -70,6 +73,23 @@ export class GlossaryPlugin {
       this.pluginAppComponent = undefined;
     }
 
+    let studentInfo;
+    try {
+      const firebaseJwt = await this.context.getFirebaseJwt(FIREBASE_APP);
+      signInWithToken(firebaseJwt.token);
+      studentInfo = {
+        // Types in LARA Plugin API should be fixed.
+        source: parseUrl((firebaseJwt.claims as IJwtClaims).domain).hostname,
+        contextId: (firebaseJwt.claims as IJwtClaims).claims.class_hash,
+        userId: (firebaseJwt.claims as any).claims.platform_user_id.toString()
+      };
+    } catch (e) {
+      // getFirebaseJwt will throw an exception when run doesn't have remote endpoint, so when user
+      // hasn't launched an activity from Portal. In this case just do nothing special.
+      // studentInfo will be undefined and PluginApp won't try to connect to Firestore.
+      studentInfo = undefined;
+    }
+
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
         saveState={this.context.saveLearnerPluginState}
@@ -79,6 +99,7 @@ export class GlossaryPlugin {
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}
+        studentInfo={studentInfo}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div

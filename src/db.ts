@@ -2,6 +2,8 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import { IStudentSettings } from "./types";
 
+export const FIREBASE_APP = "glossary-plugin";
+
 // Useful only for manual testing Firebase rules.
 const SKIP_SIGN_IN = false;
 
@@ -40,7 +42,7 @@ export const signInWithToken = (rawFirestoreJWT: string) => {
 const settingsPath = (source: string, contextId: string, userId?: string) =>
   `/sources/${source}/context_id/${contextId}/student_settings${userId ? `/${userId}` : ""}`;
 
-export const watchStudentSettings = (
+export const watchClassSettings = (
   source: string,
   contextId: string,
   onSnapshot: (settings: IStudentSettings[]) => void
@@ -52,6 +54,23 @@ export const watchStudentSettings = (
         return;
       }
       onSnapshot(snapshot.docs.map(d => d.data() as IStudentSettings));
+    }, (err: Error) => {
+      // tslint:disable-next-line no-console
+      console.error(err);
+      throw err;
+    });
+};
+
+export const watchStudentSettings = (
+  source: string,
+  contextId: string,
+  userId: string,
+  onSnapshot: (settings: IStudentSettings) => void
+) => {
+  const db = getFirestore();
+  db.collection(settingsPath(source, contextId)).doc(userId)
+    .onSnapshot(snapshot => {
+      onSnapshot(snapshot.data() as IStudentSettings);
     }, (err: Error) => {
       // tslint:disable-next-line no-console
       console.error(err);

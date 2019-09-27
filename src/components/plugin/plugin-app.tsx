@@ -2,9 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
-import { IWordDefinition, ILearnerDefinitions, ITranslation } from "../../types";
+import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { i18nContext, UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
+import { watchStudentSettings } from "../../db";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
@@ -34,6 +35,7 @@ interface IProps {
   translations: {
     [languageCode: string]: ITranslation
   };
+  studentInfo?: IStudentInfo;
 }
 
 interface IState {
@@ -41,6 +43,7 @@ interface IState {
   learnerState: ILearnerState;
   sidebarPresent: boolean;
   lang: string;
+  secondLanguage?: string;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
@@ -48,7 +51,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
     openPopups: [],
     learnerState: this.props.initialLearnerState,
     sidebarPresent: false,
-    lang: "en"
+    lang: "en",
+    secondLanguage: undefined
   };
   private definitionsByWord: { [word: string]: IWordDefinition };
   private sidebarContainer: HTMLElement;
@@ -56,15 +60,17 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private sidebarController: ISidebarController;
 
   get secondLanguage() {
-    // Currently we pick the first available language as a second one. In the future, this information will be provided
-    // by LARA/Portal in some other way (e.g. through Plugin API).
-    const { translations } = this.props;
-    const { lang } = this.state;
-    return lang === DEFAULT_LANG ? Object.keys(translations)[0] : DEFAULT_LANG;
+    const { lang, secondLanguage } = this.state;
+    if (!secondLanguage) {
+      return undefined;
+    }
+    // Depending on the current state, we should either let student switch to a second language,
+    // or go back to the default one.
+    return lang !== secondLanguage ? secondLanguage : DEFAULT_LANG;
   }
 
   public componentDidMount() {
-    const { definitions, showSideBar } = this.props;
+    const { definitions, showSideBar, studentInfo } = this.props;
     this.definitionsByWord = {};
     definitions.forEach(entry => {
       this.definitionsByWord[entry.word.toLowerCase()] = entry;
@@ -76,6 +82,18 @@ export default class PluginApp extends React.Component<IProps, IState> {
     this.decorate();
     if (showSideBar) {
       this.addSidebar();
+    }
+    if (studentInfo) {
+      watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
+        const { translations } = this.props;
+        if (translations[settings.preferredLanguage]) {
+          // Preferred language is available, so we can use it.
+          this.setState({ secondLanguage: settings.preferredLanguage });
+        } else {
+          // Preferred language is not available, do not show second language button.
+          this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
+        }
+      }));
     }
   }
 
@@ -245,6 +263,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private languageChanged = () => {
-    this.setState({ lang: this.secondLanguage });
+    const secLang = this.secondLanguage;
+    if (secLang) {
+      this.setState({ lang: secLang });
+    }
   }
 }
