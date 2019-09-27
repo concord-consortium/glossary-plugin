@@ -39,7 +39,7 @@ export const signInWithToken = (rawFirestoreJWT: string) => {
   }
 };
 
-const settingsPath = (source: string, contextId: string, userId?: string) =>
+export const settingsPath = (source: string, contextId: string, userId?: string) =>
   `/sources/${source}/context_id/${contextId}/student_settings${userId ? `/${userId}` : ""}`;
 
 export const watchClassSettings = (
