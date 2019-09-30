@@ -1,8 +1,9 @@
 import * as React from "react";
-import GlossaryResourceSelector from "./glossary-resource-selector";
+import GlossaryResourceSelector, { getTokenServiceEnv } from "./glossary-resource-selector";
 import { mount } from "enzyme";
 import { TokenServiceClient, Resource } from "@concord-consortium/token-service";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
+import * as fetch from "jest-fetch-mock";
 
 const setClientAndResource = jest.fn(() => {
   return Promise.resolve();
@@ -134,4 +135,27 @@ describe("GlossaryResourceSelector component", () => {
 
   });
 
+});
+
+describe("getTokenServiceEnv", () => {
+  afterEach(() => {
+    // Cleaup.
+    history.replaceState({}, "Test", "/");
+  });
+
+  it("should return tokenServiceEnv URL param when available", () => {
+    expect(getTokenServiceEnv()).toEqual("staging");
+    history.replaceState({}, "Test", "/?tokenServiceEnv=test123");
+    expect(getTokenServiceEnv()).toEqual("test123");
+    history.replaceState({}, "Test", "/?tokenServiceEnv=test123&portal=https://learn.concord.org");
+    expect(getTokenServiceEnv()).toEqual("test123");
+  });
+
+  it("should parse portal URL param when tokenServiceEnv is not available", () => {
+    expect(getTokenServiceEnv()).toEqual("staging");
+    history.replaceState({}, "Test", "/?portal=https://learn.concord.org");
+    expect(getTokenServiceEnv()).toEqual("production");
+    history.replaceState({}, "Test", "/?portal=https://learn.staging.concord.org");
+    expect(getTokenServiceEnv()).toEqual("staging");
+  });
 });
