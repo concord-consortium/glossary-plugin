@@ -143,17 +143,7 @@ describe("getTokenServiceEnv", () => {
     history.replaceState({}, "Test", "/");
   });
 
-  it("should return tokenServiceEnv URL param when available", () => {
-    expect(getTokenServiceEnv()).toEqual("staging");
-    history.replaceState({}, "Test", "/?tokenServiceEnv=123212");
-    expect(getTokenServiceEnv()).toEqual("staging"); // ignore invalid values
-    history.replaceState({}, "Test", "/?tokenServiceEnv=dev");
-    expect(getTokenServiceEnv()).toEqual("dev");
-    history.replaceState({}, "Test", "/?tokenServiceEnv=dev&portal=https://learn.concord.org");
-    expect(getTokenServiceEnv()).toEqual("dev");
-  });
-
-  it("should parse portal URL param when tokenServiceEnv is not available", () => {
+  it("should parse portal URL param", () => {
     expect(getTokenServiceEnv()).toEqual("staging");
     history.replaceState({}, "Test", "/?portal=https://learn.concord.org");
     expect(getTokenServiceEnv()).toEqual("production");

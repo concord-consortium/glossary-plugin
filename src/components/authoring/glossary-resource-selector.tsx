@@ -33,12 +33,6 @@ interface IState {
 }
 
 export const getTokenServiceEnv = () => {
-  const tokenServiceEnv = getQueryParam("tokenServiceEnv");
-  if (tokenServiceEnv &&
-      tokenServiceEnv === "dev" || tokenServiceEnv === "staging" || tokenServiceEnv === "production"
-  ) {
-    return tokenServiceEnv;
-  }
   const portalUrl = getQueryParam("portal");
   if (portalUrl) {
     const host = parseUrl(portalUrl).hostname;
@@ -50,7 +44,8 @@ export const getTokenServiceEnv = () => {
     }
     // Note that when local Portal is being used, we'll still return "staging" token service env, so developers don't
     // have to setup local instance of token service. When local token service client should be used, you need to use
-    // `tokenServiceEnv=dev` explicitly.
+    // `token-service-url=dev` URL param. It's handled by TokenServiceClient directly, and the `env` param passed to its
+    // constructor will be ignored.
   }
   return "staging";
 };
