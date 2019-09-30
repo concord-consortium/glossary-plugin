@@ -1,11 +1,12 @@
 import { initPlugin, GlossaryPlugin, GlossaryAuthoringPlugin } from "./plugin";
 import * as fetch from "jest-fetch-mock";
 (global as any).fetch = fetch;
-// Mock LARA API.
-jest.mock("@concord-consortium/lara-plugin-api");
-
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { ILogData } from "@concord-consortium/lara-plugin-api";
+import {ILogData} from "@concord-consortium/lara-plugin-api";
+import { signInWithToken } from "./db";
+
+jest.mock("@concord-consortium/lara-plugin-api");
+jest.mock("./db");
 
 describe("LARA plugin initialization", () => {
   it("loads without crashing and calls LARA.register", () => {
@@ -34,6 +35,10 @@ describe("GlossaryPlugin", () => {
     wrappedEmbeddable: null,
     log: (logData: string | ILogData) => { /** null */ }
   };
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
 
   it("renders PluginApp component", async () => {
     const plugin = new GlossaryPlugin(defaultContext);
@@ -91,6 +96,41 @@ describe("GlossaryPlugin", () => {
       expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
       expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
       expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(false);
+    });
+  });
+
+  describe("when firebaseJWT is available", () => {
+    it("signs in to Firestore and passes down student info", async () => {
+      const jwtResp = {
+        token: "token123",
+        claims: {
+          domain: "http://test.portal.concord.org",
+          claims: {
+            class_hash: "class123",
+            platform_user_id: 123
+          }
+        }
+      };
+      const context = Object.assign({}, defaultContext, {
+        getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>((resolve) => resolve(jwtResp as any))
+      });
+      const plugin = new GlossaryPlugin(context);
+      await plugin.renderPluginApp();
+      expect(signInWithToken).toHaveBeenCalledWith(jwtResp.token);
+      expect(plugin.pluginAppComponent.props.studentInfo).toEqual({
+        source: "test.portal.concord.org",
+        contextId: "class123",
+        userId: "123"
+      });
+    });
+  });
+
+  describe("when firebaseJWT is not available", () => {
+    it("passes `undefined` as student info", async () => {
+      const plugin = new GlossaryPlugin(defaultContext);
+      await plugin.renderPluginApp();
+      expect(signInWithToken).not.toHaveBeenCalled();
+      expect(plugin.pluginAppComponent.props.studentInfo).toEqual(undefined);
     });
   });
 });
