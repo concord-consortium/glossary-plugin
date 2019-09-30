@@ -34,7 +34,9 @@ interface IState {
 
 export const getTokenServiceEnv = () => {
   const tokenServiceEnv = getQueryParam("tokenServiceEnv");
-  if (tokenServiceEnv) {
+  if (tokenServiceEnv &&
+      tokenServiceEnv === "dev" || tokenServiceEnv === "staging" || tokenServiceEnv === "production"
+  ) {
     return tokenServiceEnv;
   }
   const portalUrl = getQueryParam("portal");
