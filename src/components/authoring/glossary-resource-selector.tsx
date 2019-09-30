@@ -1,8 +1,9 @@
 import * as React from "react";
 import Button from "../common/button";
 import { TokenServiceClient, Resource, S3Resource } from "@concord-consortium/token-service";
-import * as css from "./glossary-resource-selector.scss";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
+import { getQueryParam, parseUrl } from "../../utils/get-url-param";
+import * as css from "./glossary-resource-selector.scss";
 
 enum UIState {
   Start,
@@ -30,6 +31,24 @@ interface IState {
   glossary: S3Resource | null;
   resources: Resource[] | null;
 }
+
+export const getTokenServiceEnv = () => {
+  const portalUrl = getQueryParam("portal");
+  if (portalUrl) {
+    const host = parseUrl(portalUrl).hostname;
+    if (host.match(/staging\./)) {
+      return "staging";
+    }
+    if (host.match(/concord\.org/)) {
+      return "production";
+    }
+    // Note that when local Portal is being used, we'll still return "staging" token service env, so developers don't
+    // have to setup local instance of token service. When local token service client should be used, you need to use
+    // `token-service-url=dev` URL param. It's handled by TokenServiceClient directly, and the `env` param passed to its
+    // constructor will be ignored.
+  }
+  return "staging";
+};
 
 export default class GlossaryResourceSelector extends React.Component<IProps, IState> {
   public state: IState = {
@@ -332,7 +351,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     if (!this.client) {
       const {jwt} = this.state;
       if (jwt) {
-        this.client = new TokenServiceClient({jwt});
+        this.client = new TokenServiceClient({ jwt, env: getTokenServiceEnv() });
       }
     }
     return this.client;

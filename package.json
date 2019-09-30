@@ -104,7 +104,7 @@
   },
   "dependencies": {
     "@concord-consortium/lara-plugin-api": "^3.1.0",
-    "@concord-consortium/token-service": "^1.0.0",
+    "@concord-consortium/token-service": "^1.1.0",
     "ajv": "^6.10.0",
     "ajv-keywords": "^3.4.0",
     "aws-sdk": "^2.454.0",
