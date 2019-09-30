@@ -1,19 +1,19 @@
 import * as React from "react";
 import DefinitionEditor from "./definition-editor";
-import Button from "../button";
-import {IWordDefinition, IGlossary} from "../types";
-import GlossarySidebar from "../glossary-sidebar";
+import Button from "../common/button";
+import {IWordDefinition, IGlossary} from "../../types";
+import GlossarySidebar from "../plugin/glossary-sidebar";
 import TranslationsPanel from "./translations-panel";
 import * as clone from "clone";
 import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import { validateGlossary } from "../../utils/validate-glossary";
 import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
-import GlossaryResourceSelector from "../glossary-resource-selector";
+import GlossaryResourceSelector from "./glossary-resource-selector";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 
 import * as css from "./authoring-app.scss";
-import * as icons from "../icons.scss";
+import * as icons from "../common/icons.scss";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,

@@ -1,8 +1,8 @@
 import * as React from "react";
 import UserDefinitions from "./user-definitions";
-import * as icons from "./icons.scss";
+import * as icons from "../common/icons.scss";
 import { mount } from "enzyme";
-import {i18nContext} from "../i18n-context";
+import {i18nContext} from "../../i18n-context";
 
 describe("UserDefinitions component", () => {
   describe("when there's only one user definition available", () => {

@@ -16,3 +16,9 @@ export function getQueryParam(name: string): string | null {
 export function getHashParam(name: string): string | null {
   return getParam(name, "#");
 }
+
+export function parseUrl(url: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  return a;
+}

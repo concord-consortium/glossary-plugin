@@ -1,5 +1,5 @@
 import * as React from "react";
-import Button from "./button";
+import Button from "../common/button";
 import { TokenServiceClient, Resource, S3Resource } from "@concord-consortium/token-service";
 import * as css from "./glossary-resource-selector.scss";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";

@@ -1,10 +1,10 @@
 import * as React from "react";
 import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
-import Button from "./button";
-import { POEDITOR_LANG_NAME } from "../utils/poeditor-language-list";
-import { i18nContext } from "../i18n-context";
-import { wordTerm } from "../utils/translation-utils";
+import Button from "../common/button";
+import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
+import { i18nContext } from "../../i18n-context";
+import { wordTerm } from "../../utils/translation-utils";
 
 import * as css from "./glossary-popup.scss";
 

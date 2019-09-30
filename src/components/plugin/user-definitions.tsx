@@ -1,7 +1,7 @@
 import * as React from "react";
-import { i18nContext } from "../i18n-context";
+import { i18nContext } from "../../i18n-context";
 import * as css from "./user-definitions.scss";
-import * as icons from "./icons.scss";
+import * as icons from "../common/icons.scss";
 
 interface IProps {
   userDefinitions: string[];

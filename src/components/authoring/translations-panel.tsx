@@ -1,7 +1,7 @@
 import * as React from "react";
-import Button from "../button";
+import Button from "../common/button";
 import Dropzone from "react-dropzone";
-import { IGlossary } from "../types";
+import { IGlossary } from "../../types";
 import { saveAs } from "file-saver";
 import * as clone from "clone";
 import { POEDITOR_LANG_CODE, POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";

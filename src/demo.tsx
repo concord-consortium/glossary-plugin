@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import GlossaryPopup from "./components/glossary-popup";
-import GlossarySidebar from "./components/glossary-sidebar";
+import GlossaryPopup from "./components/plugin/glossary-popup";
+import GlossarySidebar from "./components/plugin/glossary-sidebar";
 
 // tslint:disable-next-line:no-console
 const newUserDefinition = (userDefinition: string) => { console.log("User definition:", userDefinition); };

@@ -2,7 +2,7 @@ import * as React from "react";
 import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
-import {i18nContext} from "../i18n-context";
+import {i18nContext} from "../../i18n-context";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {

@@ -24,3 +24,25 @@ export interface IWordDefinition {
 export interface ILearnerDefinitions {
   [word: string]: string[];
 }
+
+export interface IStudent {
+  name: string;
+  id: string;
+}
+
+export interface IClassInfo {
+  source: string;
+  contextId: string;
+  students: IStudent[];
+}
+
+export interface IStudentSettings {
+  userId: string;
+  preferredLanguage: string;
+}
+
+export interface IStudentInfo {
+  source: string;
+  contextId: string;
+  userId: string;
+}

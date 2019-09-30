@@ -1,4 +1,4 @@
-import { IGlossary } from "../components/types";
+import { IGlossary } from "../types";
 
 export const wordTerm = (word: string) => `${word}.word`;
 export const definitionTerm = (word: string) => `${word}.definition`;

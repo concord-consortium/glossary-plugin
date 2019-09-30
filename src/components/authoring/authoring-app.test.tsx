@@ -1,12 +1,11 @@
 import * as React from "react";
 import AuthoringApp, { DEFAULT_GLOSSARY } from "./authoring-app";
-import GlossarySidebar from "../glossary-sidebar";
+import GlossarySidebar from "../plugin/glossary-sidebar";
 import DefinitionEditor from "./definition-editor";
-import GlossaryResourceSelector from "../glossary-resource-selector";
+import GlossaryResourceSelector from "./glossary-resource-selector";
 import { shallow } from "enzyme";
-import * as icons from "../icons.scss";
+import * as icons from "../common/icons.scss";
 import { s3Upload, GLOSSARY_FILENAME } from "../../utils/s3-helpers";
-
 import * as fetch from "jest-fetch-mock";
 import { TokenServiceClient, S3Resource, Credentials } from "@concord-consortium/token-service";
 (global as any).fetch = fetch;
