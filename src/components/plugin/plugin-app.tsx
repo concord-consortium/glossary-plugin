@@ -4,8 +4,11 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { i18nContext, UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
-import { watchStudentSettings } from "../../db";
+import { UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
+import { pluginContext } from "../../plugin-context";
+import { watchStudentSettings, saveLogEvent } from "../../db";
+import { ILogEvent, ILogEventPartial } from "../../utils/logging-utils";
+import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
@@ -36,6 +39,9 @@ interface IProps {
     [languageCode: string]: ITranslation
   };
   studentInfo?: IStudentInfo;
+  glossaryInfo?: IGlossaryAuthoredState;
+  resourceUrl?: string;
+  laraLog?: (event: string | PluginAPI.ILogData) => void;
 }
 
 interface IState {
@@ -94,6 +100,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
           this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
         }
       }));
+
+      this.log({
+        event: "plugin init"
+      });
     }
   }
 
@@ -103,7 +113,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
-      <i18nContext.Provider value={{ lang, translate: this.translate }}>
+      <pluginContext.Provider value={{ lang, translate: this.translate, log: this.log }} >
         <div>
           {
             // Render sidebar into portal.
@@ -152,12 +162,12 @@ export default class PluginApp extends React.Component<IProps, IState> {
             })
           }
         </div>
-      </i18nContext.Provider>
+      </pluginContext.Provider>
     );
   }
 
   public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { saveState } = this.props;
+    const { saveState, studentInfo, resourceUrl,  } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
     const newLearnerState = Object.assign({}, learnerState);
@@ -167,6 +177,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
     newLearnerState.definitions[word] = newLearnerState.definitions[word].concat(newDefinition);
     this.setState({ learnerState: newLearnerState });
     saveState(JSON.stringify(newLearnerState));
+    this.log({
+      event: "definition saved",
+      definition: newDefinition
+    });
   }
 
   public translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
@@ -185,6 +199,26 @@ export default class PluginApp extends React.Component<IProps, IState> {
       return result;
     }
     return replaceVariables(result, variables);
+  }
+
+  public log = (event: ILogEventPartial) => {
+    const { studentInfo, glossaryInfo, laraLog, resourceUrl } = this.props;
+    if (!studentInfo || !glossaryInfo || !resourceUrl) {
+      // User not coming from Portal.
+      return;
+    }
+    const completeEvent: ILogEvent = Object.assign({}, event, {
+      userId: studentInfo.userId,
+      contextId: studentInfo.contextId,
+      resourceUrl,
+      glossaryUrl: glossaryInfo.s3Url!,
+      glossaryResourceId: glossaryInfo.glossaryResourceId!,
+      timestamp: Date.now()
+    });
+    saveLogEvent(studentInfo.source, studentInfo.contextId, completeEvent);
+    if (laraLog) {
+      laraLog(completeEvent);
+    }
   }
 
   private decorate() {
@@ -252,6 +286,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
     if (this.sidebarController) {
       this.sidebarController.close();
     }
+    this.log({
+      event: "term clicked",
+      word
+    });
   }
 
   private popupClosed(container: HTMLElement) {

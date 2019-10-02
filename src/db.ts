@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { IStudentSettings } from "./types";
+import { ILogEvent } from "./utils/logging-utils";
 
 export const FIREBASE_APP = "glossary-plugin";
 
@@ -41,6 +42,9 @@ export const signInWithToken = (rawFirestoreJWT: string) => {
 
 export const settingsPath = (source: string, contextId: string, userId?: string) =>
   `/sources/${source}/context_id/${contextId}/student_settings${userId ? `/${userId}` : ""}`;
+
+export const logEventPath = (source: string, contextId: string) =>
+  `/sources/${source}/context_id/${contextId}/events`;
 
 export const watchClassSettings = (
   source: string,
@@ -85,4 +89,13 @@ export const saveStudentSettings = (
 ) => {
   const db = getFirestore();
   db.doc(settingsPath(source, contextId, settings.userId)).set(settings);
+};
+
+export const saveLogEvent = (
+  source: string,
+  contextId: string,
+  logEvent: ILogEvent
+) => {
+  const db = getFirestore();
+  db.collection(logEventPath(source, contextId)).add(logEvent);
 };

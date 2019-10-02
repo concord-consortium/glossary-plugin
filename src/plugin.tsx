@@ -9,18 +9,25 @@ import { IGlossary } from "./types";
 import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
 import { parseUrl } from "./utils/get-url-param";
 
-const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
+const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
+  const defaultState: IGlossaryAuthoredState = {
+    version: "1.0",
+    glossaryResourceId: null,
+    s3Url: null
+  };
   if (!context.authoredState) {
-    return {};
+    return defaultState;
   }
-  let authoredState: IGlossaryAuthoredState;
   try {
-    authoredState = JSON.parse(context.authoredState);
+    return JSON.parse(context.authoredState) as IGlossaryAuthoredState;
   } catch (error) {
     // tslint:disable-next-line:no-console
     console.warn("Unexpected authoredState:", context.authoredState);
-    return {};
+    return defaultState;
   }
+};
+
+const getGlossaryDefinition = async (authoredState: IGlossaryAuthoredState) => {
   // Authored state can contain all the necessary data already or specify only URL that points to a proper state.
   if (typeof authoredState.s3Url === "string") {
     const response = await fetch(authoredState.s3Url);
@@ -32,9 +39,8 @@ const getAuthoredState = async (context: PluginAPI.IPluginRuntimeContext) => {
       console.warn("Unexpected/malformed authoredState at URL:", authoredState.s3Url);
       return {};
     }
-  } else {
-    return authoredState;
   }
+  return {};
 };
 
 const getLearnerState = (context: PluginAPI.IPluginRuntimeContext) => {
@@ -66,7 +72,8 @@ export class GlossaryPlugin {
   // Note that in such case it will be called twice - by constructor and by test code directly.
   // It needs to be idempotent.
   public renderPluginApp = async () => {
-    const authoredState: IGlossary = await getAuthoredState(this.context);
+    const glossaryInfo = getGlossaryInfo(this.context);
+    const authoredState: IGlossary = await getGlossaryDefinition(glossaryInfo);
 
     if (this.pluginAppComponent) {
       ReactDOM.unmountComponentAtNode(this.context.container);
@@ -100,6 +107,9 @@ export class GlossaryPlugin {
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}
         studentInfo={studentInfo}
+        glossaryInfo={glossaryInfo}
+        resourceUrl={this.context.resourceUrl}
+        laraLog={this.context.log}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div
