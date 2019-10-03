@@ -7,7 +7,7 @@ import { getQueryParam, parseUrl } from "./utils/get-url-param";
 import { IClassInfo } from "./types";
 
 const getClassInfoUrl = () => getQueryParam("class");
-
+const getOfferingInfoUrl = () => getQueryParam("offering");
 const getAuthHeader = () => `Bearer ${getQueryParam("token")}`;
 
 const getPortalBaseUrl = () => {
@@ -33,7 +33,8 @@ const initError = () => {
 
 const init = async () => {
   const classUrl = getClassInfoUrl();
-  if (!classUrl) {
+  const offeringUrl = getOfferingInfoUrl();
+  if (!classUrl || !offeringUrl) {
     return initError();
   }
   const classInfoResponse = await fetch(classUrl, {headers: {Authorization: getAuthHeader()}});
@@ -46,6 +47,8 @@ const init = async () => {
       id: s.user_id.toString()
     }))
   };
+  const offeringInfoResponse = await fetch(offeringUrl, {headers: {Authorization: getAuthHeader()}});
+  const offeringInfoRaw = await offeringInfoResponse.json();
 
   const firebaseJWTUrl = getPortalFirebaseJWTUrl(classInfo.contextId);
   if (!firebaseJWTUrl) {
@@ -60,6 +63,7 @@ const init = async () => {
   ReactDOM.render(
     <DashboardApp
       classInfo={classInfo}
+      resourceUrl={offeringInfoRaw.activity_url}
     />
   , document.getElementById("app") as HTMLElement);
 };
