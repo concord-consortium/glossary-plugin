@@ -3,7 +3,6 @@ import GlossaryResourceSelector, { getTokenServiceEnv } from "./glossary-resourc
 import { mount } from "enzyme";
 import { TokenServiceClient, Resource } from "@concord-consortium/token-service";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
-import * as fetch from "jest-fetch-mock";
 
 const setClientAndResource = jest.fn(() => {
   return Promise.resolve();
@@ -15,7 +14,7 @@ const getFirebaseJwtFn = () => jest.fn((appName: string) => {
     return resolve({
       token: "test",
       claims: {}
-    });
+    } as IJwtResponse);
   });
 });
 

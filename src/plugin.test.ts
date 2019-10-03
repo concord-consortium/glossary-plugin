@@ -33,7 +33,8 @@ describe("GlossaryPlugin", () => {
     pluginId: 123,
     container: document.createElement("div"),
     wrappedEmbeddable: null,
-    log: (logData: string | ILogData) => { /** null */ }
+    log: (logData: string | ILogData) => { /** null */ },
+    resourceUrl: "http://activity.com/123"
   };
 
   beforeEach(() => {
