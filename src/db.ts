@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 import { IStudentSettings } from "./types";
-import { ILogEvent } from "./utils/logging-utils";
+import { ILogEvent } from "./types";
 
 export const FIREBASE_APP = "glossary-plugin";
 
@@ -41,10 +41,19 @@ export const signInWithToken = (rawFirestoreJWT: string) => {
 };
 
 export const settingsPath = (source: string, contextId: string, userId?: string) =>
-  `/sources/${source}/context_id/${contextId}/student_settings${userId ? `/${userId}` : ""}`;
+  `/sources/${source}/contextId/${contextId}/studentSettings${userId ? `/${userId}` : ""}`;
 
 export const logEventPath = (source: string, contextId: string) =>
-  `/sources/${source}/context_id/${contextId}/events`;
+  `/sources/${source}/contextId/${contextId}/events`;
+
+export const saveStudentSettings = (
+  source: string,
+  contextId: string,
+  settings: IStudentSettings
+) => {
+  const db = getFirestore();
+  db.doc(settingsPath(source, contextId, settings.userId)).set(settings);
+};
 
 export const watchClassSettings = (
   source: string,
@@ -82,15 +91,6 @@ export const watchStudentSettings = (
     });
 };
 
-export const saveStudentSettings = (
-  source: string,
-  contextId: string,
-  settings: IStudentSettings
-) => {
-  const db = getFirestore();
-  db.doc(settingsPath(source, contextId, settings.userId)).set(settings);
-};
-
 export const saveLogEvent = (
   source: string,
   contextId: string,
@@ -98,4 +98,25 @@ export const saveLogEvent = (
 ) => {
   const db = getFirestore();
   db.collection(logEventPath(source, contextId)).add(logEvent);
+};
+
+export const watchClassEvents = (
+  source: string,
+  contextId: string,
+  resourceUrl: string,
+  onSnapshot: (settings: ILogEvent[]) => void
+) => {
+  const db = getFirestore();
+  db.collection(logEventPath(source, contextId))
+    .where("resourceUrl", "==", resourceUrl)
+    .onSnapshot(snapshot => {
+      if (snapshot.empty) {
+        onSnapshot([]);
+      }
+      onSnapshot(snapshot.docs.map(d => d.data() as ILogEvent));
+    }, (err: Error) => {
+      // tslint:disable-next-line no-console
+      console.error(err);
+      throw err;
+    });
 };
