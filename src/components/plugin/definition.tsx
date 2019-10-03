@@ -40,10 +40,12 @@ export default class Definition extends React.Component<IProps, IState> {
   };
 
   public componentDidMount() {
+    const { word } = this.props;
     const { imageVisible } = this.state;
     if (imageVisible) {
       this.context.log({
         event: "image automatically shown",
+        word
       });
     }
   }
@@ -152,37 +154,42 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   private readDefinition = () => {
+    const { word } = this.props;
     read(this.translatedDefinition, this.context.lang);
     this.context.log({
       event: "text to speech clicked",
+      word,
       textType: "definition"
     });
   }
 
   private readImageCaption = () => {
-    const { imageCaption } = this.props;
+    const { imageCaption, word } = this.props;
     if (imageCaption) {
       read(this.translatedImageCaption, this.context.lang);
     }
     this.context.log({
       event: "text to speech clicked",
+      word,
       textType: "image caption"
     });
   }
 
   private readVideoCaption = () => {
-    const { videoCaption } = this.props;
+    const { videoCaption, word } = this.props;
     if (videoCaption) {
       read(this.translatedVideoCaption, this.context.lang);
     }
     this.context.log({
       event: "text to speech clicked",
+      word,
       textType: "video caption"
     });
   }
 
   private toggleImage = () => {
     const { imageVisible } = this.state;
+    const { word } = this.props;
     const newValue = !imageVisible;
     this.setState({
       imageVisible: newValue,
@@ -192,12 +199,14 @@ export default class Definition extends React.Component<IProps, IState> {
     if (newValue) {
       this.context.log({
         event: "image icon clicked",
+        word
       });
     }
   }
 
   private toggleVideo = () => {
     const { videoVisible } = this.state;
+    const { word } = this.props;
     const newValue = !videoVisible;
     this.setState({
       videoVisible: newValue,
@@ -207,6 +216,7 @@ export default class Definition extends React.Component<IProps, IState> {
     if (newValue) {
       this.context.log({
         event: "video icon clicked",
+        word
       });
     }
   }

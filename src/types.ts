@@ -46,3 +46,46 @@ export interface IStudentInfo {
   contextId: string;
   userId: string;
 }
+
+export interface IBasicEvent {
+  userId: string;
+  contextId: string;
+  resourceUrl: string;
+  glossaryUrl: string;
+  timestamp: number;
+}
+
+export interface ISimpleEvent extends IBasicEvent {
+  event: "plugin init";
+}
+
+export interface IWordSpecificEvent extends IBasicEvent {
+  event: "term clicked" | "image icon clicked" | "video icon clicked" | "image automatically shown";
+  word: string;
+}
+
+export interface IDefinitionSavedEvent extends IBasicEvent {
+  event: "definition saved";
+  word: string;
+  definition: string;
+  definitions: string[];
+}
+
+export interface ITextToSpeechClickedEvent extends IBasicEvent {
+  event: "text to speech clicked";
+  word: string;
+  textType: "definition" | "image caption" | "video caption";
+}
+
+// These types define data stored in the Firestore.
+export type ILogEvent = ISimpleEvent | IWordSpecificEvent | IDefinitionSavedEvent | ITextToSpeechClickedEvent;
+
+// Partial types are used by the runtime code to provide specific options of the event to #log() function.
+// Then, loggingContext provider (PluginApp) transforms these partials into full events and saves in Firestore.
+export type ISimpleEventPartial = Pick<ISimpleEvent, "event">;
+export type IWordSpecificEventPartial = Pick<IWordSpecificEvent, "event" | "word">;
+export type IDefinitionSavedEventPartial = Pick<IDefinitionSavedEvent, "event" | "word" | "definition" | "definitions">;
+export type ITextToSpeechClickedEventPartial = Pick<ITextToSpeechClickedEvent, "event" | "word" | "textType">;
+
+export type ILogEventPartial = ISimpleEventPartial | IWordSpecificEventPartial | IDefinitionSavedEventPartial |
+  ITextToSpeechClickedEventPartial;

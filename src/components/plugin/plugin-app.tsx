@@ -7,7 +7,7 @@ import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
 import { pluginContext } from "../../plugin-context";
 import { watchStudentSettings, saveLogEvent } from "../../db";
-import { ILogEvent, ILogEventPartial } from "../../utils/logging-utils";
+import { ILogEvent, ILogEventPartial } from "../../types";
 import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 
 import * as css from "./plugin-app.scss";
@@ -167,7 +167,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public learnerDefinitionUpdated = (word: string, newDefinition: string) => {
-    const { saveState, studentInfo, resourceUrl,  } = this.props;
+    const { saveState } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
     const newLearnerState = Object.assign({}, learnerState);
@@ -179,7 +179,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
     saveState(JSON.stringify(newLearnerState));
     this.log({
       event: "definition saved",
-      definition: newDefinition
+      word,
+      definition: newDefinition,
+      definitions: newLearnerState.definitions[word]
     });
   }
 
