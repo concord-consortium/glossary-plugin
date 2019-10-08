@@ -6,4 +6,19 @@
   color: $color;
   margin: 0;
   padding: 0;
+
+  .header {
+    width: 100%;
+    background: #6fc6da;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    @media print {
+      display: none;
+    }
+    img {
+      margin-left: 10px;
+      height: 65%;
+    }
+  }
 }
