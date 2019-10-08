@@ -1,5 +1,5 @@
 {
-    "mainPrompt": "O que você acha que \"% {word}\" significa?",
+    "mainPrompt": "O que você acha que \"%{word}\" significa?",
     "submit": "Enviar",
     "cancel": "Cancelar",
     "iDontKnowYet": "Ainda não sei",

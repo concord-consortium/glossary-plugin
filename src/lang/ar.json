@@ -1,5 +1,5 @@
 {
-    "mainPrompt": "ما رأيك \"٪ {word}\" تعني؟",
+    "mainPrompt": "ما رأيك \"{word}%\" تعني؟",
     "submit": "تقديم",
     "cancel": "إلغاء",
     "iDontKnowYet": "أنا لا أعرف حتى الآن",
