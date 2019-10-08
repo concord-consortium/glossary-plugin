@@ -91,7 +91,7 @@ const Supports = ({ stats, showFull }: { stats: ITermStats, showFull: boolean })
               stats.supports.videoShown !== undefined &&
               <tr>
                 <td>{stats.supports.videoShown ? Checkmark : Cross}</td>
-                <td>Image</td>
+                <td>Video</td>
               </tr>
             }
           </tbody>
