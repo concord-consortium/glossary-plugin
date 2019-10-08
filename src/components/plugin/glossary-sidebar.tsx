@@ -6,7 +6,7 @@ import Button from "../common/button";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 
 import * as css from "./glossary-sidebar.scss";
-import {i18nContext} from "../../i18n-context";
+import {pluginContext} from "../../plugin-context";
 
 // Enable words grouping when number of definitions is greater than this value.
 const MIN_NUM_OF_DEFINITIONS_FOR_GROUPING = 50;
@@ -81,7 +81,7 @@ const classNameForLetter = (letter: string) => {
 };
 
 export default class GlossarySidebar extends React.Component<IProps, IState> {
-  public static contextType = i18nContext;
+  public static contextType = pluginContext;
 
   public state: IState = {
     // Show words that have user definition by default. Note that this filter will be ignored if user hasn't defined

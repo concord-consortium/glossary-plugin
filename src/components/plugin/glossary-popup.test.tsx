@@ -2,7 +2,7 @@ import * as React from "react";
 import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
-import {i18nContext} from "../../i18n-context";
+import {pluginContext} from "../../plugin-context";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
@@ -149,14 +149,14 @@ describe("GlossaryPopup component", () => {
       return key + " in Spanish";
     };
     const wrapper = mount(
-      <i18nContext.Provider value={{ lang: "es", translate }}>
+      <pluginContext.Provider value={{ lang: "es", translate, log: jest.fn() }}>
         <GlossaryPopup
           word="test"
           definition="test"
           userDefinitions={[]}
           askForUserDefinition={true}
         />
-      </i18nContext.Provider>
+      </pluginContext.Provider>
     );
     expect(wrapper.text()).toEqual(expect.stringContaining("mainPrompt in Spanish"));
     expect(wrapper.text()).toEqual(expect.stringContaining("submit in Spanish"));

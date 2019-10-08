@@ -3,7 +3,7 @@ import GlossarySidebar, { getWordsGrouping } from "./glossary-sidebar";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
 import * as css from "./glossary-sidebar.scss";
-import {i18nContext} from "../../i18n-context";
+import {pluginContext} from "../../plugin-context";
 
 describe("GlossarySidebar component", () => {
   const definitions = [
@@ -93,12 +93,12 @@ describe("GlossarySidebar component", () => {
         return key + " in Spanish";
       };
       const wrapper = mount(
-        <i18nContext.Provider value={{ lang: "es", translate }}>
+        <pluginContext.Provider value={{ lang: "es", translate, log: jest.fn() }}>
           <GlossarySidebar
             definitions={definitions}
             learnerDefinitions={learnerDefinitions}
           />
-        </i18nContext.Provider>
+        </pluginContext.Provider>
       );
       expect(wrapper.text()).toEqual(expect.stringContaining("wordsIHaveDefined in Spanish"));
       expect(wrapper.text()).toEqual(expect.stringContaining("allWords in Spanish"));
