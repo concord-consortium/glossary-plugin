@@ -38,6 +38,12 @@ const init = async () => {
     return initError();
   }
   const classInfoResponse = await fetch(classUrl, {headers: {Authorization: getAuthHeader()}});
+  if (classInfoResponse.status === 400) {
+    return alert("Your Portal session has expired. Please login to Portal and launch Glossary Dashboard again.");
+  }
+  if (!classInfoResponse.ok) {
+    return alert("Portal API error. Please try to launch Glossary Dashboard again.");
+  }
   const classInfoRaw = await classInfoResponse.json();
   const classInfo: IClassInfo = {
     source: parseUrl(classUrl).hostname,
