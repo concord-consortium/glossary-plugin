@@ -1,0 +1,41 @@
+@import "./helpers";
+
+.termValues {
+  display: flex;
+  vertical-align: top;
+  font-size: 0.85em;
+  transition: $width-transition;
+
+  .value {
+    @include cell();
+    white-space: normal;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: $flex-transition;
+    flex: 1;
+    &.fullValue {
+      transition: $flex-transition;
+      flex: 100;
+    }
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .uppercase {
+    text-transform: uppercase;
+  }
+
+  .green {
+    color: green;
+  }
+
+  .red {
+    color: #ea6d2f;
+  }
+
+  td {
+    padding: 0 3px 3px 3px;
+  }
+}

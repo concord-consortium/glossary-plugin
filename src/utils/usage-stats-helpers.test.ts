@@ -1,4 +1,4 @@
-import { getDefaultStats, getGlossaryJSON, getUsageStats } from "./get-usage-stats";
+import { getDefaultStats, getGlossaryJSON, getProgress, usageStatsHelpers } from "./usage-stats-helpers";
 import * as fetch from "jest-fetch-mock";
 import { IGlossary, ILogEvent, IStudent } from "../types";
 (global as any).fetch = fetch;
@@ -67,8 +67,8 @@ describe("usage statistic helpers", () => {
     it("should return null if list of students or events is empty", async () => {
       const students = [ { id: "123" }  ] as IStudent[];
       const events = [ { event: "plugin init" } ] as ILogEvent[];
-      expect(await getUsageStats([], events)).toEqual(null);
-      expect(await getUsageStats(students, [])).toEqual(null);
+      expect(await usageStatsHelpers([], events)).toEqual(null);
+      expect(await usageStatsHelpers(students, [])).toEqual(null);
     });
 
     it("should process list of events and update statistics correctly", async () => {
@@ -82,7 +82,7 @@ describe("usage statistic helpers", () => {
         { userId: sId, event: "video icon clicked", word: "cloud" },
         { userId: sId, event: "text to speech clicked", word: "cloud" }
       ] as ILogEvent[];
-      const stats = await getUsageStats(students, events);
+      const stats = await usageStatsHelpers(students, events);
       expect(stats).not.toEqual(null);
       expect(stats![sId].cloud.clicked).toEqual(true);
       expect(stats![sId].cloud.definitions).toEqual([ "foo", "bar" ]);
@@ -97,9 +97,84 @@ describe("usage statistic helpers", () => {
       const events = [
         { userId: sId, event: "image automatically shown", word: "cloud" },
       ] as ILogEvent[];
-      const stats = await getUsageStats(students, events);
+      const stats = await usageStatsHelpers(students, events);
       expect(stats).not.toEqual(null);
       expect(stats![sId].cloud.supports.imageShown).toEqual(true);
+    });
+  });
+
+  describe("#getProgress", () => {
+    it("should return progress based on the interactions", () => {
+      expect(getProgress({
+        clicked: false,
+        definitions: [],
+        supports: {
+          textToSpeech: false
+        }
+      })).toEqual(0);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [],
+        supports: {
+          textToSpeech: false
+        }
+      })).toBeCloseTo(0.3333);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: false
+        }
+      })).toBeCloseTo(0.6666);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: true
+        }
+      })).toEqual(1);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: false,
+          imageShown: false
+        }
+      })).toBeCloseTo(0.5);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: false,
+          imageShown: false,
+          videoShown: false
+        }
+      })).toBeCloseTo(0.4);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: false,
+          imageShown: true,
+          videoShown: false
+        }
+      })).toBeCloseTo(0.6);
+
+      expect(getProgress({
+        clicked: true,
+        definitions: [ "def" ],
+        supports: {
+          textToSpeech: false,
+          imageShown: true,
+          videoShown: true
+        }
+      })).toBeCloseTo(0.8);
     });
   });
 });

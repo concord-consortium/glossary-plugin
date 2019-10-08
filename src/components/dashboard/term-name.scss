@@ -1,0 +1,25 @@
+@import "./helpers";
+
+.termName {
+  transition: $width-transition;
+  display: inline-block;
+  vertical-align: top;
+  background: $main-dark;
+  color: #fff;
+  font-weight: 500;
+  @include clickable;
+
+  .content {
+    @include cell;
+    display: flex;
+    justify-content: space-between;
+
+    .name {
+      @include nowrap;
+    }
+
+    .icon {
+      margin-left: 10px;
+    }
+  }
+}

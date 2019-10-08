@@ -89,3 +89,5 @@ export type ITextToSpeechClickedEventPartial = Pick<ITextToSpeechClickedEvent, "
 
 export type ILogEventPartial = ISimpleEventPartial | IWordSpecificEventPartial | IDefinitionSavedEventPartial |
   ITextToSpeechClickedEventPartial;
+
+export type ExpandableInteraction = "definitions" | "supports";

@@ -23,15 +23,37 @@ export interface ISupportsDef {
 //     }
 //   }
 // };
+export interface ITermStats {
+  clicked: boolean;
+  definitions: string[];
+  supports: ISupportsDef;
+}
+
 export interface IUsageStats {
   [userId: string]: {
-    [term: string]: {
-      clicked: boolean;
-      definitions: string[];
-      supports: ISupportsDef
-    };
+    [term: string]: ITermStats;
   };
 }
+
+export type Interaction = "clicked" | "definitions" | "supports";
+
+export const INTERACTIONS = [
+  {
+    name: "clicked",
+    label: "Click",
+    expandable: false
+  },
+  {
+    name: "definitions",
+    label: "Defined",
+    expandable: true
+  },
+  {
+    label: "Supports",
+    name: "supports",
+    expandable: true
+  },
+];
 
 let glossaryInstance: IGlossary | null = null;
 
@@ -70,7 +92,7 @@ export const getDefaultStats = (students: IStudent[], glossary: IGlossary): IUsa
   return stats;
 };
 
-export const getUsageStats = async (students: IStudent[], events: ILogEvent[]): Promise<IUsageStats | null> => {
+export const usageStatsHelpers = async (students: IStudent[], events: ILogEvent[]): Promise<IUsageStats | null> => {
   if (students.length === 0 || events.length === 0) {
     return null;
   }
@@ -92,4 +114,33 @@ export const getUsageStats = async (students: IStudent[], events: ILogEvent[]): 
     }
   });
   return stats;
+};
+
+export const getProgress = (stats: ITermStats) => {
+  let count = 0;
+  let total = 3; // clicked, definitions, text to speech
+  if (stats.clicked) {
+    count += 1;
+  }
+  if (stats.definitions && stats.definitions.length > 0) {
+    count += 1;
+  }
+  if (stats.supports.textToSpeech) {
+    count += 1;
+  }
+  if (stats.supports.imageShown !== undefined) {
+    // This element is optional. Will be undefined if glossary doesn't specify image.
+    total += 1;
+    if (stats.supports.imageShown) {
+      count += 1;
+    }
+  }
+  if (stats.supports.videoShown !== undefined) {
+    // This element is optional. Will be undefined if glossary doesn't specify video.
+    total += 1;
+    if (stats.supports.videoShown) {
+      count += 1;
+    }
+  }
+  return count / total;
 };

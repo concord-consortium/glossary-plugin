@@ -3,7 +3,7 @@ import { IClassInfo } from "../../types";
 import { watchClassEvents } from "../../db";
 import { ILogEvent } from "../../types";
 import StatsTable from "./stats-table";
-import { getUsageStats, IUsageStats } from "../../utils/get-usage-stats";
+import { usageStatsHelpers, IUsageStats } from "../../utils/usage-stats-helpers";
 
 interface IProps {
   classInfo: IClassInfo;
@@ -45,7 +45,7 @@ export default class StatsTableContainer extends React.Component<IProps, IState>
 
   private onEventsUpdate = async (events: ILogEvent[]) => {
     const { classInfo } = this.props;
-    const stats = await getUsageStats(classInfo.students, events);
+    const stats = await usageStatsHelpers(classInfo.students, events);
     this.setState({ notStarted: events.length === 0, stats });
   }
 }

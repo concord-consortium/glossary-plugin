@@ -1,0 +1,24 @@
+@import "./helpers";
+
+.expandStudents {
+  width: $student-name-width;
+
+  .title {
+    @include cell;
+    background: $main-dark;
+  }
+
+  .buttonCell {
+    background: $main-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - #{$row-height});
+    border: $cell-border;
+    width: $student-name-width;
+    box-sizing: border-box;
+    .button {
+      width: 120px;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+@import "./helpers";
+
+.termInteractions {
+  transition: $width-transition;
+  vertical-align: top;
+  font-size: 0.8em;
+  text-transform: uppercase;
+
+  .content {
+    display: flex;
+    height: 100%;
+
+    .interactionPrompt {
+      @include cell;
+      @include nowrap;
+      background: $main-light;
+      color: #fff;
+      flex: 1;
+      transition: $flex-transition;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &.fullPrompt {
+        white-space: normal;
+        overflow-y: auto;
+        flex: 100;
+      }
+      &.blankCell {
+        flex-grow: 1;
+      }
+    }
+    .clickable {
+      @include clickable;
+    }
+  }
+}
