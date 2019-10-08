@@ -1,0 +1,42 @@
+$blue: #2194b1;
+
+.langSelector {
+  min-height: 30px;
+
+  .modalToggle {
+    float: right;
+    margin: 20px 20px 0 0;
+  }
+}
+
+.closeModal {
+  float: right;
+}
+
+.modalHeader {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: $blue;
+  margin-bottom: 20px;
+}
+
+.langName {
+  color: $blue;
+}
+
+.langTable {
+  border-collapse: collapse;
+  th {
+    text-align: left;
+  }
+  tr:nth-child(even) {
+    background: #f3f3f3;
+  }
+  td {
+    text-align: center;
+  }
+  td, th, tr {
+    padding: 10px;
+    border-bottom: 2px solid $blue;
+  }
+}
