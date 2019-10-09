@@ -177,7 +177,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       const client = this.getClient();
       if (client) {
         this.setState({glossary: null, uiState: UIState.Start, status: "Loading glossaries..."});
-        client.listResources({type: "s3Folder", tool: "glossary"})
+        client.listResources({type: "s3Folder", tool: "glossary", amOwner: "true"})
           .then((resources) => {
             this.setState({
               status: null,
