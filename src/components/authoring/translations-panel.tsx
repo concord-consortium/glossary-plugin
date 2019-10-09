@@ -79,13 +79,13 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
       new Promise((resolve, reject) => {
         const error = () => reject(`Reading of ${file.name} has failed.`);
         const reader = new window.FileReader();
-        reader.readAsBinaryString(file);
+        reader.readAsText(file, "UTF-8");
         reader.onerror = error;
         reader.onload = () => {
-          if (!reader.result) {
-            error();
+          if (!reader.result || typeof reader.result !== "string") {
+            return error();
           }
-          const json = JSON.parse(reader.result!.toString());
+          const json = JSON.parse(reader.result);
           if (json.constructor === Array) {
             reject(`Language file: ${file.name} has wrong format. Please export JSON *KEY-VALUE* instead.`);
           }

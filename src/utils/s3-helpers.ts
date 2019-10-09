@@ -26,6 +26,7 @@ export function s3Upload({
     Key: key,
     Body: body,
     ContentType: contentType,
+    ContentEncoding: "UTF-8",
     CacheControl: cacheControl
   }).promise()
     .then(data => {
