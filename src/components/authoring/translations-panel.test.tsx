@@ -75,7 +75,7 @@ describe("TranslationsPanel component", () => {
     (window as any).FileReader = class FakeFileReader {
       public result: string;
       public onload: () => void;
-      public readAsBinaryString() {
+      public readAsText() {
         setTimeout(() => {
           this.result = fileReaderResult;
           this.onload();

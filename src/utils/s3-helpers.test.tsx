@@ -51,6 +51,7 @@ describe("S3 helpers", () => {
         Bucket: "test-bucket",
         Key: expectedKey,
         Body: params.body,
+        ContentEncoding: "UTF-8",
         ContentType: params.contentType,
         CacheControl: params.cacheControl
       });
