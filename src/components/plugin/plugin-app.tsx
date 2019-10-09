@@ -277,7 +277,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     const container = document.createElement("div");
     const popupController = PluginAPI.addPopup({
       content: container,
-      title: "Glossary",
+      title: `Term: ${word}`,
       resizable: false,
       position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
       onClose: this.popupClosed.bind(this, container)
