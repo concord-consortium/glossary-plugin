@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as css from "./definition.scss";
 import * as icons from "../common/icons.scss";
-import { i18nContext } from "../../i18n-context";
+import { pluginContext } from "../../plugin-context";
 import { definitionTerm, imageCaptionTerm, videoCaptionTerm } from "../../utils/translation-utils";
 
 interface IProps {
@@ -31,7 +31,7 @@ const read = (text: string, langCode: string) => {
 };
 
 export default class Definition extends React.Component<IProps, IState> {
-  public static contextType = i18nContext;
+  public static contextType = pluginContext;
 
   public state: IState = {
     imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
@@ -39,32 +39,43 @@ export default class Definition extends React.Component<IProps, IState> {
     videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia
   };
 
+  public componentDidMount() {
+    const { word } = this.props;
+    const { imageVisible } = this.state;
+    if (imageVisible) {
+      this.context.log({
+        event: "image automatically shown",
+        word
+      });
+    }
+  }
+
   public get translatedDefinition() {
     const { definition, word } = this.props;
-    const i18n = this.context;
-    return i18n.translate(definitionTerm(word), definition);
+    const translate = this.context.translate;
+    return translate(definitionTerm(word), definition);
   }
 
   public get translatedImageCaption() {
     const { imageCaption, word } = this.props;
-    const i18n = this.context;
-    return i18n.translate(imageCaptionTerm(word), imageCaption);
+    const translate = this.context.translate;
+    return translate(imageCaptionTerm(word), imageCaption);
   }
 
   public get translatedVideoCaption() {
     const { videoCaption, word } = this.props;
-    const i18n = this.context;
-    return i18n.translate(videoCaptionTerm(word), videoCaption);
+    const translate = this.context.translate;
+    return translate(videoCaptionTerm(word), videoCaption);
   }
 
   public renderImageButton(imageUrl?: string) {
     if (imageUrl) {
-      const i18n = this.context;
+      const translate = this.context.translate;
       return(
         <span
           className={icons.iconButton + " " + icons.iconImage}
           onClick={this.toggleImage}
-          title={i18n.translate("imageTitle")}
+          title={translate("imageTitle")}
         />
       );
     }
@@ -73,12 +84,12 @@ export default class Definition extends React.Component<IProps, IState> {
 
   public renderVideoButton(videoUrl?: string) {
     if (videoUrl) {
-      const i18n = this.context;
+      const translate = this.context.translate;
       return(
         <span
           className={icons.iconButton + " " + icons.iconVideo}
           onClick={this.toggleVideo}
-          title={i18n.translate("videoTitle")}
+          title={translate("videoTitle")}
         />
       );
     }
@@ -89,12 +100,12 @@ export default class Definition extends React.Component<IProps, IState> {
     if (!textToSpeechAvailable()) {
       return null;
     }
-    const i18n = this.context;
+    const translate = this.context.translate;
     return(
       <span
         className={icons.iconButton + " " + icons.iconAudio}
         onClick={onClick}
-        title={i18n.translate("speechTitle")}
+        title={translate("speechTitle")}
       />
     );
   }
@@ -143,41 +154,70 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   private readDefinition = () => {
-    const i18n = this.context;
-    read(this.translatedDefinition, i18n.lang);
+    const { word } = this.props;
+    read(this.translatedDefinition, this.context.lang);
+    this.context.log({
+      event: "text to speech clicked",
+      word,
+      textType: "definition"
+    });
   }
 
   private readImageCaption = () => {
-    const { imageCaption } = this.props;
-    const i18n = this.context;
+    const { imageCaption, word } = this.props;
     if (imageCaption) {
-      read(this.translatedImageCaption, i18n.lang);
+      read(this.translatedImageCaption, this.context.lang);
     }
+    this.context.log({
+      event: "text to speech clicked",
+      word,
+      textType: "image caption"
+    });
   }
 
   private readVideoCaption = () => {
-    const { videoCaption } = this.props;
-    const i18n = this.context;
+    const { videoCaption, word } = this.props;
     if (videoCaption) {
-      read(this.translatedVideoCaption, i18n.lang);
+      read(this.translatedVideoCaption, this.context.lang);
     }
+    this.context.log({
+      event: "text to speech clicked",
+      word,
+      textType: "video caption"
+    });
   }
 
   private toggleImage = () => {
     const { imageVisible } = this.state;
+    const { word } = this.props;
+    const newValue = !imageVisible;
     this.setState({
-      imageVisible: !imageVisible,
+      imageVisible: newValue,
       // Never display both image and video at the same time.
       videoVisible: false
     });
+    if (newValue) {
+      this.context.log({
+        event: "image icon clicked",
+        word
+      });
+    }
   }
 
   private toggleVideo = () => {
     const { videoVisible } = this.state;
+    const { word } = this.props;
+    const newValue = !videoVisible;
     this.setState({
-      videoVisible: !videoVisible,
+      videoVisible: newValue,
       // Never display both image and video at the same time.
       imageVisible: false
     });
+    if (newValue) {
+      this.context.log({
+        event: "video icon clicked",
+        word
+      });
+    }
   }
 }

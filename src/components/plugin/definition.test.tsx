@@ -2,7 +2,7 @@ import * as React from "react";
 import Definition from "./definition";
 import * as icons from "../common/icons.scss";
 import { mount } from "enzyme";
-import { i18nContext } from "../../i18n-context";
+import { pluginContext } from "../../plugin-context";
 
 const expectToolTip = (wrapper: any, tip: string) => {
   expect(wrapper.find(`[title="${tip}"]`)).toHaveLength(1);
@@ -161,7 +161,7 @@ describe("Definition component", () => {
       return fallback + " in Spanish";
     };
     const wrapper = mount(
-      <i18nContext.Provider value={{ lang: "es", translate }}>
+      <pluginContext.Provider value={{ lang: "es", translate, log: jest.fn() }}>
         <Definition
           word="test"
           definition="test definition"
@@ -171,7 +171,7 @@ describe("Definition component", () => {
           videoCaption="video caption"
           autoShowMedia={false}
         />
-      </i18nContext.Provider>
+      </pluginContext.Provider>
     );
     wrapper.find("." + icons.iconAudio).first().simulate("click");
     let msg = speechSynthesisMock.speak.mock.calls[0][0];

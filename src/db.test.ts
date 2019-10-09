@@ -11,8 +11,9 @@ describe("db / Firestore helpers", () => {
       onSnapshot: jest.fn()
     };
     const docMock: any = jest.fn(() => docResult);
-    const collectionResult = {
+    const collectionResult: any = {
       onSnapshot: jest.fn(),
+      where: jest.fn(() => collectionResult),
       doc: docMock
     };
     const collectionMock: any = jest.fn(() => collectionResult);
@@ -51,10 +52,10 @@ describe("db / Firestore helpers", () => {
     it("should return path for collection or single student", () => {
       const source = "test.portal";
       const contextId = "testClass";
-      expect(db.settingsPath(source, contextId)).toEqual(`/sources/${source}/context_id/${contextId}/student_settings`);
+      expect(db.settingsPath(source, contextId)).toEqual(`/sources/${source}/contextId/${contextId}/studentSettings`);
       const userId = "testUser123";
       expect(db.settingsPath(source, contextId, userId)).toEqual(
-        `/sources/${source}/context_id/${contextId}/student_settings/${userId}`
+        `/sources/${source}/contextId/${contextId}/studentSettings/${userId}`
       );
     });
   });
@@ -62,6 +63,15 @@ describe("db / Firestore helpers", () => {
   describe("watchClassSettings", () => {
     it("should call db.collection.onSnapshot", () => {
       db.watchClassSettings("test.portal", "testClass", jest.fn());
+      const firestore = getFirestore();
+      expect(firestore.collection).toHaveBeenCalled();
+      expect(firestore.collection("ignoredByMock").onSnapshot).toHaveBeenCalled();
+    });
+  });
+
+  describe("watchClassEvents", () => {
+    it("should call db.collection.onSnapshot", () => {
+      db.watchClassEvents("test.portal", "testClass", "http://lara.com/activity/123", jest.fn());
       const firestore = getFirestore();
       expect(firestore.collection).toHaveBeenCalled();
       expect(firestore.collection("ignoredByMock").onSnapshot).toHaveBeenCalled();

@@ -19,5 +19,5 @@ script:
 - npm run build
 - npm test
 
-after_script:
+after_success:
 - ./s3_deploy.sh
