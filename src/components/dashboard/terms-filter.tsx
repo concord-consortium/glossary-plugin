@@ -21,10 +21,13 @@ export default class TermsFilter extends React.Component<IProps, IState> {
     return (
       <div style={{ marginLeft: 10 }}>
         <div>
-          Terms Filter: <input type="text" value={inputValue} onChange={this.handleInputChange} style={{width: 500}}/>
-        </div>
-        <div style={{fontSize: "0.8em"}}>
-          Comma-separated list of terms (full term or part of it)
+          Terms Filter: <input
+            type="text"
+            value={inputValue}
+            onChange={this.handleInputChange}
+            style={{width: 500}}
+            placeholder="Comma-separated list of terms"
+          />
         </div>
       </div>
     );

@@ -1,3 +1,5 @@
+@import "helpers";
+
 $blue: #2194b1;
 
 .langSelector {
@@ -9,34 +11,40 @@ $blue: #2194b1;
   }
 }
 
-.closeModal {
-  float: right;
-}
+.modalContent {
+  color: $color;
+  font: $font;
 
-.modalHeader {
-  font-size: 1.1em;
-  font-weight: bold;
-  color: $blue;
-  margin-bottom: 20px;
-}
+  .closeModal {
+    float: right;
+  }
 
-.langName {
-  color: $blue;
-}
+  .modalHeader {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: $blue;
+    margin-bottom: 20px;
+  }
 
-.langTable {
-  border-collapse: collapse;
-  th {
-    text-align: left;
+  .langName {
+    color: $blue;
   }
-  tr:nth-child(even) {
-    background: #f3f3f3;
-  }
-  td {
-    text-align: center;
-  }
-  td, th, tr {
-    padding: 10px;
-    border-bottom: 2px solid $blue;
+
+  .langTable {
+    border-collapse: collapse;
+    th {
+      text-align: left;
+      font-weight: normal;
+    }
+    tr:nth-child(even) {
+      background: #f3f3f3;
+    }
+    td {
+      text-align: center;
+    }
+    td, th, tr {
+      padding: 12px;
+      border-bottom: 2px solid $blue;
+    }
   }
 }

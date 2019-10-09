@@ -48,35 +48,37 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
           onRequestClose={this.toggleModal}
           contentLabel="Set Translations"
         >
+          <div className={css.modalContent}>
           <Button onClick={this.toggleModal} className={css.closeModal}>Close</Button>
           <div className={css.modalHeader}>Set Translations per Student</div>
-          <table className={css.langTable}>
-            <tbody>
-              <tr>
-                <th />
-                {LANG_LIST.map(lang => <th key={lang} className={css.langName}>{langName(lang)}</th>)}
-              </tr>
-              {
-                students.map((s: IStudent) =>
-                  <tr key={s.id}>
-                    <th>{s.name}</th>
-                    {
-                      LANG_LIST.map(lang =>
-                        <td key={lang}>
-                          <input
-                            type="radio"
-                            name={s.id}
-                            value={lang}
-                            onChange={this.handleLangChange}
-                            checked={this.getLangForStudent(s) === lang}
-                          />
-                        </td>
-                      )
-                    }
-                  </tr>
-                )}
-            </tbody>
-          </table>
+            <table className={css.langTable}>
+              <tbody>
+                <tr>
+                  <th />
+                  {LANG_LIST.map(lang => <th key={lang} className={css.langName}>{langName(lang)}</th>)}
+                </tr>
+                {
+                  students.map((s: IStudent) =>
+                    <tr key={s.id}>
+                      <th>{s.name}</th>
+                      {
+                        LANG_LIST.map(lang =>
+                          <td key={lang}>
+                            <input
+                              type="radio"
+                              name={s.id}
+                              value={lang}
+                              onChange={this.handleLangChange}
+                              checked={this.getLangForStudent(s) === lang}
+                            />
+                          </td>
+                        )
+                      }
+                    </tr>
+                  )}
+              </tbody>
+            </table>
+          </div>
         </Modal>
       </div>
     );

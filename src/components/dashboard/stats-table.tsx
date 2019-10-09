@@ -10,8 +10,8 @@ import ExpandStudents from "./expand-students";
 import * as css from "./stats-table.scss";
 
 export const BOTTOM_MARGIN = 10; // px
-export const COLLAPSED_TERM_WIDTH = 330; // px
-export const COLLAPSED_VALUE_WIDTH = 110; // px
+export const COLLAPSED_TERM_WIDTH = 300; // px
+export const COLLAPSED_VALUE_WIDTH = 100; // px
 export const FULL_VALUE_WIDTH = 300; // px
 
 interface IProps {
