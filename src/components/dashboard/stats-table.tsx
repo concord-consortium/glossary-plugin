@@ -167,7 +167,7 @@ export default class StatsTable extends React.Component<IProps, IState> {
 
   private getTerms() {
     const { stats, students } = this.props;
-    return Object.keys(stats[students[0].id]);
+    return students.length > 0 ? Object.keys(stats[students[0].id]) : [];
   }
 
   private anyTermExpanded() {

@@ -28,7 +28,6 @@ const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
 };
 
 const getGlossaryDefinition = async (authoredState: IGlossaryAuthoredState) => {
-  // Authored state can contain all the necessary data already or specify only URL that points to a proper state.
   if (typeof authoredState.s3Url === "string") {
     const response = await fetch(authoredState.s3Url);
     try {
