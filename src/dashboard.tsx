@@ -31,6 +31,19 @@ const initError = () => {
   alert("Please launch Glossary Dashboard from Portal");
 };
 
+// A comparison function to sort students by last and then first name
+const compareStudentsByName = (
+  student1: {lastName: string, firstName: string},
+  student2: {lastName: string, firstName: string}
+  ) => {
+  const lastNameCompare = student1.lastName.toLocaleLowerCase().localeCompare(student2.lastName.toLocaleLowerCase());
+  if (lastNameCompare !== 0) {
+    return lastNameCompare;
+  } else {
+    return student1.firstName.localeCompare(student2.firstName);
+  }
+};
+
 const init = async () => {
   const classUrl = getClassInfoUrl();
   const offeringUrl = getOfferingInfoUrl();
@@ -49,9 +62,11 @@ const init = async () => {
     source: parseUrl(classUrl).hostname,
     contextId: classInfoRaw.class_hash,
     students: classInfoRaw.students.map((s: any) => ({
-      name: `${s.first_name} ${s.last_name}`,
+      name: `${s.last_name}, ${s.first_name}`,
+      firstName: s.first_name,
+      lastName: s.last_name,
       id: s.user_id.toString()
-    }))
+    })).sort(compareStudentsByName)
   };
   const offeringInfoResponse = await fetch(offeringUrl, {headers: {Authorization: getAuthHeader()}});
   const offeringInfoRaw = await offeringInfoResponse.json();
