@@ -19,9 +19,10 @@ export default class DashboardApp extends React.Component<IProps, {}> {
         <div className={css.header}>
           <img src={ccLogoSrc} alt="CC logo" />
         </div>
-        <LanguageSelector classInfo={classInfo} />
-        <br/>
-        <StatsTableContainer classInfo={classInfo} resourceUrl={resourceUrl} />
+        <div className={css.content}>
+          <LanguageSelector classInfo={classInfo} />
+          <StatsTableContainer classInfo={classInfo} resourceUrl={resourceUrl} />
+        </div>
       </div>
     );
   }
