@@ -55,6 +55,10 @@ export const INTERACTIONS = [
   },
 ];
 
+interface IAllowedTerms {
+  [word: string]: boolean;
+}
+
 let glossaryInstance: IGlossary | null = null;
 
 export const getGlossaryJSON = async (glossaryUrl: string): Promise<IGlossary> => {
@@ -65,11 +69,15 @@ export const getGlossaryJSON = async (glossaryUrl: string): Promise<IGlossary> =
   return glossaryInstance!;
 };
 
-export const getDefaultStats = (students: IStudent[], glossary: IGlossary): IUsageStats => {
+export const getDefaultStats = (students: IStudent[], glossary: IGlossary, allowedTerms: IAllowedTerms):
+  IUsageStats => {
   const stats: IUsageStats = {};
   students.forEach(s => {
     stats[s.id] = {};
     glossary.definitions.forEach(def => {
+      if (!allowedTerms[def.word]) {
+        return;
+      }
       stats[s.id][def.word] = {
         clicked: false,
         definitions: [],
@@ -92,26 +100,46 @@ export const getDefaultStats = (students: IStudent[], glossary: IGlossary): IUsa
   return stats;
 };
 
-export const usageStatsHelpers = async (students: IStudent[], events: ILogEvent[]): Promise<IUsageStats | null> => {
+export const getAllowedTerms = (glossary: IGlossary, termsFilter: string[]): IAllowedTerms => {
+  const allowed: IAllowedTerms = {};
+  glossary.definitions.forEach(def => {
+    for (const filter of termsFilter) {
+      if (filter !== "" && def.word.includes(filter)) {
+        allowed[def.word] = true;
+        break;
+      }
+    }
+  });
+  if (Object.keys(allowed).length === 0) {
+    // If nothing is allowed using current filters, just show everything for now.
+    glossary.definitions.forEach(def => allowed[def.word] = true);
+  }
+  return allowed;
+};
+
+export const getUsageStats = async (students: IStudent[], events: ILogEvent[], termsFilter: string[]):
+  Promise<IUsageStats | null> => {
   if (students.length === 0 || events.length === 0) {
     return null;
   }
   const glossary = await getGlossaryJSON(events[0].glossaryUrl);
-  const stats = getDefaultStats(students, glossary);
+  const allowedTerms = getAllowedTerms(glossary, termsFilter);
+  const stats = getDefaultStats(students, glossary, allowedTerms);
   events
+    .filter(e => e.event !== "plugin init" && allowedTerms[e.word])
     .sort((a, b) => a.timestamp - b.timestamp)
     .forEach(e => {
-    if (e.event === "term clicked") {
-      stats[e.userId][e.word].clicked = true;
-    } else if (e.event === "definition saved") {
-      stats[e.userId][e.word].definitions = e.definitions;
-    } else if (e.event === "text to speech clicked") {
-      stats[e.userId][e.word].supports.textToSpeech = true;
-    } else if (e.event === "image icon clicked" || e.event === "image automatically shown") {
-      stats[e.userId][e.word].supports.imageShown = true;
-    } else if (e.event === "video icon clicked") {
-      stats[e.userId][e.word].supports.videoShown = true;
-    }
+      if (e.event === "term clicked") {
+        stats[e.userId][e.word].clicked = true;
+      } else if (e.event === "definition saved") {
+        stats[e.userId][e.word].definitions = e.definitions;
+      } else if (e.event === "text to speech clicked") {
+        stats[e.userId][e.word].supports.textToSpeech = true;
+      } else if (e.event === "image icon clicked" || e.event === "image automatically shown") {
+        stats[e.userId][e.word].supports.imageShown = true;
+      } else if (e.event === "video icon clicked") {
+        stats[e.userId][e.word].supports.videoShown = true;
+      }
   });
   return stats;
 };
