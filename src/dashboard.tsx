@@ -31,6 +31,19 @@ const initError = () => {
   alert("Please launch Glossary Dashboard from Portal");
 };
 
+// A comparison function to sort students by last and then first name
+const compareStudentsByName = (
+  student1: {lastName: string, firstName: string},
+  student2: {lastName: string, firstName: string}
+  ) => {
+  const lastNameCompare = student1.lastName.toLocaleLowerCase().localeCompare(student2.lastName.toLocaleLowerCase());
+  if (lastNameCompare !== 0) {
+    return lastNameCompare;
+  } else {
+    return student1.firstName.localeCompare(student2.firstName);
+  }
+};
+
 const init = async () => {
   const classUrl = getClassInfoUrl();
   const offeringUrl = getOfferingInfoUrl();
@@ -38,14 +51,22 @@ const init = async () => {
     return initError();
   }
   const classInfoResponse = await fetch(classUrl, {headers: {Authorization: getAuthHeader()}});
+  if (classInfoResponse.status === 400) {
+    return alert("Your Portal session has expired. Please login to Portal and launch Glossary Dashboard again.");
+  }
+  if (!classInfoResponse.ok) {
+    return alert("Portal API error. Please try to launch Glossary Dashboard again.");
+  }
   const classInfoRaw = await classInfoResponse.json();
   const classInfo: IClassInfo = {
     source: parseUrl(classUrl).hostname,
     contextId: classInfoRaw.class_hash,
     students: classInfoRaw.students.map((s: any) => ({
-      name: `${s.first_name} ${s.last_name}`,
+      name: `${s.last_name}, ${s.first_name}`,
+      firstName: s.first_name,
+      lastName: s.last_name,
       id: s.user_id.toString()
-    }))
+    })).sort(compareStudentsByName)
   };
   const offeringInfoResponse = await fetch(offeringUrl, {headers: {Authorization: getAuthHeader()}});
   const offeringInfoRaw = await offeringInfoResponse.json();

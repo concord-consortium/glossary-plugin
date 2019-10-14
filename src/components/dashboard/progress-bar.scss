@@ -1,0 +1,25 @@
+@import "./helpers";
+
+$progress-bar-height: 25px;
+
+.progressBarCell {
+  @include cell;
+  width: 100%;
+
+  .progressBar {
+    width: 90%;
+    height: $progress-bar-height;
+    margin: (0.5 * ($row-height - $progress-bar-height)) auto 0 auto;
+    position: relative;
+  }
+
+  .bar {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    background: #999;
+    &.completed {
+      background: #7f7f7f;
+    }
+  }
+}

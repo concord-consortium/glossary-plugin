@@ -1,8 +1,82 @@
-.stats {
-  border: 1px solid gray;
-  td {
-    border: 1px solid gray;
-    text-align: center;
-    padding: 2px;
+@import "./helpers";
+
+// Variables
+$color: #3f3f3f;
+$font: 16px verdana, helvetica, sans-serif;
+$content-padding: 10px;
+$min-report-width: 40em;
+
+.dashboard {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+  .innerContainer {
+    height: 100%;
+    margin: $content-padding;
+  }
+
+  .headers {
+    display: flex;
+  }
+
+  .studentNames {
+    display: inline-block;
+    width: $student-name-width;
+    vertical-align: top;
+    margin-right: $border-width;
+    flex-basis: content;
+  }
+
+  .termHeaders {
+    max-width: calc(100% - #{$student-name-width} + 2 * #{$content-padding});
+    white-space: nowrap;
+    overflow-x: auto;
+    // why scroll? If the scrollbars are visible, and the verticalScrollContainer has a scrollbar, this will ensure
+    // that both headers and verticalScrollContainer have the same width. If scrollbars are hidden (e.g. OS X),
+    // this won't be visible anyway.
+    overflow-y: scroll;
+
+    .interactionPromptsRow {
+      display: flex;
+      transition: $width-transition, $height-transition;
+      max-height: $row-height;
+      &.fullPrompts {
+        max-height: $expanded-interaction-prompt-max-height;
+      }
+    }
+  }
+
+  .studentAnswersRow {
+    display: flex;
+    transition: $height-transition;
+    height: $row-outer-height;
+
+    &:nth-child(even) > div {
+      background: $even-row;
+    }
+
+    &.fullAnswers {
+      height: $expanded-student-row-height;
+    }
+  }
+
+  .horizontalScrollContainer {
+    display: inline-block;
+    width: calc(100% - #{$student-name-width});
+    margin-left: -$border-width;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
+  .verticalScrollContainer {
+    max-width: 100%;
+    height: calc(100% - #{$expanded-interaction-prompt-max-height - $row-height});
+    display: inline-block;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: auto;
   }
 }

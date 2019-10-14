@@ -1,6 +1,6 @@
 import { defaultTranslate, replaceVariables } from "./i18n-context";
 
-describe("i18nContext", () => {
+describe("pluginContext", () => {
   describe("defaultTranslate function", () => {
     it("should return English translation when available", () => {
       expect(defaultTranslate("submit", "submitFallback")).toEqual("Submit");

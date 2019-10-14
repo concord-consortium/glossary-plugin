@@ -66,6 +66,7 @@
     "@types/jsonwebtoken": "^8.3.4",
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
+    "@types/react-modal": "^3.8.3",
     "@types/uuid": "^3.4.4",
     "autoprefixer": "^9.5.1",
     "copy-webpack-plugin": "^4.6.0",
@@ -115,6 +116,7 @@
     "jsonwebtoken": "^8.5.1",
     "react-dropzone": "^6.2.4",
     "react-json-editor-ajrm": "^2.5.9",
+    "react-modal": "^3.10.1",
     "uuid": "^3.3.2"
   }
 }

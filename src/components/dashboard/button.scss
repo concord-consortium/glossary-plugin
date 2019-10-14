@@ -1,0 +1,26 @@
+.ccButton {
+  color: #fff !important;
+  cursor: pointer;
+  display: inline-block;
+  font-size: .9em;
+  font-weight: normal;
+  margin: 0;
+  padding: .25em;
+  text-align: center;
+  text-decoration: none;
+  border-radius: .1875em;
+  box-shadow: 0 3px 0 #e16a3e;
+  background: #eb8723;
+  background: linear-gradient(to bottom, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
+
+  &.disabled {
+    background: #ccc;
+    box-shadow: 0 2px 0 #999;
+    color: #3f3f3f !important;
+    cursor: default;
+    opacity: .5 !important;
+  }
+  &:hover {
+    opacity: .8
+  }
+}

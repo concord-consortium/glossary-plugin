@@ -1,5 +1,5 @@
 import * as React from "react";
-import { i18nContext } from "../../i18n-context";
+import { pluginContext } from "../../plugin-context";
 import * as css from "./user-definitions.scss";
 import * as icons from "../common/icons.scss";
 
@@ -19,7 +19,7 @@ const getOrdinal = (n: number, max: number) => {
 };
 
 export default class UserDefinitions extends React.Component<IProps, IState> {
-  public static contextType = i18nContext;
+  public static contextType = pluginContext;
 
   public state: IState = {
     allUserDefsVisible: false

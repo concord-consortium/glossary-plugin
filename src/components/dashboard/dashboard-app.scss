@@ -1,0 +1,28 @@
+@import "./helpers";
+
+.dashboardApp {
+  font: 300 16px/1.4 museo-sans, verdana, helvetica, arial, sans-serif;
+  overflow: hidden;
+  color: $color;
+  margin: 0;
+  padding: 0;
+
+  .header {
+    width: 100%;
+    background: #6fc6da;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    @media print {
+      display: none;
+    }
+    img {
+      margin-left: 10px;
+      height: 65%;
+    }
+  }
+
+  .content {
+    padding: 10px;
+  }
+}

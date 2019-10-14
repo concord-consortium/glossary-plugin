@@ -2,7 +2,7 @@ import * as React from "react";
 import UserDefinitions from "./user-definitions";
 import * as icons from "../common/icons.scss";
 import { mount } from "enzyme";
-import {i18nContext} from "../../i18n-context";
+import {pluginContext} from "../../plugin-context";
 
 describe("UserDefinitions component", () => {
   describe("when there's only one user definition available", () => {
@@ -70,11 +70,11 @@ describe("UserDefinitions component", () => {
         return key + " in Spanish";
       };
       const wrapper = mount(
-        <i18nContext.Provider value={{ lang: "es", translate }}>
+        <pluginContext.Provider value={{ lang: "es", translate, log: jest.fn() }}>
           <UserDefinitions
             userDefinitions={userDefinitions}
           />
-        </i18nContext.Provider>
+        </pluginContext.Provider>
       );
       const icon = wrapper.find("." + icons.iconCaret);
       expect(icon.length).toEqual(1);

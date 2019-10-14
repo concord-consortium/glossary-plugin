@@ -3,7 +3,7 @@ import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
 import Button from "../common/button";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
-import { i18nContext } from "../../i18n-context";
+import { pluginContext } from "../../plugin-context";
 import { wordTerm } from "../../utils/translation-utils";
 
 import * as css from "./glossary-popup.scss";
@@ -29,7 +29,7 @@ interface IState {
 }
 
 export default class GlossaryPopup extends React.Component<IProps, IState> {
-  public static contextType = i18nContext;
+  public static contextType = pluginContext;
 
   public state: IState = {
     currentUserDefinition: "",

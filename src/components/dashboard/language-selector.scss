@@ -1,0 +1,50 @@
+@import "helpers";
+
+$blue: #2194b1;
+
+.langSelector {
+  min-height: 50px;
+
+  .modalToggle {
+    float: right;
+    margin: 10px 10px 0 20px;
+  }
+}
+
+.modalContent {
+  color: $color;
+  font: $font;
+
+  .closeModal {
+    float: right;
+  }
+
+  .modalHeader {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: $blue;
+    margin-bottom: 20px;
+  }
+
+  .langName {
+    color: $blue;
+  }
+
+  .langTable {
+    border-collapse: collapse;
+    th {
+      text-align: left;
+      font-weight: normal;
+    }
+    tr:nth-child(even) {
+      background: #f3f3f3;
+    }
+    td {
+      text-align: center;
+    }
+    td, th, tr {
+      padding: 12px;
+      border-bottom: 2px solid $blue;
+    }
+  }
+}
