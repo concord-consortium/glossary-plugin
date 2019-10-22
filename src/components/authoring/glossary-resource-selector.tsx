@@ -33,20 +33,19 @@ interface IState {
 }
 
 export const getTokenServiceEnv = () => {
-  const portalUrl = getQueryParam("portal");
-  if (portalUrl) {
-    const host = parseUrl(portalUrl).hostname;
-    if (host.match(/staging\./)) {
-      return "staging";
-    }
-    if (host.match(/concord\.org/)) {
-      return "production";
-    }
-    // Note that when local Portal is being used, we'll still return "staging" token service env, so developers don't
-    // have to setup local instance of token service. When local token service client should be used, you need to use
-    // `token-service-url=dev` URL param. It's handled by TokenServiceClient directly, and the `env` param passed to its
-    // constructor will be ignored.
+  // use either the portal url param for standalone authoring or the Lara page url for inline authoring
+  const portalUrl = getQueryParam("portal") || window.location.toString();
+  const host = parseUrl(portalUrl).hostname;
+  if (host.match(/staging\./)) {
+    return "staging";
   }
+  if (host.match(/concord\.org/)) {
+    return "production";
+  }
+  // Note that when local Portal is being used, we'll still return "staging" token service env, so developers don't
+  // have to setup local instance of token service. When local token service client should be used, you need to use
+  // `token-service-url=dev` URL param. It's handled by TokenServiceClient directly, and the `env` param passed to its
+  // constructor will be ignored.
   return "staging";
 };
 
