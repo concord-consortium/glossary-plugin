@@ -82,7 +82,7 @@ export class GlossaryPlugin {
     let studentInfo;
     try {
       const firebaseJwt = await this.context.getFirebaseJwt(FIREBASE_APP);
-      signInWithToken(firebaseJwt.token);
+      await signInWithToken(firebaseJwt.token);
       studentInfo = {
         // Types in LARA Plugin API should be fixed.
         source: parseUrl((firebaseJwt.claims as IJwtClaims).domain).hostname,
