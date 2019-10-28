@@ -5,9 +5,6 @@ import { ILogEvent } from "./types";
 
 export const FIREBASE_APP = "glossary-plugin";
 
-// Useful only for manual testing Firebase rules.
-const SKIP_SIGN_IN = false;
-
 let dbInstance: firebase.firestore.Firestore | null = null;
 
 export const getFirestore = () => {
@@ -28,16 +25,12 @@ export const getFirestore = () => {
   return dbInstance;
 };
 
-export const signInWithToken = (rawFirestoreJWT: string) => {
+export const signInWithToken = async (rawFirestoreJWT: string) => {
   // Ensure firebase.initializeApp has been called.
   getFirestore();
   // It's actually useful to sign out first, as firebase seems to stay signed in between page reloads otherwise.
-  const signOutPromise = firebase.auth().signOut();
-  if (!SKIP_SIGN_IN) {
-    return signOutPromise.then(() => firebase.auth().signInWithCustomToken(rawFirestoreJWT));
-  } else {
-    return signOutPromise;
-  }
+  await firebase.auth().signOut();
+  return firebase.auth().signInWithCustomToken(rawFirestoreJWT);
 };
 
 export const settingsPath = (source: string, contextId: string, userId?: string) =>

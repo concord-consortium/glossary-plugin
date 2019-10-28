@@ -78,7 +78,7 @@ const init = async () => {
   const firebaseJWTResponse = await fetch(firebaseJWTUrl, {headers: {Authorization: getAuthHeader()}});
   const firebaseJWTRaw = await firebaseJWTResponse.json();
 
-  signInWithToken(firebaseJWTRaw.token);
+  await signInWithToken(firebaseJWTRaw.token);
 
   // Finally render Dashboard app.
   ReactDOM.render(
