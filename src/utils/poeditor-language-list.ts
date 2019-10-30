@@ -1,5 +1,12 @@
 // Generated from: https://poeditor.com/docs/languages
 // using copy-paste and a few simple search & replace.
+// IMPORTANT: Some language names has been intentionally modified to support some non-standard languages.
+// E.g. Manx has been replaced with Yug'tun (lang code gv). That way, translators can still use POEditor.
+
+export const CUSTOM_LANG_NAME_MAPPING: {[langName: string]: string} = {
+  Manx: "Yug'tun"
+};
+
 export const POEDITOR_LANG_CODE: {[langName: string]: string} = {
   "Abkhazian": "ab",
   "Afar": "aa",
@@ -307,7 +314,7 @@ export const POEDITOR_LANG_NAME: {[langName: string]: string} = (() => {
   const result: {[langName: string]: string} = {};
   Object.keys(POEDITOR_LANG_CODE).forEach(langName => {
     const code = POEDITOR_LANG_CODE[langName];
-    result[code] = langName;
+    result[code] = CUSTOM_LANG_NAME_MAPPING[langName] || langName;
   });
   return result;
 })();
