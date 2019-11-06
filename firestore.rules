@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    match /sources/{source}/contextId/{contextId}/events/{document=**} {
+    	allow read: if request.auth.token.user_type == 'teacher' && request.auth.token.class_hash == contextId;
+    	allow write: if request.auth.token.class_hash == contextId;
+  	}
+    
+    match /sources/{source}/contextId/{contextId}/studentSettings/{document=**} {
+    	allow write: if request.auth.token.user_type == 'teacher' && request.auth.token.class_hash == contextId;
+      allow read: if request.auth.token.class_hash == contextId;
+  	}
+  }
+}
