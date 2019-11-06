@@ -1,0 +1,16 @@
+{
+  "mainPrompt": "[Inuit] What do you think \"%{word}\" means?",
+  "submit": "[Inuit] Submit",
+  "cancel": "[Inuit] Cancel",
+  "iDontKnowYet": "[Inuit] I don't know yet",
+  "revise": "[Inuit] Revise My Definition",
+  "writeDefinition": "[Inuit] Write the definition in your own words here.",
+  "writeNewDefinition": "[Inuit] Write your new definition in your own words here.",
+  "myDefinition": "[Inuit] My Definition",
+  "myPrevDefinition": "[Inuit] My Previous Definition",
+  "wordsIHaveDefined": "[Inuit] Words I Have Defined",
+  "allWords": "[Inuit] All Words",
+  "speechTitle": "[Inuit] Read aloud",
+  "imageTitle": "[Inuit] View photo",
+  "videoTitle": "[Inuit] View movie"
+}

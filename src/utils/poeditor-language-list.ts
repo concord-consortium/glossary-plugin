@@ -4,7 +4,9 @@
 // E.g. Manx has been replaced with Yug'tun (lang code gv). That way, translators can still use POEditor.
 
 export const CUSTOM_LANG_NAME_MAPPING: {[langName: string]: string} = {
-  Manx: "Yug'tun"
+  Manx: "Yug'tun",
+  Maori: "Athabaskan",
+  Marathi: "Inuit"
 };
 
 export const POEDITOR_LANG_CODE: {[langName: string]: string} = {
