@@ -6,6 +6,8 @@ import * as ptLang from "./lang/pt.json";
 import * as arLang from "./lang/ar.json";
 import * as ruLang from "./lang/ru.json";
 import * as gvLang from "./lang/gv.json";
+import * as miLang from "./lang/mi.json";
+import * as mrLang from "./lang/mr.json";
 import * as zhCNLang from "./lang/zh-CN.json";
 
 type ITranslateFunc = (key: string, fallback?: string | null, variables?: {[key: string]: string}) => string | null;
@@ -19,7 +21,9 @@ export const UI_TRANSLATIONS: {
   "ar": arLang,
   "ru": ruLang,
   "zh-CN": zhCNLang,
-  "gv": gvLang
+  "gv": gvLang,
+  "mi": miLang,
+  "mr": mrLang,
 };
 
 export const SUPPORTED_LANGUAGES = Object.keys(UI_TRANSLATIONS);

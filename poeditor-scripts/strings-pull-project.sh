@@ -1,7 +1,7 @@
 #!/bin/bash
 PROJECT_ID=287725
 OUTPUT_DIR=src/lang
-LANGUAGES=("es" "pt" "ar" "zh-CN" "ru")
+LANGUAGES=("es" "pt" "ar" "zh-CN" "ru" "gv" "mi" "mr")
 
 # argument processing from https://stackoverflow.com/a/14203146
 while [[ $# -gt 1 ]]
