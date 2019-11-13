@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECT_ID=287725
+PROJECT_ID=297867
 INPUT_FILE="src/lang/en.json"
 
 # argument processing from https://stackoverflow.com/a/14203146
