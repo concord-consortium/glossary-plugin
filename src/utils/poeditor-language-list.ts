@@ -3,6 +3,8 @@
 // IMPORTANT: Some language names has been intentionally modified to support some non-standard languages.
 // E.g. Manx has been replaced with Yug'tun (lang code gv). That way, translators can still use POEditor.
 
+// NOTE: the translation mapping section of the README should be updated when this mapping code is updated.
+
 export const CUSTOM_LANG_NAME_MAPPING: {[langName: string]: string} = {
   Manx: "Yug'tun",
   Maori: "Athabaskan",
