@@ -18,7 +18,7 @@ Authoring page supports following URL parameters:
  - glossaryName
  - username
  - s3AccessKey
- 
+
 They can be used to set the initial value of text inputs. E.g.:
 
 https://glossary-plugin.concord.org/authoring.html?glossaryName=test&username=joe&s3AccessKey=ABCXYZ
@@ -60,6 +60,20 @@ Note that you can define glossary inline or specify URL to a JSON that contains 
   "url": "https://example.concord.org/glossary-definiton.json"
 }
 ```
+
+## Translations
+
+Translations are stored in JSON files in the `src/lang` folder are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
+
+### Translation Mappings
+
+Due to the need to support translations of languages not available on poeditor.com we have coopted existing languages we don't plan to use and mapped them to the unsupported languages.  Here is the current mapping:
+
+| Existing Language | Mapped Language |
+|-------------------|-----------------|
+| Manx (gv)         | Yug'tun         |
+| Maori (mi)        | Athabaskan      |
+| Marathi (mr)      | Inuit           |
 
 ## Development
 
