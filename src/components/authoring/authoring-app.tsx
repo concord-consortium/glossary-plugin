@@ -229,7 +229,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
       return(
         <div className={css.dashboardUrlParams}>
           Add this param to your glossary dashboard report url:
-          <div className={css.s3url}>
+          <div data-cy="S3Url" className={css.s3url}>
             #{GLOSSARY_URL_PARAM}={encodeURIComponent(publicGlossaryUrl)}
           </div>
         </div>

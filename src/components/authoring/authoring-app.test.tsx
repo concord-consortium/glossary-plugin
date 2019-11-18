@@ -132,27 +132,31 @@ describe("AuthoringApp component", () => {
   // and are tested there
 
   describe(".loadJSONFromS3() method", () => {
-    it("should download data and update preview", async () => {
-      const glossary = {
-        definitions: [{word: "test1", definition: "test 1"}],
-        askForUserDefinition: false,
-        showSideBar: true
-      };
+    const glossary = {
+      definitions: [{word: "test1", definition: "test 1"}],
+      askForUserDefinition: false,
+      showSideBar: true
+    };
 
+    beforeEach(() => {
       fetch.mockResponse(JSON.stringify(glossary));
+    });
 
-      const wrapper = shallow(
-        <AuthoringApp/>
-      );
-      wrapper.setState({
-        client,
-        glossaryResource
-      });
+    it("should download data and update preview", async () => {
+      const wrapper = shallow(<AuthoringApp/>);
+      wrapper.setState({client, glossaryResource});
       await (wrapper.instance() as AuthoringApp).loadJSONFromS3();
 
       expect(fetch).toHaveBeenCalled();
       expect(wrapper.text()).toEqual(expect.stringContaining("Loading JSON: success!"));
       expect(wrapper.find(GlossarySidebar).props().definitions).toEqual(glossary.definitions);
+    });
+
+    it("Should provide the author with a glossaryUrl param to copy", async () => {
+      const wrapper = shallow(<AuthoringApp/>);
+      wrapper.setState({client, glossaryResource});
+      await (wrapper.instance() as AuthoringApp).loadJSONFromS3();
+      expect(wrapper.find("[data-cy='S3Url']").text()).toMatch("#glossaryUrl=https");
     });
   });
 
