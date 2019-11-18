@@ -11,7 +11,7 @@ import { validateGlossary } from "../../utils/validate-glossary";
 import { TokenServiceClient, S3Resource } from "@concord-consortium/token-service";
 import GlossaryResourceSelector from "./glossary-resource-selector";
 import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
-
+import { GLOSSARY_URL_PARAM } from "../../utils/get-url-param";
 import * as css from "./authoring-app.scss";
 import * as icons from "../common/icons.scss";
 
@@ -52,6 +52,7 @@ interface IState {
   glossaryDirty: boolean;
   client: TokenServiceClient | null;
   glossaryResource: S3Resource | null;
+  publicGlossaryUrl: string | null;
 }
 
 const getStatusTxt = (msg: string) => `[${(new Date()).toLocaleTimeString()}] ${msg}`;
@@ -65,7 +66,8 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     s3Status: "",
     glossaryDirty: false,
     client: null,
-    glossaryResource: null
+    glossaryResource: null,
+    publicGlossaryUrl: null
   };
 
   get glossaryResourceId() {
@@ -195,6 +197,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
             </div>
             <TranslationsPanel glossary={glossary} onGlossaryUpdate={this.saveGlossary} />
           </div>
+          { this.renderDashboardUrlParams() }
           <div className={css.preview}>
             <h2>Preview</h2>
             {showSideBar && this.renderSideBar(definitions)}
@@ -218,6 +221,20 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
         }
       </div>
     );
+  }
+
+  public renderDashboardUrlParams() {
+    const {publicGlossaryUrl} = this.state;
+    if (publicGlossaryUrl) {
+      return(
+        <div className={css.dashboardUrlParams}>
+          Add this param to your glossary dashboard report url:
+          <div className={css.s3url}>
+            #{GLOSSARY_URL_PARAM}={encodeURIComponent(publicGlossaryUrl)}
+          </div>
+        </div>
+      );
+    }
   }
 
   public renderSideBar(definitions: IWordDefinition[]) {
@@ -268,11 +285,13 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     if (!client || !glossaryResource) {
       return;
     }
+    const url = client.getPublicS3Url(glossaryResource, GLOSSARY_FILENAME);
     this.setState({
+      publicGlossaryUrl: url,
       s3ActionInProgress: true,
       s3Status: getStatusTxt("Loading JSON...")
     });
-    const url = client.getPublicS3Url(glossaryResource, GLOSSARY_FILENAME);
+
     const response = await fetch(url);
     if (response.status !== 200) {
       this.setState({
@@ -322,8 +341,9 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
           body: this.glossaryJSON,
           contentType: "application/json",
           cacheControl: "no-cache"
-        }).then(() => {
+        }).then((url: string) => {
           this.setState({
+            publicGlossaryUrl: url,
             s3ActionInProgress: false,
             s3Status: getStatusTxt("Uploading JSON to S3: success!")
           });
