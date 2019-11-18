@@ -197,7 +197,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
             </div>
             <TranslationsPanel glossary={glossary} onGlossaryUpdate={this.saveGlossary} />
           </div>
-          { this.renderDashboardUrlParams() }
+          {this.renderDashboardUrlParams()}
           <div className={css.preview}>
             <h2>Preview</h2>
             {showSideBar && this.renderSideBar(definitions)}
