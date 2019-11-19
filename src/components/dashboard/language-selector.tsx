@@ -11,41 +11,39 @@ import * as css from "./language-selector.scss";
 
 interface IProps {
   classInfo: IClassInfo;
+  supportedLanguageCodes: string[];
+  disableAria?: boolean;
 }
 interface IState {
   studentSettings: IStudentSettings[];
   modalIsOpen: boolean;
-  supportedLanguageCodes: string[];
 }
 
 const NONE = "none";
 const langName = (langCode: string) => POEDITOR_LANG_NAME[langCode] || langCode;
 
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-Modal.setAppElement("#app");
+// 2019-11-19 NP: used to be '#app', but was failing under jest tests.
+Modal.setAppElement("body");
 
 export default class LanguageSelector extends React.Component<IProps, IState> {
   public state: IState = {
     studentSettings: [],
-    modalIsOpen: false,
-    supportedLanguageCodes: []
+    modalIsOpen: false
   };
 
   public componentDidMount() {
     const { classInfo } = this.props;
     watchClassSettings(classInfo.source, classInfo.contextId, this.onSettingsUpdate);
-    this.loadGlossaryLanguages();
   }
 
   public render() {
     const { modalIsOpen } = this.state;
-    const { classInfo } = this.props;
+    const { classInfo, supportedLanguageCodes, disableAria } = this.props;
     const { students } = classInfo;
-    const { supportedLanguageCodes } = this.state;
     const languages = supportedLanguageCodes.concat(NONE).filter(s => s !== "en");
     return (
       <div className={css.langSelector}>
-        <Button onClick={this.toggleModal} className={css.modalToggle}>
+        <Button onClick={this.toggleModal} data-cy="setTranslations" className={css.modalToggle}>
           Set Translations
         </Button>
         <Modal
@@ -56,11 +54,18 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
           <div className={css.modalContent}>
           <Button onClick={this.toggleModal} className={css.closeModal}>Close</Button>
           <div className={css.modalHeader}>Set Translations per Student</div>
-            <table className={css.langTable}>
+            <table data-cy="langTable" className={css.langTable}>
               <tbody>
                 <tr>
                   <th />
-                  {languages.map(lang => <th key={lang} className={css.langName}>{langName(lang)}</th>)}
+                  {languages.map(lang =>
+                    <th
+                      key={lang}
+                      data-cy={`language-${lang}`}
+                      className={css.langName}
+                    >
+                      {langName(lang)}
+                    </th>)}
                 </tr>
                 {
                   students.map((s: IStudent) =>
@@ -113,31 +118,4 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
     saveStudentSettings(classInfo.source, classInfo.contextId, { userId, preferredLanguage });
   }
 
-  // 2019-11-18 NP: If we have a URL Parameter named "glossaryUrl"
-  // we look to see which languages are defined within. Otherwise,
-  // we use the full list of SUPPORTED_LANGUAGES.
-  private loadGlossaryLanguages = () => {
-    const glossaryUrl = getHashParam(GLOSSARY_URL_PARAM);
-    const setLangs = (glossary: IGlossary) => {
-      const {translations} = glossary;
-      if (translations && Object.keys(translations).length > 0){
-        this.setState({
-          supportedLanguageCodes: Object.keys(translations)
-        });
-      }
-    };
-
-    if (glossaryUrl) {
-      fetch(glossaryUrl)
-      .then( (response: Response) => {
-        response.json().then(setLangs);
-      });
-    } else {
-      // TBD: Should we display all languages or no languages if we can't
-      // find any in the URL Params?
-      this.setState({
-        supportedLanguageCodes: SUPPORTED_LANGUAGES // []
-      });
-    }
-  }
 }
