@@ -1,5 +1,5 @@
 import * as React from "react";
-import { shallow, mount, ReactWrapper } from "enzyme";
+import { shallow,  ShallowWrapper } from "enzyme";
 import { getHashParam, GLOSSARY_URL_PARAM} from "../../utils/get-url-param";
 import * as fetch from "jest-fetch-mock";
 import LanguageSelector from "./language-selector";
@@ -11,60 +11,35 @@ const students = [
   {name: "student-b", id: "student-b", language: "es"},
 ];
 
-const classInfo = {
-  source: "source",
-  contextId: "context",
-  students
-};
-
-// 2019-11-19 NP: We will want to test the URL parsing too, this is a start:
-// const glossaryUrl = "http://foo.bar/index.html";
-// const glossary = {
-//   definitions: {},
-//   translations: {
-//     es: {
-//       "cloud.word": "a",
-//       "cloud.definition": "b",
-//       "cloud.image_caption": "c"
-//     }
-//   }
-// };
+const classInfo = { source: "source", contextId: "context", students };
 
 const cyTanslationsSel = "[data-cy='setTranslations']";
-
-const findLanguage = (wrapper: ReactWrapper, lang: string) => {
-  const selector = `[data-cy='language-${lang}']`;
-  expect(wrapper.find(selector).length).toEqual(1);
-};
-
-const dontFindLanguage = (wrapper: ReactWrapper, lang: string) => {
-  const selector = `[data-cy='language-${lang}']`;
-  expect(wrapper.find(selector).length).toEqual(0);
-};
+const languageSelector = (lang: string) => `[data-cy='language-${lang}']`;
 
 describe("LanguageSelector component", () => {
   describe("when languages are not specified", () => {
     it("renders all the language options", () => {
-      const wrapper = mount(
+      const wrapper = shallow(
         <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES}/>
       );
       wrapper.find(cyTanslationsSel).simulate("click");
-      dontFindLanguage(wrapper, "en");
+      expect(wrapper.find(languageSelector("en")).length).toEqual(0);
       SUPPORTED_LANGUAGES
         .filter( l => l !== "en")
-        .forEach(l => findLanguage(wrapper, l));
+        .forEach(l => expect(wrapper.find(languageSelector(l)).length).toEqual(1));
+      expect(true).toBeTruthy();
     });
   });
 
   describe("When languages are specified", () => {
     it("renders only the language defined in the glossary", () => {
-      const wrapper = mount(
+      const wrapper = shallow(
         <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]}/>
       );
       wrapper.find(cyTanslationsSel).simulate("click");
-      findLanguage(wrapper, "es");
-      dontFindLanguage(wrapper, "en");
-      dontFindLanguage(wrapper, "de");
+      expect(wrapper.find(languageSelector("es")).length).toEqual(1);
+      expect(wrapper.find(languageSelector("en")).length).toEqual(0);
+      expect(wrapper.find(languageSelector("de")).length).toEqual(0);
     });
   });
 

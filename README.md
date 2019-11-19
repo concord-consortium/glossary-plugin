@@ -75,6 +75,24 @@ Due to the need to support translations of languages not available on poeditor.c
 | Maori (mi)        | Athabaskan      |
 | Marathi (mr)      | Inuit           |
 
+
+### Teanslations in the Dashboard (reporting)
+If you would like to limit the language selection choices in the dashboard to only languages that exist
+in the glossary definition then you can append a hash parameter to the dashboard report url in the portal.
+To specify the glossary URL in the external-report url, add  `#glossaryUrl=<uri-encoded glossary url>`
+
+This parameter name is defined as a constant in `get-url-param.tsx`
+
+```typescript
+  export const GLOSSARY_URL_PARAM = "glossaryUrl";
+```
+
+The value for this URL parameter can be viewed at the bottom of the glossary authoring interface.
+When this URL parameter exists in the dashboard url, the dashboard fetches the
+glossary definition from the glossary, and uses the `translations:` keys to find
+supported language codes.
+
+
 ## Development
 
 ### Initial steps
