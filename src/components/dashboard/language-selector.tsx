@@ -1,8 +1,6 @@
 import * as React from "react";
 import { IClassInfo, IStudentSettings, IStudent, IGlossary } from "../../types";
 import { watchClassSettings, saveStudentSettings } from "../../db";
-import { getHashParam, GLOSSARY_URL_PARAM} from "../../utils/get-url-param";
-import { SUPPORTED_LANGUAGES } from "../../i18n-context";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import Button from "./button";
 import * as Modal from "react-modal";
