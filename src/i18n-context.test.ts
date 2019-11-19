@@ -55,7 +55,7 @@ describe("pluginContext", () => {
       it("should only return the languages defined in the glossary at glossaryUrl", () => {
         fetchGlossaryLanguages(glossaryUrl, (x) => {
           expect(x).toContain("fr");
-          expect(x).toContain("en");
+          expect(x).toContain("es");
         });
       });
     });

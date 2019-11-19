@@ -10,7 +10,7 @@
     "clean": "rimraf dist",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
     "lint:fix": "tslint -c tslint.json --fix 'src/**/*.{ts,tsx}'",
-    "test": "jest --detectOpenHandles",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "strings:pull:usage": "echo 'Usage: npm run strings:pull -- -a <poeditor_api_key>'",
