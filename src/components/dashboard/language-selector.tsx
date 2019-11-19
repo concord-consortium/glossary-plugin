@@ -57,11 +57,7 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                 <tr>
                   <th />
                   {languages.map(lang =>
-                    <th
-                      key={lang}
-                      data-cy={`language-${lang}`}
-                      className={css.langName}
-                    >
+                    <th key={lang} data-cy={`language-${lang}`} className={css.langName}>
                       {langName(lang)}
                     </th>)}
                 </tr>
