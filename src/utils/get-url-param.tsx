@@ -9,6 +9,7 @@ function getParam(name: string, type: string): string | null {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+export const GLOSSARY_URL_PARAM = "glossaryUrl";
 export function getQueryParam(name: string): string | null {
   return getParam(name, "?");
 }

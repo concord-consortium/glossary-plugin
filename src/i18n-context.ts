@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ITranslation } from "./types";
+import { ITranslation, IGlossary } from "./types";
 import * as enLang from "./lang/en.json";
 import * as esLang from "./lang/es.json";
 import * as ptLang from "./lang/pt.json";
@@ -44,6 +44,29 @@ export const defaultTranslate: ITranslateFunc = (key, fallback = null, variables
     return result;
   }
   return replaceVariables(result, variables);
+};
+
+// Check glossary at glossaryUrl for `translations` keys. If those exist
+// return them. Otherwise return `SUPPORTED_LANGUAGES` constant.
+export const fetchGlossaryLanguages = (
+  glossaryUrl: string | null,
+  callback: (languageCodes: string[]) => void) => {
+
+  const setLangs = (glossary: IGlossary) => {
+    const {translations} = glossary;
+    if (translations && Object.keys(translations).length > 0) {
+      callback(Object.keys(translations));
+    }
+  };
+
+  if (glossaryUrl) {
+    fetch(glossaryUrl)
+    .then( (response: Response) => {
+      response.json().then(setLangs);
+    });
+  } else {
+    callback(SUPPORTED_LANGUAGES);
+  }
 };
 
 export const pluginContext = React.createContext({ lang: DEFAULT_LANG, translate: defaultTranslate });

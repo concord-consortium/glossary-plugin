@@ -1,7 +1,9 @@
 import * as React from "react";
 import { IClassInfo } from "../../types";
 import LanguageSelector from "./language-selector";
+import {getHashParam, GLOSSARY_URL_PARAM} from "../../utils/get-url-param";
 import StatsTableContainer from "./stats-table-container";
+import { SUPPORTED_LANGUAGES, fetchGlossaryLanguages } from "../../i18n-context";
 
 import * as ccLogoSrc from "../../images/cc-logo.png";
 import * as css from "./dashboard-app.scss";
@@ -11,19 +13,42 @@ interface IProps {
   resourceUrl: string;
 }
 
-export default class DashboardApp extends React.Component<IProps, {}> {
+interface IState {
+  supportedLanguageCodes: string[];
+}
+
+export default class DashboardApp extends React.Component<IProps, IState> {
+  public state: IState = {
+    supportedLanguageCodes: SUPPORTED_LANGUAGES
+  };
+
+  public componentDidMount() {
+    this.loadGlossaryLanguages();
+  }
+
   public render() {
     const { classInfo, resourceUrl } = this.props;
+    const { supportedLanguageCodes } = this.state;
     return (
       <div className={css.dashboardApp}>
         <div className={css.header}>
           <img src={ccLogoSrc} alt="CC logo" />
         </div>
         <div className={css.content}>
-          <LanguageSelector classInfo={classInfo} />
+          <LanguageSelector classInfo={classInfo} supportedLanguageCodes={supportedLanguageCodes}/>
           <StatsTableContainer classInfo={classInfo} resourceUrl={resourceUrl} />
         </div>
       </div>
     );
+  }
+
+  // 2019-11-18 NP: If we have a URL Parameter named "glossaryUrl"
+  // we look to see which languages are defined within. Otherwise,
+  // we use the full list of SUPPORTED_LANGUAGES.
+  private loadGlossaryLanguages = () => {
+    const glossaryUrl = getHashParam(GLOSSARY_URL_PARAM);
+    const callback = (langCodes: string[]) =>
+      this.setState({supportedLanguageCodes: langCodes});
+    fetchGlossaryLanguages(glossaryUrl, callback);
   }
 }
