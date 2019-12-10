@@ -113,6 +113,7 @@ describe("GlossaryPlugin", () => {
         }
       };
       const context = Object.assign({}, defaultContext, {
+        remoteEndpoint: "endpoint",
         getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>((resolve) => resolve(jwtResp as any))
       });
       const plugin = new GlossaryPlugin(context);
