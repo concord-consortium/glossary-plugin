@@ -17,6 +17,7 @@ interface IProps {
   autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
   imageUrl?: string;
+  zoomImageUrl?: string;
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
@@ -71,7 +72,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl,
+    const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl, zoomImageUrl,
       videoUrl, imageCaption, videoCaption, word } = this.props;
     const i18n = this.context;
     return (
@@ -80,6 +81,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           word={word}
           definition={definition}
           imageUrl={imageUrl}
+          zoomImageUrl={zoomImageUrl}
           videoUrl={videoUrl}
           imageCaption={imageCaption}
           videoCaption={videoCaption}
