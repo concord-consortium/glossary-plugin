@@ -50,6 +50,7 @@ describe("DefinitionEditor component", () => {
   const s3AccessKey = "s3-access";
   const s3SecretKey = "s3-secret";
   const file = new File(["test"], "test-media.jpg", { type: "image/jpg" });
+  const zoomFile = new File(["test-zoom"], "test-media-zoom.jpg", { type: "image/jpg" });
 
   it("renders basic UI", () => {
     const wrapper = shallow(
@@ -64,6 +65,7 @@ describe("DefinitionEditor component", () => {
     expect(wrapper.find("textarea[name='definition']").length).toEqual(1);
     expect(wrapper.find("input[name='image']").length).toEqual(1);
     expect(wrapper.find("input[name='imageCaption']").length).toEqual(1);
+    expect(wrapper.find("input[name='zoomImage']").length).toEqual(1);
     expect(wrapper.find("input[name='video']").length).toEqual(1);
     expect(wrapper.find("input[name='videoCaption']").length).toEqual(1);
     expect(wrapper.find("[data-cy='save']").length).toEqual(1);
@@ -88,6 +90,7 @@ describe("DefinitionEditor component", () => {
           definition: "",
           image: "",
           imageCaption: "",
+          zoomImage: "",
           video: "",
           videoCaption: ""
         }
@@ -115,6 +118,7 @@ describe("DefinitionEditor component", () => {
           definition: "definition",
           image: "http://test.image.com/test.png",
           imageCaption: "",
+          zoomImage: "http://test.image.com/test-zoom.png",
           video: "",
           videoCaption: ""
         }
@@ -126,7 +130,8 @@ describe("DefinitionEditor component", () => {
       expect(saveHandler).toHaveBeenCalledWith({
         word: "test",
         definition: "definition",
-        image: "http://test.image.com/test.png"
+        image: "http://test.image.com/test.png",
+        zoomImage: "http://test.image.com/test-zoom.png"
       });
     });
 
@@ -149,7 +154,8 @@ describe("DefinitionEditor component", () => {
           video: "",
           videoCaption: ""
         },
-        imageFile: file
+        imageFile: file,
+        zoomImageFile: zoomFile
       });
 
       const uploadMediaMock = jest.fn();

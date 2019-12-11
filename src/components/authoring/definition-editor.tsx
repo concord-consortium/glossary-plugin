@@ -23,6 +23,7 @@ interface IProps {
 interface IState {
   definition: IWordDefinition;
   imageFile: File | null;
+  zoomImageFile: File | null;
   videoFile: File | null;
   uploadInProgress: boolean;
   uploadStatus: string;
@@ -54,6 +55,7 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       videoCaption: ""
     }, this.props.initialDefinition),
     imageFile: null,
+    zoomImageFile: null,
     videoFile: null,
     uploadInProgress: false,
     uploadStatus: "",
@@ -62,9 +64,11 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
 
   public render() {
     const { onCancel, initialDefinition } = this.props;
-    const { definition, error, imageFile, videoFile, uploadStatus, uploadInProgress } = this.state;
+    const { definition, error, imageFile, zoomImageFile, videoFile, uploadStatus, uploadInProgress } = this.state;
     // imageFile is a custom file selected by user.
     const image = imageFile ? `[file to upload]: ${imageFile.name}` : definition.image;
+    // zoomImageFile is a custom file selected by user.
+    const zoomImage = zoomImageFile ? `[file to upload]: ${zoomImageFile.name}` : definition.zoomImage;
     // videoFile is a custom file selected by user.
     const video = videoFile ? `[file to upload]: ${videoFile.name}` : definition.video;
     return (
@@ -109,6 +113,29 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
                 </Dropzone>
                 {/* If user selects a new local file to upload, clear preview to avoid confusion */}
                 {image && !imageFile && <img src={image}/>}
+              </td>
+            </tr>
+            <tr>
+              <td>Zoom Image URL (optional)</td>
+              <td><input type="text" value={zoomImage} name="zoomImage" onChange={this.handleInputChange}/></td>
+            </tr>
+            <tr>
+              <td/>
+              <td>
+                <Dropzone
+                  className={css.dropzone}
+                  activeClassName={css.dropzoneActive}
+                  rejectClassName={css.dropzoneReject}
+                  accept="image/png, image/jpeg, image/gif, image/svg+xml, image/webp"
+                  multiple={false}
+                  onDropAccepted={this.handleZoomImageDrop}
+                  onDropRejected={wrongFileTypeAlert}
+                >
+                  Drop an image here, or click to select a file to upload. Only popular image formats are supported
+                  (e.g. png, jpeg, gif, svg, webp).
+                </Dropzone>
+                {/* If user selects a new local file to upload, clear preview to avoid confusion */}
+                {zoomImage && !zoomImageFile && <img src={zoomImage}/>}
               </td>
             </tr>
             <tr>
@@ -219,6 +246,16 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     this.setState({ imageFile: files[0], definition: Object.assign({}, definition, {image: ""}) });
   }
 
+  private handleZoomImageDrop = (files: File[]) => {
+    if (!files[0]) {
+      return;
+    }
+    const { definition } = this.state;
+    // Cleanup anything that user typed into "Zoom Image URL" field before to avoid subtle bugs (e.g. when this string
+    // doesn't pass validation).
+    this.setState({ zoomImageFile: files[0], definition: Object.assign({}, definition, {zoomImage: ""}) });
+  }
+
   private handleVideoDrop = (files: File[]) => {
     if (!files[0]) {
       return;
@@ -232,7 +269,7 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
   private handleSave = async () => {
     // Hide old errors first.
     this.setState({error: ""});
-    const { definition, videoFile, imageFile } = this.state;
+    const { definition, videoFile, imageFile, zoomImageFile } = this.state;
     // Definition passed to a parent has a bit different format that internally stored object that is used
     // to control text inputs.
     let finalDefinition = Object.assign({}, definition);
@@ -248,6 +285,16 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       try {
         const image = await this.uploadMedia(imageFile);
         finalDefinition = Object.assign(finalDefinition, { image });
+      } catch (e) {
+        // Upload failed. Interrupt saving process.
+        this.setState({error: e});
+        return;
+      }
+    }
+    if (zoomImageFile) {
+      try {
+        const zoomImage = await this.uploadMedia(zoomImageFile);
+        finalDefinition = Object.assign(finalDefinition, { zoomImage });
       } catch (e) {
         // Upload failed. Interrupt saving process.
         this.setState({error: e});

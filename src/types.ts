@@ -16,6 +16,7 @@ export interface IWordDefinition {
   word: string;
   definition: string;
   image?: string;
+  zoomImage?: string;
   video?: string;
   imageCaption?: string;
   videoCaption?: string;
