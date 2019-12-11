@@ -44,6 +44,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     return i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word });
   }
 
+  public get answerPlaceholder() {
+    const { userDefinitions } = this.props;
+    const i18n = this.context;
+    const anyUserDef = userDefinitions && userDefinitions.length > 0;
+    return anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition");
+  }
+
   public render() {
     const { questionVisible } = this.state;
     const { secondLanguage, onLanguageChange } = this.props;
@@ -115,12 +122,18 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         }
         {this.mainPrompt}
         <TextToSpeech text={this.mainPrompt} word={word} textType="main prompt" />
-        <textarea
-          className={css.userDefinitionTextarea}
-          placeholder={anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition")}
-          onChange={this.handleTextareaChange}
-          value={currentUserDefinition}
-        />
+        <div className={css.answerTextarea}>
+          <textarea
+            className={css.userDefinitionTextarea}
+            placeholder={this.answerPlaceholder}
+            onChange={this.handleTextareaChange}
+            value={currentUserDefinition}
+          />
+          {
+            !currentUserDefinition &&
+            <TextToSpeech text={this.answerPlaceholder} word={word} textType="answer placeholder" />
+          }
+        </div>
         {
           // If user already provided some answer, display them below.
           userDefinitions && userDefinitions.length > 0 &&
