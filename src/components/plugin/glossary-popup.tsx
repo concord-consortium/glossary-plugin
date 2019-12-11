@@ -7,6 +7,7 @@ import { pluginContext } from "../../plugin-context";
 import { wordTerm } from "../../utils/translation-utils";
 
 import * as css from "./glossary-popup.scss";
+import TextToSpeech from "./text-to-speech";
 
 interface IProps {
   word: string;
@@ -35,6 +36,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     currentUserDefinition: "",
     questionVisible: this.props.askForUserDefinition || false
   };
+
+  public get mainPrompt() {
+    const { word } = this.props;
+    const i18n = this.context;
+    const translatedWord = i18n.translate(wordTerm(word), word);
+    return i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word });
+  }
 
   public render() {
     const { questionVisible } = this.state;
@@ -91,7 +99,6 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     const { currentUserDefinition } = this.state;
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
-    const translatedWord = i18n.translate(wordTerm(word), word);
     return (
       <div>
         {
@@ -106,7 +113,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             <video src={videoUrl} controls={true}/>
           </div>
         }
-        {i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word })}
+        {this.mainPrompt}
+        <TextToSpeech text={this.mainPrompt} word={word} textType="main prompt" />
         <textarea
           className={css.userDefinitionTextarea}
           placeholder={anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition")}
