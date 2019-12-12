@@ -51,6 +51,7 @@ ReactDOM.render(
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
     userDefinitions={["I don't know", "Still not sure", "Something in the ear", "A membrane"]}
     askForUserDefinition={true}
+    autoShowMedia={true}
     onUserDefinitionsUpdate={newUserDefinition}
   />,
   document.getElementById("popup3") as HTMLElement
