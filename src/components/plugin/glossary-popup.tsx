@@ -4,7 +4,7 @@ import UserDefinitions from "./user-definitions";
 import Button from "../common/button";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import { pluginContext } from "../../plugin-context";
-import { wordTerm } from "../../utils/translation-utils";
+import { TextKey, term } from "../../utils/translation-utils";
 
 import * as css from "./glossary-popup.scss";
 import TextToSpeech from "./text-to-speech";
@@ -40,7 +40,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   public get mainPrompt() {
     const { word } = this.props;
     const i18n = this.context;
-    const translatedWord = i18n.translate(wordTerm(word), word);
+    const translatedWord = i18n.translate(term[TextKey.Word](word), word);
     return i18n.translate("mainPrompt", null, { word: translatedWord, wordInEnglish: word });
   }
 
@@ -121,7 +121,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           </div>
         }
         {this.mainPrompt}
-        <TextToSpeech text={this.mainPrompt} word={word} textType="main prompt" />
+        <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />
         <div className={css.answerTextarea}>
           <textarea
             className={css.userDefinitionTextarea}
@@ -131,7 +131,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           />
           {
             !currentUserDefinition &&
-            <TextToSpeech text={this.answerPlaceholder} word={word} textType="answer placeholder" />
+            <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />
           }
         </div>
         {

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as css from "./definition.scss";
 import * as icons from "../common/icons.scss";
 import { pluginContext } from "../../plugin-context";
-import { definitionTerm, imageCaptionTerm, videoCaptionTerm } from "../../utils/translation-utils";
+import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
 
 interface IProps {
@@ -43,19 +43,19 @@ export default class Definition extends React.Component<IProps, IState> {
   public get translatedDefinition() {
     const { definition, word } = this.props;
     const translate = this.context.translate;
-    return translate(definitionTerm(word), definition);
+    return translate(term[TextKey.Definition](word), definition);
   }
 
   public get translatedImageCaption() {
     const { imageCaption, word } = this.props;
     const translate = this.context.translate;
-    return translate(imageCaptionTerm(word), imageCaption);
+    return translate(term[TextKey.ImageCaption](word), imageCaption);
   }
 
   public get translatedVideoCaption() {
     const { videoCaption, word } = this.props;
     const translate = this.context.translate;
-    return translate(videoCaptionTerm(word), videoCaption);
+    return translate(term[TextKey.VideoCaption](word), videoCaption);
   }
 
   public renderImageButton(imageUrl?: string) {
@@ -94,7 +94,7 @@ export default class Definition extends React.Component<IProps, IState> {
         <div>
           {this.translatedDefinition}
           <span className={css.icons}>
-          <TextToSpeech text={this.translatedDefinition} word={word} textType="definition" />
+          <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
           {this.renderImageButton(imageUrl)}
           {this.renderVideoButton(videoUrl)}
         </span>
@@ -107,7 +107,7 @@ export default class Definition extends React.Component<IProps, IState> {
               imageCaption &&
               <div className={css.caption}>
                 {this.translatedImageCaption}
-                <TextToSpeech text={this.translatedImageCaption} word={word} textType="image caption" />
+                <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
               </div>
             }
           </div>
@@ -120,7 +120,7 @@ export default class Definition extends React.Component<IProps, IState> {
               videoCaption &&
               <div className={css.caption}>
                 {this.translatedVideoCaption}
-                <TextToSpeech text={this.translatedVideoCaption} word={word} textType="video caption" />
+                <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />
               </div>
             }
           </div>
