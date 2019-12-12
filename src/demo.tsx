@@ -32,13 +32,28 @@ ReactDOM.render(
     definition="An eardrum is a membrane, or thin piece of skin, stretched tight like a drum."
     imageUrl={img}
     zoomImageUrl={zoomImg}
+    imageCaption="Source: Wikipedia. This is a test caption. This is a test caption. This is a test caption."
+    videoUrl={video}
+    videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
+    userDefinitions={[]}
+    autoShowMedia={true}
+  />,
+  document.getElementById("popup2") as HTMLElement
+);
+
+ReactDOM.render(
+  <GlossaryPopup
+    word="eardrum"
+    definition="An eardrum is a membrane, or thin piece of skin, stretched tight like a drum."
+    imageUrl={img}
+    zoomImageUrl={zoomImg}
     videoUrl={video}
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
     userDefinitions={["I don't know", "Still not sure", "Something in the ear", "A membrane"]}
     askForUserDefinition={true}
     onUserDefinitionsUpdate={newUserDefinition}
   />,
-  document.getElementById("popup2") as HTMLElement
+  document.getElementById("popup3") as HTMLElement
 );
 
 ReactDOM.render(
