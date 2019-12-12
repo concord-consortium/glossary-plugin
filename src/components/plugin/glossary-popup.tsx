@@ -5,6 +5,7 @@ import Button from "../common/button";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import { pluginContext } from "../../plugin-context";
 import { TextKey, term } from "../../utils/translation-utils";
+import Image from "./image";
 
 import * as css from "./glossary-popup.scss";
 import TextToSpeech from "./text-to-speech";
@@ -104,7 +105,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestion() {
-    const { word, userDefinitions, imageUrl, videoUrl, autoShowMedia } = this.props;
+    const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, definition,
+            videoUrl, autoShowMedia } = this.props;
     const { currentUserDefinition } = this.state;
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
@@ -112,9 +114,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
       <div>
         {
           autoShowMedia && imageUrl &&
-          <div className={css.imageContainer}>
-            <img src={imageUrl} />
-          </div>
+          <Image
+            word={word}
+            definition={definition}
+            imageUrl={imageUrl}
+            zoomImageUrl={zoomImageUrl}
+            imageCaption={imageCaption}
+          />
         }
         {
           autoShowMedia && !imageUrl && videoUrl &&
