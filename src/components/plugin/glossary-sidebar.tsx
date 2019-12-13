@@ -152,6 +152,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
                     word={entry.word}
                     definition={entry.definition}
                     imageUrl={entry.image}
+                    zoomImageUrl={entry.zoomImage}
                     videoUrl={entry.video}
                     imageCaption={entry.imageCaption}
                     videoCaption={entry.videoCaption}

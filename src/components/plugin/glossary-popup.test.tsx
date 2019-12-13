@@ -84,6 +84,34 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find(`video[src='${videoSrc}']`).length).toEqual(1);
     });
 
+    it("toggles zoomed image when image is clicked", () => {
+      const word = "test";
+      const definition = "test def";
+      const imageSrc = "http://test.image.png";
+      const zoomImageSrc = "http://test.image.zoomed.png";
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          imageUrl={imageSrc}
+          imageCaption="test"
+          zoomImageUrl={zoomImageSrc}
+          userDefinitions={[]}
+          autoShowMedia={true}
+        />
+      );
+      // no zoom image showing before normal image click
+      const img = wrapper.find(`img[src='${imageSrc}']`);
+      expect(wrapper.find(`img[src='${zoomImageSrc}']`).length).toEqual(0);
+      img.simulate("click");
+      // zoom image now showing after normal image click
+      const zoomImg = wrapper.find(`img[src='${zoomImageSrc}']`);
+      expect(zoomImg.length).toEqual(1);
+      // zoom image hidden after zoom image click
+      zoomImg.simulate("click");
+      expect(wrapper.find(`img[src='${zoomImageSrc}']`).length).toEqual(0);
+    });
+
     it("user can click 'I don't know' button", () => {
       const word = "test";
       const definition = "test def";

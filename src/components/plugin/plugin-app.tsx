@@ -147,6 +147,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   word={word}
                   definition={this.definitionsByWord[word].definition}
                   imageUrl={this.definitionsByWord[word].image}
+                  zoomImageUrl={this.definitionsByWord[word].zoomImage}
                   videoUrl={this.definitionsByWord[word].video}
                   imageCaption={this.definitionsByWord[word].imageCaption}
                   videoCaption={this.definitionsByWord[word].videoCaption}

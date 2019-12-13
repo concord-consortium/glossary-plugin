@@ -135,3 +135,12 @@
     content: "\ea56";
   }
 }
+.iconZoomIn {
+  @extend %icon;
+  &:before {
+    content: "\e906";
+  }
+  color: #fff;
+  background: #c9c9c9;
+  padding: 2px;
+}

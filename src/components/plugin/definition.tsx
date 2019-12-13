@@ -4,11 +4,13 @@ import * as icons from "../common/icons.scss";
 import { pluginContext } from "../../plugin-context";
 import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
+import Image from "./image";
 
 interface IProps {
   word: string;
   definition: string;
   imageUrl?: string;
+  zoomImageUrl?: string;
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
@@ -26,7 +28,7 @@ export default class Definition extends React.Component<IProps, IState> {
   public state: IState = {
     imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
     // Video is loaded automatically only if there's no image.
-    videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia
+    videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia,
   };
 
   public componentDidMount() {
@@ -87,8 +89,9 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { imageUrl, videoUrl, imageCaption, videoCaption, word } = this.props;
-    const { imageVisible, videoVisible } = this.state;
+    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition } = this.props;
+    const { imageVisible, videoVisible, } = this.state;
+    const translate = this.context.translate;
     return (
       <div>
         <div>
@@ -101,16 +104,13 @@ export default class Definition extends React.Component<IProps, IState> {
         </div>
         {
           imageVisible &&
-          <div className={css.imageContainer}>
-            <img src={imageUrl} />
-            {
-              imageCaption &&
-              <div className={css.caption}>
-                {this.translatedImageCaption}
-                <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
-              </div>
-            }
-          </div>
+          <Image
+            word={word}
+            definition={definition}
+            imageUrl={imageUrl}
+            zoomImageUrl={zoomImageUrl}
+            imageCaption={imageCaption}
+          />
         }
         {
           videoVisible &&
