@@ -59,7 +59,7 @@ export const watchClassSettings = (
       if (snapshot.empty) {
         return;
       }
-      onSnapshot(snapshot.docs.map(d => d.data() as IStudentSettings));
+      onSnapshot(snapshot.docs.map(d => d.data()).filter(s => s) as IStudentSettings[]);
     }, (err: Error) => {
       // tslint:disable-next-line no-console
       console.error(err);
@@ -76,7 +76,10 @@ export const watchStudentSettings = (
   const db = getFirestore();
   db.collection(settingsPath(source, contextId)).doc(userId)
     .onSnapshot(snapshot => {
-      onSnapshot(snapshot.data() as IStudentSettings);
+      const data = snapshot.data();
+      if (data) {
+        onSnapshot(data as IStudentSettings);
+      }
     }, (err: Error) => {
       // tslint:disable-next-line no-console
       console.error(err);
