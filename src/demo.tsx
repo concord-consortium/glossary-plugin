@@ -3,8 +3,12 @@ import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./components/plugin/glossary-popup";
 import GlossarySidebar from "./components/plugin/glossary-sidebar";
 
-// tslint:disable-next-line:no-console
-const newUserDefinition = (userDefinition: string) => { console.log("User definition:", userDefinition); };
+const userDefinitions = ["I don't know", "Still not sure", "Something in the ear", "A membrane"];
+const newUserDefinition = (userDefinition: string) => {
+  userDefinitions.push(userDefinition);
+  // tslint:disable-next-line:no-console
+  console.log("User definition:", userDefinition);
+};
 
 // tslint:disable-next-line:max-line-length
 const img = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Blausen_0328_EarAnatomy.png/500px-Blausen_0328_EarAnatomy.png";
@@ -22,6 +26,7 @@ ReactDOM.render(
     videoUrl={video}
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
     userDefinitions={[]}
+    demoMode={true}
   />,
   document.getElementById("popup1") as HTMLElement
 );
@@ -37,6 +42,7 @@ ReactDOM.render(
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
     userDefinitions={[]}
     autoShowMedia={true}
+    demoMode={true}
   />,
   document.getElementById("popup2") as HTMLElement
 );
@@ -49,10 +55,11 @@ ReactDOM.render(
     zoomImageUrl={zoomImg}
     videoUrl={video}
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
-    userDefinitions={["I don't know", "Still not sure", "Something in the ear", "A membrane"]}
+    userDefinitions={userDefinitions}
     askForUserDefinition={true}
     autoShowMedia={true}
     onUserDefinitionsUpdate={newUserDefinition}
+    demoMode={true}
   />,
   document.getElementById("popup3") as HTMLElement
 );

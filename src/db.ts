@@ -1,11 +1,15 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
-import { IStudentSettings } from "./types";
+import { v4 as uuid } from "uuid";
+import { IStudentSettings, IStudentInfo, IClassInfo } from "./types";
 import { ILogEvent } from "./types";
+import { createRecordingUrl } from "./utils/audio";
 
 export const FIREBASE_APP = "glossary-plugin";
 
 let dbInstance: firebase.firestore.Firestore | null = null;
+
+let signedIn = false;
 
 export const getFirestore = () => {
   if (!dbInstance) {
@@ -30,7 +34,9 @@ export const signInWithToken = async (rawFirestoreJWT: string) => {
   getFirestore();
   // It's actually useful to sign out first, as firebase seems to stay signed in between page reloads otherwise.
   await firebase.auth().signOut();
-  return firebase.auth().signInWithCustomToken(rawFirestoreJWT);
+  const result = firebase.auth().signInWithCustomToken(rawFirestoreJWT);
+  signedIn = true;
+  return result;
 };
 
 export const settingsPath = (source: string, contextId: string, userId?: string) =>
@@ -38,6 +44,12 @@ export const settingsPath = (source: string, contextId: string, userId?: string)
 
 export const logEventPath = (source: string, contextId: string) =>
   `/sources/${source}/contextId/${contextId}/events`;
+
+export const recordingsPath = (source: string, contextId: string) =>
+  `/sources/${source}/contextId/${contextId}/recordings`;
+
+export const recordingDataPath = (source: string, contextId: string, id?: string) =>
+  `/sources/${source}/contextId/${contextId}/recordingData${id ? `/${id}` : ""}`;
 
 export const saveStudentSettings = (
   source: string,
@@ -115,4 +127,92 @@ export const watchClassEvents = (
       console.error(err);
       throw err;
     });
+};
+
+interface IUploadRecordingOptions {
+  audioBlobUrl: string;
+  studentInfo?: IStudentInfo;
+  demoMode?: boolean;
+}
+
+interface IRecording {
+  userId: string;
+  createdAt: number | firebase.firestore.FieldValue;
+}
+
+interface IRecordingData {
+  userId: string;
+  audioBlobUrl: string;
+  createdAt: number | firebase.firestore.FieldValue;
+}
+
+export const uploadRecording = (options: IUploadRecordingOptions) => {
+  return new Promise<string>((resolve, reject) => {
+    const { audioBlobUrl, studentInfo, demoMode } = options;
+
+    if (demoMode) {
+      // fake an upload after a timeout
+      setInterval(() => {
+        resolve(audioBlobUrl);
+      }, 1000);
+      return;
+    }
+
+    if (!signedIn || !studentInfo) {
+      reject(new Error("Sorry, uploads are not allowed as you are not signed into the portal"));
+      return;
+    }
+
+    const db = getFirestore();
+    const { source, contextId, userId } = studentInfo;
+    const createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    const id = uuid();
+
+    const recording: IRecording = {userId, createdAt};
+    const recordingData: IRecordingData = {userId, createdAt, audioBlobUrl};
+
+    db.collection(recordingsPath(source, contextId)).doc(id)
+      // create a lightweight record with the user and date that can be queried
+      .set(recording)
+      // upload the large audio blob url to same key in a parallel collection
+      .then(() => db.collection(recordingDataPath(source, contextId)).doc(id).set(recordingData))
+      // return an url representing the recording
+      .then(() => resolve(createRecordingUrl({source, contextId, id})))
+      .catch(reject);
+  });
+};
+
+interface IDownloadRecordingOptions {
+  source: string;
+  contextId: string;
+  id: string;
+  demoMode?: boolean;
+}
+
+export const downloadRecording = (options: IDownloadRecordingOptions) => {
+  return new Promise<string>((resolve, reject) => {
+    const { source, contextId, id, demoMode } = options;
+
+    if (demoMode) {
+      reject("Can't download audio in demo mode!");
+      return;
+    }
+
+    if (!signedIn) {
+      reject(new Error("Sorry, downloads are not allowed as you are not signed into the portal"));
+      return;
+    }
+
+    const db = getFirestore();
+    db.collection(recordingDataPath(source, contextId)).doc(id).get()
+      .then((doc) => {
+        const data = doc.data() as IRecordingData | undefined;
+        if (data && data.audioBlobUrl) {
+          resolve(data.audioBlobUrl);
+        } else {
+          reject("Unable to find audio blob url");
+        }
+      })
+      .catch(reject);
+  });
 };

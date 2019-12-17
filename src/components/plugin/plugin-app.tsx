@@ -123,7 +123,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
@@ -172,6 +172,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
                   secondLanguage={this.secondLanguage}
                   onLanguageChange={this.languageChanged}
+                  studentInfo={studentInfo}
                 />,
                 container
               );

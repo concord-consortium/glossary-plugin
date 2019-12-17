@@ -2,6 +2,7 @@ import * as React from "react";
 import { pluginContext } from "../../plugin-context";
 import * as css from "./user-definitions.scss";
 import * as icons from "../common/icons.scss";
+import { getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
 
 interface IProps {
   userDefinitions: string[];
@@ -9,6 +10,11 @@ interface IProps {
 
 interface IState {
   allUserDefsVisible: boolean;
+}
+
+interface ICurrentAudio {
+  element: HTMLAudioElement;
+  userDefinition: string;
 }
 
 const getOrdinal = (n: number, max: number) => {
@@ -24,6 +30,8 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
   public state: IState = {
     allUserDefsVisible: false
   };
+
+  private currentAudio: ICurrentAudio | null = null;
 
   public render() {
     const { userDefinitions, } = this.props;
@@ -64,9 +72,61 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
         <div className={css.userDefinitionHeader}>
           {label}{ordinal ? ` #${ordinal}` : ""}:
         </div>
-        {userDefinitions[userDefinitions.length - 1 - index]}
+        {this.renderUserDefText(index)}
       </span>
     );
+  }
+
+  private renderUserDefText(index: number) {
+    const { userDefinitions } = this.props;
+    const userDefinition = userDefinitions[userDefinitions.length - 1 - index];
+    const i18n = this.context;
+    if (!userDefinition) {
+      return;
+    }
+    const playRecording = () => {
+      if (this.currentAudio) {
+        const {element} = this.currentAudio;
+
+        // toggle current audio
+        if (this.currentAudio.userDefinition === userDefinition) {
+          if (element.paused) {
+            element.currentTime = 0;
+            element.play();
+          } else {
+            element.pause();
+          }
+          return;
+        }
+
+        // pause existing recording before playing new one
+        element.pause();
+      }
+
+      getAudio(userDefinition)
+        .then(audio => {
+          this.currentAudio = {
+            element: audio,
+            userDefinition
+          };
+          this.currentAudio.element.play();
+        })
+        .catch(err => alert(err.toString()));
+    };
+    if (isAudioOrRecordingUrl(userDefinition)) {
+      const recordingIndex = userDefinitions.filter(isAudioOrRecordingUrl).indexOf(userDefinition) + 1;
+      return (
+        <>
+          {i18n.translate("audioDefinition", "Audio definition %{index}", {index: recordingIndex})}
+          <span
+            className={icons.iconButton + " " + icons.iconAudio}
+            onClick={playRecording}
+            title={i18n.translate("playRecording")}
+          />
+        </>
+      );
+    }
+    return userDefinition;
   }
 
   private toggleAllUserDefinitions = () => {
