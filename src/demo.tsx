@@ -58,6 +58,7 @@ ReactDOM.render(
     userDefinitions={userDefinitions}
     askForUserDefinition={true}
     autoShowMedia={true}
+    enableStudentRecording={true}
     onUserDefinitionsUpdate={newUserDefinition}
     demoMode={true}
   />,

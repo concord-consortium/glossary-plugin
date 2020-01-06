@@ -12,7 +12,8 @@ describe("#glossaryToPOEditorTerms", () => {
       ],
       askForUserDefinition: false,
       showSideBar: false,
-      autoShowMediaInPopup: false
+      autoShowMediaInPopup: false,
+      enableStudentRecording: false
     });
     expect(terms["cloud.word"]).toEqual("cloud");
     expect(terms["cloud.definition"]).toEqual("white thing");
@@ -35,6 +36,7 @@ describe("#isTranslationComplete", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      enableStudentRecording: false,
       translations: {
         es: {
           "cloud.word": "a",
@@ -57,6 +59,7 @@ describe("#isTranslationComplete", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      enableStudentRecording: false,
       translations: {
         es: {
           "cloud.word": "a",

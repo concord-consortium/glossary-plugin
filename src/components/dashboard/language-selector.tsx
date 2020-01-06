@@ -11,6 +11,7 @@ interface IProps {
   classInfo: IClassInfo;
   supportedLanguageCodes: string[];
   disableAria?: boolean;
+  enableRecording: boolean;
 }
 interface IState {
   studentSettings: IStudentSettings[];
@@ -36,13 +37,16 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   public render() {
     const { modalIsOpen } = this.state;
-    const { classInfo, supportedLanguageCodes, disableAria } = this.props;
+    const { classInfo, supportedLanguageCodes, disableAria, enableRecording } = this.props;
     const { students } = classInfo;
     const languages = supportedLanguageCodes.concat(NONE).filter(s => s !== "en");
     return (
       <div className={css.langSelector}>
         <Button onClick={this.toggleModal} data-cy="setTranslations" className={css.modalToggle}>
-          Set Translations
+          {enableRecording
+            ? "Enable Recording & Set Translations"
+            : "Set Translations"
+          }
         </Button>
         <Modal
           isOpen={modalIsOpen}
@@ -50,12 +54,25 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
           contentLabel="Set Translations"
         >
           <div className={css.modalContent}>
-          <Button onClick={this.toggleModal} className={css.closeModal}>Close</Button>
-          <div className={css.modalHeader}>Set Translations per Student</div>
+            <Button onClick={this.toggleModal} className={css.closeModal}>Close</Button>
+            <div className={css.modalHeader}>
+              {enableRecording
+                ? "Enable Recording & Set Translations per Student"
+                : "Set Translations per Student"
+              }
+            </div>
             <table data-cy="langTable" className={css.langTable}>
               <tbody>
+                {enableRecording ?
+                  <tr>
+                    <th />
+                    <th />
+                    <th colSpan={languages.length} style={{textAlign: "center"}}>Set Translation</th>
+                  </tr>
+                  : undefined}
                 <tr>
                   <th />
+                  {enableRecording ? <th>Enable Recording</th> : undefined}
                   {languages.map(lang =>
                     <th key={lang} data-cy={`language-${lang}`} className={css.langName}>
                       {langName(lang)}
@@ -65,15 +82,24 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                   students.map((s: IStudent) =>
                     <tr key={s.id}>
                       <th>{s.name}</th>
+                      {enableRecording ?
+                        <td>
+                          <input
+                            type="checkbox"
+                            onChange={this.handleEnableRecordingChange(s)}
+                            checked={this.getStudentSettings(s).enableRecording}
+                          />
+                        </td>
+                        : undefined
+                      }
                       {
                         languages.map(lang =>
                           <td key={lang}>
                             <input
                               type="radio"
-                              name={s.id}
                               value={lang}
-                              onChange={this.handleLangChange}
-                              checked={this.getLangForStudent(s) === lang}
+                              onChange={this.handleLangChange(s)}
+                              checked={this.getStudentSettings(s).preferredLanguage === lang}
                             />
                           </td>
                         )
@@ -92,24 +118,33 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
     this.setState({ modalIsOpen: !this.state.modalIsOpen });
   }
 
-  private getLangForStudent = (student: IStudent) => {
+  private getStudentSettings = (student: IStudent) => {
     const { studentSettings } = this.state;
-    const settings = studentSettings.find(s => s.userId === student.id);
-    if (!settings) {
-      return NONE;
-    }
-    return settings.preferredLanguage;
+    return studentSettings.find(s => s.userId === student.id) || {preferredLanguage: NONE, enableRecording: false};
   }
 
   private onSettingsUpdate = (studentSettings: IStudentSettings[]) => {
     this.setState({ studentSettings });
   }
 
-  private handleLangChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { classInfo } = this.props;
-    const userId = e.target.name;
-    const preferredLanguage = e.target.value;
-    saveStudentSettings(classInfo.source, classInfo.contextId, { userId, preferredLanguage });
+  private handleSaveStudentSetting = (student: IStudent, setting: "preferredLanguage" | "enableRecording") => {
+    return (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { classInfo } = this.props;
+      const studentSettings = this.getStudentSettings(student);
+      const newSettings: IStudentSettings = {
+        userId: student.id,
+        preferredLanguage: setting === "preferredLanguage" ? e.target.value : studentSettings.preferredLanguage,
+        enableRecording: setting === "enableRecording" ? e.target.checked : studentSettings.enableRecording,
+      };
+      saveStudentSettings(classInfo.source, classInfo.contextId, newSettings);
+    };
   }
 
+  private handleLangChange = (student: IStudent) => {
+    return this.handleSaveStudentSetting(student, "preferredLanguage");
+  }
+
+  private handleEnableRecordingChange = (student: IStudent) => {
+    return this.handleSaveStudentSetting(student, "enableRecording");
+  }
 }

@@ -3,6 +3,7 @@ export interface IGlossary {
   showSideBar: boolean;
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
+  enableStudentRecording: boolean;
   translations?: {
     [languageCode: string]: ITranslation
   };
@@ -40,6 +41,7 @@ export interface IClassInfo {
 export interface IStudentSettings {
   userId: string;
   preferredLanguage: string;
+  enableRecording: boolean;
 }
 
 export interface IStudentInfo {

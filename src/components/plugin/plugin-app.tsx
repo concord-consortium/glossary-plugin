@@ -35,6 +35,7 @@ interface IProps {
   initialLearnerState: ILearnerState;
   askForUserDefinition: boolean;
   autoShowMediaInPopup: boolean;
+  enableStudentRecording: boolean;
   showSideBar: boolean;
   translations: {
     [languageCode: string]: ITranslation
@@ -56,6 +57,7 @@ interface IState {
   lang: string;
   secondLanguage?: string;
   definitionsByWord: IDefinitionsByWord;
+  enableStudentRecording: boolean;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
@@ -65,7 +67,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
     sidebarPresent: false,
     lang: "en",
     secondLanguage: undefined,
-    definitionsByWord: {}
+    definitionsByWord: {},
+    enableStudentRecording: false
   };
   private sidebarContainer: HTMLElement;
   private sidebarIconContainer: HTMLElement;
@@ -113,6 +116,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
             // Preferred language is not available, do not show second language button.
             this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
           }
+
+          // add per-student recording toggle
+          this.setState({enableStudentRecording: settings.enableRecording});
         }));
 
         this.log({
@@ -125,6 +131,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
   public render() {
     const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
+    // student recording is enabled per student with the combination of it being enabled by the glossary
+    // author along with it being enabled by the teacher in the dashboard per student
+    const enableStudentRecording = this.props.enableStudentRecording && this.state.enableStudentRecording;
+
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
@@ -169,6 +179,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}
+                  enableStudentRecording={enableStudentRecording}
                   onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
                   secondLanguage={this.secondLanguage}
                   onLanguageChange={this.languageChanged}

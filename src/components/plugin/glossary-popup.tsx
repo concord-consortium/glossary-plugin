@@ -29,6 +29,7 @@ interface IProps {
   definition: string;
   userDefinitions?: string[];
   askForUserDefinition?: boolean;
+  enableStudentRecording?: boolean;
   autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
   imageUrl?: string;
@@ -56,7 +57,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   public state: IState = {
     currentUserDefinition: "",
     questionVisible: this.props.askForUserDefinition || false,
-    canRecord: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder),
+    canRecord: this.canRecord(this.props),
     recordingState: RecordingState.NotRecording,
     recordingStartTime: 0
   };
@@ -65,6 +66,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   private recordedBlobs: Blob[] = [];
   private audio: HTMLAudioElement | null = null;
   private recordingTimeout: number;
+
+  public UNSAFE_componentWillReceiveProps(nextProps: IProps) {
+    // teacher may change the recording option in their dashboard while popup is visible for student
+    this.setState({canRecord: this.canRecord(nextProps)});
+  }
 
   public get mainPrompt() {
     const { word } = this.props;
@@ -453,5 +459,10 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private handleDeleteRecording = () => {
     this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
+  }
+
+  private canRecord(props: IProps) {
+    return !!props.enableStudentRecording
+        && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder);
   }
 }
