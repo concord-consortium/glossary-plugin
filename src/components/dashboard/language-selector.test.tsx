@@ -20,7 +20,7 @@ describe("LanguageSelector component", () => {
   describe("when languages are not specified", () => {
     it("renders all the language options", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES}/>
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("en")).length).toEqual(0);
@@ -34,7 +34,7 @@ describe("LanguageSelector component", () => {
   describe("When languages are specified", () => {
     it("renders only the language defined in the glossary", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]}/>
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]} enableRecording={false}/>
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("es")).length).toEqual(1);
