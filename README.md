@@ -109,6 +109,13 @@ If you want to work only on this one, you can also do it:
 If you want to build a local version run `npm build`, it will create the files in the `dist` folder.
 You *do not* need to build to deploy the code, that is automatic.  See more info in the Deployment section below.
 
+### Debug demo logging
+
+The default logger does nothing when the application is not run in a plugin context (eg demo.html or dashboard.html).
+To see log messages in the console in that context add DEBUG_LOG to the url query string:
+
+`http://localhost:8080/demo.html?DEBUG_LOG`
+
 ### Notes
 
 1. Make sure if you are using Visual Studio Code that you use the workspace version of TypeScript.

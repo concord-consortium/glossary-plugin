@@ -317,15 +317,21 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
       this.updateRecording({nextState: RecordingState.SavingRecording, clearRecording: false });
       let questionVisible = false;
       try {
+        this.context.log({event: "submitting recording"});
         const uploadedUrl = await uploadRecording({
           audioBlobUrl: currentUserDefinition,
           studentInfo,
           demoMode
         });
+        this.context.log({event: "submitted recording"});
         if (this.props.onUserDefinitionsUpdate) {
           this.props.onUserDefinitionsUpdate(uploadedUrl);
         }
       } catch (err) {
+        this.context.log({
+          event: "error submitting recording",
+          error: err.toString()
+        });
         alert(err);
         questionVisible = true;
       } finally {
@@ -386,6 +392,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         };
         const {mimeType} = this.mediaRecorder;
         this.mediaRecorder.onstop = () => {
+          this.context.log({event: "stopped recording"});
           this.mediaRecorder = null;
           const recording = new Blob(this.recordedBlobs, {type: mimeType});
           const reader = new FileReader();
@@ -405,9 +412,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           reader.readAsDataURL(recording);
         };
         this.recordingTimeout = window.setTimeout(() => {
+          this.context.log({event: "recording timeout reached"});
           this.handleStopRecording();
           showRecordingTimeLimitReached = true;
         }, RECORDING_TIMEOUT);
+        this.context.log({event: "started recording"});
         this.mediaRecorder.start();
       })
       .catch(err => alert(err.toString()));
@@ -421,9 +430,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private handlePlayRecording = () => {
+    const logPlay = () => this.context.log({event: "play unsubmitted recording"});
     if (this.audio) {
       // toggle audio
       if (this.audio.paused) {
+        logPlay();
         this.audio.currentTime = 0;
         this.audio.play();
       } else {
@@ -432,6 +443,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     } else {
       getAudio(this.state.currentUserDefinition)
         .then((audio) => {
+          logPlay();
           this.audio = audio;
           this.audio.play();
         })

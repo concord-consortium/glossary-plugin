@@ -84,13 +84,20 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
     if (!userDefinition) {
       return;
     }
-    const playRecording = () => {
+    const playRecording = (recordingIndex: number) => {
+      const logPlay = () => {
+        this.context.log({
+          event: "play submitted recording",
+          recordingIndex
+        });
+      };
       if (this.currentAudio) {
         const {element} = this.currentAudio;
 
         // toggle current audio
         if (this.currentAudio.userDefinition === userDefinition) {
           if (element.paused) {
+            logPlay();
             element.currentTime = 0;
             element.play();
           } else {
@@ -109,6 +116,7 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
             element: audio,
             userDefinition
           };
+          logPlay();
           this.currentAudio.element.play();
         })
         .catch(err => alert(err.toString()));
@@ -120,7 +128,8 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
           {i18n.translate("audioDefinition", "Audio definition %{index}", {index: recordingIndex})}
           <span
             className={icons.iconButton + " " + icons.iconAudio}
-            onClick={playRecording}
+            // tslint:disable-next-line:jsx-no-lambda
+            onClick={() => playRecording(recordingIndex)}
             title={i18n.translate("playRecording")}
           />
         </>
