@@ -1,6 +1,7 @@
 import * as React from "react";
 import ProgressBar from "./progress-bar";
 import { Interaction, INTERACTIONS, ITermStats } from "../../utils/usage-stats-helpers";
+import { isAudioOrRecordingUrl, getAudio } from "../../utils/audio";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./term-values.scss";
@@ -24,30 +25,97 @@ const Clicked = ({ stats }: { stats: ITermStats, showFull: boolean }) => (
   </div>
 );
 
-const Definitions = ({ stats, showFull }: { stats: ITermStats, showFull: boolean }) => (
-  <div>
-    {
-      showFull ?
-        (
-          <table>
-            <tbody>
-            {
-              stats.definitions.map((d, idx) =>
-                <tr key={idx}><td>{idx + 1}.</td><td>{d}</td></tr>)
-            }
-            </tbody>
-          </table>
-        )
-        :
-        (
-          stats.definitions.length > 0 &&
-          <div className={css.center}>
-            <span className={icons.iconFileText} />
-          </div>
-        )
+interface ICurrentAudio {
+  element: HTMLAudioElement;
+  definition: string;
+}
+
+let currentAudio: ICurrentAudio | null = null;
+
+// tslint:disable-next-line:max-line-length
+const Definition = ({ definitions, definition }: {definitions: string[], definition: string}) => {
+  const playRecording = () => {
+    if (currentAudio) {
+      const {element} = currentAudio;
+
+      // toggle current audio
+      if (currentAudio.definition === definition) {
+        if (element.paused) {
+          element.currentTime = 0;
+          element.play();
+        } else {
+          element.pause();
+        }
+        return;
+      }
+
+      // pause existing recording before playing new one
+      element.pause();
     }
-  </div>
-);
+
+    getAudio(definition)
+      .then(audio => {
+        currentAudio = {
+          element: audio,
+          definition
+        };
+        currentAudio.element.play();
+      })
+      .catch(err => alert(err.toString()));
+  };
+
+  if (isAudioOrRecordingUrl(definition)) {
+    const recordingIndex = definitions.filter(isAudioOrRecordingUrl).indexOf(definition) + 1;
+    return (
+      <>
+        {`Audio definition ${recordingIndex}`}
+        <span
+          className={icons.iconButton + " " + icons.iconAudio}
+          onClick={playRecording}
+          title="Play Recording"
+        />
+      </>
+    );
+  }
+  return <>{definition}</>;
+};
+
+const Definitions = ({ stats, showFull }: { stats: ITermStats, showFull: boolean }) => {
+  const numAudioUrls = stats.definitions.filter(isAudioOrRecordingUrl).length;
+  const hasAudio = numAudioUrls > 0;
+  const hasText = stats.definitions.length > numAudioUrls;
+
+  return (
+    <div>
+      {
+        showFull ?
+          (
+            <table>
+              <tbody>
+              {
+                stats.definitions.map((definition, idx) =>
+                  <tr key={idx}>
+                    <td>{idx + 1}.</td>
+                    <td>
+                      <Definition definitions={stats.definitions} definition={definition} />
+                    </td>
+                  </tr>)
+              }
+              </tbody>
+            </table>
+          )
+          :
+          (
+            (hasText || hasAudio) &&
+            <div className={css.center}>
+              {hasText ? <span className={icons.iconFileText} /> : undefined}
+              {hasAudio ? <span className={icons.iconAudio} style={{marginLeft: hasText ? 5 : 0}} /> : undefined}
+            </div>
+          )
+      }
+    </div>
+  );
+};
 
 const Supports = ({ stats, showFull }: { stats: ITermStats, showFull: boolean }) => {
   let count = 0;
