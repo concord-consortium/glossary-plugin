@@ -257,11 +257,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             {i18n.translate("audioDefinition", "Audio definition %{index}", {index: recordingIndex})}
             <div className={css.recordedIcons}>
               <span
+                data-cy={`playRecording${recordingIndex}`}
                 className={icons.iconButton + " " + icons.iconAudio}
                 onClick={this.handlePlayRecording}
                 title={i18n.translate("playRecording")}
               />
               <span
+                data-cy={`deleteRecording${recordingIndex}`}
                 className={icons.iconButton + " " + icons.iconDeleteAudio}
                 onClick={this.handleDeleteRecording}
                 title={i18n.translate("deleteRecording")}
@@ -299,6 +301,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         <div className={css.answerTextareaIcons}>
           <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />
           {canRecord && <span
+            data-cy="recordButton"
             className={icons.iconButton + " " + icons.iconRecord}
             onClick={this.handleStartRecording}
             title={i18n.translate("record")}

@@ -189,4 +189,144 @@ describe("GlossaryPopup component", () => {
     expect(wrapper.text()).toEqual(expect.stringContaining("mainPrompt in Spanish"));
     expect(wrapper.text()).toEqual(expect.stringContaining("submit in Spanish"));
   });
+
+  describe("when enableStudentRecording=false", () => {
+    it("renders question that can be answered without record icon", () => {
+      const word = "test";
+      const definition = "test def";
+      const onUserSubmit = jest.fn();
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          userDefinitions={[]}
+          askForUserDefinition={true}
+          onUserDefinitionsUpdate={onUserSubmit}
+          enableStudentRecording={false}
+        />
+      );
+      expect(wrapper.find("[data-cy='recordButton']").length).toEqual(0);
+    });
+  });
+
+  describe("when enableStudentRecording=true", () => {
+    // navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder
+    const mediaDevicesMock = {
+      getUserMedia: jest.fn().mockImplementation(() => Promise.resolve(true))
+    };
+    // tslint:disable-next-line:no-console
+    const mockAlert = jest.fn().mockImplementation((text) => console.log("ALERT", text));
+    const mockMediaRecorderStart = jest.fn();
+    let mockedMediaRecorder: any = null;
+    // tslint:disable-next-line:no-console
+    const mockMediaRecorderStop = jest.fn().mockImplementation(() => mockedMediaRecorder.onstop());
+    const MockedMediaRecorder = jest.fn();
+    MockedMediaRecorder.mockImplementation(() => {
+      mockedMediaRecorder = {
+        start: mockMediaRecorderStart,
+        stop: mockMediaRecorderStop
+      };
+      return mockedMediaRecorder;
+    });
+    let mockedFileReader: any = null;
+    const fakeAudioUrl = "data:audio/mp3;base64,FOO";
+    const MockedFileReader = jest.fn();
+    const mockReadAsDataURL = jest.fn().mockImplementation(() => {
+      mockedFileReader.result = fakeAudioUrl,
+      mockedFileReader.onload();
+    });
+    MockedFileReader.mockImplementation(() => {
+      mockedFileReader = {
+        readAsDataURL: mockReadAsDataURL
+      };
+      return mockedFileReader;
+    });
+    beforeEach(() => {
+      mediaDevicesMock.getUserMedia.mockClear();
+      (window as any).navigator.mediaDevices = mediaDevicesMock;
+      (window as any).MediaRecorder = MockedMediaRecorder;
+      (window as any).FileReader = MockedFileReader;
+      (window as any).alert = mockAlert;
+    });
+
+    const mountPopup = () => {
+      const word = "test";
+      const definition = "test def";
+      const onUserSubmit = jest.fn();
+
+      return mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          userDefinitions={[]}
+          askForUserDefinition={true}
+          onUserDefinitionsUpdate={onUserSubmit}
+          enableStudentRecording={true}
+        />
+      );
+    };
+
+    it("renders question that can be answered with record icon", () => {
+      const wrapper = mountPopup();
+      const recordButton = wrapper.find("[data-cy='recordButton']");
+      expect(recordButton.length).toEqual(1);
+    });
+
+    it("renders the record ui when the record button is pressed", async () => {
+      const wrapper = mountPopup();
+      const recordButton = wrapper.find("[data-cy='recordButton']");
+      await recordButton.simulate("click");
+      expect(mockMediaRecorderStart).toBeCalled();
+    });
+
+    it("sets the current user definition with an audio url when the stop button is pressed", async () => {
+      const wrapper = mountPopup();
+      expect(wrapper.state("currentUserDefinition")).toBe("");
+      await wrapper.find("[data-cy='recordButton']").simulate("click");
+      wrapper.update();
+      await wrapper.find("[data-cy='recordProgress']").simulate("click");
+      expect(mockMediaRecorderStop).toBeCalled();
+      expect(wrapper.state("currentUserDefinition")).toBe(fakeAudioUrl);
+    });
+
+    it("renders the recorded user definition with play and delete buttons", async () => {
+      const wrapper = mountPopup();
+      expect(wrapper.find("[data-cy='playRecording1']").length).toBe(0);
+      expect(wrapper.find("[data-cy='deleteRecording1']").length).toBe(0);
+      await wrapper.find("[data-cy='recordButton']").simulate("click");
+      wrapper.update();
+      await wrapper.find("[data-cy='recordProgress']").simulate("click");
+      wrapper.update();
+      expect(wrapper.find("[data-cy='playRecording1']").length).toBe(1);
+      expect(wrapper.find("[data-cy='deleteRecording1']").length).toBe(1);
+    });
+
+    it("plays/pauses the recorded user definition when the play button is toggled", async () => {
+      const playStub = jest
+        .spyOn(window.HTMLMediaElement.prototype, "play")
+        .mockImplementation(() => Promise.resolve());
+      const pauseStub = jest
+        .spyOn(window.HTMLMediaElement.prototype, "pause")
+        .mockImplementation(() => Promise.resolve());
+      const setPaused = (paused: boolean) => {
+        Object.defineProperty(HTMLMediaElement.prototype, "paused", {
+          get() { return paused; }
+        });
+      };
+      const wrapper = mountPopup();
+      await wrapper.find("[data-cy='recordButton']").simulate("click");
+      wrapper.update();
+      await wrapper.find("[data-cy='recordProgress']").simulate("click");
+      wrapper.update();
+      setPaused(true);
+      await wrapper.find("[data-cy='playRecording1']").simulate("click");
+      expect(playStub).toHaveBeenCalled();
+      wrapper.update();
+      setPaused(false);
+      await wrapper.find("[data-cy='playRecording1']").simulate("click");
+      expect(pauseStub).toHaveBeenCalled();
+      playStub.mockRestore();
+      pauseStub.mockRestore();
+    });
+  });
 });

@@ -28,7 +28,7 @@ export default class RecordProgress extends React.Component<IProps, IState> {
 
   private tickInterval: number;
 
-  public componentWillMount() {
+  public UNSAFE_componentWillMount() {
     this.tickInterval = window.setInterval(() => {
       this.setState({currentTime: Date.now()});
     }, 250);
@@ -44,7 +44,7 @@ export default class RecordProgress extends React.Component<IProps, IState> {
     const percentage = Math.min(currentTime - startTime, maxDuration) / maxDuration;
     const offset = INNER_CIRCUMFERENCE * (1 - percentage);
     return (
-      <div className={css.recordProgress} onClick={onClick} title={title}>
+      <div data-cy="recordProgress" className={css.recordProgress} onClick={onClick} title={title}>
         <svg width={OUTER_DIAMETER} height={OUTER_DIAMETER} viewBox={`0 0 ${OUTER_DIAMETER} ${OUTER_DIAMETER}`}>
           <circle
             cx={OUTER_RADIUS}
