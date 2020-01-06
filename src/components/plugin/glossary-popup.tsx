@@ -10,7 +10,7 @@ import RecordProgress from "./record-progress";
 import Image from "./image";
 import TextToSpeech from "./text-to-speech";
 import { IStudentInfo } from "../../types";
-import { isAudioUrl, getAudio } from "../../utils/audio";
+import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./glossary-popup.scss";
@@ -49,6 +49,7 @@ interface IState {
   canRecord: boolean;
   recordingState: RecordingState;
   recordingStartTime: number;
+  errorSavingRecording: boolean;
 }
 
 export default class GlossaryPopup extends React.Component<IProps, IState> {
@@ -59,7 +60,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     questionVisible: this.props.askForUserDefinition || false,
     canRecord: this.canRecord(this.props),
     recordingState: RecordingState.NotRecording,
-    recordingStartTime: 0
+    recordingStartTime: 0,
+    errorSavingRecording: false
   };
 
   private mediaRecorder: MediaRecorder | null = null;
@@ -220,7 +222,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private renderRecording() {
     const { userDefinitions } = this.props;
-    const { recordingState, recordingStartTime } = this.state;
+    const { recordingState, recordingStartTime, errorSavingRecording } = this.state;
     const i18n = this.context;
     const className = recordingState === RecordingState.Recording ? css.recording : css.recorded;
     let recordingContents: JSX.Element | null = null;
@@ -249,7 +251,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         break;
 
       case RecordingState.AwaitingSubmit:
-        const recordingIndex = (userDefinitions ? userDefinitions.filter(isAudioUrl) : []).length + 1;
+        const recordingIndex = (userDefinitions ? userDefinitions.filter(isAudioOrRecordingUrl) : []).length + 1;
         recordingContents = (
           <>
             {i18n.translate("audioDefinition", "Audio definition %{index}", {index: recordingIndex})}
@@ -265,6 +267,9 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
                 title={i18n.translate("deleteRecording")}
               />
             </div>
+            {errorSavingRecording
+              ? <div className={css.recordingSaveError}>{i18n.translate("errorSavingRecording")}</div>
+              : undefined}
           </>
         );
         break;
@@ -320,8 +325,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     const { currentUserDefinition, recordingState } = this.state;
     const { studentInfo, demoMode } = this.props;
     if ((recordingState === RecordingState.AwaitingSubmit) && isAudioUrl(currentUserDefinition)) {
+      this.setState({errorSavingRecording: false});
       this.updateRecording({nextState: RecordingState.SavingRecording, clearRecording: false });
-      let questionVisible = false;
       try {
         this.context.log({event: "submitting recording"});
         const uploadedUrl = await uploadRecording({
@@ -333,16 +338,16 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         if (this.props.onUserDefinitionsUpdate) {
           this.props.onUserDefinitionsUpdate(uploadedUrl);
         }
+        this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
       } catch (err) {
+        // tslint:disable-next-line:no-console
+        console.error(err.toString());
         this.context.log({
           event: "error submitting recording",
           error: err.toString()
         });
-        alert(err);
-        questionVisible = true;
-      } finally {
-        this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
-        this.setState({ questionVisible });
+        this.setState({errorSavingRecording: true});
+        this.updateRecording({nextState: RecordingState.AwaitingSubmit, clearRecording: false });
       }
     } else {
       this.addUserDefinition(currentUserDefinition);
@@ -357,11 +362,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private handleCancel = () => {
     this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
-    this.setState({ questionVisible: false });
+    this.setState({ questionVisible: false, errorSavingRecording: false });
   }
 
   private handleRevise = () => {
-    this.setState({ questionVisible: true });
+    this.setState({ questionVisible: true, errorSavingRecording: false });
   }
 
   private updateRecording(options: {nextState: RecordingState, clearRecording: boolean}) {

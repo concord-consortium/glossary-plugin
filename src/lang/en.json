@@ -21,5 +21,6 @@
   "playRecording": "Play recording",
   "deleteRecording": "Delete recording",
   "recordingTimeLimitReached": "You have reached the recording time limit",
-  "audioDefinition": "Audio Definition %{index}"
+  "audioDefinition": "Audio Definition %{index}",
+  "errorSavingRecording": "Error saving recording.  Try to re-submit."
 }
