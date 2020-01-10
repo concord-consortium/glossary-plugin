@@ -20,7 +20,7 @@ const read = (text: string, langCode: string) => {
   const msg = new SpeechSynthesisUtterance(text);
   msg.lang = langCode;
   msg.rate = 0.7;
-  const alex = window.speechSynthesis.getVoices().find((voice) => voice.name === "Alex (en-US)");
+  const alex = window.speechSynthesis.getVoices().find((voice) => voice.name === "Alex");
   if (alex) {
     msg.voice = alex;
   }
