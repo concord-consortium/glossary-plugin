@@ -5,3 +5,15 @@
   display: inline-block;
   vertical-align: middle;
 }
+.imageContainer {
+  max-width: 256px;
+  margin: 10px 0;
+  img {
+    max-width: 256px;
+    max-height: 144px;
+  }
+  video {
+    max-width: 256px;
+    max-height: 144px
+  }
+}
