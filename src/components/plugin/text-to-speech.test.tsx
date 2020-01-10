@@ -8,7 +8,6 @@ import { TextKey } from "../../utils/translation-utils";
 describe("TextToSpeech component", () => {
   const speechSynthesisMock = {
     speak: jest.fn(),
-    getVoices: jest.fn(() => [])
   };
   const SpeechSynthesisUtteranceMock = jest.fn((text: string) => {
     return { text };
@@ -18,7 +17,6 @@ describe("TextToSpeech component", () => {
   };
   beforeEach(() => {
     speechSynthesisMock.speak.mockClear();
-    speechSynthesisMock.getVoices.mockClear();
     SpeechSynthesisUtteranceMock.mockClear();
     audioMock.play.mockClear();
     (window as any).speechSynthesis = speechSynthesisMock;
@@ -50,7 +48,6 @@ describe("TextToSpeech component", () => {
     const wrapper = renderTextToSpeech("en", translate, log);
     wrapper.find("." + icons.iconAudio).first().simulate("click");
     expect(speechSynthesisMock.speak).not.toHaveBeenCalled();
-    expect(speechSynthesisMock.getVoices).not.toHaveBeenCalled();
     expect(audioMock.play).toHaveBeenCalled();
     expect(log).toHaveBeenCalledWith({
       event: "text to speech clicked",
@@ -64,11 +61,10 @@ describe("TextToSpeech component", () => {
     const wrapper = renderTextToSpeech("en", jest.fn(), log);
     wrapper.find("." + icons.iconAudio).first().simulate("click");
     expect(speechSynthesisMock.speak).toHaveBeenCalled();
-    expect(speechSynthesisMock.getVoices).toHaveBeenCalled();
     expect(audioMock.play).not.toHaveBeenCalled();
     const msg = speechSynthesisMock.speak.mock.calls[0][0];
     expect(msg.text).toEqual("test text");
-    expect(msg.lang).toEqual("en");
+    expect(msg.lang).toEqual("en-US"); // en gets set to en-US automatically
     expect(log).toHaveBeenCalledWith({
       event: "text to speech clicked",
       word: "test",
