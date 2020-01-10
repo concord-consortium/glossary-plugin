@@ -76,6 +76,22 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl, zoomImageUrl,
       videoUrl, imageCaption, videoCaption, word } = this.props;
     const i18n = this.context;
+    /*
+      this code:
+
+      <div className={css.buttons}>
+        <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
+          {i18n.translate("revise")}
+        </div>
+      </div>
+
+      followed:
+
+      <UserDefinitions ... />
+
+      We are removing it for now to keep students from immediately revising their definitions
+      using the supplied definition.
+    */
     return (
       <div>
         <Definition
@@ -93,11 +109,6 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           <div className={css.userDefs}>
             <hr />
             <UserDefinitions userDefinitions={userDefinitions} />
-            <div className={css.buttons}>
-              <div className={css.button} data-cy="revise" onClick={this.handleRevise}>
-                {i18n.translate("revise")}
-              </div>
-            </div>
           </div>
         }
       </div>

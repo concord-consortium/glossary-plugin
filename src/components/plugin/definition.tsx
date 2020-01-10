@@ -95,7 +95,7 @@ export default class Definition extends React.Component<IProps, IState> {
     return (
       <div>
         <div>
-          {this.translatedDefinition}
+          <span className={css.disableSelect}>{this.translatedDefinition}</span>
           <span className={css.icons}>
           <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
           {this.renderImageButton(imageUrl)}
