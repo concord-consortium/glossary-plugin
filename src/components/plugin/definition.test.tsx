@@ -10,7 +10,7 @@ const expectToolTip = (wrapper: any, tip: string) => {
 
 describe("Definition component", () => {
   const speechSynthesisMock = {
-    speak: jest.fn()
+    speak: jest.fn(),
   };
   const SpeechSynthesisUtteranceMock = jest.fn((text: string) => {
     return { text };
@@ -62,7 +62,7 @@ describe("Definition component", () => {
     expect(speechSynthesisMock.speak).toHaveBeenCalledTimes(1);
     const msg = speechSynthesisMock.speak.mock.calls[0][0];
     expect(msg.text).toEqual("test definition");
-    expect(msg.lang).toEqual("en");
+    expect(msg.lang).toEqual("en-US"); // en gets set to en-US automatically
   });
 
   it("renders image icon if imageUrl is provided and opens image when the icon is clicked", () => {

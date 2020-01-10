@@ -18,7 +18,8 @@ const textToSpeechAvailable = (langCode: string) => {
 
 const read = (text: string, langCode: string) => {
   const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = langCode;
+  msg.lang = langCode === "en" ? "en-US" : langCode;
+  msg.rate = 0.7;
   window.speechSynthesis.speak(msg);
 };
 

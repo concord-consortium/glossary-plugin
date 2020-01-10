@@ -7,7 +7,7 @@ import { TextKey } from "../../utils/translation-utils";
 
 describe("TextToSpeech component", () => {
   const speechSynthesisMock = {
-    speak: jest.fn()
+    speak: jest.fn(),
   };
   const SpeechSynthesisUtteranceMock = jest.fn((text: string) => {
     return { text };
@@ -64,7 +64,7 @@ describe("TextToSpeech component", () => {
     expect(audioMock.play).not.toHaveBeenCalled();
     const msg = speechSynthesisMock.speak.mock.calls[0][0];
     expect(msg.text).toEqual("test text");
-    expect(msg.lang).toEqual("en");
+    expect(msg.lang).toEqual("en-US"); // en gets set to en-US automatically
     expect(log).toHaveBeenCalledWith({
       event: "text to speech clicked",
       word: "test",
