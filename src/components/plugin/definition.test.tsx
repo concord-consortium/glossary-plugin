@@ -11,9 +11,13 @@ const expectToolTip = (wrapper: any, tip: string) => {
 describe("Definition component", () => {
   const speechSynthesisMock = {
     speak: jest.fn(),
+    cancel: jest.fn(),
   };
   const SpeechSynthesisUtteranceMock = jest.fn((text: string) => {
-    return { text };
+    return {
+      text,
+      addEventListener: jest.fn()
+    };
   });
   beforeEach(() => {
     speechSynthesisMock.speak.mockClear();

@@ -16,15 +16,16 @@ const textToSpeechAvailable = (langCode: string) => {
     canUseBrowserTextToSpeech(langCode);
 };
 
-const read = (text: string, langCode: string) => {
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = langCode === "en" ? "en-US" : langCode;
-  msg.rate = 0.7;
-  window.speechSynthesis.speak(msg);
-};
+interface IState {
+  reading: boolean;
+}
 
-export default class TextToSpeech extends React.Component<IProps, {}> {
+export default class TextToSpeech extends React.Component<IProps, IState> {
   public static contextType = pluginContext;
+
+  public state: IState = {
+    reading: false
+  };
 
   public get shouldRender() {
     return this.customMp3Recording || textToSpeechAvailable(this.context.lang);
@@ -43,10 +44,11 @@ export default class TextToSpeech extends React.Component<IProps, {}> {
     if (!this.shouldRender) {
       return null;
     }
-    const translate = this.context.translate;
+    const {reading} = this.state;
+    const {translate} = this.context;
     return(
       <span
-        className={icons.iconButton + " " + icons.iconAudio}
+        className={icons.iconButton + " " + (reading ? icons.iconStop : icons.iconAudio)}
         onClick={this.read}
         title={translate("speechTitle")}
       />
@@ -58,7 +60,19 @@ export default class TextToSpeech extends React.Component<IProps, {}> {
     if (this.customMp3Recording) {
       new Audio(this.customMp3Recording).play();
     } else if (textToSpeechAvailable(this.context.lang)) {
-      read(text, this.context.lang);
+      if (this.state.reading) {
+        // if currently reading in this instance stop
+        window.speechSynthesis.cancel();
+      } else {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = this.context.lang === "en" ? "en-US" : this.context.lang;
+        msg.rate = 0.7;
+        msg.addEventListener("start", () => this.setState({reading: true}));
+        msg.addEventListener("end", () => this.setState({reading: false}));
+        // stop any other TextToSpeech instances and then start speaking
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(msg);
+      }
     }
     this.context.log({
       event: "text to speech clicked",
