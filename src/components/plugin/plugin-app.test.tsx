@@ -1,5 +1,5 @@
 import * as React from "react";
-import PluginApp from "./plugin-app";
+import PluginApp, { IDefinitionsByWord } from "./plugin-app";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { shallow, mount } from "enzyme";
@@ -26,8 +26,106 @@ describe("PluginApp component", () => {
     jest.clearAllMocks();
   });
 
+  it("calls pluralizes the definitions into a state variable on load", () => {
+    const testPluralWord = `${testWord}s`;
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={definitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        autoShowMediaInPopup={false}
+        showSideBar={true}
+        translations={{}}
+      />
+    );
+
+    expect(definitions.length).toEqual(1);
+    expect(definitions[0].word).toEqual(testWord);
+
+    const definitionsByWord = wrapper.state("definitionsByWord") as IDefinitionsByWord;
+    expect(Object.keys(definitionsByWord).length).toEqual(2);
+    expect(definitionsByWord[testWord].word).toEqual(testWord);
+    expect(definitionsByWord[testPluralWord].word).toEqual(testWord);
+    expect(definitionsByWord[testPluralWord].definition).toEqual(definitionsByWord[testWord].definition);
+  });
+
+  it("does not pluralize already plural words", () => {
+    const testPluralWord = "tests";
+    const pluralDefinitions = [{word: testPluralWord, definition: "plural definition"}];
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={pluralDefinitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        autoShowMediaInPopup={false}
+        showSideBar={true}
+        translations={{}}
+      />
+    );
+
+    const definitionsByWord = wrapper.state("definitionsByWord") as IDefinitionsByWord;
+
+    expect(pluralDefinitions.length).toEqual(1);
+    expect(pluralDefinitions[0].word).toEqual(testPluralWord);
+
+    expect(Object.keys(definitionsByWord).length).toEqual(1);
+    expect(definitionsByWord[testPluralWord].word).toEqual(testPluralWord);
+  });
+
+  it("does not pluralize non-pluralizable words", () => {
+    const nonPlualizableDefinitions = [
+      {word: "moose", definition: "moose definition"},
+      {word: "information", definition: "information definition"}
+    ];
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={nonPlualizableDefinitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        autoShowMediaInPopup={false}
+        showSideBar={true}
+        translations={{}}
+      />
+    );
+
+    const definitionsByWord = wrapper.state("definitionsByWord") as IDefinitionsByWord;
+    expect(nonPlualizableDefinitions.length).toEqual(2);
+    expect(Object.keys(definitionsByWord).length).toEqual(2);
+  });
+
+  it("pluralizes irregular words", () => {
+    const irregularDefinitions = [
+      {word: "matrix", definition: "matrix definition"},
+      {word: "person", definition: "person definition"}
+    ];
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={irregularDefinitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        autoShowMediaInPopup={false}
+        showSideBar={true}
+        translations={{}}
+      />
+    );
+
+    const definitionsByWord = wrapper.state("definitionsByWord") as IDefinitionsByWord;
+    expect(irregularDefinitions.length).toEqual(2);
+    expect(Object.keys(definitionsByWord).length).toEqual(4);
+    expect(definitionsByWord.matrix.word).toEqual("matrix");
+    expect(definitionsByWord.matrices.word).toEqual("matrix");
+    expect(definitionsByWord.matrices.definition).toEqual("matrix definition");
+    expect(definitionsByWord.person.word).toEqual("person");
+    expect(definitionsByWord.people.word).toEqual("person");
+    expect(definitionsByWord.people.definition).toEqual("person definition");
+  });
+
   it("calls decorateContent on load", () => {
-    shallow(
+    const wrapper = shallow(
       <PluginApp
         saveState={saveState}
         definitions={definitions}
@@ -41,7 +139,7 @@ describe("PluginApp component", () => {
 
     expect(MockPluginAPI.decorateContent).toHaveBeenCalledTimes(1);
     expect(MockPluginAPI.decorateContent).toHaveBeenCalledWith(
-      ["test"],
+      ["test", "tests"],
       `<span class="${css.ccGlossaryWord}">$1</span>`,
       css.ccGlossaryWord,
       [{listener: expect.any(Function), type: "click"}]
