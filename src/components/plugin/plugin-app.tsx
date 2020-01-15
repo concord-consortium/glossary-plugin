@@ -9,6 +9,7 @@ import { pluginContext } from "../../plugin-context";
 import { watchStudentSettings, saveLogEvent } from "../../db";
 import { ILogEvent, ILogEventPartial } from "../../types";
 import { IGlossaryAuthoredState } from "../authoring/authoring-app";
+import * as pluralize from "pluralize";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
@@ -44,12 +45,17 @@ interface IProps {
   laraLog?: (event: string | PluginAPI.ILogData) => void;
 }
 
+export interface IDefinitionsByWord {
+  [word: string]: IWordDefinition;
+}
+
 interface IState {
   openPopups: IOpenPopupDesc[];
   learnerState: ILearnerState;
   sidebarPresent: boolean;
   lang: string;
   secondLanguage?: string;
+  definitionsByWord: IDefinitionsByWord;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
@@ -58,9 +64,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
     learnerState: this.props.initialLearnerState,
     sidebarPresent: false,
     lang: "en",
-    secondLanguage: undefined
+    secondLanguage: undefined,
+    definitionsByWord: {}
   };
-  private definitionsByWord: { [word: string]: IWordDefinition };
   private sidebarContainer: HTMLElement;
   private sidebarIconContainer: HTMLElement;
   private sidebarController: ISidebarController;
@@ -76,40 +82,49 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public componentDidMount() {
-    const { definitions, showSideBar, studentInfo } = this.props;
-    this.definitionsByWord = {};
+    const {definitionsByWord} = this.state;
+    const { showSideBar, studentInfo, definitions } = this.props;
     definitions.forEach(entry => {
-      this.definitionsByWord[entry.word.toLowerCase()] = entry;
+      const word = entry.word.toLowerCase();
+      definitionsByWord[word] = entry;
+      if (pluralize.isSingular(word)) {
+        const pluralWord = pluralize.plural(word);
+        if (pluralWord !== word) {
+          definitionsByWord[pluralWord] = entry;
+        }
+      }
     });
     if (definitions.length === 0) {
       // Nothing to do.
       return;
     }
-    this.decorate();
-    if (showSideBar) {
-      this.addSidebar();
-    }
-    if (studentInfo) {
-      watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
-        const { translations } = this.props;
-        if (translations[settings.preferredLanguage]) {
-          // Preferred language is available, so we can use it.
-          this.setState({ secondLanguage: settings.preferredLanguage });
-        } else {
-          // Preferred language is not available, do not show second language button.
-          this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
-        }
-      }));
+    this.setState({definitionsByWord}, () => {
+      this.decorate();
+      if (showSideBar) {
+        this.addSidebar();
+      }
+      if (studentInfo) {
+        watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
+          const { translations } = this.props;
+          if (translations[settings.preferredLanguage]) {
+            // Preferred language is available, so we can use it.
+            this.setState({ secondLanguage: settings.preferredLanguage });
+          } else {
+            // Preferred language is not available, do not show second language button.
+            this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
+          }
+        }));
 
-      this.log({
-        event: "plugin init"
-      });
-    }
+        this.log({
+          event: "plugin init"
+        });
+      }
+    });
   }
 
   public render() {
     const { askForUserDefinition, autoShowMediaInPopup, definitions } = this.props;
-    const { openPopups, learnerState, sidebarPresent, lang } = this.state;
+    const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
     return (
@@ -145,12 +160,12 @@ export default class PluginApp extends React.Component<IProps, IState> {
               return ReactDOM.createPortal(
                 <GlossaryPopup
                   word={word}
-                  definition={this.definitionsByWord[word].definition}
-                  imageUrl={this.definitionsByWord[word].image}
-                  zoomImageUrl={this.definitionsByWord[word].zoomImage}
-                  videoUrl={this.definitionsByWord[word].video}
-                  imageCaption={this.definitionsByWord[word].imageCaption}
-                  videoCaption={this.definitionsByWord[word].videoCaption}
+                  definition={definitionsByWord[word].definition}
+                  imageUrl={definitionsByWord[word].image}
+                  zoomImageUrl={definitionsByWord[word].zoomImage}
+                  videoUrl={definitionsByWord[word].video}
+                  imageCaption={definitionsByWord[word].imageCaption}
+                  videoCaption={definitionsByWord[word].videoCaption}
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}
@@ -225,8 +240,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private decorate() {
-    const { definitions } = this.props;
-    const words = definitions.map(entry => entry.word);
+    const words = Object.keys(this.state.definitionsByWord);
     const replace = `<span class="${css.ccGlossaryWord}">$1</span>`;
     const listener = {
       type: "click",
@@ -265,33 +279,43 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private wordClicked = (evt: Event) => {
+    const {definitionsByWord} = this.state;
     const wordElement = evt.srcElement as HTMLElement;
     if (!wordElement) {
       return;
     }
-    const word = (wordElement.textContent || "").toLowerCase();
-    if (!this.definitionsByWord[word]) {
+    const clickedWord = (wordElement.textContent || "").toLowerCase();
+    if (!definitionsByWord[clickedWord]) {
       // Ignore, nothing to do.
       return;
     }
+    // get singular version of the word if plural
+    const word = definitionsByWord[clickedWord].word;
     const { openPopups } = this.state;
-    const container = document.createElement("div");
-    const popupController = PluginAPI.addPopup({
-      content: container,
-      title: `Term: ${word}`,
-      resizable: false,
-      position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
-      onClose: this.popupClosed.bind(this, container)
-    } );
-    const newOpenPopups = openPopups.concat({ word, container, popupController });
-    this.setState({ openPopups: newOpenPopups });
-    // Finally, close sidebar in case it's available and open.
-    if (this.sidebarController) {
-      this.sidebarController.close();
+
+    // ensure that the popup isn't already open
+    const popupOpen = !!openPopups.find((openPopup) => openPopup.word === word);
+    if (!popupOpen) {
+      const container = document.createElement("div");
+      const popupController = PluginAPI.addPopup({
+        content: container,
+        title: `Term: ${word}`,
+        resizable: false,
+        position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
+        onClose: this.popupClosed.bind(this, container)
+      } );
+      const newOpenPopups = openPopups.concat({ word, container, popupController });
+      this.setState({ openPopups: newOpenPopups });
+      // Finally, close sidebar in case it's available and open.
+      if (this.sidebarController) {
+        this.sidebarController.close();
+      }
     }
     this.log({
       event: "term clicked",
-      word
+      word,
+      clickedWord,
+      popupState: popupOpen ? "already open" : "opening"
     });
   }
 
