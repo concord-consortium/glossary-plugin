@@ -144,3 +144,9 @@
   background: #c9c9c9;
   padding: 2px;
 }
+.iconStop {
+  @extend %icon;
+  &:before {
+    content: "\e908";
+  }
+}
