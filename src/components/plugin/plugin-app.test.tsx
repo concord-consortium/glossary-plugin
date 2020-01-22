@@ -37,6 +37,7 @@ describe("PluginApp component", () => {
         autoShowMediaInPopup={false}
         showSideBar={true}
         translations={{}}
+        enableStudentRecording={false}
       />
     );
 
@@ -62,6 +63,7 @@ describe("PluginApp component", () => {
         autoShowMediaInPopup={false}
         showSideBar={true}
         translations={{}}
+        enableStudentRecording={false}
       />
     );
 
@@ -88,6 +90,7 @@ describe("PluginApp component", () => {
         autoShowMediaInPopup={false}
         showSideBar={true}
         translations={{}}
+        enableStudentRecording={false}
       />
     );
 
@@ -110,6 +113,7 @@ describe("PluginApp component", () => {
         autoShowMediaInPopup={false}
         showSideBar={true}
         translations={{}}
+        enableStudentRecording={false}
       />
     );
 
