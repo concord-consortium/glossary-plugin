@@ -10,6 +10,12 @@
   border-radius: 6px;
   cursor: pointer;
   margin: 10px;
+
+  &.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+  }
 }
 
 .buttons {
@@ -47,6 +53,27 @@
   }
 }
 
+.recording {
+  height: 80px;
+  margin-top: 20px;
+  padding: 5px;
+  font-style: italic;
+  .recordingIcons {
+    // icons
+    position: absolute;
+    bottom: 7px;
+    right: 20px;
+  }
+}
+
+.recorded {
+  margin-top: 20px;
+  padding: 5px;
+  .recordedIcons {
+    float: right;
+  }
+}
+
 .answerTextarea {
   position: relative;
   .userDefinitionTextarea {
@@ -59,10 +86,16 @@
     border-radius: 5px;
     display: block;
   }
-  span {
-    // icon
+  .answerTextareaIcons {
+    // icons
     position: absolute;
     bottom: 7px;
     right: 20px;
   }
+}
+
+.recordingSaveError {
+  margin: 10px 0;
+  color: #f00;
+  font-weight: bold;
 }

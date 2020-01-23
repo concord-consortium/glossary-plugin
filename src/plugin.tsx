@@ -106,6 +106,7 @@ export class GlossaryPlugin {
         definitions={authoredState.definitions || []}
         askForUserDefinition={authoredState.askForUserDefinition || false}
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
+        enableStudentRecording={authoredState.enableStudentRecording || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}
         studentInfo={studentInfo}

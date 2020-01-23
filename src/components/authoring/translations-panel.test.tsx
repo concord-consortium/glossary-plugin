@@ -1,6 +1,7 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import TranslationsPanel from "./translations-panel";
+import { IGlossary } from "../../types";
 
 // https://github.com/react-dropzone/react-dropzone/issues/554
 jest.mock("react-dropzone", () => {
@@ -14,7 +15,7 @@ jest.mock("file-saver", () => {
   };
 });
 
-const defGlossary = {
+const defGlossary: IGlossary = {
   definitions: [
     {
       word: "cloud",
@@ -25,6 +26,7 @@ const defGlossary = {
   askForUserDefinition: false,
   showSideBar: false,
   autoShowMediaInPopup: false,
+  enableStudentRecording: false,
   translations: {
     es: {
       "cloud.word": "a",
@@ -65,8 +67,9 @@ describe("TranslationsPanel component", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      enableStudentRecording: false,
       translations: {}
-    });
+    } as IGlossary);
   });
 
   it("handles language file upload", async () => {
@@ -105,6 +108,7 @@ describe("TranslationsPanel component", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      enableStudentRecording: false,
       translations: {
         es: {
           "cloud.word": "a",
@@ -117,7 +121,7 @@ describe("TranslationsPanel component", () => {
           "cloud.image_caption": "z"
         }
       }
-    });
+    } as IGlossary);
     expect(window.alert).not.toHaveBeenCalled();
 
     // 2. Wrong filename (no language).

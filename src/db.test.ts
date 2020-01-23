@@ -2,6 +2,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 import * as db from "./db";
 import {getFirestore} from "./db";
+import { IStudentSettings } from "./types";
 
 describe("db / Firestore helpers", () => {
   beforeEach(() => {
@@ -90,7 +91,7 @@ describe("db / Firestore helpers", () => {
 
   describe("saveStudentSettings", () => {
     it("should call db.doc.set", () => {
-      const settings = {userId: "testStudent123", preferredLanguage: "es"};
+      const settings: IStudentSettings = {userId: "testStudent123", preferredLanguage: "es", enableRecording: true};
       db.saveStudentSettings("test.portal", "testClass", settings);
       const firestore = getFirestore();
       expect(firestore.doc).toHaveBeenCalled();

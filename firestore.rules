@@ -4,14 +4,24 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    
+
     match /sources/{source}/contextId/{contextId}/events/{document=**} {
     	allow read: if request.auth.token.user_type == 'teacher' && request.auth.token.class_hash == contextId;
     	allow write: if request.auth.token.class_hash == contextId;
   	}
-    
+
     match /sources/{source}/contextId/{contextId}/studentSettings/{document=**} {
     	allow write: if request.auth.token.user_type == 'teacher' && request.auth.token.class_hash == contextId;
+      allow read: if request.auth.token.class_hash == contextId;
+  	}
+
+    match /sources/{source}/contextId/{contextId}/recordings/{document=**} {
+    	allow read: if request.auth.token.class_hash == contextId;
+    	allow write: if request.auth.token.class_hash == contextId;
+  	}
+
+    match /sources/{source}/contextId/{contextId}/recordingData/{document=**} {
+    	allow write: if request.auth.token.class_hash == contextId;
       allow read: if request.auth.token.class_hash == contextId;
   	}
   }

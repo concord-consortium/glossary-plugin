@@ -144,9 +144,27 @@
   background: #c9c9c9;
   padding: 2px;
 }
+.iconDeleteAudio {
+  @extend %icon;
+  &:before {
+    content: "\e90a";
+  }
+}
+.iconPause {
+  @extend %icon;
+  &:before {
+    content: "\e909";
+  }
+}
 .iconStop {
   @extend %icon;
   &:before {
     content: "\e908";
+  }
+}
+.iconRecord {
+  @extend %icon;
+  &:before {
+    content: "\e907";
   }
 }

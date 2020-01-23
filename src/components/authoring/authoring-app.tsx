@@ -19,6 +19,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
   autoShowMediaInPopup: false,
   showSideBar: false,
+  enableStudentRecording: false,
   definitions: []
 };
 
@@ -87,7 +88,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   public render() {
     const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
     const { getFirebaseJwt } = this.props;
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, showSideBar } = glossary;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, showSideBar, enableStudentRecording } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={`${this.inlineMode ? css.inlineScrollForm : ""}`}>
@@ -144,6 +145,20 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                 <div className={css.help}>
                   When this option is turned on, students will automatically see provided image or video. If both
                   image and video are provided, students will see the image.
+                </div>
+              </label>
+              <br/>
+              <input
+                type="checkbox"
+                checked={enableStudentRecording}
+                data-cy="enableStudentRecording"
+                onChange={this.handleEnableStudentRecordingChange}
+              />
+              <label>
+                Enable student recording in definition popup
+                <div className={css.help}>
+                  When this option is turned on, teachers will have the option to enable students to record
+                  definitions in the popup.  Teachers must further enable this per student in their dashboard.
                 </div>
               </label>
               <br/>
@@ -387,6 +402,12 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   private handleShowSideBarChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.showSideBar = (event.target as HTMLInputElement).checked;
+    this.setState({ glossary });
+  }
+
+  private handleEnableStudentRecordingChange = (event: React.ChangeEvent) => {
+    const glossary: IGlossary = clone(this.state.glossary);
+    glossary.enableStudentRecording = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
   }
 

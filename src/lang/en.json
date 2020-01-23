@@ -13,5 +13,14 @@
   "speechTitle": "Read aloud",
   "imageTitle": "View photo",
   "videoTitle": "View movie",
-  "zoomInTitle": "Zoom in"
+  "zoomInTitle": "Zoom in",
+  "record": "Record",
+  "recording": "Recording",
+  "savingRecording": "Saving recording",
+  "stopRecording": "Stop recording",
+  "playRecording": "Play recording",
+  "deleteRecording": "Delete recording",
+  "recordingTimeLimitReached": "You have reached the recording time limit",
+  "audioDefinition": "Audio Definition %{index}",
+  "errorSavingRecording": "Error saving recording.  Try to re-submit."
 }
