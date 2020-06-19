@@ -46,5 +46,17 @@ $blue: #2194b1;
       padding: 12px;
       border-bottom: 2px solid $blue;
     }
+
+    th.scaffoldedQuestionLvl {
+      text-align: center;
+      color: $blue;
+    }
+
+    .scaffoldedQuestionLvlSlider {
+      border-left: 2px solid $blue;
+      input {
+        width: 100%;
+      }
+    }
   }
 }
