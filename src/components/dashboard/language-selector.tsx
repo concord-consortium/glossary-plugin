@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IClassInfo, IStudentSettings, IStudent, IGlossary } from "../../types";
+import { IClassInfo, IStudentSettings, IStudent } from "../../types";
 import { watchClassSettings, saveStudentSettings } from "../../db";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import Button from "./button";
@@ -22,9 +22,9 @@ const SCAFFOLDED_QUESTION_LEVELS = [5, 4, 3, 2, 1];
 const SCAFFOLDED_LEVEL_MIN = SCAFFOLDED_QUESTION_LEVELS[SCAFFOLDED_QUESTION_LEVELS.length - 1];
 const SCAFFOLDED_LEVEL_MAX = SCAFFOLDED_QUESTION_LEVELS[0];
 
-// UI lists scaffolded question levels from the biggest to the smallest. This helper is useful to ser
-// and transform value of the range input / slider.
-const scaffoldedLevelReversed = (lvl: number) => {
+// UI lists scaffolded question levels from the biggest to the smallest.
+// This helper is useful to transform value of the slider.
+export const scaffoldedLevelReversed = (lvl: number) => {
   return SCAFFOLDED_LEVEL_MAX - lvl + 1;
 };
 
