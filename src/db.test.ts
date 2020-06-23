@@ -91,7 +91,12 @@ describe("db / Firestore helpers", () => {
 
   describe("saveStudentSettings", () => {
     it("should call db.doc.set", () => {
-      const settings: IStudentSettings = {userId: "testStudent123", preferredLanguage: "es", enableRecording: true};
+      const settings: IStudentSettings = {
+        userId: "testStudent123",
+        preferredLanguage: "es",
+        enableRecording: true,
+        scaffoldedQuestionLevel: 1
+      };
       db.saveStudentSettings("test.portal", "testClass", settings);
       const firestore = getFirestore();
       expect(firestore.doc).toHaveBeenCalled();

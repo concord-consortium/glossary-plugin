@@ -1,15 +1,36 @@
 import * as React from "react";
-import { shallow,  ShallowWrapper } from "enzyme";
-import { getHashParam, GLOSSARY_URL_PARAM} from "../../utils/get-url-param";
+import { shallow } from "enzyme";
 import * as fetch from "jest-fetch-mock";
-import LanguageSelector from "./language-selector";
+import LanguageSelector, { scaffoldedLevelReversed } from "./language-selector";
 import {SUPPORTED_LANGUAGES} from "../../i18n-context";
+import { IStudentSettings } from "../../types";
+import { saveStudentSettings } from "../../db";
 (global as any).fetch = fetch;
 
+jest.mock("../../db", () => ({
+  saveStudentSettings: jest.fn(),
+  watchClassSettings:
+    (source: string, contextId: string, onSnapshot: (settings: IStudentSettings[]) => void) => onSnapshot(settings)
+}));
+
+const saveStudentSettingsMock = saveStudentSettings as jest.Mock;
+
 const students = [
-  {name: "student-a", id: "student-a", language: "en"},
-  {name: "student-b", id: "student-b", language: "es"},
+  {name: "student-a", id: "student-a" },
+  {name: "student-b", id: "student-b" },
 ];
+
+const settings: IStudentSettings[] = [{
+  userId: "student-a",
+  preferredLanguage: "en",
+  enableRecording: true,
+  scaffoldedQuestionLevel: 2
+}, {
+  userId: "student-b",
+  preferredLanguage: "es",
+  enableRecording: false,
+  scaffoldedQuestionLevel: 3
+}];
 
 const classInfo = { source: "source", contextId: "context", students };
 
@@ -17,6 +38,10 @@ const cyTanslationsSel = "[data-cy='setTranslations']";
 const languageSelector = (lang: string) => `[data-cy='language-${lang}']`;
 
 describe("LanguageSelector component", () => {
+  beforeEach(() => {
+    saveStudentSettingsMock.mockReset();
+  });
+
   describe("when languages are not specified", () => {
     it("renders all the language options", () => {
       const wrapper = shallow(
@@ -43,4 +68,42 @@ describe("LanguageSelector component", () => {
     });
   });
 
+  describe("Scaffolded Question Level slider", () => {
+    it("has value based on student settings", async () => {
+      const wrapper = shallow(
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
+      );
+
+      wrapper.find(cyTanslationsSel).simulate("click");
+
+      expect(wrapper.find("input[type='range']").length).toEqual(students.length);
+
+      expect(wrapper.find("input[type='range']").at(0).props().step).toEqual(1);
+      expect(wrapper.find("input[type='range']").at(0).props().min).toEqual(1);
+      expect(wrapper.find("input[type='range']").at(0).props().max).toEqual(5);
+
+      expect(wrapper.find("input[type='range']").at(0).props().value)
+        .toEqual(scaffoldedLevelReversed(settings[0].scaffoldedQuestionLevel));
+      expect(wrapper.find("input[type='range']").at(1).props().value)
+        .toEqual(scaffoldedLevelReversed(settings[1].scaffoldedQuestionLevel));
+    });
+
+    it("updates student settings when moved", async () => {
+      const wrapper = shallow(
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
+      );
+
+      wrapper.find(cyTanslationsSel).simulate("click");
+
+      const newLevel = 5;
+      wrapper.find("input[type='range']").at(0).simulate("change",
+        { target: { value: scaffoldedLevelReversed(newLevel) }}
+      );
+
+      expect(saveStudentSettingsMock).toHaveBeenCalledTimes(1);
+      expect(saveStudentSettingsMock.mock.calls[0][2]).toEqual(expect.objectContaining({
+        scaffoldedQuestionLevel: newLevel
+      }));
+    });
+  });
 });

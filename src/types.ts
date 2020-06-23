@@ -42,6 +42,7 @@ export interface IStudentSettings {
   userId: string;
   preferredLanguage: string;
   enableRecording: boolean;
+  scaffoldedQuestionLevel: number;
 }
 
 export interface IStudentInfo {
