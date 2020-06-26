@@ -88,9 +88,15 @@ export interface ITextToSpeechClickedEvent extends IBasicEvent {
   textType: "definition" | "image caption" | "video caption";
 }
 
+export interface ILanguageChanged extends IBasicEvent {
+  event: "language changed";
+  previousLanguage: string;
+  newLanguage: string;
+}
+
 // These types define data stored in the Firestore.
 export type ILogEvent = ISimpleEvent | ITermClickedEvent | IWordSpecificEvent | IDefinitionSavedEvent |
-  ITextToSpeechClickedEvent;
+  ITextToSpeechClickedEvent | ILanguageChanged;
 
 // Partial types are used by the runtime code to provide specific options of the event to #log() function.
 // Then, loggingContext provider (PluginApp) transforms these partials into full events and saves in Firestore.
@@ -99,8 +105,9 @@ export type ITermClickedEventPartial = Pick<ITermClickedEvent, "event" | "word" 
 export type IWordSpecificEventPartial = Pick<IWordSpecificEvent, "event" | "word">;
 export type IDefinitionSavedEventPartial = Pick<IDefinitionSavedEvent, "event" | "word" | "definition" | "definitions">;
 export type ITextToSpeechClickedEventPartial = Pick<ITextToSpeechClickedEvent, "event" | "word" | "textType">;
+export type ILanguageChangedPartial = Pick<ILanguageChanged, "event" | "previousLanguage" | "newLanguage">;
 
 export type ILogEventPartial = ISimpleEventPartial | ITermClickedEventPartial | IWordSpecificEventPartial |
-  IDefinitionSavedEventPartial | ITextToSpeechClickedEventPartial;
+  IDefinitionSavedEventPartial | ITextToSpeechClickedEventPartial | ILanguageChangedPartial;
 
 export type ExpandableInteraction = "definitions" | "supports";
