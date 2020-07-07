@@ -13,6 +13,7 @@ import * as pluralize from "pluralize";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
+import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 
 interface ILearnerState {
   definitions: ILearnerDefinitions;
@@ -340,9 +341,15 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   private languageChanged = () => {
+    const { lang } = this.state;
     const secLang = this.secondLanguage;
     if (secLang) {
       this.setState({ lang: secLang });
+      this.log({
+        event: "language changed",
+        previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),
+        newLanguage: POEDITOR_LANG_NAME[secLang].replace("_", " ")
+      });
     }
   }
 }

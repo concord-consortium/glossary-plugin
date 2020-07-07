@@ -126,7 +126,7 @@ export const getUsageStats = async (students: IStudent[], events: ILogEvent[], t
   const allowedTerms = getAllowedTerms(glossary, termsFilter);
   const stats = getDefaultStats(students, glossary, allowedTerms);
   events
-    .filter(e => e.event !== "plugin init" && allowedTerms[e.word])
+    .filter(e => e.event !== "plugin init" && e.event !== "language changed" && allowedTerms[e.word])
     .sort((a, b) => a.timestamp - b.timestamp)
     .forEach(e => {
       if (e.event === "term clicked") {
