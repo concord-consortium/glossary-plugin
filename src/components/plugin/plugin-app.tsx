@@ -15,6 +15,11 @@ import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 
+export interface IPluginEvent {
+  type: string;
+  text: string;
+}
+
 interface ILearnerState {
   definitions: ILearnerDefinitions;
 }
@@ -254,7 +259,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   private decorate() {
     const words = Object.keys(this.state.definitionsByWord);
-    const replace = `<span class="${css.ccGlossaryWord}">$1</span>`;
+    const replace = `<span class="${css.ccGlossaryWord}" style="text-decoration:underline; cursor:pointer;">$1</span>`;
     const listener = {
       type: "click",
       listener: this.wordClicked
@@ -291,13 +296,13 @@ export default class PluginApp extends React.Component<IProps, IState> {
     });
   }
 
-  private wordClicked = (evt: Event) => {
+  private wordClicked = (evt: Event | IPluginEvent) => {
     const {definitionsByWord} = this.state;
-    const wordElement = evt.srcElement as HTMLElement;
-    if (!wordElement) {
-      return;
-    }
-    const clickedWord = (wordElement.textContent || "").toLowerCase();
+    const wordElement = "srcElement" in evt ? evt.srcElement as HTMLElement : undefined;
+    const pluginEventWord = "text" in evt ? evt.text : "";
+    const clickedWord = wordElement
+                        ? (wordElement.textContent || "").toLowerCase()
+                        : pluginEventWord.toLowerCase();
     if (!definitionsByWord[clickedWord]) {
       // Ignore, nothing to do.
       return;
@@ -314,7 +319,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
         content: container,
         title: `Term: ${word}`,
         resizable: false,
-        position: { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" },
+        position: wordElement
+                  ? { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" }
+                  : undefined,
         onClose: this.popupClosed.bind(this, container)
       } );
       const newOpenPopups = openPopups.concat({ word, container, popupController });
