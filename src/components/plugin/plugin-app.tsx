@@ -259,6 +259,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   private decorate() {
     const words = Object.keys(this.state.definitionsByWord);
+    // inline style is used so uniform style can be applied to text decoration inside iframes
+    // leave the CSS class for now, but this might become obsolete in the future
     const replace = `<span class="${css.ccGlossaryWord}" style="text-decoration:underline; cursor:pointer;">$1</span>`;
     const listener = {
       type: "click",
@@ -321,7 +323,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
         resizable: false,
         position: wordElement
                   ? { my: "left top+10", at: "left bottom", of: wordElement, collision: "flip" }
-                  : undefined,
+                  : undefined, // no srcElement from the evt argument, use undefined to position in screen center
         onClose: this.popupClosed.bind(this, container)
       } );
       const newOpenPopups = openPopups.concat({ word, container, popupController });
