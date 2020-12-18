@@ -145,7 +145,7 @@ describe("PluginApp component", () => {
     expect(MockPluginAPI.decorateContent).toHaveBeenCalledTimes(1);
     expect(MockPluginAPI.decorateContent).toHaveBeenCalledWith(
       ["test", "tests"],
-      `<span class="${css.ccGlossaryWord}">$1</span>`,
+      `<span class="${css.ccGlossaryWord}" style="text-decoration:underline; cursor:pointer;">$1</span>`,
       css.ccGlossaryWord,
       [{listener: expect.any(Function), type: "click"}]
     );
