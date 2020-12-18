@@ -18,6 +18,7 @@ import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 export interface IPluginEvent {
   type: string;
   text: string;
+  bounds?: DOMRect;
 }
 
 interface ILearnerState {
