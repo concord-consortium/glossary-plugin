@@ -80,23 +80,23 @@ export class GlossaryPlugin {
     }
 
     let studentInfo;
-    if (this.context.remoteEndpoint) {
-      // If there's no remote endpoint, there's no connection to Portal and JWT cannot be obtained.
-      // Errors are handled anyway, but we can avoid displaying 500 error in browser console.
-      try {
-        const firebaseJwt = await this.context.getFirebaseJwt(FIREBASE_APP);
-        await signInWithToken(firebaseJwt.token);
-        studentInfo = {
-          // Types in LARA Plugin API should be fixed.
-          source: parseUrl((firebaseJwt.claims as IJwtClaims).domain).hostname,
-          contextId: (firebaseJwt.claims as IJwtClaims).claims.class_hash,
-          userId: (firebaseJwt.claims as any).claims.platform_user_id.toString()
-        };
-      } catch (e) {
-        // getFirebaseJwt will throw an exception when run doesn't have remote endpoint, so when user
-        // hasn't launched an activity from Portal. In this case just do nothing special.
-        // studentInfo will be undefined and PluginApp won't try to connect to Firestore.
-      }
+    try {
+      const firebaseJwt = await this.context.getFirebaseJwt(FIREBASE_APP);
+      await signInWithToken(firebaseJwt.token);
+      studentInfo = {
+        // Types in LARA Plugin API should be fixed.
+        source: parseUrl((firebaseJwt.claims as IJwtClaims).domain).hostname,
+        contextId: (firebaseJwt.claims as IJwtClaims).claims.class_hash,
+        userId: (firebaseJwt.claims as any).claims.platform_user_id.toString()
+      };
+    } catch (e) {
+      // getFirebaseJwt will throw an exception when run doesn't have remote endpoint, so when user
+      // hasn't launched an activity from Portal. In this case just do nothing special.
+      // studentInfo will be undefined and PluginApp won't try to connect to Firestore.
+      //
+      // NOTE: we used to wrap this try/catch in an `if (this.context.remoteEndpoint)` check
+      // but that was removed as activities launched from the Activity Player do not have
+      // a remote endpoint.
     }
 
     this.pluginAppComponent = ReactDOM.render(
