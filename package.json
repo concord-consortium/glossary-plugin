@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --hot --content-base dist/",
+    "start:secure:no-certs": "webpack-dev-server --https --inline --hot --content-base dist/",
     "build": "npm-run-all lint clean build:webpack",
     "build:webpack": "webpack --mode production --devtool false",
     "clean": "rimraf dist",

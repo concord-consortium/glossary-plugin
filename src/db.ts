@@ -11,10 +11,14 @@ let dbInstance: firebase.firestore.Firestore | null = null;
 
 let signedIn = false;
 
+let app: firebase.app.App;
+
+let snapshotSubscriptions: Array<() => void> = [];
+
 export const getFirestore = () => {
   if (!dbInstance) {
     // Initialize Cloud Firestore through Firebase
-    firebase.initializeApp({
+    app = firebase.initializeApp({
       apiKey: "AIzaSyAOCFQiOechmScOoJtYLPSv1kqdsf9sr1Y",
       authDomain: "glossary-plugin.firebaseapp.com",
       databaseURL: "https://glossary-plugin.firebaseio.com",
@@ -23,8 +27,8 @@ export const getFirestore = () => {
       messagingSenderId: "137541784121",
       appId: "1:137541784121:web:f1881d868bfd3d647f73e8",
       measurementId: "G-RJYWLT2NE4"
-    });
-    dbInstance = firebase.firestore();
+    }, "glossary-plugin");
+    dbInstance = app.firestore();
   }
   return dbInstance;
 };
@@ -32,9 +36,13 @@ export const getFirestore = () => {
 export const signInWithToken = async (rawFirestoreJWT: string) => {
   // Ensure firebase.initializeApp has been called.
   getFirestore();
+  // cancel current subscriptions so we don't get errors when signing out
+  snapshotSubscriptions.forEach(unsubscribe => unsubscribe());
+  snapshotSubscriptions = [];
+
   // It's actually useful to sign out first, as firebase seems to stay signed in between page reloads otherwise.
-  await firebase.auth().signOut();
-  const result = firebase.auth().signInWithCustomToken(rawFirestoreJWT);
+  await app.auth().signOut();
+  const result = app.auth().signInWithCustomToken(rawFirestoreJWT);
   signedIn = true;
   return result;
 };
@@ -66,7 +74,7 @@ export const watchClassSettings = (
   onSnapshot: (settings: IStudentSettings[]) => void
 ) => {
   const db = getFirestore();
-  db.collection(settingsPath(source, contextId))
+  snapshotSubscriptions.push(db.collection(settingsPath(source, contextId))
     .onSnapshot(snapshot => {
       if (snapshot.empty) {
         return;
@@ -76,7 +84,7 @@ export const watchClassSettings = (
       // tslint:disable-next-line no-console
       console.error(err);
       throw err;
-    });
+    }));
 };
 
 export const watchStudentSettings = (
@@ -86,7 +94,7 @@ export const watchStudentSettings = (
   onSnapshot: (settings: IStudentSettings) => void
 ) => {
   const db = getFirestore();
-  db.collection(settingsPath(source, contextId)).doc(userId)
+  snapshotSubscriptions.push(db.collection(settingsPath(source, contextId)).doc(userId)
     .onSnapshot(snapshot => {
       const data = snapshot.data();
       if (data) {
@@ -96,7 +104,7 @@ export const watchStudentSettings = (
       // tslint:disable-next-line no-console
       console.error(err);
       throw err;
-    });
+    }));
 };
 
 export const saveLogEvent = (
@@ -115,7 +123,7 @@ export const watchClassEvents = (
   onSnapshot: (settings: ILogEvent[]) => void
 ) => {
   const db = getFirestore();
-  db.collection(logEventPath(source, contextId))
+  snapshotSubscriptions.push(db.collection(logEventPath(source, contextId))
     .where("resourceUrl", "==", resourceUrl)
     .onSnapshot(snapshot => {
       if (snapshot.empty) {
@@ -126,7 +134,7 @@ export const watchClassEvents = (
       // tslint:disable-next-line no-console
       console.error(err);
       throw err;
-    });
+    }));
 };
 
 interface IUploadRecordingOptions {
