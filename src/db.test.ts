@@ -5,8 +5,11 @@ import {getFirestore} from "./db";
 import { IStudentSettings } from "./types";
 
 describe("db / Firestore helpers", () => {
+  let appMock: any;
+  let signInWithCustomTokenMock: any;
+  let signOutMock: any;
+
   beforeEach(() => {
-    jest.spyOn(firebase, "initializeApp").mockImplementation(jest.fn());
     const docResult = {
       set: jest.fn(),
       onSnapshot: jest.fn()
@@ -18,34 +21,37 @@ describe("db / Firestore helpers", () => {
       doc: docMock
     };
     const collectionMock: any = jest.fn(() => collectionResult);
-    const firestoreMock: any = {
-      doc: docMock,
-      collection: collectionMock
+
+    signInWithCustomTokenMock = jest.fn();
+    signOutMock = jest.fn(() => new Promise((resolve) => resolve()));
+    appMock = {
+      firestore: jest.fn(() => ({
+        doc: docMock,
+        collection: collectionMock
+      })),
+      auth: jest.fn(() => ({
+        signInWithCustomToken: signInWithCustomTokenMock,
+        signOut: signOutMock
+      }))
     };
-    jest.spyOn(firebase, "firestore").mockImplementation(jest.fn(() => firestoreMock));
-    const auth: any = {
-      signInWithCustomToken: jest.fn(),
-      signOut: jest.fn(() => new Promise((resolve) => resolve()))
-    };
-    jest.spyOn(firebase, "auth").mockImplementation(() => auth);
+    jest.spyOn(firebase, "initializeApp").mockImplementation(jest.fn(() => appMock));
   });
 
   describe("getFirestore", () => {
-    it("should call firebase.initializeApp once and return only one instance", () => {
+    it("should call firebase.initializeApp once and return only one instance", async () => {
       const f1 = db.getFirestore();
       const f2 = db.getFirestore();
       expect(firebase.initializeApp).toHaveBeenCalledTimes(1);
-      expect(firebase.firestore).toHaveBeenCalledTimes(1);
+      expect(appMock.firestore).toHaveBeenCalledTimes(1);
       expect(f1).toEqual(f2);
     });
   });
 
   describe("signInWithToken", () => {
-    it("should ensure firebase.initializeApp was called once and auth using token", async () => {
+    it("should ensure signOut and signInWithCustomToken were called once using token", async () => {
       await db.signInWithToken("token.123");
-      expect(firebase.initializeApp).toHaveBeenCalledTimes(1);
-      expect(firebase.firestore).toHaveBeenCalledTimes(1);
-      expect(firebase.auth().signInWithCustomToken).toHaveBeenCalledWith("token.123");
+      expect(signOutMock).toHaveBeenCalled();
+      expect(signInWithCustomTokenMock).toHaveBeenCalledWith("token.123");
     });
   });
 
