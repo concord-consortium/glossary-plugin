@@ -5,6 +5,7 @@ import DashboardApp from "./components/dashboard/dashboard-app";
 import { FIREBASE_APP, signInWithToken } from "./db";
 import { getQueryParam, parseUrl } from "./utils/get-url-param";
 import { IClassInfo } from "./types";
+import { extractResourceUrl } from "./utils/extract-resource-url";
 
 const getClassInfoUrl = () => getQueryParam("class");
 const getOfferingInfoUrl = () => getQueryParam("offering");
@@ -70,6 +71,7 @@ const init = async () => {
   };
   const offeringInfoResponse = await fetch(offeringUrl, {headers: {Authorization: getAuthHeader()}});
   const offeringInfoRaw = await offeringInfoResponse.json();
+  const resourceUrl = extractResourceUrl(offeringInfoRaw.activity_url);
 
   const firebaseJWTUrl = getPortalFirebaseJWTUrl(classInfo.contextId);
   if (!firebaseJWTUrl) {
@@ -84,7 +86,7 @@ const init = async () => {
   ReactDOM.render(
     <DashboardApp
       classInfo={classInfo}
-      resourceUrl={offeringInfoRaw.activity_url}
+      resourceUrl={resourceUrl}
     />
   , document.getElementById("app") as HTMLElement);
 };
