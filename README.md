@@ -94,10 +94,7 @@ supported language codes.
 
 ## Dashboard
 
-The dashboard queries events within a class (denoted by a `contextId` equal to the portal class hash) to display the dashboard data.
-The query uses the `activity_url` from the json data of the offering endpoint at the portal.  The `activity_url` is normally the
-url like  `https://authoring.concord.org/activity/<id>` however for Activity Player activities the actvity is embedded as a parameter
-within the activity url.  The code checks for the embedded activity url and extracts it as needed.
+The dashboard queries events within a class (denoted by a `contextId` equal to the portal class hash) to display the dashboard data.  The query uses the `activity_url` from the json data of the offering endpoint at the portal to search the `resourceUrl` attribute in the Firestore data.  The `resourceUrl` attribute is given to the plugin as part of the context object.  The `activity_url` is normally the url like  `https://authoring.concord.org/activity/<id>` however for Activity Player activities the activity is embedded as a parameter within the activity url.  The code checks for the embedded activity url and extracts it as needed.
 
 **NOTE**: This activity url parsing code expects a defined format.  This code is brittle and will need to change if/when that
 format changes.
