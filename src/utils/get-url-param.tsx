@@ -1,5 +1,5 @@
-function getParam(name: string, type: string): string | null {
-  const url = type === "?" ? window.location.search : window.location.hash;
+function getParam(name: string, type: string, url?: string): string | null {
+  url = url || (type === "?" ? window.location.search : window.location.hash);
   name = name.replace(/[[]]/g, "\\$&");
   const regex = new RegExp(`[${type}&]${name}(=([^&#]*)|&|#|$)`);
   const results = regex.exec(url);
@@ -10,8 +10,8 @@ function getParam(name: string, type: string): string | null {
 }
 
 export const GLOSSARY_URL_PARAM = "glossaryUrl";
-export function getQueryParam(name: string): string | null {
-  return getParam(name, "?");
+export function getQueryParam(name: string, url?: string): string | null {
+  return getParam(name, "?", url);
 }
 
 export function getHashParam(name: string): string | null {

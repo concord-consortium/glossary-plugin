@@ -76,7 +76,7 @@ Due to the need to support translations of languages not available on poeditor.c
 | Marathi (mr)      | Inuit           |
 
 
-### Teanslations in the Dashboard (reporting)
+### Translations in the Dashboard (reporting)
 If you would like to limit the language selection choices in the dashboard to only languages that exist
 in the glossary definition then you can append a hash parameter to the dashboard report url in the portal.
 To specify the glossary URL in the external-report url, add  `#glossaryUrl=<uri-encoded glossary url>`
@@ -91,6 +91,13 @@ The value for this URL parameter can be viewed at the bottom of the glossary aut
 When this URL parameter exists in the dashboard url, the dashboard fetches the
 glossary definition from the glossary, and uses the `translations:` keys to find
 supported language codes.
+
+## Dashboard
+
+The dashboard queries events within a class (denoted by a `contextId` equal to the portal class hash) to display the dashboard data.  The query uses the `activity_url` from the json data of the offering endpoint at the portal to search the `resourceUrl` attribute in the Firestore data.  The `resourceUrl` attribute is given to the plugin as part of the context object.  The `activity_url` is normally the url like  `https://authoring.concord.org/activity/<id>` however for Activity Player activities the activity is embedded as a parameter within the activity url.  The code checks for the embedded activity url and extracts it as needed.
+
+**NOTE**: This activity url parsing code expects a defined format.  This code is brittle and will need to change if/when that
+format changes.
 
 
 ## Development
