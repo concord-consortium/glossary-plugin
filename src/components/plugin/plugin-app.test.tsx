@@ -38,6 +38,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         enableStudentRecording={false}
+        offlineMode={false}
       />
     );
 
@@ -64,6 +65,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         enableStudentRecording={false}
+        offlineMode={false}
       />
     );
 
@@ -91,6 +93,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         enableStudentRecording={false}
+        offlineMode={false}
       />
     );
 
@@ -114,6 +117,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         enableStudentRecording={false}
+        offlineMode={false}
       />
     );
 
@@ -139,6 +143,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
 
@@ -162,6 +167,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
 
@@ -188,6 +194,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
 
@@ -209,6 +216,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
 
@@ -240,6 +248,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -260,6 +269,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={true}
         translations={{}}
+        offlineMode={false}
       />
     );
 
@@ -282,6 +292,7 @@ describe("PluginApp component", () => {
         enableStudentRecording={false}
         showSideBar={false}
         translations={{}}
+        offlineMode={false}
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);
@@ -299,6 +310,7 @@ describe("PluginApp component", () => {
           enableStudentRecording={false}
           showSideBar={false}
           translations={{}}
+          offlineMode={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
@@ -322,6 +334,7 @@ describe("PluginApp component", () => {
               submit: "Enviar?!!"
             }
           }}
+          offlineMode={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);

@@ -8,6 +8,8 @@ import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/aut
 import { IGlossary } from "./types";
 import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
 import { parseUrl } from "./utils/get-url-param";
+import { syncLogEventsToFirestore, setStudentInfo } from "./components/plugin/offline-storage";
+import { getStudentInfo } from "./utils/get-student-info";
 
 const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
   const defaultState: IGlossaryAuthoredState = {
@@ -62,6 +64,9 @@ export class GlossaryPlugin {
 
   constructor(context: PluginAPI.IPluginRuntimeContext) {
     this.context = context;
+
+    PluginAPI.events.onPluginSyncRequest(syncLogEventsToFirestore(context));
+
     // Note renderPluginApp is an async function. Constructor can't be async, as it needs to return immediately.
     // It also means that component won't be rendered immediately. That's fine.
     this.renderPluginApp();
@@ -79,25 +84,8 @@ export class GlossaryPlugin {
       this.pluginAppComponent = undefined;
     }
 
-    let studentInfo;
-    if (this.context.remoteEndpoint) {
-      // If there's no remote endpoint, there's no connection to Portal and JWT cannot be obtained.
-      // Errors are handled anyway, but we can avoid displaying 500 error in browser console.
-      try {
-        const firebaseJwt = await this.context.getFirebaseJwt(FIREBASE_APP);
-        await signInWithToken(firebaseJwt.token);
-        studentInfo = {
-          // Types in LARA Plugin API should be fixed.
-          source: parseUrl((firebaseJwt.claims as IJwtClaims).domain).hostname,
-          contextId: (firebaseJwt.claims as IJwtClaims).claims.class_hash,
-          userId: (firebaseJwt.claims as any).claims.platform_user_id.toString()
-        };
-      } catch (e) {
-        // getFirebaseJwt will throw an exception when run doesn't have remote endpoint, so when user
-        // hasn't launched an activity from Portal. In this case just do nothing special.
-        // studentInfo will be undefined and PluginApp won't try to connect to Firestore.
-      }
-    }
+    const studentInfo = await getStudentInfo(this.context);
+    setStudentInfo(studentInfo);
 
     this.pluginAppComponent = ReactDOM.render(
       <PluginApp
@@ -113,6 +101,7 @@ export class GlossaryPlugin {
         glossaryInfo={glossaryInfo}
         resourceUrl={this.context.resourceUrl}
         laraLog={this.context.log}
+        offlineMode={this.context.offlineMode}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div

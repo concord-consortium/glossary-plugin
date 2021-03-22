@@ -107,13 +107,14 @@
     "react-dom": "^16.9.0"
   },
   "dependencies": {
-    "@concord-consortium/lara-plugin-api": "^3.1.2",
+    "@concord-consortium/lara-plugin-api": "3.3.1",
     "@concord-consortium/token-service": "^1.1.0",
     "ajv": "^6.10.0",
     "ajv-keywords": "^3.4.0",
     "aws-sdk": "^2.454.0",
     "client-oauth2": "^4.2.5",
     "clone": "^2.1.2",
+    "dexie": "^3.0.3",
     "file-saver": "^2.0.2",
     "firebase": "^6.6.2",
     "jsonwebtoken": "^8.5.1",

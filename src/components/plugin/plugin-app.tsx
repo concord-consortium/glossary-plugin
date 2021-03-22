@@ -6,7 +6,7 @@ import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
 import { pluginContext } from "../../plugin-context";
-import { watchStudentSettings, saveLogEvent } from "../../db";
+import { watchStudentSettings, sendLogEventToFirestore } from "../../db";
 import { ILogEvent, ILogEventPartial } from "../../types";
 import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 import * as pluralize from "pluralize";
@@ -14,6 +14,7 @@ import * as pluralize from "pluralize";
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
+import { saveLogEventInIndexDB, OfflineStorageTBDMarker } from "./offline-storage";
 
 export interface IPluginEvent {
   type: string;
@@ -51,6 +52,7 @@ interface IProps {
   glossaryInfo?: IGlossaryAuthoredState;
   resourceUrl?: string;
   laraLog?: (event: string | PluginAPI.ILogData) => void;
+  offlineMode: boolean;
 }
 
 export interface IDefinitionsByWord {
@@ -239,22 +241,30 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public log = (event: ILogEventPartial) => {
-    const { studentInfo, glossaryInfo, laraLog, resourceUrl } = this.props;
-    if (!studentInfo || !glossaryInfo || !resourceUrl) {
-      // User not coming from Portal.
+    const { studentInfo, glossaryInfo, laraLog, resourceUrl, offlineMode } = this.props;
+    if (!glossaryInfo || !resourceUrl) {
+      // can't log anything without this information
       return;
     }
+    // studentInfo will be undefined in offline mode when not launched from the portal
+    const { contextId, userId } = studentInfo
+      ? studentInfo
+      : { contextId: OfflineStorageTBDMarker, userId: OfflineStorageTBDMarker };
     const completeEvent: ILogEvent = Object.assign({}, event, {
-      userId: studentInfo.userId,
-      contextId: studentInfo.contextId,
+      userId,
+      contextId,
       resourceUrl,
       glossaryUrl: glossaryInfo.s3Url!,
       glossaryResourceId: glossaryInfo.glossaryResourceId!,
       timestamp: Date.now()
     });
-    saveLogEvent(studentInfo.source, studentInfo.contextId, completeEvent);
-    if (laraLog) {
-      laraLog(completeEvent);
+    if (offlineMode) {
+      saveLogEventInIndexDB(completeEvent);
+    } else if (studentInfo) {
+      sendLogEventToFirestore(studentInfo.source, studentInfo.contextId, completeEvent);
+      if (laraLog) {
+        laraLog(completeEvent);
+      }
     }
   }
 
