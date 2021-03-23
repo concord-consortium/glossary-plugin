@@ -38,10 +38,10 @@ export const syncLogEventsToFirestore = (context: PluginAPI.IPluginRuntimeContex
         updateCallback({status: "failed", message: "Student info not found!"});
       } else {
         const {contextId, userId, source} = studentInfo;
-        const logQuery = dexieStorage.logs
+        let logs = await dexieStorage.logs
           .where("[resourceUrl+contextId]")
-          .anyOf([context.resourceUrl, OfflineStorageTBDMarker], [context.resourceUrl, contextId]);
-        let logs = await logQuery.toArray();
+          .anyOf([context.resourceUrl, OfflineStorageTBDMarker], [context.resourceUrl, contextId])
+          .toArray();
         logs = logs.map(log => ({...log, contextId, userId}));
 
         const totalLogs = logs.length;
@@ -60,6 +60,10 @@ export const syncLogEventsToFirestore = (context: PluginAPI.IPluginRuntimeContex
             });
             await sendBulkLogEventsToFirestore(source, contextId, batch);
 
+            // delete synced logs
+            const ids = batch.map(item => (item as any).id); // id is added automatically by dexie
+            await dexieStorage.logs.where("id").anyOf(ids).delete();
+
             batchIndex += batch.length;
           } while (logs.length > 0);
 
@@ -67,9 +71,6 @@ export const syncLogEventsToFirestore = (context: PluginAPI.IPluginRuntimeContex
             status: "working",
             message: `Finished syncing ${totalLogs} logs, deleting locally saved logs`
           });
-
-          // delete synced logs
-          await logQuery.delete();
 
           updateCallback({status: "completed", message: `Synced ${totalLogs} logs`});
         }
