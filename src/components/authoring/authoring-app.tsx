@@ -20,6 +20,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   autoShowMediaInPopup: false,
   showSideBar: false,
   enableStudentRecording: false,
+  enableStudentLanguageSwitching: false,
   definitions: []
 };
 
@@ -68,7 +69,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     glossaryDirty: false,
     client: null,
     glossaryResource: null,
-    publicGlossaryUrl: null
+    publicGlossaryUrl: null,
   };
 
   get glossaryResourceId() {
@@ -88,7 +89,8 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   public render() {
     const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
     const { getFirebaseJwt } = this.props;
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, showSideBar, enableStudentRecording } = glossary;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions,
+            showSideBar, enableStudentRecording, enableStudentLanguageSwitching } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={`${this.inlineMode ? css.inlineScrollForm : ""}`}>
@@ -159,6 +161,20 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                 <div className={css.help}>
                   When this option is turned on, teachers will have the option to enable students to record
                   definitions in the popup.  Teachers must further enable this per student in their dashboard.
+                </div>
+              </label>
+              <br/>
+              <input
+                type="checkbox"
+                checked={enableStudentLanguageSwitching}
+                data-cy="enableStudentLanguageSwitching"
+                onChange={this.handleEnableStudentLanguageSwitching}
+              />
+              <label>
+                Enable students to switch between languages
+                <div className={css.help}>
+                  When this option is turned on, students will have the option to switch between languages
+                  if there are multiple languages available.
                 </div>
               </label>
               <br/>
@@ -408,6 +424,12 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
   private handleEnableStudentRecordingChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.enableStudentRecording = (event.target as HTMLInputElement).checked;
+    this.setState({ glossary });
+  }
+
+  private handleEnableStudentLanguageSwitching = (event: React.ChangeEvent) => {
+    const glossary: IGlossary = clone(this.state.glossary);
+    glossary.enableStudentLanguageSwitching = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
   }
 

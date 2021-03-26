@@ -4,6 +4,7 @@ export interface IGlossary {
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
+  enableStudentLanguageSwitching: boolean;
   translations?: {
     [languageCode: string]: ITranslation
   };

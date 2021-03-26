@@ -14,6 +14,7 @@ import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./glossary-popup.scss";
+import LanguageSelector from "./language-selector";
 
 export const RECORDING_TIMEOUT = 60 * 1000;
 
@@ -37,8 +38,8 @@ interface IProps {
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
-  secondLanguage?: string;
-  onLanguageChange?: () => void;
+  otherLanguages?: string[];
+  onLanguageChange?: (newLang: string) => void;
   studentInfo?: IStudentInfo;
   demoMode?: boolean;
 }
@@ -90,18 +91,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
-    const { secondLanguage, onLanguageChange } = this.props;
+    const { otherLanguages, onLanguageChange } = this.props;
     return (
       <div className={css.glossaryPopup}>
-        {
-          secondLanguage && onLanguageChange &&
-          <Button
-            data-cy="langToggle"
-            className={css.langButton}
-            label={POEDITOR_LANG_NAME[secondLanguage].replace("_", " ")}
-            onClick={onLanguageChange}
-          />
-        }
+        <LanguageSelector
+          otherLanguages={otherLanguages}
+          onLanguageChange={onLanguageChange}
+        />
         {questionVisible ? this.renderQuestion() : this.renderDefinition()}
       </div>
     );

@@ -156,13 +156,13 @@ describe("GlossaryPopup component", () => {
   describe("when secondLanguage is provided", () => {
     it("renders language toggle and calls provided callback on click", () => {
       const onLangChange = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word="test"
           definition="test"
           userDefinitions={[]}
           askForUserDefinition={false}
-          secondLanguage="es"
+          otherLanguages={["es"]}
           onLanguageChange={onLangChange}
         />
       );
