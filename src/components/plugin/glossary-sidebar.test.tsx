@@ -150,7 +150,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={{}}
-          otherLanguages={["es"]}
+          languages={[{lang: "es", selected: false]}
           onLanguageChange={onLangChange}
         />
       );

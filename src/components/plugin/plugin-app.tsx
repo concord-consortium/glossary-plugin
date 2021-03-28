@@ -12,6 +12,7 @@ import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 import * as pluralize from "pluralize";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import { saveLogEventInIndexDB, OfflineStorageTBDMarker } from "./offline-storage";
+import { ILanguage } from "./language-selector";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
@@ -86,25 +87,22 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private sidebarIconContainer: HTMLElement;
   private sidebarController: ISidebarController;
 
-  get otherLanguages() {
+  get languages(): ILanguage[] {
     const { lang, secondLanguage } = this.state;
     const { translations, enableStudentLanguageSwitching } = this.props;
-    const langs = Object.keys(translations);
+    let langs: string[] = [];
 
-    if (!enableStudentLanguageSwitching) {
-      // if the student cannot switch languages themselves return the teacher selected one if set
-      if (secondLanguage) {
-        return secondLanguage === lang ? [DEFAULT_LANG] : [secondLanguage];
+    if (enableStudentLanguageSwitching) {
+      langs = Object.keys(translations);
+      if (langs.length > 0) {
+        // add the default language to the translations
+        langs.unshift(DEFAULT_LANG);
       }
-      return [];
+    } else if (secondLanguage) {
+      langs = [DEFAULT_LANG, secondLanguage];
     }
 
-    // add the default language to the translation if not currently selected
-    if (lang !== DEFAULT_LANG) {
-      langs.unshift(DEFAULT_LANG);
-    }
-
-    return langs.filter(key => key !== lang);
+    return langs.map<ILanguage>(langItem => ({lang: langItem, selected: langItem === lang}));
   }
 
   public componentDidMount() {
@@ -152,8 +150,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions,
-           studentInfo, enableStudentLanguageSwitching } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
     // student recording is enabled per student with the combination of it being enabled by the glossary
     // author along with it being enabled by the teacher in the dashboard per student
@@ -172,7 +169,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
               <GlossarySidebar
                 definitions={definitions}
                 learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
-                otherLanguages={this.otherLanguages}
+                languages={this.languages}
                 onLanguageChange={this.languageChanged}
               />,
               this.sidebarContainer
@@ -205,7 +202,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   autoShowMedia={autoShowMediaInPopup}
                   enableStudentRecording={enableStudentRecording}
                   onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
-                  otherLanguages={this.otherLanguages}
+                  languages={this.languages}
                   onLanguageChange={this.languageChanged}
                   studentInfo={studentInfo}
                 />,

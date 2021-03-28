@@ -1,11 +1,12 @@
 import * as React from "react";
 import Button from "../common/button";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
+import { ILanguage } from "./language-selector";
 
 import * as css from "./language-selector-button.scss";
 
 interface IProps {
-  lang: string;
+  language: ILanguage;
   onClick: (lang: string) => void;
 }
 
@@ -17,11 +18,11 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
   }
 
   public render() {
-    const { lang } = this.props;
+    const { lang, selected } = this.props.language;
     return (
       <Button
         data-cy="langToggle"
-        className={css.langButton}
+        className={`${css.langButton} ${selected ? css.selected : ""}`}
         label={POEDITOR_LANG_NAME[lang].replace("_", " ")}
         onClick={this.handleButtonClick}
       />
@@ -29,6 +30,6 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
   }
 
   private handleButtonClick = () => {
-    this.props.onClick(this.props.lang);
+    this.props.onClick(this.props.language.lang);
   }
 }

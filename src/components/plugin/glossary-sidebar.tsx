@@ -3,7 +3,7 @@ import Definition from "./definition";
 import { IWordDefinition, ILearnerDefinitions } from "../../types";
 import UserDefinitions from "./user-definitions";
 import {pluginContext} from "../../plugin-context";
-import LanguageSelector from "./language-selector";
+import LanguageSelector, { ILanguage } from "./language-selector";
 
 import * as css from "./glossary-sidebar.scss";
 
@@ -22,7 +22,7 @@ const nonEmptyHash = (hash: any) => {
 interface IProps {
   definitions: IWordDefinition[];
   learnerDefinitions: ILearnerDefinitions;
-  otherLanguages?: string[];
+  languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
 }
 
@@ -90,7 +90,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
   private definitionsRef = React.createRef<HTMLDivElement>();
 
   public render() {
-    const { learnerDefinitions, onLanguageChange, otherLanguages } = this.props;
+    const { learnerDefinitions, onLanguageChange, languages } = this.props;
     const { filter } = this.state;
     const i18n = this.context;
     const wordsIHaveDefinedClass = css.toggle
@@ -104,7 +104,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
     return (
       <div className={css.glossarySidebar}>
         <LanguageSelector
-          otherLanguages={otherLanguages}
+          languages={languages}
           onLanguageChange={onLanguageChange}
         />
         {

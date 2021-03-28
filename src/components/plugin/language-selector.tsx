@@ -3,23 +3,33 @@ import LanguageSelectorButton from "./language-selector-button";
 
 import * as css from "./language-selector.scss";
 
+export interface ILanguage {
+  lang: string;
+  selected: boolean;
+}
+
 interface IProps {
-  otherLanguages?: string[];
+  languages?: ILanguage[];
   onLanguageChange?: (lang: string) => void;
 }
 
 export default class LanguageSelector extends React.Component<IProps, {}> {
 
   public render() {
-    const { otherLanguages, onLanguageChange } = this.props;
+    const { languages, onLanguageChange } = this.props;
 
-    if (!otherLanguages || (otherLanguages.length === 0) || !onLanguageChange) {
+    if (!languages || (languages.length === 0) || !onLanguageChange) {
       return null;
     }
 
     return (
       <div className={css.languageSelector}>
-        {otherLanguages.map(lang => <LanguageSelectorButton key={lang} lang={lang} onClick={onLanguageChange} />)}
+        {languages.map(language => (
+          <LanguageSelectorButton
+            key={language.lang}
+            language={language}
+            onClick={onLanguageChange}
+          />))}
       </div>
     );
   }

@@ -11,10 +11,10 @@ import Image from "./image";
 import TextToSpeech from "./text-to-speech";
 import { IStudentInfo } from "../../types";
 import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
+import LanguageSelector, { ILanguage } from "./language-selector";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./glossary-popup.scss";
-import LanguageSelector from "./language-selector";
 
 export const RECORDING_TIMEOUT = 60 * 1000;
 
@@ -38,7 +38,7 @@ interface IProps {
   videoUrl?: string;
   imageCaption?: string;
   videoCaption?: string;
-  otherLanguages?: string[];
+  languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
   studentInfo?: IStudentInfo;
   demoMode?: boolean;
@@ -91,11 +91,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
-    const { otherLanguages, onLanguageChange } = this.props;
+    const { languages, onLanguageChange } = this.props;
     return (
       <div className={css.glossaryPopup}>
         <LanguageSelector
-          otherLanguages={otherLanguages}
+          languages={languages}
           onLanguageChange={onLanguageChange}
         />
         {questionVisible ? this.renderQuestion() : this.renderDefinition()}
