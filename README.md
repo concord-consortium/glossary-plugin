@@ -71,7 +71,7 @@ Due to the need to support translations of languages not available on poeditor.c
 
 | Existing Language | Mapped Language |
 |-------------------|-----------------|
-| Manx (gv)         | Yug'tun         |
+| Manx (gv)         | Yugtun          |
 | Maori (mi)        | Athabaskan      |
 | Marathi (mr)      | Inuit           |
 
