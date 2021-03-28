@@ -174,7 +174,8 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                 Enable students to switch between languages
                 <div className={css.help}>
                   When this option is turned on, students will have the option to switch between languages
-                  if there are multiple languages available.
+                  if there are translations defined in the glossary.  <strong>NOTE</strong>: this will disable the
+                  ability of a teacher to select a secondary language for a student in the glossary dashboard.
                 </div>
               </label>
               <br/>
