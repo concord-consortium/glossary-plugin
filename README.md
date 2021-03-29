@@ -73,7 +73,7 @@ Due to the need to support translations of languages not available on poeditor.c
 |-------------------|-----------------|
 | Manx (gv)         | Yugtun          |
 | Maori (mi)        | Athabaskan      |
-| Marathi (mr)      | Inuit           |
+| Marathi (mr)      | Inupiaq         |
 
 
 ### Translations in the Dashboard (reporting)
