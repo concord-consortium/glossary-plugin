@@ -378,7 +378,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
     this.log({
       event: "language changed",
       previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),
-      newLanguage: POEDITOR_LANG_NAME[newLang].replace("_", " ")
+      newLanguage: POEDITOR_LANG_NAME[newLang].replace("_", " "),
+      previousLanguageCode: lang,
+      newLanguageCode: newLang
     });
   }
 }
