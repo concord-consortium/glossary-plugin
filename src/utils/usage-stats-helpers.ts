@@ -61,12 +61,19 @@ interface IAllowedTerms {
 
 let glossaryInstance: IGlossary | null = null;
 
-export const getGlossaryJSON = async (glossaryUrl: string): Promise<IGlossary> => {
+// For jest testing:
+export const resetGlossaryInstance = () => glossaryInstance = null;
+
+export const getGlossaryJSON = async (glossaryUrl: string): Promise<IGlossary|null> => {
   if (!glossaryInstance) {
-    const response = await fetch(glossaryUrl);
-    glossaryInstance = await response.json();
+    try {
+      const response = await fetch(glossaryUrl);
+      glossaryInstance = await response.json();
+    }
+    // tslint:disable-next-line:no-console
+    catch (e) {  console.warn(e); }
   }
-  return glossaryInstance!;
+  return glossaryInstance;
 };
 
 export const getDefaultStats = (students: IStudent[], glossary: IGlossary, allowedTerms: IAllowedTerms):
@@ -122,7 +129,13 @@ export const getUsageStats = async (students: IStudent[], events: ILogEvent[], t
   if (students.length === 0 || events.length === 0) {
     return null;
   }
-  const glossary = await getGlossaryJSON(events[0].glossaryUrl);
+  const urls = events.map( e => e.glossaryUrl);
+  const uniqueUrls = urls.filter( (e, i) => i === urls.indexOf(e));
+  const urlPromises = uniqueUrls.map( u => getGlossaryJSON(u) );
+  const glossaries = await Promise.all(urlPromises);
+  const glossary = glossaries.find( g => !!g);
+  if (!glossary) { return null; }
+
   const allowedTerms = getAllowedTerms(glossary, termsFilter);
   const stats = getDefaultStats(students, glossary, allowedTerms);
   events

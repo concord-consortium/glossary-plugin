@@ -1,4 +1,7 @@
-import { getDefaultStats, getGlossaryJSON, getProgress, getUsageStats, getAllowedTerms } from "./usage-stats-helpers";
+import {
+  getDefaultStats, getGlossaryJSON, getProgress,
+  getUsageStats, getAllowedTerms, resetGlossaryInstance
+} from "./usage-stats-helpers";
 import * as fetch from "jest-fetch-mock";
 import { IGlossary, ILogEvent, IStudent } from "../types";
 (global as any).fetch = fetch;
@@ -84,6 +87,40 @@ describe("usage statistic helpers", () => {
       const events = [ { event: "plugin init" } ] as ILogEvent[];
       expect(await getUsageStats([], events, [])).toEqual(null);
       expect(await getUsageStats(students, [], [])).toEqual(null);
+    });
+
+    describe("when some students glossary urls are invalid", () => {
+      beforeEach( () => {
+        resetGlossaryInstance();
+        const happyResponse = [JSON.stringify(glossary), {status: 200}];
+        const sadResponse = [null, {status: 404}];
+        fetch.mockResponses(sadResponse, happyResponse);
+      });
+      it("should return usage stats if there is one valid glossary", async () => {
+        const students = [ { id: "123" }  ] as IStudent[];
+        const events = [
+          { glossaryUrl: "fail", event: "plugin init"},
+          { glossaryUrl: "success", event: "plugin init" }
+        ] as ILogEvent[];
+        const usageStats = await getUsageStats(students, events, []);
+        expect(usageStats).not.toBe(null);
+      });
+    });
+    describe("when all students glossary urls are invalid", () => {
+      beforeEach( () => {
+        resetGlossaryInstance();
+        const sadResponse = [null, {status: 404}];
+        fetch.mockResponses(sadResponse, sadResponse);
+      });
+      it("should fail with no usageStats", async () => {
+        const students = [ { id: "123" }  ] as IStudent[];
+        const events = [
+          { glossaryUrl: "fail", event: "plugin init"},
+          { glossaryUrl: "fail", event: "plugin init" }
+        ] as ILogEvent[];
+        const usageStats = await getUsageStats(students, events, []);
+        expect(usageStats).toEqual(null);
+      });
     });
 
     it("should process list of events and update statistics correctly", async () => {
