@@ -65,7 +65,10 @@ export class GlossaryPlugin {
   constructor(context: PluginAPI.IPluginRuntimeContext) {
     this.context = context;
 
-    PluginAPI.events.onPluginSyncRequest(syncLogEventsToFirestore(context));
+    // TODO: convert to optional chaining (?.) when TypeScript is upgraded to 3.7
+    if (PluginAPI.events && PluginAPI.events.onPluginSyncRequest) {
+      PluginAPI.events.onPluginSyncRequest(syncLogEventsToFirestore(context));
+    }
 
     // Note renderPluginApp is an async function. Constructor can't be async, as it needs to return immediately.
     // It also means that component won't be rendered immediately. That's fine.
