@@ -274,9 +274,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
       saveLogEventInIndexDB(completeEvent);
     } else if (studentInfo) {
       sendLogEventToFirestore(studentInfo.source, studentInfo.contextId, completeEvent);
-      if (laraLog) {
-        laraLog(completeEvent);
-      }
+    }
+    if (laraLog) {
+      laraLog(completeEvent);
     }
   }
 
