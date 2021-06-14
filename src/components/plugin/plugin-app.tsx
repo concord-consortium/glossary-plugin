@@ -10,11 +10,12 @@ import { watchStudentSettings, sendLogEventToFirestore } from "../../db";
 import { ILogEvent, ILogEventPartial } from "../../types";
 import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 import * as pluralize from "pluralize";
+import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
+import { saveLogEventInIndexDB, OfflineStorageTBDMarker } from "./offline-storage";
+import { ILanguage } from "./language-selector";
 
 import * as css from "./plugin-app.scss";
 import * as icons from "../common/icons.scss";
-import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
-import { saveLogEventInIndexDB, OfflineStorageTBDMarker } from "./offline-storage";
 
 export interface IPluginEvent {
   type: string;
@@ -44,6 +45,7 @@ interface IProps {
   askForUserDefinition: boolean;
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
+  enableStudentLanguageSwitching: boolean;
   showSideBar: boolean;
   translations: {
     [languageCode: string]: ITranslation
@@ -65,6 +67,7 @@ interface IState {
   sidebarPresent: boolean;
   lang: string;
   secondLanguage?: string;
+  otherLanguages: string[];
   definitionsByWord: IDefinitionsByWord;
   enableStudentRecording: boolean;
 }
@@ -74,8 +77,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
     openPopups: [],
     learnerState: this.props.initialLearnerState,
     sidebarPresent: false,
-    lang: "en",
+    lang: DEFAULT_LANG,
     secondLanguage: undefined,
+    otherLanguages: [],
     definitionsByWord: {},
     enableStudentRecording: false
   };
@@ -83,14 +87,22 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private sidebarIconContainer: HTMLElement;
   private sidebarController: ISidebarController;
 
-  get secondLanguage() {
+  get languages(): ILanguage[] {
     const { lang, secondLanguage } = this.state;
-    if (!secondLanguage) {
-      return undefined;
+    const { translations, enableStudentLanguageSwitching } = this.props;
+    let langs: string[] = [];
+
+    if (enableStudentLanguageSwitching) {
+      langs = Object.keys(translations);
+      if (langs.length > 0) {
+        // add the default language to the translations
+        langs.unshift(DEFAULT_LANG);
+      }
+    } else if (secondLanguage) {
+      langs = [DEFAULT_LANG, secondLanguage];
     }
-    // Depending on the current state, we should either let student switch to a second language,
-    // or go back to the default one.
-    return lang !== secondLanguage ? secondLanguage : DEFAULT_LANG;
+
+    return langs.map<ILanguage>(langItem => ({lang: langItem, selected: langItem === lang}));
   }
 
   public componentDidMount() {
@@ -157,7 +169,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
               <GlossarySidebar
                 definitions={definitions}
                 learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
-                secondLanguage={this.secondLanguage}
+                languages={this.languages}
                 onLanguageChange={this.languageChanged}
               />,
               this.sidebarContainer
@@ -190,7 +202,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   autoShowMedia={autoShowMediaInPopup}
                   enableStudentRecording={enableStudentRecording}
                   onUserDefinitionsUpdate={this.learnerDefinitionUpdated.bind(this, word)}
-                  secondLanguage={this.secondLanguage}
+                  languages={this.languages}
                   onLanguageChange={this.languageChanged}
                   studentInfo={studentInfo}
                 />,
@@ -360,16 +372,15 @@ export default class PluginApp extends React.Component<IProps, IState> {
     this.setState({ openPopups: newOpenPopups });
   }
 
-  private languageChanged = () => {
+  private languageChanged = (newLang: string) => {
     const { lang } = this.state;
-    const secLang = this.secondLanguage;
-    if (secLang) {
-      this.setState({ lang: secLang });
-      this.log({
-        event: "language changed",
-        previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),
-        newLanguage: POEDITOR_LANG_NAME[secLang].replace("_", " ")
-      });
-    }
+    this.setState({ lang: newLang });
+    this.log({
+      event: "language changed",
+      previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),
+      newLanguage: POEDITOR_LANG_NAME[newLang].replace("_", " "),
+      previousLanguageCode: lang,
+      newLanguageCode: newLang
+    });
   }
 }

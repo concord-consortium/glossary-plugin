@@ -1,14 +1,14 @@
 // Generated from: https://poeditor.com/docs/languages
 // using copy-paste and a few simple search & replace.
 // IMPORTANT: Some language names has been intentionally modified to support some non-standard languages.
-// E.g. Manx has been replaced with Yug'tun (lang code gv). That way, translators can still use POEditor.
+// E.g. Manx has been replaced with Yugtun (lang code gv). That way, translators can still use POEditor.
 
 // NOTE: the translation mapping section of the README should be updated when this mapping code is updated.
 
 export const CUSTOM_LANG_NAME_MAPPING: {[langName: string]: string} = {
-  Manx: "Yug'tun",
+  Manx: "Yugtun",
   Maori: "Athabaskan",
-  Marathi: "Inuit"
+  Marathi: "Inupiaq"   // note, there is an ik code for Inupiaq but we want to reuse existing glossaries with mr
 };
 
 export const POEDITOR_LANG_CODE: {[langName: string]: string} = {

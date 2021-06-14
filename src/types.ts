@@ -4,6 +4,7 @@ export interface IGlossary {
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
+  enableStudentLanguageSwitching: boolean;
   translations?: {
     [languageCode: string]: ITranslation
   };
@@ -92,6 +93,8 @@ export interface ILanguageChanged extends IBasicEvent {
   event: "language changed";
   previousLanguage: string;
   newLanguage: string;
+  previousLanguageCode: string;
+  newLanguageCode: string;
 }
 
 // These types define data stored in the Firestore.
@@ -105,7 +108,10 @@ export type ITermClickedEventPartial = Pick<ITermClickedEvent, "event" | "word" 
 export type IWordSpecificEventPartial = Pick<IWordSpecificEvent, "event" | "word">;
 export type IDefinitionSavedEventPartial = Pick<IDefinitionSavedEvent, "event" | "word" | "definition" | "definitions">;
 export type ITextToSpeechClickedEventPartial = Pick<ITextToSpeechClickedEvent, "event" | "word" | "textType">;
-export type ILanguageChangedPartial = Pick<ILanguageChanged, "event" | "previousLanguage" | "newLanguage">;
+export type ILanguageChangedPartial = Pick<
+  ILanguageChanged,
+  "event" | "previousLanguage" | "newLanguage" | "previousLanguageCode" | "newLanguageCode"
+>;
 
 export type ILogEventPartial = ISimpleEventPartial | ITermClickedEventPartial | IWordSpecificEventPartial |
   IDefinitionSavedEventPartial | ITextToSpeechClickedEventPartial | ILanguageChangedPartial;

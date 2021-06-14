@@ -39,6 +39,7 @@ describe("PluginApp component", () => {
         translations={{}}
         enableStudentRecording={false}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -66,6 +67,7 @@ describe("PluginApp component", () => {
         translations={{}}
         enableStudentRecording={false}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -94,6 +96,7 @@ describe("PluginApp component", () => {
         translations={{}}
         enableStudentRecording={false}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -118,6 +121,7 @@ describe("PluginApp component", () => {
         translations={{}}
         enableStudentRecording={false}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -144,6 +148,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -168,6 +173,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -195,6 +201,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -217,6 +224,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -249,6 +257,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -270,6 +279,7 @@ describe("PluginApp component", () => {
         showSideBar={true}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
 
@@ -293,6 +303,7 @@ describe("PluginApp component", () => {
         showSideBar={false}
         translations={{}}
         offlineMode={false}
+        enableStudentLanguageSwitching={false}
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);
@@ -311,6 +322,7 @@ describe("PluginApp component", () => {
           showSideBar={false}
           translations={{}}
           offlineMode={false}
+          enableStudentLanguageSwitching={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
@@ -335,6 +347,7 @@ describe("PluginApp component", () => {
             }
           }}
           offlineMode={false}
+          enableStudentLanguageSwitching={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);

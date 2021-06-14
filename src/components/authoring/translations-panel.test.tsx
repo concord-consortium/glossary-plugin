@@ -27,6 +27,7 @@ const defGlossary: IGlossary = {
   showSideBar: false,
   autoShowMediaInPopup: false,
   enableStudentRecording: false,
+  enableStudentLanguageSwitching: false,
   translations: {
     es: {
       "cloud.word": "a",
@@ -68,6 +69,7 @@ describe("TranslationsPanel component", () => {
       showSideBar: false,
       autoShowMediaInPopup: false,
       enableStudentRecording: false,
+      enableStudentLanguageSwitching: false,
       translations: {}
     } as IGlossary);
   });
@@ -109,6 +111,7 @@ describe("TranslationsPanel component", () => {
       showSideBar: false,
       autoShowMediaInPopup: false,
       enableStudentRecording: false,
+      enableStudentLanguageSwitching: false,
       translations: {
         es: {
           "cloud.word": "a",

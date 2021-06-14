@@ -11,6 +11,8 @@ cache:
 
 before_install:
 - travis_retry gem install s3_website -v 3.4.0
+# the next commands is to fix "SSLContext object is not available" error in awscli install
+- travis_retry pip install requests[security]
 - travis_retry pip install awscli --upgrade --user
 
 install:

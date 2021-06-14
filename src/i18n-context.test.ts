@@ -53,7 +53,8 @@ describe("pluginContext", () => {
         askForUserDefinition: true,
         showSideBar: true,
         autoShowMediaInPopup: true,
-        enableStudentRecording: true
+        enableStudentRecording: true,
+        enableStudentLanguageSwitching: true
       };
       beforeEach(() => {
         fetch.mockResponse(JSON.stringify(glossary));

@@ -3,6 +3,7 @@ import GlossaryPopup from "./glossary-popup";
 import Definition from "./definition";
 import { shallow, mount } from "enzyme";
 import {pluginContext} from "../../plugin-context";
+import { DEFAULT_LANG } from "../../i18n-context";
 
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
@@ -156,18 +157,21 @@ describe("GlossaryPopup component", () => {
   describe("when secondLanguage is provided", () => {
     it("renders language toggle and calls provided callback on click", () => {
       const onLangChange = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup
           word="test"
           definition="test"
           userDefinitions={[]}
           askForUserDefinition={false}
-          secondLanguage="es"
+          languages={[
+            {lang: DEFAULT_LANG, selected: true},
+            {lang: "es", selected: false}
+          ]}
           onLanguageChange={onLangChange}
         />
       );
-      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(1);
-      wrapper.find("[data-cy='langToggle']").simulate("click");
+      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(2);
+      wrapper.find("[data-cy='langToggle']").first().simulate("click");
       expect(onLangChange).toHaveBeenCalled();
     });
   });

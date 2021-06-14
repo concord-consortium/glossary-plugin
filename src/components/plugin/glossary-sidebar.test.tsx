@@ -146,11 +146,11 @@ describe("GlossarySidebar component", () => {
   describe("when secondLanguage is provided", () => {
     it("renders language toggle and calls provided callback on click", () => {
       const onLangChange = jest.fn();
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={{}}
-          secondLanguage="es"
+          languages={[{lang: "es", selected: false]}
           onLanguageChange={onLangChange}
         />
       );

@@ -72,6 +72,10 @@ export const fetchGlossary = (
     fetch(glossaryUrl)
     .then( (response: Response) => {
       response.json().then(setLangs);
+    })
+    .catch((e) => {
+      // tslint:disable-next-line:no-console
+      console.warn(e);
     });
   } else {
     callback({languageCodes: SUPPORTED_LANGUAGES, enableRecording: false});
