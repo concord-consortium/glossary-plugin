@@ -7,6 +7,9 @@ import { createRecordingUrl } from "./utils/audio";
 
 export const FIREBASE_APP = "glossary-plugin";
 
+export const FirestoreBatchUpdateSize = 100; // 500 is max, use 100 for better progress updates
+export const MaxFirestoreBatchUpdateSize = 500; // 500 is max in Firebase
+
 let dbInstance: firebase.firestore.Firestore | null = null;
 
 let signedIn = false;
@@ -107,13 +110,32 @@ export const watchStudentSettings = (
     }));
 };
 
-export const saveLogEvent = (
+export const sendLogEventToFirestore = (
   source: string,
   contextId: string,
   logEvent: ILogEvent
 ) => {
   const db = getFirestore();
   db.collection(logEventPath(source, contextId)).add(logEvent);
+};
+
+export const sendBulkLogEventsToFirestore = async (
+  source: string,
+  contextId: string,
+  logEvents: ILogEvent[]
+) => {
+  if (logEvents.length > MaxFirestoreBatchUpdateSize) {
+    throw new Error("Too many log events to write in one batch!");
+  }
+  const db = getFirestore();
+  const batch = db.batch();
+  const collection = db.collection(logEventPath(source, contextId));
+  logEvents.forEach((logEvent) => {
+    // there is no batch.add, you just use set on a new reference
+    const ref = collection.doc();
+    batch.set(ref, logEvent);
+  });
+  await batch.commit();
 };
 
 export const watchClassEvents = (

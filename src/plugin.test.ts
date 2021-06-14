@@ -8,6 +8,10 @@ import { signInWithToken } from "./db";
 jest.mock("@concord-consortium/lara-plugin-api");
 jest.mock("./db");
 
+(PluginAPI.events as any) = {
+  onPluginSyncRequest: jest.fn()
+};
+
 describe("LARA plugin initialization", () => {
   it("loads without crashing and calls LARA.register", () => {
     initPlugin();
@@ -34,7 +38,8 @@ describe("GlossaryPlugin", () => {
     container: document.createElement("div"),
     wrappedEmbeddable: null,
     log: (logData: string | ILogData) => { /** null */ },
-    resourceUrl: "http://activity.com/123"
+    resourceUrl: "http://activity.com/123",
+    offlineMode: false
   };
 
   beforeEach(() => {
@@ -47,6 +52,7 @@ describe("GlossaryPlugin", () => {
     // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
     await plugin.renderPluginApp();
     expect(plugin.pluginAppComponent).not.toBeUndefined();
+    expect(PluginAPI.events.onPluginSyncRequest).toBeCalled();
   });
 
   it("provides reasonable fallback state if provided values are malformed", async () => {
