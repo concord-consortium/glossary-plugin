@@ -99,6 +99,19 @@ The dashboard queries events within a class (denoted by a `contextId` equal to t
 **NOTE**: This activity url parsing code expects a defined format.  This code is brittle and will need to change if/when that
 format changes.
 
+## Updating Existing Glossary Words
+
+The authoring UI does not currently provide a way to rename a glossary word so this must be done manually.  Here are the steps to do that:
+
+1. In Lara, edit the glossary and note the glossary id (it is in the small gray text under glossary title).  For this example the id will be "oRKDulC2nuAoBjeIaAIh", which is the Waters glossary.
+2. Login to the AWS console, load the S3 GUI and browse to models-resources > glossary-resources/ > oRKDulC2nuAoBjeIaAIh/ (note that last folder is id from previous step)
+3. Download the glossary.json file from that folder in S3 and make any changes needed locally.
+4. As a safe guard load https://jsonlint.com in your browser and validate the changed json from step 3.
+5. When you have validated the changed glossary.json file upload it over the existing one in S3.
+6. You may need to wait up to 5 minutes for CloudFront to see the change (and for the change to be visible in the Glossary). In the meantime you can verify the change was saved on S3 by using the S3 url shown in the GUI. If CloudFront seems "stuck" on the old content you can manually invalidate the path at:
+   https://console.aws.amazon.com/cloudfront/home?region=us-east-1#distribution-settings:E1QHTGVGYD1DWZ
+   The path to invalidate in this example would be:
+   `/glossary-resources/oRKDulC2nuAoBjeIaAIh/glossary.json`
 
 ## Development
 
