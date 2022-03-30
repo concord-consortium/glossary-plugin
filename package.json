@@ -111,7 +111,7 @@
     "@concord-consortium/token-service": "^1.1.0",
     "ajv": "^6.12.3",
     "ajv-keywords": "^3.4.0",
-    "aws-sdk": "^2.454.0",
+    "aws-sdk": "^2.814.0",
     "client-oauth2": "^4.2.5",
     "clone": "^2.1.2",
     "dexie": "^3.0.3",
