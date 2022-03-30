@@ -39,6 +39,7 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
@@ -79,7 +80,7 @@
     "fork-ts-checker-webpack-plugin": "^0.4.15",
     "identity-obj-proxy": "^3.0.0",
     "ignore-styles": "^5.0.1",
-    "jest": "^24.8.0",
+    "jest": "^27.5.1",
     "jest-fetch-mock": "^1.7.5",
     "mini-css-extract-plugin": "^0.4.5",
     "node-sass": "^4.13.0",
@@ -90,7 +91,7 @@
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.22.1",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "^27.1.4",
     "ts-loader": "^4.5.0",
     "ts-node": "^7.0.1",
     "tslint": "^6.1.3",
