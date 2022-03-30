@@ -16,7 +16,7 @@ let signedIn = false;
 
 let app: firebase.app.App;
 
-let snapshotSubscriptions: Array<() => void> = [];
+let snapshotSubscriptions: (() => void)[] = [];
 
 export const getFirestore = () => {
   if (!dbInstance) {
