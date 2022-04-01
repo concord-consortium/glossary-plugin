@@ -14,7 +14,6 @@ module.exports = (env, argv) => {
         'Access-Control-Allow-Origin': '*'
       }
     },
-    devtool: 'source-map',
     entry: {
       demo: './src/demo.tsx',
       plugin: './src/plugin.tsx',
@@ -22,9 +21,6 @@ module.exports = (env, argv) => {
       dashboard: './src/dashboard.tsx'
     },
     mode: devMode ? 'development' : 'production',
-    output: {
-      filename: '[name].js',
-    },
     performance: { hints: false },
     module: {
       rules: [
@@ -85,9 +81,11 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: "plugin.css"
       }),
-      new CopyWebpackPlugin([
-        {from: 'src/public'}
-      ])
+      new CopyWebpackPlugin({
+        patterns: [
+          {from: 'src/public'}
+        ]
+      })
     ]
   };
 };

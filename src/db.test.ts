@@ -23,7 +23,7 @@ describe("db / Firestore helpers", () => {
     const collectionMock: any = jest.fn(() => collectionResult);
 
     signInWithCustomTokenMock = jest.fn();
-    signOutMock = jest.fn(() => new Promise((resolve) => resolve()));
+    signOutMock = jest.fn(() => new Promise<void>((resolve) => resolve()));
     appMock = {
       firestore: jest.fn(() => ({
         doc: docMock,

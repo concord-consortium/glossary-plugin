@@ -467,6 +467,6 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private canRecord(props: IProps) {
     return !!props.enableStudentRecording
-        && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && MediaRecorder);
+        && !!((navigator.mediaDevices?.getUserMedia !== undefined) && MediaRecorder);
   }
 }

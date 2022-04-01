@@ -76,7 +76,7 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
     const { glossary } = this.props;
     const newGlossary = clone(glossary);
     const fileReadPromises = acceptedFiles.map(file =>
-      new Promise((resolve, reject) => {
+      new Promise<void>((resolve, reject) => {
         const error = () => reject(`Reading of ${file.name} has failed.`);
         const reader = new window.FileReader();
         reader.readAsText(file, "UTF-8");
