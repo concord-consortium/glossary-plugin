@@ -188,15 +188,16 @@ export default class PluginApp extends React.Component<IProps, IState> {
             // Note that they might be available if previously this mode was enabled.
             openPopups.length === 0 ? null : openPopups.map((desc: IOpenPopupDesc) => {
               const {word, container} = desc;
+              const glossaryItem = definitionsByWord[word.toLowerCase()];
               return ReactDOM.createPortal(
                 <GlossaryPopup
                   word={word}
-                  definition={definitionsByWord[word].definition}
-                  imageUrl={definitionsByWord[word].image}
-                  zoomImageUrl={definitionsByWord[word].zoomImage}
-                  videoUrl={definitionsByWord[word].video}
-                  imageCaption={definitionsByWord[word].imageCaption}
-                  videoCaption={definitionsByWord[word].videoCaption}
+                  definition={glossaryItem.definition}
+                  imageUrl={glossaryItem.image}
+                  zoomImageUrl={glossaryItem.zoomImage}
+                  videoUrl={glossaryItem.video}
+                  imageCaption={glossaryItem.imageCaption}
+                  videoCaption={glossaryItem.videoCaption}
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}
