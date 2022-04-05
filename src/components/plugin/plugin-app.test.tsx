@@ -19,6 +19,12 @@ describe("PluginApp component", () => {
       definition: "test definition"
     }
   ];
+  const upperCaseDefinitions = [
+    {
+      word: "Test",
+      definition: "test definition"
+    }
+  ];
   const initialLearnerState = { definitions: {} };
 
   // Setup MockPluginAPI before each test to reset mock function counters (jest.fn()).
@@ -194,6 +200,29 @@ describe("PluginApp component", () => {
       <PluginApp
         saveState={saveState}
         definitions={definitions}
+        initialLearnerState={initialLearnerState}
+        askForUserDefinition={true}
+        autoShowMediaInPopup={false}
+        enableStudentRecording={false}
+        showSideBar={true}
+        translations={{}}
+        offlineMode={false}
+        enableStudentLanguageSwitching={false}
+      />
+    );
+
+    MockPluginAPI.simulateTestWordClick(testWord.toUpperCase());
+
+    expect(MockPluginAPI.addPopup).toHaveBeenCalledTimes(1);
+    expect((wrapper.state("openPopups") as any).length).toEqual(1);
+    expect(wrapper.find(GlossaryPopup).length).toEqual(1);
+  });
+
+  it("calls addPopup when a lowercase word is clicked, even if the definition starts with an uppercase letter", () => {
+    const wrapper = shallow(
+      <PluginApp
+        saveState={saveState}
+        definitions={upperCaseDefinitions}
         initialLearnerState={initialLearnerState}
         askForUserDefinition={true}
         autoShowMediaInPopup={false}
