@@ -5,11 +5,12 @@ import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { FIREBASE_APP, signInWithToken } from "./db";
 import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
-import { IGlossary } from "./types";
+import { IGlossary, IGlossaryModelAuthoringInfo } from "./types";
 import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
 import { parseUrl } from "./utils/get-url-param";
 import { syncLogEventsToFirestore, setStudentInfo } from "./components/plugin/offline-storage";
 import { getStudentInfo } from "./utils/get-student-info";
+import { renderGlossaryModelAuthoring } from "./components/model-authoring/model-authoring-app";
 
 const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
   const defaultState: IGlossaryAuthoredState = {
@@ -143,6 +144,13 @@ export class GlossaryAuthoringPlugin {
 }
 
 export const initPlugin = () => {
+  // check if we are being loaded in the LARA glossary edit page
+  const glossaryModelAuthoring = (window as any).LARA?.GlossaryModelAuthoring as IGlossaryModelAuthoringInfo | undefined;
+  if (glossaryModelAuthoring) {
+    renderGlossaryModelAuthoring(glossaryModelAuthoring)
+    return
+  }
+
   if (!PluginAPI || !PluginAPI.registerPlugin) {
     // tslint:disable-next-line:no-console
     console.warn("LARA Plugin API not available, GlossaryPlugin terminating");

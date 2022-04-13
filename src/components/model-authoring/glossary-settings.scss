@@ -1,0 +1,36 @@
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #0592af;
+    border-radius: 5px 5px 0px 0px;
+    padding: 10px;
+    h1 {
+        color: white;
+        font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+        font-weight: normal;
+    }
+}
+
+.content {
+    background-color: hsl(0, 0%, 90%);
+    padding: 10px;
+    
+    h2 {
+        color: #313131;
+        font: 700 16px 'Lato', helvetica, verdana, sans-serif;
+        margin-block-start: 10px;
+        margin-block-end: 10px;
+    }
+    
+    input {
+        margin-block-end: 15px;
+    }
+    
+    label {
+        color: #313131;
+        padding-left: 5px;
+        font: 700 16px 'Lato', helvetica, verdana, sans-serif;
+        margin-block-start: 10px;
+        margin-block-end: 10px;
+    }
+}

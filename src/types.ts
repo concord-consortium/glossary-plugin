@@ -5,10 +5,10 @@ export interface IGlossary {
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
   enableStudentLanguageSwitching: boolean;
-  translations?: {
-    [languageCode: string]: ITranslation
-  };
+  translations?: ITranslationMap;
 }
+
+export type ITranslationMap = Record<string, ITranslation>;
 
 export interface ITranslation {
   [word: string]: string;
@@ -117,3 +117,18 @@ export type ILogEventPartial = ISimpleEventPartial | ITermClickedEventPartial | 
   IDefinitionSavedEventPartial | ITextToSpeechClickedEventPartial | ILanguageChangedPartial;
 
 export type ExpandableInteraction = "definitions" | "supports";
+
+// for new model authoring
+
+export interface IGlossaryModelAuthoringInitialData {
+  name: string
+  json: IGlossary
+}
+
+export interface IGlossaryModelAuthoringInfo {
+  apiUrl: string;
+  containerId: string;
+  initialData: IGlossaryModelAuthoringInitialData;
+}
+
+export type IGlossarySettings = Omit<Omit<IGlossary, "definitions">, "translations">;
