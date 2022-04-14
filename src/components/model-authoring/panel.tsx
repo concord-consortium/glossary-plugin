@@ -8,7 +8,7 @@ interface IProps {
   label: string;
   collapsible: boolean;
   minHeight: number;
-  children: JSX.Element | JSX.Element[]
+  children: any
 }
 
 export const Panel = ({ contentClassName, label, collapsible, minHeight, children }: IProps) => {

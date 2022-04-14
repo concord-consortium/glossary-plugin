@@ -1,0 +1,89 @@
+.definitionForm {
+  display: flex;
+  background-color: #fff;
+
+  .left {
+    min-width: 500px;
+    border-right: 1px solid #0592af;
+
+    .header {
+      background-color: #0592af;
+      color: white;
+      font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+
+      a {
+        margin-right: 20px;
+        color: white;
+      }
+      span {
+        cursor: pointer;
+      }
+    }
+
+    form {
+      padding: 10px 20px;
+
+      .fieldset {
+        border: none;
+        padding: 0;
+        margin: 20px 0;
+        display: flex;
+        flex-direction: row;
+
+        legend {
+          display: inline;
+          width: 140px;
+          white-space: nowrap;
+        }
+
+        :nth-child(2) {
+          display: flex;
+          flex-direction: column;
+
+          :nth-child(1) {
+            flex-grow: 1;
+          }
+
+          flex-grow: 1;
+        }
+
+        input, textarea {
+          padding: 3px;
+        }
+
+        textarea {
+          height: 60px;
+        }
+
+        .error {
+          display: block;
+          color: red;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .buttons {
+      padding: 10px 0 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+
+      button {
+        padding: 10px;
+      }
+    }
+  }
+
+  .right {
+    padding: 10px;
+    margin-left: 10px;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
