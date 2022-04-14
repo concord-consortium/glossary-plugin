@@ -1,0 +1,31 @@
+.panel {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0592af;
+    border-radius: 5px 5px 0px 0px;
+    padding: 10px;
+
+    h1 {
+      color: white;
+      font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+      font-weight: normal;
+      padding: 0;
+      margin: 0;
+    }
+
+    button {
+      height: fit-content;
+      background-color: #0592af;
+      border: none;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  .content {
+    padding: 10px;
+  }
+}
