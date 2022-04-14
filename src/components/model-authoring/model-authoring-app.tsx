@@ -11,7 +11,9 @@ import { useSetDefaultGlossary } from "../../hooks/use-set-default-glossary";
 
 import * as css from "./model-authoring-app.scss";
 import SaveIndicator from "./save-indicator";
-import { debugJson } from "./params";
+import { debugJson, saveInDemo } from "./params";
+
+import {demoGlossary} from "./demo-glossary"
 
 interface IProps {
   demo?: boolean;
@@ -23,6 +25,11 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
   const [name, setName] = useState<string>(initialData.name);
   const [glossary, setGlossary] = useState<IGlossary>(initialData.json);
   const {saveIndicatorStatus, saveGlossary, saveName} = useSave({demo, apiUrl});
+
+  const updateName = (newName: string) => {
+    setName(newName);
+    saveName(newName);
+  }
 
   const updateGlossary = useCallback((newGlossary: IGlossary) => {
     saveGlossary(newGlossary);
@@ -46,18 +53,24 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     updateGlossary({...glossary, translations})
   }, [glossary]);
 
+  const handleClearSavedDemoData = () => {
+    updateGlossary(demoGlossary.json);
+    updateName(demoGlossary.name);
+  }
+
   return (
     <div className={css.modelAuthoringApp}>
       <div className={css.header}>
         <h1>Edit Glossary: {name}</h1>
         <SaveIndicator status={saveIndicatorStatus} />
+        {demo && saveInDemo && <div className={css.clearDemoData}><button onClick={handleClearSavedDemoData}>Clear Saved Demo Data</button></div>}
       </div>
       <div className={css.columns}>
         <div className={css.leftColumn}>
           <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions}/>
         </div>
         <div className={css.rightColumn}>
-          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={saveName}/></div>
+          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName}/></div>
       </div>
       {debugJson && <div className={css.debugJson}>{JSON.stringify(glossary, null, 2)}</div>}
     </div>

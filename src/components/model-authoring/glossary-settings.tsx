@@ -6,7 +6,7 @@ interface IProps {
   name: string;
   glossary: IGlossary;
   saveSettings: (settings: IGlossarySettings) => void;
-  saveName: (name: string) => Promise<void>;
+  saveName: (name: string) => void;
 }
 
 export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IProps) => {
@@ -25,7 +25,7 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
         <h2>Glossary Name</h2>
         <input defaultValue={name} />
         <br />
-        <input type="checkbox" id="askForUserDefinition" defaultChecked={askForUserDefinition} onChange={handleChange("askForUserDefinition")} />
+        <input type="checkbox" id="askForUserDefinition" checked={askForUserDefinition} onChange={handleChange("askForUserDefinition")} />
         <label>Require student-provided definitions</label>
         <div className="help">When this option is enabled, students will be required to submit their own
           definition before they can see the authored definition for a term.</div>
