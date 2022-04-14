@@ -1,0 +1,36 @@
+.modelAuthoringApp {
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    display: flex;
+    align-items: center;
+
+    h1 {
+      color: #ea6d2f;
+      font: 700 24px 'Lato', helvetica, verdana, sans-serif;
+    }
+  }
+
+  .columns {
+    display: flex;
+    flex-direction: row;
+    gap: 3%;
+
+    .leftColumn {
+      width: 65%;
+    }
+
+    .rightColumn {
+      width: 30%;
+    }
+  }
+
+  .debugJson {
+    font-family: monospace;
+    white-space: pre;
+    margin: 20px;
+    border: 1px solid #777;
+    padding: 10px;
+  }
+}
