@@ -2,21 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import ModelAuthoringApp from "./components/model-authoring/model-authoring-app";
 import { saveInDemo } from "./components/model-authoring/params";
+import { demoGlossary } from "./components/model-authoring/demo-glossary";
 import { demoGlossaryJSONKey, demoGlossaryNameKey } from "./hooks/use-save";
-import { IGlossaryModelAuthoringInitialData } from "./types";
 
-let initialData: IGlossaryModelAuthoringInitialData = {
-  name: "Demo Glossary",
-  json: {
-    askForUserDefinition: true,
-    showSideBar: true,
-    definitions: [],
-    autoShowMediaInPopup: true,
-    enableStudentRecording: true,
-    enableStudentLanguageSwitching: true,
-    translations: {}
-  }
-};
+let initialData = demoGlossary;
 
 // merge in any saved demo data
 if (saveInDemo) {
