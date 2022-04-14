@@ -21,8 +21,12 @@ export const EditName = ({ name, saveName }: IProps) => {
   }
 
   const handleSave = () => {
-    saveName(newName);
-    setEditing(false);
+    if (newName.length) {
+      saveName(newName);
+      setEditing(false);
+    } else {
+      window.alert("The glossary name cannot be blank.")
+    }
   }
 
   return (
