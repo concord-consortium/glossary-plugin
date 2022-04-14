@@ -24,7 +24,7 @@ const ModelAuthoringDemo = () => {
   return (
     <div>
       <div style={{backgroundColor: "#777", color: "#fff", padding: 5, marginBottom: 5, textAlign: "center"}}>
-        This is a demo of the glossary model authoring.  No data is being saved.
+        This is a demo of the glossary model authoring.  {saveInDemo ? "Data is being saved to local storage due to saveInDemo parameter." : "No data is being saved."}
       </div>
       <ModelAuthoringApp demo={true} initialData={initialData} />
     </div>
