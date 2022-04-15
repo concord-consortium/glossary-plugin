@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import * as css from "./edit-name.scss";
 
@@ -11,13 +11,15 @@ interface IProps {
 export const EditName = ({ name, saveName }: IProps) => {
   const [newName, setNewName] = useState<string>(name);
   const [editing, setEditing] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
   }
 
-  const handleEditClick = () => {
-    setEditing(true);
+  const handleEdit = () => {
+    setEditing(true)
+    setTimeout(() => inputRef.current?.focus(), 1)
   }
 
   const handleSave = () => {
@@ -25,14 +27,22 @@ export const EditName = ({ name, saveName }: IProps) => {
     setEditing(false);
   }
 
+  const handleCancel = () => {
+    setNewName(name);
+    setEditing(false);
+  }
+
   return (
-    <>
-      <input value={newName} disabled={!editing} onChange={handleChange} />
+    <div className={css.editName}>
+      <input value={newName} disabled={!editing} onChange={handleChange} ref={inputRef} />
       {editing ?
-        <button className={css.button} onClick={handleSave}>Save</button>
+        <>
+          <button onClick={handleSave}>Save</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </>
         :
-        <button className={css.button} onClick={handleEditClick}>Edit</button>
+        <button onClick={handleEdit}>Edit</button>
       }
-    </>
+    </div>
   )
 }
