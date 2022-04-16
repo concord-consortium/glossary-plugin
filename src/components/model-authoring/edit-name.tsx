@@ -11,7 +11,10 @@ interface IProps {
 export const EditName = ({ name, saveName }: IProps) => {
   const [newName, setNewName] = useState<string>(name);
   const [editing, setEditing] = useState<boolean>(false);
+  const [error, setError] = useState<string|null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const focusInput = () => setTimeout(() => inputRef.current?.focus(), 1)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
@@ -19,34 +22,43 @@ export const EditName = ({ name, saveName }: IProps) => {
 
   const handleEdit = () => {
     setEditing(true)
-    setTimeout(() => inputRef.current?.focus(), 1)
+    setError(null);
+    focusInput()
   }
 
   const handleSave = () => {
-    if (newName.length) {
-      saveName(newName);
+    const trimmedName = newName.trim()
+    if (trimmedName.length) {
+      saveName(trimmedName);
+      setNewName(trimmedName);
       setEditing(false);
+      setError(null);
     } else {
-      window.alert("The glossary name cannot be blank.")
+      setError("Glossary name cannot be empty");
+      focusInput()
     }
   }
 
   const handleCancel = () => {
     setNewName(name);
     setEditing(false);
+    setError(null);
   }
 
   return (
     <div className={css.editName}>
-      <input value={newName} disabled={!editing} onChange={handleChange} ref={inputRef} />
-      {editing ?
-        <>
-          <button onClick={handleSave}>Save</button>
-          <button onClick={handleCancel}>Cancel</button>
-        </>
-        :
-        <button onClick={handleEdit}>Edit</button>
-      }
+      <div className={css.inputs}>
+        <input value={newName} disabled={!editing} onChange={handleChange} ref={inputRef} />
+        {editing ?
+          <>
+            <button onClick={handleSave}>Save</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </>
+          :
+          <button onClick={handleEdit}>Edit</button>
+        }
+      </div>
+      {error && <div className={css.error}>{error}</div>}
     </div>
   )
 }
