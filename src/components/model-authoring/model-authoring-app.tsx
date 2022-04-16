@@ -7,7 +7,7 @@ import { GlossaryTermsDefinitions } from "./glossary-terms-definitions";
 import { GlossarySettings } from "./glossary-settings";
 
 import { useSave } from "../../hooks/use-save";
-import { useSetDefaultGlossary } from "../../hooks/use-set-default-glossary";
+import { useMigrateGlossary } from "../../hooks/use-migrate-glossary";
 
 import * as css from "./model-authoring-app.scss";
 import SaveIndicator from "./save-indicator";
@@ -36,9 +36,9 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     setGlossary(newGlossary);
   }, [setGlossary, saveGlossary]);
 
-  // set the initial glossary to the default if it's empty
+  // set the initial glossary to the default if it's empty and fill any missing updatedAt values
   useEffect(() => {
-    useSetDefaultGlossary(initialData.json, updateGlossary);
+    useMigrateGlossary(initialData.json, updateGlossary);
   }, [initialData]);
 
   const saveSettings = useCallback((settings: IGlossarySettings) => {
