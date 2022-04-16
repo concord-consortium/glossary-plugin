@@ -1,8 +1,8 @@
 .outerPopup {
-  margin-top: 20px;
+  margin: 20px 0;
   align-self: center;
   background-color: white;
-  max-width: 300px;
+  width: 300px;
   color: #313131;
 
   .header {
@@ -21,7 +21,7 @@
   }
 
   .innerPopup {
-    padding: 8px;
+    padding: 10px;
     border: solid #0592af;
     border-width: 0px 1px 1px 1px;
   }
