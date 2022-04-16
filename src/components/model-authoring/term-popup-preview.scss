@@ -1,28 +1,28 @@
-.outerPopup{
-	margin-top: 20px;
-	align-self: center;
-	background-color: white;
-	max-width: 300px;
-	color: #313131;
+.outerPopup {
+  margin-top: 20px;
+  align-self: center;
+  background-color: white;
+  max-width: 300px;
+  color: #313131;
 
-	.header {
-		display: flex;
-		justify-content: space-between;
-		padding: 8px;
-		background-color: #cdebf2;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #cdebf2;
 
-		h4 {
-			margin: 0px;
-		}
+    h4 {
+      margin: 0px;
+    }
 
-		.exit {
-			color: #0592af;
-		}
-	}
+    .exit {
+      color: #0592af;
+    }
+  }
 
-	.innerPopup {
-		padding: 8px;
-		border: solid #0592af;
-		border-width: 0px 1px 1px 1px;
-	}
+  .innerPopup {
+    padding: 8px;
+    border: solid #0592af;
+    border-width: 0px 1px 1px 1px;
+  }
 }

@@ -46,6 +46,22 @@ export const defaultTranslate: ITranslateFunc = (key, fallback = null, variables
   return replaceVariables(result, variables);
 };
 
+export const translate = (translations: any, lang: string, key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
+  // Note that `translations` consist of authored translations like terms or image captions.
+  // UI translations consists of UI elements translations that are built into the app.
+  // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
+  // of some UI elements or prompts.
+  const result = translations[lang] && translations[lang][key] ||
+    translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
+    UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
+    UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
+    fallback;
+  if (!result) {
+    return result;
+  }
+  return replaceVariables(result, variables);
+}
+
 export interface IFetchGlossaryCallbackOptions {
   languageCodes: string[];
   enableRecording: boolean;

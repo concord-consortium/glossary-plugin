@@ -4,7 +4,7 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
+import { DEFAULT_LANG, translate } from "../../i18n-context";
 import { pluginContext } from "../../plugin-context";
 import { watchStudentSettings, sendLogEventToFirestore } from "../../db";
 import { ILogEvent, ILogEventPartial } from "../../types";
@@ -236,21 +236,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
-    const { translations } = this.props;
-    const { lang } = this.state;
-    // Note that `translations` consist of authored translations like terms or image captions.
-    // UI translations consists of UI elements translations that are built into the app.
-    // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
-    // of some UI elements or prompts.
-    const result = translations[lang] && translations[lang][key] ||
-      translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
-      UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
-      UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
-      fallback;
-    if (!result) {
-      return result;
-    }
-    return replaceVariables(result, variables);
+    return translate(this.props.translations, this.state.lang, key, fallback, variables);
   }
 
   public log = (event: ILogEventPartial) => {

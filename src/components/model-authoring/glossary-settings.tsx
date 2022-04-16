@@ -65,7 +65,7 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
 
       <div className={css.settingInformation}>
         <div className={css.checkboxRow}>
-          <input type="checkbox" defaultChecked={autoShowMediaInPopup} onChange={handleChange("autoShowMediaInPopup")}/>
+          <input type="checkbox" checked={autoShowMediaInPopup} onChange={handleChange("autoShowMediaInPopup")}/>
           <label>
             Automatically show media (image or video)
           </label>
@@ -80,20 +80,7 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
 
       <div className={css.settingInformation}>
         <div className={css.checkboxRow}>
-          <input type="checkbox" defaultChecked={showSideBar} onChange={handleChange("showSideBar")}/>
-          <label>
-            Show Glossary Sidebar on activity pages
-          </label>
-        </div>
-        <div className={css.help}>
-          When this option is enabled, students will have access on every page to a glossary
-          of all terms in the activity via a button in the page sidebar.
-        </div>
-      </div>
-
-      <div className={css.settingInformation}>
-        <div className={css.checkboxRow}>
-          <input type="checkbox" defaultChecked={enableStudentLanguageSwitching}  onChange={handleChange("enableStudentLanguageSwitching")}/>
+          <input type="checkbox" checked={enableStudentLanguageSwitching}  onChange={handleChange("enableStudentLanguageSwitching")}/>
           <label>
             Display language switch for all students
           </label>
@@ -106,6 +93,19 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
       </div>
 
       <div className={css.settingInformation}>
+        <div className={css.checkboxRow}>
+          <input type="checkbox" checked={showSideBar} onChange={handleChange("showSideBar")}/>
+          <label>
+            Show Glossary Sidebar on activity pages
+          </label>
+        </div>
+        <div className={css.help}>
+          When this option is enabled, students will have access on every page to a glossary
+          of all terms in the activity via a button in the page sidebar.
+        </div>
+      </div>
+
+      <div className={css.settingInformation}>
         <h2 className={css.termPopup}>Term Popup Preview</h2>
         <div className={css.help}>
           This popup shows an example term popup to demonstrate these settings.
@@ -113,6 +113,7 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
           Glossary Terms & Definitions panel.
         </div>
       </div>
+
       <TermPopUpPreview settings={glossary}/>
     </Panel>
   )
