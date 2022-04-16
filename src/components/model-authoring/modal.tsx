@@ -7,11 +7,11 @@ import * as css from "./modal.scss";
 interface IProps {
   children: any
   title?: string
-  width?: number
+  contentStyle?: React.CSSProperties
   onClose: () => void
 }
 
-export const Modal = ({ title, width, children, onClose }: IProps) => {
+export const Modal = ({ title, contentStyle, children, onClose }: IProps) => {
 
   useEffect(() => {
     const listenForEscape = (e: KeyboardEvent) => {
@@ -34,13 +34,11 @@ export const Modal = ({ title, width, children, onClose }: IProps) => {
     }
   }
 
-  const style: React.CSSProperties = width ? {width} : {}
-
   return (
     <>
       <div className={css.container}>
         <div className={css.background} onClick={onClose}/>
-        <div className={css.content} style={style}>
+        <div className={css.content} style={contentStyle}>
           {renderTitle()}
           {children}
         </div>

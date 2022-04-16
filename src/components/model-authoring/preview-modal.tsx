@@ -25,7 +25,7 @@ export const PreviewModal = ({ terms, glossary, onClose }: IProps) => {
   const handlePrev = () => setIndex(index === 0 ? sortedTerms.length - 1 : index - 1)
 
   return (
-    <Modal onClose={onClose} title="Preview Terms" width={600}>
+    <Modal onClose={onClose} title="Preview Terms" contentStyle={{width: 600}}>
       <div className={css.previewModal}>
         <div className={css.select}>
           <strong>Term</strong>

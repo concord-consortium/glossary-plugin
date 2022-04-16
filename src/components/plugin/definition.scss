@@ -7,7 +7,7 @@
 }
 .imageContainer {
   max-width: 256px;
-  margin: 10px 0;
+  margin: 10px auto;
   img {
     max-width: 256px;
     max-height: 144px;
@@ -15,5 +15,10 @@
   video {
     max-width: 256px;
     max-height: 144px
+  }
+  .caption {
+    margin-top: 5px;
+    max-width: 256px;
+    font-size: 0.7em;
   }
 }

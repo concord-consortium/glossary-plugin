@@ -6,9 +6,34 @@ import { Panel } from "./panel";
 import { Modal } from "./modal";
 import { DefinitionTable } from "./definition-table";
 import { DefinitionForm, IWordDefinitionFormErrors, NextAddAction, NextEditAction } from "./definition-form";
+import { PreviewModal } from "./preview-modal";
+import Definition from "../plugin/definition";
 
 import * as css from "./glossary-terms-definitions.scss";
-import { PreviewModal } from "./preview-modal";
+import * as imageModalCss from "./image-and-video-modal.scss";
+
+interface IImageModal {
+  type: "image"
+  definition: IWordDefinition
+}
+interface IVideoModal {
+  type: "video"
+  definition: IWordDefinition
+}
+interface IPreviewTerms {
+  type: "preview terms"
+}
+interface IAddModal {
+  type: "add term"
+  now: number
+}
+interface IEditModal {
+  type: "edit term"
+  definition: IWordDefinition
+}
+
+type IModal = IImageModal | IVideoModal | IPreviewTerms | IAddModal | IEditModal;
+
 interface IProps {
   glossary: IGlossary;
   saveDefinitions: (definitions: IWordDefinition[]) => void;
@@ -18,7 +43,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   const {definitions} = glossary
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "updated">("asc")
   const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
-  const [modal, setModal] = useState<"preview terms" | number | IWordDefinition | undefined>(undefined)
+  const [modal, setModal] = useState<IModal | undefined>(undefined)
 
   const isWordDefined = (word: string) => definitions.find(d => d.word === word) !== undefined
   const isValidUrl = (url?: string) => url ? url.startsWith("http") : true
@@ -34,11 +59,15 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
     }
   }
 
-  const handleShowPreviewTerms = () => setModal("preview terms")
+  const handleShowPreviewTerms = () => setModal({type: "preview terms"})
 
-  const handleShowAddDefinition = () => setModal(Date.now()) // Date.now() ensures that we redraw the form on each new add term click as we use it as the model key
+  const handleShowAddDefinition = () => setModal({type: "add term", now: Date.now()}) // Date.now() ensures that we redraw the form on each new add term click as we use it as the model key
 
-  const handleShowEditDefinition = (definition: IWordDefinition) => setModal(definition)
+  const handleShowEditDefinition = (definition: IWordDefinition) => setModal({type: "edit term", definition})
+
+  const handleShowImageClick = (definition: IWordDefinition) => setModal({type: "image", definition})
+
+  const handleShowVideoClick = (definition: IWordDefinition) => setModal({type: "video", definition})
 
   const handleCloseModal = () => setModal(undefined)
 
@@ -53,6 +82,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
       newDefinitions.push(newDefinition)
 
       saveDefinitions(newDefinitions)
+
       switch (next) {
         case "save":
           handleCloseModal()
@@ -87,10 +117,10 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
           handleCloseModal()
           break
         case "save and edit previous":
-          setModal(sortedDefinitions[prevIndex])
+          setModal({type: "edit term", definition: sortedDefinitions[prevIndex]})
           break
         case "save and edit next":
-          setModal(sortedDefinitions[nextIndex])
+          setModal({type: "edit term", definition: sortedDefinitions[nextIndex]})
           break
       }
     }
@@ -119,21 +149,71 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   }
 
   const renderModal = () => {
-    if (modal === "preview terms") {
-      return <PreviewModal terms={definitions} glossary={glossary} onClose={handleCloseModal} />
-    }
-    else if (typeof modal === "number") {
-      return (
-        <Modal onClose={handleCloseModal}>
-          <DefinitionForm type="add" key={modal} onAdd={handleAddDefinition} onCancel={handleCloseModal} glossary={glossary} />
-        </Modal>
-      )
-    } else if (modal) {
-      return (
-        <Modal onClose={handleCloseModal}>
-          <DefinitionForm type="edit" key={modal.word} definition={modal} onEdit={handleEditDefinition} onCancel={handleCloseModal} glossary={glossary} />
-        </Modal>
-      )
+    if (modal) {
+      switch (modal.type) {
+        case "preview terms":
+          return <PreviewModal terms={definitions} glossary={glossary} onClose={handleCloseModal} />
+
+        case "add term":
+          return (
+            <Modal onClose={handleCloseModal}>
+              <DefinitionForm
+                type="add"
+                key={modal.now}
+                onAdd={handleAddDefinition}
+                onCancel={handleCloseModal}
+                glossary={glossary}
+              />
+            </Modal>
+          )
+
+        case "edit term":
+          return (
+            <Modal onClose={handleCloseModal}>
+              <DefinitionForm
+                type="edit"
+                key={modal.definition.word}
+                definition={modal.definition}
+                onEdit={handleEditDefinition}
+                onCancel={handleCloseModal}
+                glossary={glossary}
+              />
+            </Modal>
+          )
+
+        case "image":
+          const image = modal.definition
+          return (
+            <Modal onClose={handleCloseModal} title={`Preview Image: ${image.word}`}>
+              <div className={imageModalCss.imageAndVideoModal}>
+                <Definition
+                  word=""
+                  definition=""
+                  imageUrl={image.image}
+                  zoomImageUrl={image.zoomImage}
+                  imageCaption={image.imageCaption}
+                  autoShowMedia={true}
+                />
+              </div>
+            </Modal>
+          )
+
+        case "video":
+          const video = modal.definition
+          return (
+            <Modal onClose={handleCloseModal}  title={`Preview Video: ${video.word}`}>
+              <div className={imageModalCss.imageAndVideoModal}>
+                <Definition
+                  word=""
+                  definition=""
+                  videoUrl={video.video}
+                  videoCaption={video.videoCaption}
+                  autoShowMedia={true}
+                />
+              </div>
+            </Modal>
+          )
+      }
     }
   }
 
@@ -172,7 +252,15 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
             </select>
           </div>
         </div>
-        {haveDefinitions && <DefinitionTable definitions={sortedDefinitions} onDelete={handleDeleteDefinition} onEdit={handleShowEditDefinition} />}
+        {haveDefinitions && (
+          <DefinitionTable
+            definitions={sortedDefinitions}
+            onDelete={handleDeleteDefinition}
+            onEdit={handleShowEditDefinition}
+            onImageClick={handleShowImageClick}
+            onVideoClick={handleShowVideoClick}
+          />
+        )}
         {modal && renderModal()}
       </div>
     </Panel>
