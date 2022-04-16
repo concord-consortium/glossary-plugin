@@ -1,48 +1,47 @@
 .glossarySettings {
-    background-color: hsl(0, 0%, 90%);
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    min-width: 400px;
+  background-color: hsl(0, 0%, 90%);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 
-    h2 {
-        color: #313131;
-        font: 700 16px 'Lato', helvetica, verdana, sans-serif;
-        margin-block-start: 10px;
-        margin-block-end: 10px;
+  h2 {
+    color: #313131;
+    font: 700 16px 'Lato', helvetica, verdana, sans-serif;
+    margin-block-start: 10px;
+    margin-block-end: 10px;
+  }
+
+  h2.termPopup {
+    margin-block-start: 0px;
+  }
+
+  .settingInformation {
+    padding-top: 20px;
+
+    input {
+      margin-block-end: 15px;
     }
 
-    h2.termPopup {
-        margin-block-start: 0px;
+    label {
+      color: #313131;
+      padding-left: 5px;
+      line-height: 16px;
+      font: 700 16px 'Lato', helvetica, verdana, sans-serif;
     }
 
-    .settingInformation {
-        padding-top: 20px;
-
-        input {
-            margin-block-end: 15px;
-        }
-
-        label {
-            color: #313131;
-            padding-left: 5px;
-            line-height: 16px;
-            font: 700 16px 'Lato', helvetica, verdana, sans-serif;
-        }
-
-        .help {
-            color: #666;
-            font-size: 0.85em;
-            padding-left: 10px;
-            padding-right: 10px;
-        }
+    .help {
+      color: #666;
+      font-size: 0.85em;
+      padding-left: 10px;
+      padding-right: 10px;
     }
+  }
 
-    .enableStudentRecording {
-        margin-left: 45px;
-    }
+  .enableStudentRecording {
+    margin-left: 20px;
+  }
 
-    .disabled {
-        opacity: 50%;
-    }
+  .disabled {
+    opacity: 50%;
+  }
 }
