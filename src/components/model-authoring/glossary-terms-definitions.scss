@@ -1,4 +1,6 @@
 .glossaryTermsDefinitions {
+  padding: 10px;
+
   .header {
     display: flex;
     flex-direction: row;
@@ -7,12 +9,12 @@
 
     button {
       padding: 5px 10px;
+      margin-right: 10px;
     }
 
     strong {
       margin-right: 10px;
     }
-
 
     select {
       padding: 5px;
