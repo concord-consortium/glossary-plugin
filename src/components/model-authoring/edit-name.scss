@@ -1,9 +1,10 @@
 .editName {
   .inputs {
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 
     input {
-      margin-right: 15px;
       flex-grow: 1;
       padding: 5px;
     }

@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useCallback, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
-
-import * as css from "./definition-form.scss";
 import { TermPopUpPreview } from "./term-popup-preview";
+
+import * as css from "./shared-modal-form.scss";
 
 type IWordDefinitionKey = keyof IWordDefinition;
 export type IWordDefinitionFormErrors = Partial<Record<IWordDefinitionKey, string>>
@@ -118,7 +118,7 @@ export const DefinitionForm = (props: IProps) => {
   };
 
   return (
-    <div className={css.definitionForm}>
+    <div className={css.modalForm}>
       <div className={css.left}>
         <div className={css.header}>
           <div>

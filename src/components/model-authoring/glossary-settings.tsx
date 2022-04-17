@@ -15,7 +15,7 @@ interface IProps {
   saveName: (name: string) => void;
 }
 
-const previewTerm: IWordDefinition = {
+export const previewTerm: IWordDefinition = {
   word: "Dog",
   definition: "A domesticated carniverous mammal that typically has a long snout, an acute sense of smell, nonretractable claws, and a barking, howling, or whining voice.",
   image: "https://learn-resources.concord.org/tutorials/images/brogan-acadia.jpg",

@@ -2,18 +2,18 @@ import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import * as ReactDOM from "react-dom";
 
+import SaveIndicator from "./save-indicator";
 import { IGlossary, IGlossaryModelAuthoringInfo, IGlossaryModelAuthoringInitialData, IGlossarySettings, ITranslationMap, IWordDefinition } from "../../types";
 import { GlossaryTermsDefinitions } from "./glossary-terms-definitions";
 import { GlossarySettings } from "./glossary-settings";
-
 import { useSave } from "../../hooks/use-save";
 import { useMigrateGlossary } from "../../hooks/use-migrate-glossary";
+import { debugJson, saveInDemo } from "./params";
+import {demoGlossary} from "./demo-glossary"
+import { AddTranslation, allLanguages } from "./add-translation";
+import { GlossaryTranslations } from "./glossary-translations";
 
 import * as css from "./model-authoring-app.scss";
-import SaveIndicator from "./save-indicator";
-import { debugJson, saveInDemo } from "./params";
-
-import {demoGlossary} from "./demo-glossary"
 
 interface IProps {
   demo?: boolean;
@@ -25,6 +25,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
   const [name, setName] = useState<string>(initialData.name);
   const [glossary, setGlossary] = useState<IGlossary>(initialData.json);
   const {saveIndicatorStatus, saveGlossary, saveName} = useSave({demo, apiUrl});
+  const [usedLangs, setUsedLangs] = useState<string[]>([]);
 
   const updateName = (newName: string) => {
     setName(newName);
@@ -35,11 +36,6 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     saveGlossary(newGlossary);
     setGlossary(newGlossary);
   }, [setGlossary, saveGlossary]);
-
-  // set the initial glossary to the default if it's empty and fill any missing updatedAt values
-  useEffect(() => {
-    useMigrateGlossary(initialData.json, updateGlossary);
-  }, [initialData]);
 
   const saveSettings = useCallback((settings: IGlossarySettings) => {
     updateGlossary({...glossary, ...settings})
@@ -58,6 +54,17 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     updateName(demoGlossary.name);
   }
 
+  // set the initial glossary to the default if it's empty and fill any missing updatedAt values
+  useEffect(() => {
+    useMigrateGlossary(initialData.json, updateGlossary);
+  }, [initialData]);
+
+  useEffect(() => {
+    const langs = Object.keys(glossary.translations || {})
+    langs.sort((a, b) => allLanguages[a].localeCompare(allLanguages[b]));
+    setUsedLangs(langs);
+  }, [glossary]);
+
   return (
     <div className={css.modelAuthoringApp}>
       <div className={css.header}>
@@ -68,9 +75,19 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
       <div className={css.columns}>
         <div className={css.leftColumn}>
           <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions}/>
+          <AddTranslation glossary={glossary} saveTranslations={saveTranslations}/>
+          {usedLangs.map(lang => (
+            <GlossaryTranslations
+              key={lang}
+              lang={lang}
+              glossary={glossary}
+              saveTranslations={saveTranslations}
+              usedLangs={usedLangs}
+            />))}
         </div>
         <div className={css.rightColumn}>
-          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName}/></div>
+          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName}/>
+        </div>
       </div>
       {debugJson && <div className={css.debugJson}>{JSON.stringify(glossary, null, 2)}</div>}
     </div>

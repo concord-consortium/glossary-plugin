@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IWordDefinition } from "../../types";
 
-import * as css from "./definition-table.scss";
+import * as css from "./shared-table.scss";
 
 const imageButton = (
   <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -73,7 +73,7 @@ interface IDefinitionTableProps {
 
 export const DefinitionTable = ({definitions, onDelete, onEdit, onImageClick, onVideoClick}: IDefinitionTableProps) => {
   return (
-    <table className={css.definitionTable}>
+    <table className={css.sharedTable}>
       <thead>
         <tr>
           <th>Term</th>

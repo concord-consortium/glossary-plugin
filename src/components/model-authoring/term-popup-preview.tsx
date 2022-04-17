@@ -12,11 +12,12 @@ interface IProps {
   settings: IGlossarySettings;
   translations: ITranslationMap;
   term: IWordDefinition
+  lang?: string
 }
 
-
-export const TermPopUpPreview = ({ term, settings, translations }: IProps) => {
-  const [lang, setLang] = useState("en")
+export const TermPopUpPreview = (props: IProps) => {
+  const { term, settings, translations } = props;
+  const [lang, setLang] = useState(props.lang || "en")
   const [languages, setLanguages] = useState<ILanguage[]>([])
   const [userDefinitions, setUserDefinitions] = useState<string[]>([]);
   const [renderUpdateCount, setRenderUpdateCount] = useState(0)
@@ -29,7 +30,7 @@ export const TermPopUpPreview = ({ term, settings, translations }: IProps) => {
         { lang: "es", selected: newLang === "es" }
       ]);
     } else {
-      setLang("en");
+      setLang(props.lang || "en");
       setLanguages([]);
     }
   }, [settings])
@@ -56,7 +57,7 @@ export const TermPopUpPreview = ({ term, settings, translations }: IProps) => {
   }, [translations])
 
   const translatePreview = (key: string, fallback: string | null = null, variables: { [key: string]: string } = {}) => {
-    return translate(translations, lang, key, fallback, variables);
+    return translate(translations, props.lang || lang, key, fallback, variables);
   }
 
   // drop log message
