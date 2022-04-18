@@ -16,13 +16,13 @@ interface IProps {
 }
 
 export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IProps) => {
-  const { askForUserDefinition, showSideBar, autoShowMediaInPopup,  enableStudentRecording, enableStudentLanguageSwitching } = glossary;
+  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, enableStudentLanguageSwitching } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
     setEnabled(e.target.checked);
     if (!e.target.checked){
-      saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false})
+      saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false, "showIDontKnowButton": false})
     } else {
       saveSettings({...glossary, "askForUserDefinition": e.target.checked})
     }
@@ -51,7 +51,20 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
         </div>
       </div>
 
-      <div className={`${css.settingInformation} ${css.enableStudentRecording}`}>
+      <div className={`${css.settingInformation} ${css.nestedOptions}`}>
+        <div className={css.checkboxRow}>
+          <input type="checkbox" disabled={!enabled} checked={showIDontKnowButton} onChange={handleChange("showIDontKnowButton")} />
+          <label className={`${!enabled && css.disabled}`}>
+            Display "I Don't Know" button
+          </label>
+        </div>
+        <div className={`${css.help} ${!enabled && css.disabled}`}>
+          When this option is enabled, students can click "I don't know" instead of providing their own definition. Their first
+          definition will be recorded as "I don't know". The student will see the authored definition after clicking this button.
+        </div>
+      </div>
+
+      <div className={`${css.settingInformation} ${css.nestedOptions}`}>
         <div className={css.checkboxRow}>
           <input type="checkbox" disabled={!enabled} checked={enableStudentRecording} onChange={handleChange("enableStudentRecording")} />
           <label className={`${!enabled && css.disabled}`}>

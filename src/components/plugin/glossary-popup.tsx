@@ -30,6 +30,7 @@ interface IProps {
   definition: string;
   userDefinitions?: string[];
   askForUserDefinition?: boolean;
+  showIDontKnowButton?: boolean;
   enableStudentRecording?: boolean;
   autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
@@ -148,7 +149,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private renderQuestion() {
     const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, definition,
-            videoUrl, autoShowMedia } = this.props;
+            videoUrl, autoShowMedia, showIDontKnowButton } = this.props;
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
     const canSubmit = recordingState !== RecordingState.Recording;
@@ -204,6 +205,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             {i18n.translate("submit")}
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
+          { showIDontKnowButton &&
           <div
             className={css.button}
             data-cy="cancel"
@@ -211,6 +213,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           >
             {anyUserDef ? i18n.translate("cancel") : i18n.translate("iDontKnowYet")}
           </div>
+          }
         </div>
       </div>
     );

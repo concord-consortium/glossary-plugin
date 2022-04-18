@@ -19,6 +19,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
   autoShowMediaInPopup: false,
   showSideBar: false,
+  showIDontKnowButton: false,
   enableStudentRecording: false,
   enableStudentLanguageSwitching: false,
   definitions: []

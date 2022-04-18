@@ -17,6 +17,7 @@ export const demoGlossary: IGlossaryModelAuthoringInitialData = {
       }
     ],
     autoShowMediaInPopup: true,
+    showIDontKnowButton: true,
     enableStudentRecording: true,
     enableStudentLanguageSwitching: true,
     translations: {}

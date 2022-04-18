@@ -53,6 +53,7 @@ describe("pluginContext", () => {
         askForUserDefinition: true,
         showSideBar: true,
         autoShowMediaInPopup: true,
+        showIDontKnowButton: true,
         enableStudentRecording: true,
         enableStudentLanguageSwitching: true
       };
