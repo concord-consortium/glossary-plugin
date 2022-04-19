@@ -17,7 +17,12 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
     glossaryChanged = true
   }
 
+  // use the term position in the array as a proxy for the created at and updated at times since new terms are added to the end of the array
   glossary.definitions.forEach((definition, index) => {
+    if (!definition.createdAt) {
+      definition.createdAt = index + 1;
+      glossaryChanged = true;
+    }
     if (!definition.updatedAt) {
       definition.updatedAt = index + 1;
       glossaryChanged = true;

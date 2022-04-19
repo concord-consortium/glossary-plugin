@@ -1,27 +1,35 @@
-.outerPopup {
-  margin: 20px 0;
-  align-self: center;
-  background-color: white;
-  width: 300px;
-  color: #313131;
-  border: solid #0592af;
+.termPopupPreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px;
-    background-color: #cdebf2;
+  .outerPopup {
+    margin: 20px 0;
+    align-self: center;
+    background-color: white;
+    width: 300px;
+    color: #313131;
+    border: solid #0592af;
 
-    h4 {
-      margin: 0px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background-color: #cdebf2;
+
+      h4 {
+        margin: 0px;
+      }
     }
 
-    .exit {
-      color: #0592af;
+    .innerPopup {
+      padding: 10px;
     }
   }
 
-  .innerPopup {
-    padding: 10px;
+  .note {
+    width: 300px;
+    font-style: italic;
   }
 }

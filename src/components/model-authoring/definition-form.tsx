@@ -83,7 +83,14 @@ export const DefinitionForm = (props: IProps) => {
   const renderPreview = () => {
     // disable student definition in preview so defintion is visible
     const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false}
-    return <TermPopUpPreview term={previewTerm} settings={settings} translations={props.glossary.translations || {}}/>
+    return (
+      <TermPopUpPreview
+        term={previewTerm}
+        settings={settings}
+        translations={props.glossary.translations || {}}
+        note="NOTE: This preview ignores the student-provided definitions setting in order to show the definition automatically."
+      />
+    )
   }
 
   const renderButtons = () => {
