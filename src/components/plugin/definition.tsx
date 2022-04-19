@@ -91,17 +91,17 @@ export default class Definition extends React.Component<IProps, IState> {
   public render() {
     const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition } = this.props;
     const { imageVisible, videoVisible, } = this.state;
-    const translate = this.context.translate;
+    const hasDefinition = definition.length > 0
     return (
       <div>
-        <div>
+        {hasDefinition && <div>
           <span className={css.disableSelect}>{this.translatedDefinition}</span>
           <span className={css.icons}>
-          <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
-          {this.renderImageButton(imageUrl)}
-          {this.renderVideoButton(videoUrl)}
-        </span>
-        </div>
+            <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
+            {this.renderImageButton(imageUrl)}
+            {this.renderVideoButton(videoUrl)}
+          </span>
+        </div>}
         {
           imageVisible &&
           <Image

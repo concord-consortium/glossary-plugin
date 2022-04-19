@@ -5,7 +5,7 @@ import * as css from "./definition-table.scss";
 
 const imageButton = (
   <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-    <title>Image Button</title>
+    <title>Preview Image</title>
     <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="Definition-Recording" transform="translate(-1372.000000, -290.000000)">
             <g id="Image-Button" transform="translate(1372.500000, 290.500000)">
@@ -20,7 +20,7 @@ const imageButton = (
 
 const videoButton = (
   <svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-    <title>Video Button</title>
+    <title>Preview Video</title>
     <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="Definition-Recording" transform="translate(-1413.000000, -290.000000)">
             <g id="Video-Button" transform="translate(1413.500000, 290.500000)">
@@ -37,6 +37,8 @@ interface IDefinitionTableRowProps {
   definition: IWordDefinition;
   onDelete: (definition: IWordDefinition) => void;
   onEdit: (definition: IWordDefinition) => void;
+  onImageClick: (definition: IWordDefinition) => void;
+  onVideoClick: (definition: IWordDefinition) => void;
 }
 
 export const DefinitionTableRow = (props: IDefinitionTableRowProps) => {
@@ -44,12 +46,15 @@ export const DefinitionTableRow = (props: IDefinitionTableRowProps) => {
   const handleEdit = () => props.onEdit(props.definition);
   const { word, definition, image, video } = props.definition;
 
+  const handleImageClick = () => props.onImageClick(props.definition);
+  const handleVideoClick = () => props.onVideoClick(props.definition);
+
   return (
     <tr key={word}>
       <td>{word}</td>
       <td>{definition}</td>
-      <td className={css.centered}>{(image || "").length > 0 ? imageButton : undefined}</td>
-      <td className={css.centered}>{(video || "").length > 0 ? videoButton : undefined}</td>
+      <td className={css.centered}>{(image || "").length > 0 ? <span onClick={handleImageClick}>{imageButton}</span> : undefined}</td>
+      <td className={css.centered}>{(video || "").length > 0 ? <span onClick={handleVideoClick}>{videoButton}</span> : undefined}</td>
       <td className={css.actions}>
         <span onClick={handleEdit}>EDIT</span>
         <span onClick={handleDelete}>DELETE</span>
@@ -62,9 +67,11 @@ interface IDefinitionTableProps {
   definitions: IWordDefinition[];
   onDelete: (definition: IWordDefinition) => void
   onEdit: (definition: IWordDefinition) => void
+  onImageClick: (definition: IWordDefinition) => void;
+  onVideoClick: (definition: IWordDefinition) => void;
 }
 
-export const DefinitionTable = ({definitions, onDelete, onEdit}: IDefinitionTableProps) => {
+export const DefinitionTable = ({definitions, onDelete, onEdit, onImageClick, onVideoClick}: IDefinitionTableProps) => {
   return (
     <table className={css.definitionTable}>
       <thead>
@@ -83,6 +90,8 @@ export const DefinitionTable = ({definitions, onDelete, onEdit}: IDefinitionTabl
             definition={definition}
             onDelete={onDelete}
             onEdit={onEdit}
+            onImageClick={onImageClick}
+            onVideoClick={onVideoClick}
           />
         ))}
       </tbody>
