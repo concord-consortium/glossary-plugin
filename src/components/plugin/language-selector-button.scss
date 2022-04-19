@@ -1,9 +1,22 @@
 .langButton {
+  border: solid #000000;
   padding: 5px 10px;
   text-align: center;
-}
+  background-color: hsl(0, 0%, 90%);
 
-.selected {
-  background-color: #777;
-  color: #fff;
+  &:hover, &.selected {
+    background-color: #0592af;
+    color: #fff;
+  }
+
+  &.en{
+    border-radius: 5px 0px 0px 5px;
+    border-width: 1px;
+  }
+
+  &.secondLang {
+    margin-left: 0px;
+    border-width: 1px 1px 1px 0px;
+    border-radius: 0px 5px 5px 0px;
+  }
 }
