@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { IGlossary, IWordDefinition } from "../../types";
 import { Panel } from "./panel";
 import { Modal } from "./modal";
-import { DefinitionTable, DefinitionTableRow } from "./definition-table";
+import { DefinitionTable } from "./definition-table";
 import { DefinitionForm, IWordDefinitionFormErrors, NextAddAction, NextEditAction } from "./definition-form";
 
 import * as css from "./glossary-terms-definitions.scss";
+import { PreviewModal } from "./preview-modal";
 interface IProps {
   glossary: IGlossary;
   saveDefinitions: (definitions: IWordDefinition[]) => void;
@@ -17,7 +18,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   const {definitions} = glossary
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "updated">("asc")
   const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
-  const [modal, setModal] = useState<number | IWordDefinition | undefined>(undefined)
+  const [modal, setModal] = useState<"preview terms" | number | IWordDefinition | undefined>(undefined)
 
   const isWordDefined = (word: string) => definitions.find(d => d.word === word) !== undefined
   const isValidUrl = (url?: string) => url ? url.startsWith("http") : true
@@ -32,6 +33,8 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
       saveDefinitions(remaining)
     }
   }
+
+  const handleShowPreviewTerms = () => setModal("preview terms")
 
   const handleShowAddDefinition = () => setModal(Date.now()) // Date.now() ensures that we redraw the form on each new add term click as we use it as the model key
 
@@ -116,17 +119,19 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   }
 
   const renderModal = () => {
-
-    if (typeof modal === "number") {
+    if (modal === "preview terms") {
+      return <PreviewModal terms={definitions} glossary={glossary} onClose={handleCloseModal} />
+    }
+    else if (typeof modal === "number") {
       return (
-        <Modal contentClassName="" onClose={handleCloseModal}>
-          <DefinitionForm type="add" key={modal} onAdd={handleAddDefinition} onCancel={handleCloseModal} />
+        <Modal onClose={handleCloseModal}>
+          <DefinitionForm type="add" key={modal} onAdd={handleAddDefinition} onCancel={handleCloseModal} glossary={glossary} />
         </Modal>
       )
     } else if (modal) {
       return (
-        <Modal contentClassName="" onClose={handleCloseModal}>
-          <DefinitionForm type="edit" key={modal.word} definition={modal} onEdit={handleEditDefinition} onCancel={handleCloseModal} />
+        <Modal onClose={handleCloseModal}>
+          <DefinitionForm type="edit" key={modal.word} definition={modal} onEdit={handleEditDefinition} onCancel={handleCloseModal} glossary={glossary} />
         </Modal>
       )
     }
@@ -141,27 +146,35 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
         case "desc":
           return b.word.localeCompare(a.word)
         case "updated":
-          return (b.updatedAt || 0) - (a.updatedAt || 0)
+          const result = (b.updatedAt || 0) - (a.updatedAt || 0)
+          return result || a.word.localeCompare(b.word)
       }
     })
     setSortedDefinitions(sorted)
   }, [definitions, sortOrder])
 
+  const haveDefinitions = definitions.length > 0
+
   return (
-    <Panel label="Glossary Terms & Definitions" collapsible={true} minHeight={500} contentClassName={css.glossaryTermsDefinitions} >
-      <div className={css.header}>
-        <button onClick={handleShowAddDefinition}>+ Add New Term</button>
-        <div>
-          <strong>Sort by</strong>
-          <select value={sortOrder} onChange={handleSortOrder}>
-            <option value="asc">A to Z</option>
-            <option value="desc">Z to A</option>
-            <option value="updated">Most Recently Updated</option>
-          </select>
+    <Panel label="Glossary Terms & Definitions" collapsible={true}>
+      <div className={css.glossaryTermsDefinitions}>
+        <div className={css.header}>
+          <div>
+            <button onClick={handleShowAddDefinition}>+ Add New Term</button>
+            {haveDefinitions && <button onClick={handleShowPreviewTerms}>Preview Terms</button>}
+          </div>
+          <div>
+            <strong>Sort by</strong>
+            <select value={sortOrder} onChange={handleSortOrder}>
+              <option value="asc">A to Z</option>
+              <option value="desc">Z to A</option>
+              <option value="updated">Most Recently Updated</option>
+            </select>
+          </div>
         </div>
+        {haveDefinitions && <DefinitionTable definitions={sortedDefinitions} onDelete={handleDeleteDefinition} onEdit={handleShowEditDefinition} />}
+        {modal && renderModal()}
       </div>
-      {sortedDefinitions.length > 0 && <DefinitionTable definitions={sortedDefinitions} onDelete={handleDeleteDefinition} onEdit={handleShowEditDefinition} />}
-      {modal && renderModal()}
     </Panel>
   )
 }

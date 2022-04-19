@@ -4,6 +4,7 @@
   background-color: white;
   width: 300px;
   color: #313131;
+  border: solid #0592af;
 
   .header {
     display: flex;
@@ -22,7 +23,5 @@
 
   .innerPopup {
     padding: 10px;
-    border: solid #0592af;
-    border-width: 0px 1px 1px 1px;
   }
 }

@@ -4,7 +4,7 @@
 
   .left {
     min-width: 500px;
-    border-right: 1px solid #0592af;
+    border-right: solid #0592af;
 
     .header {
       background-color: #0592af;
@@ -37,6 +37,7 @@
           display: inline;
           width: 140px;
           white-space: nowrap;
+          font-weight: bold;
         }
 
         :nth-child(2) {
@@ -51,11 +52,15 @@
         }
 
         input, textarea {
-          padding: 3px;
+          padding: 5px;
         }
 
         textarea {
           height: 60px;
+
+          &.definition {
+            height: 100px;
+          }
         }
 
         .error {
@@ -79,8 +84,8 @@
   }
 
   .right {
-    padding: 10px;
-    margin-left: 10px;
+    background-color: hsl(0, 0%, 90%);
+    padding: 10px 20px;
     min-width: 200px;
     display: flex;
     align-items: center;

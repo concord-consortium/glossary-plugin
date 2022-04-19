@@ -21,4 +21,21 @@
 
 .content {
   z-index: 2;
+
+  .header {
+    background-color: #0592af;
+    color: white;
+    font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      margin-right: 20px;
+      color: white;
+    }
+    span {
+      cursor: pointer;
+    }
+  }
 }
