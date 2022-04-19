@@ -22,6 +22,7 @@ export interface IWordDefinition {
   video?: string;
   imageCaption?: string;
   videoCaption?: string;
+  createdAt?: number;
   updatedAt?: number;
 }
 

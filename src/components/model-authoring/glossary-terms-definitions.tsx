@@ -41,7 +41,7 @@ interface IProps {
 
 export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) => {
   const {definitions} = glossary
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "updated">("asc")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "created"| "updated">("asc")
   const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
   const [modal, setModal] = useState<IModal | undefined>(undefined)
 
@@ -77,6 +77,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
     checkUpdatedDefinition(newDefinition, errors, true)
 
     if (Object.keys(errors).length === 0) {
+      newDefinition.createdAt = Date.now()
       newDefinition.updatedAt = Date.now()
       const newDefinitions = definitions.slice()
       newDefinitions.push(newDefinition)
@@ -220,13 +221,17 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   useEffect(() => {
     const sorted = definitions.slice()
     sorted.sort((a, b) => {
+      let result: number
       switch (sortOrder) {
         case "asc":
           return a.word.localeCompare(b.word)
         case "desc":
           return b.word.localeCompare(a.word)
+        case "created":
+          result = (b.createdAt || 0) - (a.createdAt || 0)
+          return result || a.word.localeCompare(b.word)
         case "updated":
-          const result = (b.updatedAt || 0) - (a.updatedAt || 0)
+          result = (b.updatedAt || 0) - (a.updatedAt || 0)
           return result || a.word.localeCompare(b.word)
       }
     })
@@ -250,6 +255,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
             <select value={sortOrder} onChange={handleSortOrder}>
               <option value="asc">A to Z</option>
               <option value="desc">Z to A</option>
+              <option value="created">Newest</option>
               <option value="updated">Most Recently Updated</option>
             </select>
           </div>
