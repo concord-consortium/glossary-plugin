@@ -53,7 +53,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
   }
 
   const handleDeleteDefinition = (definition: IWordDefinition) => {
-    if (confirm(`Are you sure you want to delete the definition of ${definition.word}?`)) {
+    if (confirm(`Are you sure you want to permanently delete the definition of ${definition.word}?`)) {
       const remaining = definitions.filter(d => d !== definition)
       saveDefinitions(remaining)
     }
@@ -235,8 +235,10 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
 
   const haveDefinitions = definitions.length > 0
 
+  const panelLabel = `Glossary Terms & Definitions (${definitions.length})`
+
   return (
-    <Panel label="Glossary Terms & Definitions" collapsible={true}>
+    <Panel label={panelLabel} collapsible={true}>
       <div className={css.glossaryTermsDefinitions}>
         <div className={css.header}>
           <div>

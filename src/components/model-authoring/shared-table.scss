@@ -1,4 +1,4 @@
-table.definitionTable {
+table.sharedTable {
   width: 100%;
   display: block;
   max-height: 500px;
@@ -30,6 +30,11 @@ table.definitionTable {
   }
 
   tbody {
+    tr:hover {
+      background-color: #999 !important;
+      color: #fff;
+    }
+
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }

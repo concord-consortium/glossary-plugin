@@ -6,8 +6,6 @@ import GlossarySidebar from "./components/plugin/glossary-sidebar";
 const userDefinitions = ["I don't know", "Still not sure", "Something in the ear", "A membrane"];
 const newUserDefinition = (userDefinition: string) => {
   userDefinitions.push(userDefinition);
-  // tslint:disable-next-line:no-console
-  console.log("User definition:", userDefinition);
 };
 
 // tslint:disable-next-line:max-line-length
