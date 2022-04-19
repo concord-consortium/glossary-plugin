@@ -16,15 +16,14 @@
   .columns {
     display: flex;
     flex-direction: row;
+    gap: 20px;
 
     .leftColumn {
-      flex-grow: 1;
-      margin-right: 20px;
+      width: 75%;
     }
 
     .rightColumn {
-      flex-grow: 0;
-      width: 400px;
+      width: 25%;
     }
   }
 

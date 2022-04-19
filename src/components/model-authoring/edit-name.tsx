@@ -51,11 +51,11 @@ export const EditName = ({ name, saveName }: IProps) => {
         <input value={newName} disabled={!editing} onChange={handleChange} ref={inputRef} />
         {editing ?
           <>
-            <button onClick={handleSave}>Save</button>
+            <button onClick={handleSave}>Save Name</button>
             <button onClick={handleCancel}>Cancel</button>
           </>
           :
-          <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleEdit}>Edit Name</button>
         }
       </div>
       {error && <div className={css.error}>{error}</div>}

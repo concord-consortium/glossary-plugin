@@ -1,5 +1,5 @@
 .container {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -21,4 +21,22 @@
 
 .content {
   z-index: 2;
+
+  .header {
+    background-color: #0592af;
+    color: white;
+    font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    a {
+      margin-right: 20px;
+      color: white;
+    }
+    span {
+      margin-left: 20px;
+      cursor: pointer;
+    }
+  }
 }

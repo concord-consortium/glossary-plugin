@@ -1,8 +1,9 @@
 import * as React from "react";
 import { useCallback, useState } from "react";
-import { IWordDefinition } from "../../types";
+import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
+import { TermPopUpPreview } from "./term-popup-preview";
 
-import * as css from "./definition-form.scss";
+import * as css from "./shared-modal-form.scss";
 
 type IWordDefinitionKey = keyof IWordDefinition;
 export type IWordDefinitionFormErrors = Partial<Record<IWordDefinitionKey, string>>
@@ -23,11 +24,12 @@ interface IEditProps {
   onCancel: () => void;
 }
 
-type IProps = IAddProps | IEditProps
+type IProps = (IAddProps | IEditProps) & {glossary: IGlossary}
 
 export const DefinitionForm = (props: IProps) => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
+  const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
 
   const getNewDefinition = () => {
     const newDefinition: IWordDefinition = {
@@ -79,9 +81,9 @@ export const DefinitionForm = (props: IProps) => {
   }
 
   const renderPreview = () => {
-    return (
-      "ADD PREVIEW HERE IN PT#181870142"
-    )
+    // disable student definition in preview so defintion is visible
+    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false}
+    return <TermPopUpPreview term={previewTerm} settings={settings} translations={props.glossary.translations || {}}/>
   }
 
   const renderButtons = () => {
@@ -111,8 +113,12 @@ export const DefinitionForm = (props: IProps) => {
     }
   }, [errors]);
 
+  const handleFormChange = () => {
+    setPreviewTerm(getNewDefinition())
+  };
+
   return (
-    <div className={css.definitionForm}>
+    <div className={css.modalForm}>
       <div className={css.left}>
         <div className={css.header}>
           <div>
@@ -123,7 +129,7 @@ export const DefinitionForm = (props: IProps) => {
             <span onClick={props.onCancel} title="Close without saving"><strong>X</strong></span>
           </div>
         </div>
-        <form onSubmit={handleSubmit} ref={formRef}>
+        <form onSubmit={handleSubmit} onChange={handleFormChange} ref={formRef}>
           <div className={css.fieldset}>
             <legend>Term</legend>
             <div>
@@ -134,7 +140,7 @@ export const DefinitionForm = (props: IProps) => {
           <div className={css.fieldset}>
             <legend>Definition</legend>
             <div>
-              <textarea name="definition" defaultValue={getSavedValue("definition")} autoFocus={props.type === "edit"} />
+              <textarea name="definition" defaultValue={getSavedValue("definition")} autoFocus={props.type === "edit"} className={css.definition} />
               {renderError("definition")}
             </div>
           </div>

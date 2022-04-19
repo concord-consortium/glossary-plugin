@@ -1,10 +1,12 @@
-.definitionForm {
+.modalForm {
   display: flex;
   background-color: #fff;
 
   .left {
-    min-width: 500px;
-    border-right: 1px solid #0592af;
+    min-width: 560px;
+    border-right: solid #0592af;
+    display: flex;
+    flex-direction: column;
 
     .header {
       background-color: #0592af;
@@ -25,6 +27,7 @@
 
     form {
       padding: 10px 20px;
+      flex-grow: 1;
 
       .fieldset {
         border: none;
@@ -35,8 +38,9 @@
 
         legend {
           display: inline;
-          width: 140px;
+          width: 190px;
           white-space: nowrap;
+          font-weight: bold;
         }
 
         :nth-child(2) {
@@ -50,12 +54,16 @@
           flex-grow: 1;
         }
 
-        input, textarea {
-          padding: 3px;
+        input, textarea, select {
+          padding: 5px;
         }
 
         textarea {
           height: 60px;
+
+          &.definition {
+            height: 100px;
+          }
         }
 
         .error {
@@ -79,8 +87,8 @@
   }
 
   .right {
-    padding: 10px;
-    margin-left: 10px;
+    background-color: hsl(0, 0%, 90%);
+    padding: 10px 20px;
     min-width: 200px;
     display: flex;
     align-items: center;

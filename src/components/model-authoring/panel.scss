@@ -1,4 +1,6 @@
 .panel {
+  margin-bottom: 20px;
+
   .header {
     display: flex;
     justify-content: space-between;
@@ -15,7 +17,7 @@
       margin: 0;
     }
 
-    button {
+    button.toggle {
       height: fit-content;
       background-color: #0592af;
       border: none;
@@ -23,9 +25,9 @@
       color: white;
       cursor: pointer;
     }
-  }
 
-  .content {
-    padding: 10px;
+    button {
+      padding: 5px 10px;
+    }
   }
 }
