@@ -13,10 +13,11 @@ interface IProps {
   translations: ITranslationMap;
   term: IWordDefinition
   lang?: string
+  note?: string
 }
 
 export const TermPopUpPreview = (props: IProps) => {
-  const { term, settings, translations } = props;
+  const { term, settings, translations, note } = props;
   const [lang, setLang] = useState(props.lang || "en")
   const [languages, setLanguages] = useState<ILanguage[]>([])
   const [userDefinitions, setUserDefinitions] = useState<string[]>([]);
@@ -65,30 +66,32 @@ export const TermPopUpPreview = (props: IProps) => {
 
   return (
     <pluginContext.Provider value={{ lang, translate: translatePreview, log }} key={renderUpdateCount}>
-      <div className={css.outerPopup}>
-        <div className={css.header}>
-          <h4>Term: {term.word}</h4>
-          <h4 className={css.exit}>X</h4>
+      <div className={css.termPopupPreview}>
+        <div className={css.outerPopup}>
+          <div className={css.header}>
+            <h4>Term: {term.word}</h4>
+          </div>
+          <div className={css.innerPopup}>
+            <GlossaryPopup
+              word={term.word}
+              definition={term.definition}
+              imageUrl={term.image}
+              imageCaption={term.imageCaption}
+              zoomImageUrl={term.zoomImage}
+              videoUrl={term.video}
+              videoCaption={term.videoCaption}
+              languages={languages}
+              onLanguageChange={onLanguageChange}
+              askForUserDefinition={settings.askForUserDefinition}
+              enableStudentRecording={settings.enableStudentRecording}
+              autoShowMedia={settings.autoShowMediaInPopup}
+              showIDontKnowButton={settings.showIDontKnowButton}
+              userDefinitions={settings.askForUserDefinition ? userDefinitions : []}
+              onUserDefinitionsUpdate={onUserDefinitionsUpdate}
+            />
+          </div>
         </div>
-        <div className={css.innerPopup}>
-          <GlossaryPopup
-            word={term.word}
-            definition={term.definition}
-            imageUrl={term.image}
-            imageCaption={term.imageCaption}
-            zoomImageUrl={term.zoomImage}
-            videoUrl={term.video}
-            videoCaption={term.videoCaption}
-            languages={languages}
-            onLanguageChange={onLanguageChange}
-            askForUserDefinition={settings.askForUserDefinition}
-            enableStudentRecording={settings.enableStudentRecording}
-            autoShowMedia={settings.autoShowMediaInPopup}
-            showIDontKnowButton={settings.showIDontKnowButton}
-            userDefinitions={settings.askForUserDefinition ? userDefinitions : []}
-            onUserDefinitionsUpdate={onUserDefinitionsUpdate}
-          />
-        </div>
+        {note && <div className={css.note}>{note}</div>}
       </div>
     </pluginContext.Provider>
   )

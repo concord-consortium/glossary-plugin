@@ -250,7 +250,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
             <select value={sortOrder} onChange={handleSortOrder}>
               <option value="asc">A to Z</option>
               <option value="desc">Z to A</option>
-              <option value="untranslated">Most Untranslated</option>
+              <option value="untranslated">Needs translation</option>
             </select>
           </div>
         </div>

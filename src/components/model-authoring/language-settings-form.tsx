@@ -98,13 +98,13 @@ export const LanguageSettingsForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Main Prompt MP3 Url</legend>
+            <legend>Main Prompt MP3 URL</legend>
             <div>
             <input type="text" name="mainPromptMP3Url" defaultValue={getTranslatedValue("mainPromptMP3Url")} placeholder={`MP3 recording of translated main prompt instructions`} />
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Write Definition MP3 Url</legend>
+            <legend>Write Definition MP3 URL</legend>
             <div>
             <input type="text" name="writeDefinitionMP3Url" defaultValue={getTranslatedValue("writeDefinitionMP3Url")} placeholder={`MP3 recording of translated write definition instructions`} />
             </div>

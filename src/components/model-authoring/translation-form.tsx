@@ -151,19 +151,19 @@ export const TranslationForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Definition MP3 Url</legend>
+            <legend>Definition MP3 URL</legend>
             <div>
             <input type="text" name="translatedDefinitionMP3Url" defaultValue={getTranslatedValue("translatedDefinitionMP3Url")} placeholder={`MP3 recording of translated definition for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Image Caption MP3 Url</legend>
+            <legend>Image Caption MP3 URL</legend>
             <div>
             <input type="text" name="translatedImageCaptionMP3Url" defaultValue={getTranslatedValue("translatedImageCaptionMP3Url")} placeholder={`MP3 recording of translated image caption for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Video Caption MP3 Url</legend>
+            <legend>Video Caption MP3 URL</legend>
             <div>
             <input type="text" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
             </div>

@@ -50,8 +50,8 @@ export const TranslationTable = ({lang, translations, definitions, onDelete, onE
           <th>Term</th>
           <th>Translated Term</th>
           <th className={css.definition}>Translated Definition</th>
-          <th>Image</th>
-          <th>Video</th>
+          <th>Image Caption</th>
+          <th>Video Caption</th>
           <th className={css.actions}>&nbsp;</th>
         </tr>
       </thead>
