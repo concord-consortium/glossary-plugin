@@ -3,6 +3,7 @@ export interface IGlossary {
   showSideBar: boolean;
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
+  showIDontKnowButton: boolean;
   enableStudentRecording: boolean;
   enableStudentLanguageSwitching: boolean;
   translations?: ITranslationMap;

@@ -5,6 +5,7 @@ export const demoGlossary: IGlossaryModelAuthoringInitialData = {
   json: {
     askForUserDefinition: true,
     autoShowMediaInPopup: true,
+    showIDontKnowButton: true,
     showSideBar: false,
     enableStudentLanguageSwitching: true,
     enableStudentRecording: false,

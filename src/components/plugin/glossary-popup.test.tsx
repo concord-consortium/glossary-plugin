@@ -113,7 +113,7 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find(`img[src='${zoomImageSrc}']`).length).toEqual(0);
     });
 
-    it("user can click 'I don't know' button", () => {
+    it("user can click 'I don't know' button when showIDontKnowButton is true", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
@@ -123,6 +123,7 @@ describe("GlossaryPopup component", () => {
           definition={definition}
           userDefinitions={[]}
           askForUserDefinition={true}
+          showIDontKnowButton={true}
           onUserDefinitionsUpdate={onUserSubmit}
         />
       );
@@ -165,7 +166,7 @@ describe("GlossaryPopup component", () => {
           askForUserDefinition={false}
           languages={[
             {lang: DEFAULT_LANG, selected: true},
-            {lang: "es", selected: false}
+            {lang: "es", selected: false},
           ]}
           onLanguageChange={onLangChange}
         />
