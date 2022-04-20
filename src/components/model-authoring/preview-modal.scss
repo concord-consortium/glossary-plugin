@@ -1,7 +1,9 @@
+@import '../common/base.scss';
+
 .previewModal {
   display: flex;
   flex-direction: column;
-  background-color: hsl(0, 0%, 90%);
+  background-color: var(--lt-gray);
   padding: 20px;
   justify-content: center;
 
@@ -20,9 +22,5 @@
     display: flex;
     gap: 5px;
     justify-content: center;
-
-    button {
-      padding: 10px;
-    }
   }
 }

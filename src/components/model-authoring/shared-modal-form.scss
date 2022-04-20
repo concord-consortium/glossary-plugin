@@ -1,17 +1,19 @@
+@import '../common/base.scss';
+
 .modalForm {
   display: flex;
   background-color: #fff;
 
   .left {
     min-width: 560px;
-    border-right: solid #0592af;
+    border-right: solid var(--teal);
     display: flex;
     flex-direction: column;
 
     .header {
-      background-color: #0592af;
+      background-color: var(--teal);
       color: white;
-      font: 700 18px 'Lato', helvetica, verdana, sans-serif;
+      font: 700 18px 'Lato-Bold', helvetica, verdana, sans-serif;
       padding: 10px;
       display: flex;
       justify-content: space-between;
@@ -60,6 +62,7 @@
 
         textarea {
           height: 60px;
+          font-family: 'Lato-Regular', verdana, Helvetica, sans-serif;
 
           &.definition {
             height: 100px;
@@ -79,15 +82,11 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-
-      button {
-        padding: 10px;
-      }
     }
   }
 
   .right {
-    background-color: hsl(0, 0%, 90%);
+    background-color: var(--lt-gray);
     padding: 10px 20px;
     min-width: 200px;
     display: flex;
