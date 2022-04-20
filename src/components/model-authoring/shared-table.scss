@@ -31,8 +31,7 @@ table.sharedTable {
 
   tbody {
     tr:hover {
-      background-color: #999 !important;
-      color: #fff;
+      background-color: #ddd !important;
     }
 
     tr:nth-child(even) {
@@ -56,6 +55,24 @@ table.sharedTable {
 
       &.centered {
         text-align: center;
+      }
+
+      span.active {
+        svg {
+          fill: #646464;
+        }
+      }
+
+      svg {
+        width: 20px;
+        fill: #979797;
+
+        &:hover {
+          fill: #B4B4B4;
+        }
+        &:active {
+          fill: #646464;
+        }
       }
     }
   }
