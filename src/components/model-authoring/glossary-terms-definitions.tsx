@@ -32,7 +32,7 @@ interface IEditModal {
   definition: IWordDefinition
 }
 
-type IModal = IImageModal | IVideoModal | IPreviewTerms | IAddModal | IEditModal;
+export type IModal = IImageModal | IVideoModal | IPreviewTerms | IAddModal | IEditModal;
 
 interface IProps {
   glossary: IGlossary;
@@ -267,6 +267,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
             onEdit={handleShowEditDefinition}
             onImageClick={handleShowImageClick}
             onVideoClick={handleShowVideoClick}
+            modal={modal}
           />
         )}
         {modal && renderModal()}
