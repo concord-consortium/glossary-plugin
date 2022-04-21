@@ -1,15 +1,26 @@
+@import '../common/base.scss';
+
 .modelAuthoringApp {
   display: flex;
   flex-direction: column;
-  font: 100 'Lato', helvetica, verdana, sans-serif;
+  font-family: 'Lato-Regular', helvetica, verdana, sans-serif;
+  color: var(--font-color-default);
+
+  a {
+    color: var(--teal);
+
+    &:hover {
+      color: var(--ltr-teal);
+    }
+  }
 
   .header {
     display: flex;
     align-items: center;
 
     h1 {
-      color: #ea6d2f;
-      font: 700 24px 'Lato', helvetica, verdana, sans-serif;
+      color: var(--orange);
+      font: 700 24px 'Lato-Bold', helvetica, verdana, sans-serif;
     }
   }
 
@@ -39,5 +50,35 @@
   .clearDemoData {
     flex-grow: 1;
     text-align: right;
+  }
+
+  button {
+    background: var(--ltst-teal);
+    border: solid 1.5px var(--teal);
+    border-radius: 4px;
+    color: var(--teal);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--ltr-teal);
+      color: var(--teal);
+    }
+
+    &:active {
+      background: var(--teal);
+      color: white;
+
+      svg {
+        fill: white;
+      }
+    }
+
+    &.disabled {
+      background: #ccc;
+    }
   }
 }
