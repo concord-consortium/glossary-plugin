@@ -35,6 +35,7 @@ export const DefinitionForm = (props: IProps) => {
     const newDefinition: IWordDefinition = {
       word: getFormValue("word"),
       definition: getFormValue("definition"),
+      diggingDeeper: getFormValue("diggingDeeper"),
       image: getFormValue("image"),
       zoomImage: getFormValue("zoomImage"),
       video: getFormValue("video"),
@@ -152,35 +153,60 @@ export const DefinitionForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Image URL</legend>
+            <div>
+              <legend>Digging Deeper</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <textarea name="diggingDeeper" defaultValue={getSavedValue("diggingDeeper")} autoFocus={props.type === "edit"} className={css.diggingDeeper} />
+              {renderError("diggingDeeper")}
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
+              <legend>Image URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
             <div>
               <input type="text" name="image" defaultValue={getSavedValue("image")} />
               {renderError("image")}
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Zoom Image URL</legend>
+            <div>
+              <legend>Zoom Image URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
             <div>
               <input type="text" name="zoomImage" defaultValue={getSavedValue("zoomImage")}/>
               {renderError("zoomImage")}
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Image Caption</legend>
+            <div>
+              <legend>Image Caption</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
             <div>
               <textarea name="imageCaption" defaultValue={getSavedValue("imageCaption")}/>
               {renderError("imageCaption")}
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Video URL</legend>
+            <div>
+              <legend>Video URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
             <div>
               <input type="text" name="video" defaultValue={getSavedValue("video")}/>
               {renderError("video")}
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Video Caption</legend>
+            <div>
+              <legend>Video Caption</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
             <div>
               <textarea name="videoCaption" defaultValue={getSavedValue("videoCaption")}/>
               {renderError("videoCaption")}
