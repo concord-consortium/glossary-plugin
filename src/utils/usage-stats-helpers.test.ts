@@ -31,11 +31,11 @@ describe("usage statistic helpers", () => {
 
   describe("#getGlossaryJSON", () => {
     it("should fetch glossary JSON and cache it for later use", async () => {
-      expect(await getGlossaryJSON("http://s3.url/glossary/123.json")).toEqual(glossary);
-      expect(fetch).toHaveBeenCalledWith("http://s3.url/glossary/123.json");
+      expect(await getGlossaryJSON("https://s3.url/glossary/123.json")).toEqual(glossary);
+      expect(fetch).toHaveBeenCalledWith("https://s3.url/glossary/123.json");
       expect(fetch).toHaveBeenCalledTimes(1);
 
-      expect(await getGlossaryJSON("http://s3.url/glossary/123.json")).toEqual(glossary);
+      expect(await getGlossaryJSON("https://s3.url/glossary/123.json")).toEqual(glossary);
       expect(fetch).toHaveBeenCalledTimes(1); // still 1
     });
   });
@@ -127,7 +127,7 @@ describe("usage statistic helpers", () => {
       const sId = "123";
       const students = [ { id: sId }  ] as IStudent[];
       const events = [
-        { userId: sId, event: "plugin init", glossaryUrl: "http://glossary.com" },
+        { userId: sId, event: "plugin init", glossaryUrl: "https://glossary.com" },
         { userId: sId, event: "term clicked", word: "cloud" },
         { userId: sId, event: "definition saved", word: "cloud", definitions: [ "foo", "bar" ] },
         { userId: sId, event: "image icon clicked", word: "cloud" },
@@ -147,7 +147,7 @@ describe("usage statistic helpers", () => {
       const sId = "123";
       const students = [ { id: sId }  ] as IStudent[];
       const events = [
-        { userId: sId, event: "plugin init", glossaryUrl: "http://glossary.com" },
+        { userId: sId, event: "plugin init", glossaryUrl: "https://glossary.com" },
         { userId: sId, event: "term clicked", word: "cloud" },
         { userId: sId, event: "term clicked", word: "eardrum" },
       ] as ILogEvent[];

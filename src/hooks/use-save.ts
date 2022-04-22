@@ -1,7 +1,11 @@
 import { useRef, useState } from "react";
 import { saveInDemo } from "../components/model-authoring/params";
 import { IGlossary } from "../types";
+import ensureCorrectProtocol from "../utils/ensure-correct-protocol";
 
+export interface ISaveIndicatorSavingDisabled {
+  mode: "savingDisabled";
+}
 export interface ISaveIndicatorSaving {
   mode: "saving";
 }
@@ -13,14 +17,14 @@ export interface ISaveIndicatorError {
   message: string;
 }
 
-export type ISaveIndicatorStatus = ISaveIndicatorSaving | ISaveIndicatorSaved | ISaveIndicatorError;
+export type ISaveIndicatorStatus = ISaveIndicatorSaving | ISaveIndicatorSaved | ISaveIndicatorError | ISaveIndicatorSavingDisabled;
 
 export const demoGlossaryNameKey = "demoGlossaryName";
 export const demoGlossaryJSONKey = "demoGlossaryJSON";
 
-export const useSave = (options: { demo?: boolean; apiUrl?: string; }) => {
-  const { demo, apiUrl } = options;
-  const [saveIndicatorStatus, setSaveIndicatorStatus] = useState<ISaveIndicatorStatus | null>(null);
+export const useSave = (options: { demo?: boolean; apiUrl?: string; canEdit: boolean }) => {
+  const { demo, apiUrl, canEdit } = options;
+  const [saveIndicatorStatus, setSaveIndicatorStatus] = useState<ISaveIndicatorStatus | null>(canEdit ? null : {mode: "savingDisabled"});
   const saveIndicatorTimeout = useRef<number | undefined>(undefined);
 
   const updateSaveIndicator = (status: ISaveIndicatorStatus) => {
@@ -34,6 +38,10 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; }) => {
   // the glossary api endpoint accepts either/or a post body of name and json,
   // where json is the glossary data
   const save = async (body: ({ json: IGlossary; }) | ({ name: string; })) => {
+    if (!canEdit) {
+      return;
+    }
+
     updateSaveIndicator({ mode: "saving" });
 
     if (demo) {
@@ -50,12 +58,13 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; }) => {
       setTimeout(() => updateSaveIndicator({ mode: "saved" }), 1000);
     } else if (apiUrl) {
       try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
+        const response = await fetch(ensureCorrectProtocol(apiUrl), {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
+          credentials: "include"
         });
         const json = await response.json();
         updateSaveIndicator({ mode: "saved" });

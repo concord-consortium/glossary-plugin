@@ -11,6 +11,7 @@ import * as css from "./glossary-settings.scss";
 interface IProps {
   name: string;
   glossary: IGlossary;
+  canEdit: boolean;
   saveSettings: (settings: IGlossarySettings) => void;
   saveName: (name: string) => void;
 }
@@ -32,16 +33,18 @@ const previewTranslations: ITranslationMap = {
   }
 }
 
-export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IProps) => {
+export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
   const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud, enableStudentLanguageSwitching } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEnabled(e.target.checked);
-    if (!e.target.checked){
-      saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false, "showIDontKnowButton": false})
-    } else {
-      saveSettings({...glossary, "askForUserDefinition": e.target.checked})
+    if (canEdit) {
+      setEnabled(e.target.checked);
+      if (!e.target.checked){
+        saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false, "showIDontKnowButton": false})
+      } else {
+        saveSettings({...glossary, "askForUserDefinition": e.target.checked})
+      }
     }
   }
 
@@ -54,7 +57,7 @@ export const GlossarySettings = ({ name, glossary, saveSettings, saveName }: IPr
       <div className={css.glossarySettings}>
         <div>
           <h2>Glossary Name</h2>
-          <EditName name={name} saveName={saveName}/>
+          <EditName name={name} saveName={saveName} canEdit={canEdit}/>
         </div>
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>

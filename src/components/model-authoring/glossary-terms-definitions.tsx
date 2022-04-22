@@ -36,10 +36,11 @@ export type IModal = IImageModal | IVideoModal | IPreviewTerms | IAddModal | IEd
 
 interface IProps {
   glossary: IGlossary;
+  canEdit: boolean;
   saveDefinitions: (definitions: IWordDefinition[]) => void;
 }
 
-export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) => {
+export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }: IProps) => {
   const {definitions} = glossary
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "created"| "updated">("asc")
   const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
@@ -164,6 +165,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
                 onAdd={handleAddDefinition}
                 onCancel={handleCloseModal}
                 glossary={glossary}
+                canEdit={canEdit}
               />
             </Modal>
           )
@@ -178,6 +180,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
                 onEdit={handleEditDefinition}
                 onCancel={handleCloseModal}
                 glossary={glossary}
+                canEdit={canEdit}
               />
             </Modal>
           )
@@ -247,7 +250,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
       <div className={css.glossaryTermsDefinitions}>
         <div className={css.header}>
           <div>
-            <button onClick={handleShowAddDefinition}>+ Add New Term</button>
+            {canEdit && <button onClick={handleShowAddDefinition}>+ Add New Term</button>}
             {haveDefinitions && <button onClick={handleShowPreviewTerms}>Preview Terms</button>}
           </div>
           <div>
@@ -268,6 +271,7 @@ export const GlossaryTermsDefinitions = ({ glossary, saveDefinitions }: IProps) 
             onImageClick={handleShowImageClick}
             onVideoClick={handleShowVideoClick}
             modal={modal}
+            canEdit={canEdit}
           />
         )}
         {modal && renderModal()}
