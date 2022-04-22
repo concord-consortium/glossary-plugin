@@ -21,6 +21,7 @@ const videoButton = (
 interface IDefinitionTableRowProps {
   definition: IWordDefinition;
   modal?: IModal;
+  canEdit: boolean;
   onDelete: (definition: IWordDefinition) => void;
   onEdit: (definition: IWordDefinition) => void;
   onImageClick: (definition: IWordDefinition) => void;
@@ -28,6 +29,7 @@ interface IDefinitionTableRowProps {
 }
 
 export const DefinitionTableRow = (props: IDefinitionTableRowProps) => {
+  const {canEdit} = props;
   const handleDelete = () => props.onDelete(props.definition);
   const handleEdit = () => props.onEdit(props.definition);
   const { word, definition, image, video } = props.definition;
@@ -48,8 +50,8 @@ export const DefinitionTableRow = (props: IDefinitionTableRowProps) => {
       <td className={css.centered}>{(image || "").length > 0 ? <span className={imageSpanClassName} onClick={handleImageClick}>{imageButton}</span> : undefined}</td>
       <td className={css.centered}>{(video || "").length > 0 ? <span className={videoSpanClassName} onClick={handleVideoClick}>{videoButton}</span> : undefined}</td>
       <td className={css.actions}>
-        <span onClick={handleEdit}>EDIT</span>
-        <span onClick={handleDelete}>DELETE</span>
+        <span onClick={handleEdit}>{canEdit ? "EDIT" : "VIEW"}</span>
+        {canEdit && <span onClick={handleDelete}>DELETE</span>}
       </td>
     </tr>
   );
@@ -58,13 +60,14 @@ export const DefinitionTableRow = (props: IDefinitionTableRowProps) => {
 interface IDefinitionTableProps {
   definitions: IWordDefinition[];
   modal?: IModal;
+  canEdit: boolean;
   onDelete: (definition: IWordDefinition) => void
   onEdit: (definition: IWordDefinition) => void
   onImageClick: (definition: IWordDefinition) => void;
   onVideoClick: (definition: IWordDefinition) => void;
 }
 
-export const DefinitionTable = ({ definitions, modal, onDelete, onEdit, onImageClick, onVideoClick }: IDefinitionTableProps) => {
+export const DefinitionTable = ({ definitions, modal, canEdit, onDelete, onEdit, onImageClick, onVideoClick }: IDefinitionTableProps) => {
   return (
     <table className={css.sharedTable}>
       <thead>
@@ -82,6 +85,7 @@ export const DefinitionTable = ({ definitions, modal, onDelete, onEdit, onImageC
             key={definition.word}
             definition={definition}
             modal={modal}
+            canEdit={canEdit}
             onDelete={onDelete}
             onEdit={onEdit}
             onImageClick={onImageClick}

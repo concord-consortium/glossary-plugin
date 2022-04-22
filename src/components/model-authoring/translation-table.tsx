@@ -10,11 +10,13 @@ interface ITranslationTableRowProps {
   lang: string;
   translations: ITranslationMap;
   definition: ITranslatedWordDefinition;
+  canEdit: boolean;
   onDelete: (definition: IWordDefinition) => void;
   onEdit: (definition: IWordDefinition) => void;
 }
 
 export const TranslationTableRow = (props: ITranslationTableRowProps) => {
+  const {canEdit} = props
   const handleDelete = () => props.onDelete(props.definition);
   const handleEdit = () => props.onEdit(props.definition);
   const { word, translatedWord, translatedDefinition, hasTranslatedImageCaption, hasImageCaption, hasTranslatedVideoCaption, hasVideoCaption } = props.definition;
@@ -27,8 +29,8 @@ export const TranslationTableRow = (props: ITranslationTableRowProps) => {
       <td className={css.centered}>{hasTranslatedImageCaption ? "✓" : (hasImageCaption ? "✗" : "")}</td>
       <td className={css.centered}>{hasTranslatedVideoCaption ? "✓" : (hasVideoCaption ? "✗" : "")}</td>
       <td className={css.actions}>
-        <span onClick={handleEdit}>EDIT</span>
-        <span onClick={handleDelete}>DELETE</span>
+        <span onClick={handleEdit}>{canEdit ? "EDIT" : "VIEW"}</span>
+        {canEdit && <span onClick={handleDelete}>DELETE</span>}
       </td>
     </tr>
   );
@@ -38,11 +40,12 @@ interface ITranslationTableProps {
   lang: string;
   definitions: ITranslatedWordDefinition[];
   translations: ITranslationMap;
+  canEdit: boolean;
   onDelete: (definition: IWordDefinition) => void
   onEdit: (definition: IWordDefinition) => void
 }
 
-export const TranslationTable = ({lang, translations, definitions, onDelete, onEdit}: ITranslationTableProps) => {
+export const TranslationTable = ({lang, translations, definitions, canEdit, onDelete, onEdit}: ITranslationTableProps) => {
   return (
     <table className={css.sharedTable}>
       <thead>
@@ -62,6 +65,7 @@ export const TranslationTable = ({lang, translations, definitions, onDelete, onE
             definition={definition}
             lang={lang}
             translations={translations}
+            canEdit={canEdit}
             onDelete={onDelete}
             onEdit={onEdit}
           />

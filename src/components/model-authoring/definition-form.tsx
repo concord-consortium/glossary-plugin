@@ -24,9 +24,10 @@ interface IEditProps {
   onCancel: () => void;
 }
 
-type IProps = (IAddProps | IEditProps) & {glossary: IGlossary}
+type IProps = (IAddProps | IEditProps) & {glossary: IGlossary; canEdit: boolean}
 
 export const DefinitionForm = (props: IProps) => {
+  const {canEdit} = props
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
   const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
@@ -95,7 +96,14 @@ export const DefinitionForm = (props: IProps) => {
   }
 
   const renderButtons = () => {
-    if (props.type === "add") {
+    if (!canEdit) {
+      return (
+        <div className={css.buttons}>
+          <button onClick={props.onCancel}>Close</button>
+        </div>
+      )
+    }
+    else if (props.type === "add") {
       return (
         <div className={css.buttons}>
           <button onClick={props.onCancel}>Cancel</button>
@@ -122,7 +130,9 @@ export const DefinitionForm = (props: IProps) => {
   }, [errors]);
 
   const handleFormChange = () => {
-    setPreviewTerm(getNewDefinition())
+    if (canEdit) {
+      setPreviewTerm(getNewDefinition())
+    }
   };
 
   return (
@@ -130,7 +140,7 @@ export const DefinitionForm = (props: IProps) => {
       <div className={css.left}>
         <div className={css.header}>
           <div>
-            {props.type === "add" ? "Add New Term" : `Edit Term: ${props.definition.word}`}
+            {props.type === "add" ? "Add New Term" : `${canEdit ? "Edit" : "View"} Term: ${props.definition.word}`}
           </div>
           <div>
             <a href="https://docs.google.com/document/d/1HA8KaOHR3pd027UJKq96DK2TKUDA2-sYDIemZ94kN9g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open Glossary Authoring Guide in a new tab">Help</a>
@@ -158,7 +168,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="diggingDeeper" defaultValue={getSavedValue("diggingDeeper")} autoFocus={props.type === "edit"} className={css.diggingDeeper} />
+              <textarea name="diggingDeeper" defaultValue={getSavedValue("diggingDeeper")} className={css.diggingDeeper} />
               {renderError("diggingDeeper")}
             </div>
           </div>

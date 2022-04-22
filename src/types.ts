@@ -127,6 +127,7 @@ export type ExpandableInteraction = "definitions" | "supports";
 export interface IGlossaryModelAuthoringInitialData {
   name: string
   json: IGlossary
+  canEdit: boolean
 }
 
 export interface IGlossaryModelAuthoringInfo {
