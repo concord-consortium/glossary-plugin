@@ -65,15 +65,10 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     setUsedLangs(langs);
   }, [glossary]);
 
-  return (
-    <div className={css.modelAuthoringApp}>
-      <div className={css.header}>
-        <h1>Edit Glossary: {name}</h1>
-        <SaveIndicator status={saveIndicatorStatus} />
-        {demo && saveInDemo && <div className={css.clearDemoData}><button onClick={handleClearSavedDemoData}>Clear Saved Demo Data</button></div>}
-      </div>
-      <div className={css.columns}>
-        <div className={css.leftColumn}>
+  const renderLeftColumn = () => {
+    if (glossary.definitions) {
+      return (
+        <>
           <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions}/>
           <AddTranslation glossary={glossary} saveTranslations={saveTranslations}/>
           {usedLangs.map(lang => (
@@ -84,6 +79,21 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
               saveTranslations={saveTranslations}
               usedLangs={usedLangs}
             />))}
+        </>
+      )
+    }
+  }
+
+  return (
+    <div className={css.modelAuthoringApp}>
+      <div className={css.header}>
+        <h1>Edit Glossary: {name}</h1>
+        <SaveIndicator status={saveIndicatorStatus} />
+        {demo && saveInDemo && <div className={css.clearDemoData}><button onClick={handleClearSavedDemoData}>Clear Saved Demo Data</button></div>}
+      </div>
+      <div className={css.columns}>
+        <div className={css.leftColumn}>
+          {renderLeftColumn()}
         </div>
         <div className={css.rightColumn}>
           <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName}/>
