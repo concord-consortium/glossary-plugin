@@ -10,7 +10,29 @@ E.g.:
 - https://glossary-plugin.concord.org/version/1.0.0/plugin.js
 - https://glossary-plugin.concord.org/version/1.1.0/plugin.js
 
-## Authoring page
+
+## New Authoring
+
+**TODO** Update this section, tracked in this story: https://www.pivotaltracker.com/story/show/181972724
+
+### Query Parameters
+
+There are a few query query parameters that are checked in the glossary model authoring:
+
+1. `dangerouslyEditJson` - when this is `true` a textarea is shown at the top of the page that allows
+direct edits of the glossary JSON.  As noted by the parameter name this can be dangerous as no validation
+is done other than to validate it parses as JSON.  This will be used to port over existing glossaries.
+NOTE: the JSON shown is the initial glossary JSON, any updates done in the UI are not reflected in the
+textarea.
+
+2. `debugJson` - when this is `true` a div is shown at the bottom of the page with a static view of the
+JSON.  This is useful for debugging.
+
+3. `saveInDemo` - when this is `true` in the `model-authoring-demo.html` url any changes made in the demo
+are saved in localstorage and then re-read on page load.  This is useful for development.
+
+## Old Authoring
+### Authoring page
 
 https://glossary-plugin.concord.org/authoring.html
 
@@ -29,7 +51,7 @@ https://console.aws.amazon.com/iam/home#/groups/Glossary-S3-Access
 
 It limits access to their own directory based on the username (IAM username and username on the authoring page have to match).
 
-## Authored state format
+### Authored state format
 
 Authoring page UI should always generate a correct JSON. Existing format example:
 
@@ -61,11 +83,11 @@ Note that you can define glossary inline or specify URL to a JSON that contains 
 }
 ```
 
-## Translations
+### Translations
 
 Translations are stored in JSON files in the `src/lang` folder are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
 
-### Translation Mappings
+#### Translation Mappings
 
 Due to the need to support translations of languages not available on poeditor.com we have coopted existing languages we don't plan to use and mapped them to the unsupported languages.  Here is the current mapping:
 
@@ -76,7 +98,7 @@ Due to the need to support translations of languages not available on poeditor.c
 | Marathi (mr)      | Inupiaq         |
 
 
-### Translations in the Dashboard (reporting)
+#### Translations in the Dashboard (reporting)
 If you would like to limit the language selection choices in the dashboard to only languages that exist
 in the glossary definition then you can append a hash parameter to the dashboard report url in the portal.
 To specify the glossary URL in the external-report url, add  `#glossaryUrl=<uri-encoded glossary url>`
