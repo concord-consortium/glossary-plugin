@@ -33,7 +33,7 @@ export default class Definition extends React.Component<IProps, IState> {
     imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
     // Video is loaded automatically only if there's no image.
     videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia,
-    diggingDeeperVisible: !!this.props.diggingDeeper,
+    diggingDeeperVisible: false,
   };
 
   public componentDidMount() {
