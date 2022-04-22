@@ -8,12 +8,13 @@ import { GlossaryTermsDefinitions } from "./glossary-terms-definitions";
 import { GlossarySettings } from "./glossary-settings";
 import { useSave } from "../../hooks/use-save";
 import { useMigrateGlossary } from "../../hooks/use-migrate-glossary";
-import { debugJson, saveInDemo } from "./params";
+import { debugJson, saveInDemo, dangerouslyEditJson } from "./params";
 import {demoGlossary} from "./demo-glossary"
 import { AddTranslation, allLanguages } from "./add-translation";
 import { GlossaryTranslations } from "./glossary-translations";
 
 import * as css from "./model-authoring-app.scss";
+import { DangerouslyEditJson } from "./dangerously-edit-json";
 
 interface IProps {
   demo?: boolean;
@@ -91,6 +92,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
         <SaveIndicator status={saveIndicatorStatus} />
         {demo && saveInDemo && <div className={css.clearDemoData}><button onClick={handleClearSavedDemoData}>Clear Saved Demo Data</button></div>}
       </div>
+      {dangerouslyEditJson && <DangerouslyEditJson glossary={glossary} saveGlossary={updateGlossary}/>}
       <div className={css.columns}>
         <div className={css.leftColumn}>
           {renderLeftColumn()}
