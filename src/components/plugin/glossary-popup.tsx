@@ -30,6 +30,7 @@ interface IProps {
   definition: string;
   userDefinitions?: string[];
   askForUserDefinition?: boolean;
+  disableReadAloud?: boolean;
   showIDontKnowButton?: boolean;
   enableStudentRecording?: boolean;
   autoShowMedia?: boolean;
@@ -106,7 +107,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, userDefinitions, imageUrl, zoomImageUrl,
+    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl, zoomImageUrl,
       videoUrl, imageCaption, videoCaption, word } = this.props;
     const i18n = this.context;
     /*
@@ -137,6 +138,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           imageCaption={imageCaption}
           videoCaption={videoCaption}
           autoShowMedia={autoShowMedia}
+          disableReadAloud={disableReadAloud}
         />
         {
           askForUserDefinition && userDefinitions && userDefinitions.length > 0 &&
@@ -151,7 +153,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private renderQuestion() {
     const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, definition,
-            videoUrl, autoShowMedia, showIDontKnowButton } = this.props;
+            videoUrl, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
     const canSubmit = recordingState !== RecordingState.Recording;
@@ -167,6 +169,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            disableReadAloud={disableReadAloud}
           />
         }
         {
@@ -176,7 +179,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           </div>
         }
         {this.mainPrompt}
-        <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />
+        {!disableReadAloud && <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />}
         <div className={css.answerTextarea}>
           {recording && this.renderRecording()}
           {!recording &&
@@ -294,13 +297,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestionIcons() {
-    const { word } = this.props;
+    const { word, disableReadAloud } = this.props;
     const { currentUserDefinition, canRecord } = this.state;
     const i18n = this.context;
     if (!currentUserDefinition) {
       return (
         <div className={css.answerTextareaIcons}>
-          <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />
+          {!disableReadAloud && <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />}
           {canRecord && <span
             data-cy="recordButton"
             className={icons.iconButton + " " + icons.iconRecord}

@@ -11,6 +11,7 @@ interface IProps {
   imageUrl?: string;
   zoomImageUrl?: string;
   imageCaption?: string;
+  disableReadAloud?: boolean;
 }
 
 interface IState {
@@ -39,7 +40,7 @@ export default class Image extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { imageUrl, imageCaption, word } = this.props;
+    const { imageUrl, imageCaption, word, disableReadAloud } = this.props;
     const { imageZoomed } = this.state;
     const translate = this.context.translate;
     return (
@@ -58,7 +59,7 @@ export default class Image extends React.Component<IProps, IState> {
             imageCaption &&
             <div className={css.caption}>
               {this.translatedImageCaption}
-              <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
+              {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
             </div>
           }
         </div>

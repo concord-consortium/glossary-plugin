@@ -54,6 +54,7 @@ describe("pluginContext", () => {
         showSideBar: true,
         autoShowMediaInPopup: true,
         showIDontKnowButton: true,
+        disableReadAloud: false,
         enableStudentRecording: true,
         enableStudentLanguageSwitching: true
       };

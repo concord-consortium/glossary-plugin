@@ -24,6 +24,7 @@ interface IProps {
   learnerDefinitions: ILearnerDefinitions;
   languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
+  disableReadAloud: boolean;
 }
 
 interface IState {
@@ -90,7 +91,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
   private definitionsRef = React.createRef<HTMLDivElement>();
 
   public render() {
-    const { learnerDefinitions, onLanguageChange, languages } = this.props;
+    const { learnerDefinitions, onLanguageChange, languages, disableReadAloud } = this.props;
     const { filter } = this.state;
     const i18n = this.context;
     const wordsIHaveDefinedClass = css.toggle
@@ -150,6 +151,7 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
                     videoUrl={entry.video}
                     imageCaption={entry.imageCaption}
                     videoCaption={entry.videoCaption}
+                    disableReadAloud={disableReadAloud}
                   />
                   {
                     learnerDefinitions[entry.word] &&
