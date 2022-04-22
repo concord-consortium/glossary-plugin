@@ -18,6 +18,7 @@ interface IProps {
   imageCaption?: string;
   videoCaption?: string;
   autoShowMedia?: boolean;
+  disableReadAloud?: boolean;
 }
 
 interface IState {
@@ -113,7 +114,7 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition, diggingDeeper } = this.props;
+    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition, diggingDeeper, disableReadAloud } = this.props;
     const { imageVisible, videoVisible, diggingDeeperVisible } = this.state;
     const hasDefinition = definition.length > 0
     return (
@@ -121,7 +122,7 @@ export default class Definition extends React.Component<IProps, IState> {
         {hasDefinition && <div>
           <span className={css.disableSelect}>{this.translatedDefinition}</span>
           <span className={css.icons}>
-            <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
+            {!disableReadAloud && <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />}
             {this.renderImageButton(imageUrl)}
             {this.renderVideoButton(videoUrl)}
             {this.renderDiggingDeeperButton(diggingDeeper)}
@@ -138,6 +139,7 @@ export default class Definition extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            disableReadAloud={disableReadAloud}
           />
         }
         {
@@ -148,7 +150,7 @@ export default class Definition extends React.Component<IProps, IState> {
               videoCaption &&
               <div className={css.caption}>
                 {this.translatedVideoCaption}
-                <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />
+                {!disableReadAloud && <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />}
               </div>
             }
           </div>

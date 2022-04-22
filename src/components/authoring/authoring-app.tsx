@@ -19,6 +19,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
   autoShowMediaInPopup: false,
   showSideBar: false,
+  disableReadAloud: false,
   showIDontKnowButton: false,
   enableStudentRecording: false,
   enableStudentLanguageSwitching: false,
@@ -91,7 +92,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     const { glossary, newDefEditor, definitionEditors, s3Status, glossaryDirty, client, glossaryResource } = this.state;
     const { getFirebaseJwt } = this.props;
     const { askForUserDefinition, autoShowMediaInPopup, definitions,
-            showSideBar, enableStudentRecording, enableStudentLanguageSwitching } = glossary;
+            showSideBar, enableStudentRecording, enableStudentLanguageSwitching, disableReadAloud } = glossary;
     return (
       <div className={css.authoringApp}>
         <div className={`${this.inlineMode ? css.inlineScrollForm : ""}`}>
@@ -233,7 +234,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
           {this.renderDashboardUrlParams()}
           <div className={css.preview}>
             <h2>Preview</h2>
-            {showSideBar && this.renderSideBar(definitions)}
+            {showSideBar && this.renderSideBar(definitions, disableReadAloud)}
           </div>
         </div>
         {
@@ -270,7 +271,8 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     }
   }
 
-  public renderSideBar(definitions: IWordDefinition[]) {
+  public renderSideBar(definitions: IWordDefinition[], disableReadAloud: boolean) {
+
     return(
       <div>
         <div className={css.handle}>
@@ -281,6 +283,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
           <GlossarySidebar
             definitions={definitions}
             learnerDefinitions={{}}
+            disableReadAloud={disableReadAloud}
           />
         </div>
       </div>

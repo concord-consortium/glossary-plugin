@@ -10,6 +10,7 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
       showSideBar: false,
       definitions: [],
       autoShowMediaInPopup: false,
+      disableReadAloud: false,
       showIDontKnowButton: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false,

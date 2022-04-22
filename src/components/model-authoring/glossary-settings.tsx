@@ -34,7 +34,7 @@ const previewTranslations: ITranslationMap = {
 }
 
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
-  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, enableStudentLanguageSwitching } = glossary;
+  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud, enableStudentLanguageSwitching } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +109,19 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
             to the student automatically in the term popup. If both image and video are provided,
             students will only see the image automatically. If student definitions are required,
             students will see the video after their have provided their own definition.
+          </div>
+        </div>
+
+        <div className={css.settingInformation}>
+          <div className={css.checkboxRow}>
+            <input type="checkbox" checked={disableReadAloud} onChange={handleChange("disableReadAloud")}/>
+            <label>
+              Disable read-aloud buttons
+            </label>
+          </div>
+          <div className={css.help}>
+            When this option is enabled, the read-aloud buttons will not be shown on the term popup
+            or in the Glossary Sidebar.
           </div>
         </div>
 

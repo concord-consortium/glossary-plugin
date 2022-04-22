@@ -25,6 +25,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find(Definition).length).toEqual(2);
@@ -38,6 +39,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find("." + css.toggles).length).toEqual(0);
@@ -54,6 +56,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find("." + css.toggles).length).toEqual(1);
@@ -64,6 +67,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find(Definition).length).toEqual(1);
@@ -77,6 +81,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={learnerDefinitions}
+          disableReadAloud={false}
         />
       );
 
@@ -97,6 +102,7 @@ describe("GlossarySidebar component", () => {
           <GlossarySidebar
             definitions={definitions}
             learnerDefinitions={learnerDefinitions}
+            disableReadAloud={false}
           />
         </pluginContext.Provider>
       );
@@ -111,6 +117,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={{}}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find("." + css.groupBtn).length).toEqual(0);
@@ -129,6 +136,7 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={manyDefinitions}
           learnerDefinitions={{}}
+          disableReadAloud={false}
         />
       );
       const buttons = wrapper.find("." + css.groupBtn);
@@ -150,8 +158,9 @@ describe("GlossarySidebar component", () => {
         <GlossarySidebar
           definitions={definitions}
           learnerDefinitions={{}}
-          languages={[{lang: "es", selected: false]}
+          languages={[{lang: "es", selected: false}]}
           onLanguageChange={onLangChange}
+          disableReadAloud={false}
         />
       );
       expect(wrapper.find("[data-cy='langToggle']").length).toEqual(1);

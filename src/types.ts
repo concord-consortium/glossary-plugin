@@ -5,6 +5,7 @@ export interface IGlossary {
   autoShowMediaInPopup: boolean;
   showIDontKnowButton: boolean;
   enableStudentRecording: boolean;
+  disableReadAloud: boolean;
   enableStudentLanguageSwitching: boolean;
   translations?: ITranslationMap;
 }

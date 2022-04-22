@@ -14,6 +14,7 @@ describe("#glossaryToPOEditorTerms", () => {
       showSideBar: false,
       autoShowMediaInPopup: false,
       showIDontKnowButton: false,
+      disableReadAloud: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false
     });
@@ -39,6 +40,7 @@ describe("#isTranslationComplete", () => {
       showSideBar: false,
       autoShowMediaInPopup: false,
       showIDontKnowButton: false,
+      disableReadAloud: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false,
       translations: {
@@ -65,6 +67,7 @@ describe("#isTranslationComplete", () => {
       autoShowMediaInPopup: false,
       showIDontKnowButton: false,
       enableStudentRecording: false,
+      disableReadAloud: false,
       enableStudentLanguageSwitching: false,
       translations: {
         es: {
