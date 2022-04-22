@@ -57,6 +57,7 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
+          credentials: "include"
         });
         const json = await response.json();
         updateSaveIndicator({ mode: "saved" });
