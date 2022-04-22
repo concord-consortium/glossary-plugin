@@ -18,6 +18,7 @@ const SaveIndicator = ({status}: IProps) => {
       {status && status.mode === "saving" && <div className={css.saving}>Saving...</div>}
       {status && status.mode === "saved" && <div className={css.saved}>Saved!</div>}
       {status && status.mode === "error" && <div className={css.error}>{status.message}</div>}
+      {status && status.mode === "savingDisabled" && <div className={css.saving}>Saving is disabled!</div>}
     </div>
   )
 }

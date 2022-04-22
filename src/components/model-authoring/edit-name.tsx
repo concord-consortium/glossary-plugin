@@ -5,10 +5,11 @@ import * as css from "./edit-name.scss";
 
 interface IProps {
   name: string;
+  canEdit: boolean;
   saveName: (name: string) => void;
 }
 
-export const EditName = ({ name, saveName }: IProps) => {
+export const EditName = ({ name, canEdit, saveName }: IProps) => {
   const [newName, setNewName] = useState<string>(name);
   const [editing, setEditing] = useState<boolean>(false);
   const [error, setError] = useState<string|null>(null);
@@ -45,18 +46,24 @@ export const EditName = ({ name, saveName }: IProps) => {
     setError(null);
   }
 
+  const renderButtons = () => {
+    if (canEdit) {
+      return (
+        editing ? (
+        <>
+          <button onClick={canEdit ? handleSave : handleCancel}>Save Name</button>
+          <button onClick={handleCancel}>Cancel</button>
+        </>
+        ) : <button onClick={handleEdit}>Edit Name</button>
+      )
+    }
+  }
+
   return (
     <div className={css.editName}>
       <div className={css.inputs}>
         <input value={newName} disabled={!editing} onChange={handleChange} ref={inputRef} />
-        {editing ?
-          <>
-            <button onClick={handleSave}>Save Name</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </>
-          :
-          <button onClick={handleEdit}>Edit Name</button>
-        }
+        {renderButtons()}
       </div>
       {error && <div className={css.error}>{error}</div>}
     </div>

@@ -23,11 +23,13 @@ type IProps = {
   glossary: IGlossary
   usedLangs: string[]
   translatedDefinition: ITranslatedWordDefinition
+  canEdit: boolean;
   onEdit: (translatedDefinition: ITranslatedWordDefinition, definitionTranslation: DefinitionTranslation, lang: string, next: NextEditAction) => void
   onCancel: () => void;
 }
 
 export const TranslationForm = (props: IProps) => {
+  const {canEdit} = props;
   const translations = props.glossary.translations || {}
   const formRef = React.useRef<HTMLFormElement>(null);
   const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.translatedDefinition);
@@ -101,8 +103,30 @@ export const TranslationForm = (props: IProps) => {
   }
 
   const handleFormChange = () => {
-    setPreviewTranslation(getNewTranslation())
+    if (canEdit) {
+      setPreviewTranslation(getNewTranslation())
+    }
   };
+
+  const renderButtons = () => {
+    if (canEdit) {
+      return (
+        <div className={css.buttons}>
+          <button onClick={handleEditSubmit({type: "save and edit previous", lang})}>&lt;&lt; Save &amp; Previous</button>
+          <button onClick={props.onCancel}>Cancel</button>
+          <button type="submit" onClick={handleEditSubmit({type: "save", lang})}>Save</button>
+          <button type="submit" onClick={handleEditSubmit({type: "save and close", lang})}>Save &amp; Close</button>
+          <button onClick={handleEditSubmit({type: "save and edit next", lang})}>Save &amp; Next &gt;&gt;</button>
+        </div>
+      )
+    } else {
+      return (
+        <div className={css.buttons}>
+          <button onClick={props.onCancel}>Close</button>
+        </div>
+      )
+    }
+  }
 
   useEffect(() => {
     setPreviewTranslation(getNewTranslation())
@@ -113,7 +137,7 @@ export const TranslationForm = (props: IProps) => {
       <div className={css.left}>
         <div className={css.header}>
           <div>
-            Edit {allLanguages[lang]} Translation: {word}
+            {canEdit ? "Edit" : "View"} {allLanguages[lang]} Translation: {word}
           </div>
           <div>
             <a href="https://docs.google.com/document/d/1HA8KaOHR3pd027UJKq96DK2TKUDA2-sYDIemZ94kN9g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open Glossary Authoring Guide in a new tab">Help</a>
@@ -185,13 +209,8 @@ export const TranslationForm = (props: IProps) => {
           </div>
         </form>
 
-        <div className={css.buttons}>
-          <button onClick={handleEditSubmit({type: "save and edit previous", lang})}>&lt;&lt; Save &amp; Previous</button>
-          <button onClick={props.onCancel}>Cancel</button>
-          <button type="submit" onClick={handleEditSubmit({type: "save", lang})}>Save</button>
-          <button type="submit" onClick={handleEditSubmit({type: "save and close", lang})}>Save &amp; Close</button>
-          <button onClick={handleEditSubmit({type: "save and edit next", lang})}>Save &amp; Next &gt;&gt;</button>
-        </div>
+        {renderButtons()}
+
       </div>
       <div className={css.right}>
         {renderPreview()}

@@ -22,9 +22,10 @@ interface IProps {
 }
 
 const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
+  const {canEdit} = initialData;
   const [name, setName] = useState<string>(initialData.name);
   const [glossary, setGlossary] = useState<IGlossary>(initialData.json);
-  const {saveIndicatorStatus, saveGlossary, saveName} = useSave({demo, apiUrl});
+  const {saveIndicatorStatus, saveGlossary, saveName} = useSave({demo, apiUrl, canEdit});
   const [usedLangs, setUsedLangs] = useState<string[]>([]);
 
   const updateName = (newName: string) => {
@@ -33,8 +34,10 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
   }
 
   const updateGlossary = useCallback((newGlossary: IGlossary) => {
-    saveGlossary(newGlossary);
-    setGlossary(newGlossary);
+    if (canEdit) {
+      saveGlossary(newGlossary);
+      setGlossary(newGlossary);
+    }
   }, [setGlossary, saveGlossary]);
 
   const saveSettings = useCallback((settings: IGlossarySettings) => {
@@ -69,8 +72,8 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     if (glossary.definitions) {
       return (
         <>
-          <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions}/>
-          <AddTranslation glossary={glossary} saveTranslations={saveTranslations}/>
+          <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions} canEdit={canEdit} />
+          {canEdit && <AddTranslation glossary={glossary} saveTranslations={saveTranslations}/>}
           {usedLangs.map(lang => (
             <GlossaryTranslations
               key={lang}
@@ -78,6 +81,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
               glossary={glossary}
               saveTranslations={saveTranslations}
               usedLangs={usedLangs}
+              canEdit={canEdit}
             />))}
         </>
       )
@@ -87,16 +91,17 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
   return (
     <div className={css.modelAuthoringApp}>
       <div className={css.header}>
-        <h1>Edit Glossary: {name}</h1>
+        <h1>{canEdit ? "Edit" : "View"} Glossary: {name}</h1>
         <SaveIndicator status={saveIndicatorStatus} />
         {demo && saveInDemo && <div className={css.clearDemoData}><button onClick={handleClearSavedDemoData}>Clear Saved Demo Data</button></div>}
       </div>
+      {!canEdit && <div className={css.readonlyGlossaryNotice}>You are not the author of this glossary so any changes you make will not be reflected in the UI or saved.</div>}
       <div className={css.columns}>
         <div className={css.leftColumn}>
           {renderLeftColumn()}
         </div>
         <div className={css.rightColumn}>
-          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName}/>
+          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName} canEdit={canEdit}/>
         </div>
       </div>
       {debugJson && <div className={css.debugJson}>{JSON.stringify(glossary, null, 2)}</div>}
