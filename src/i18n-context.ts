@@ -9,6 +9,7 @@ import * as gvLang from "./lang/gv.json";
 import * as miLang from "./lang/mi.json";
 import * as mrLang from "./lang/mr.json";
 import * as zhCNLang from "./lang/zh-CN.json";
+import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
 
 type ITranslateFunc = (key: string, fallback?: string | null, variables?: {[key: string]: string}) => string | null;
 
@@ -85,7 +86,7 @@ export const fetchGlossary = (
   };
 
   if (glossaryUrl) {
-    fetch(glossaryUrl)
+    fetch(ensureCorrectProtocol(glossaryUrl))
     .then( (response: Response) => {
       response.json().then(setLangs);
     })

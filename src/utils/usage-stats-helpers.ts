@@ -1,4 +1,5 @@
 import { IGlossary, IStudent, ILogEvent } from "../types";
+import ensureCorrectProtocol from "./ensure-correct-protocol";
 
 export interface ISupportsDef {
   textToSpeech: boolean;
@@ -67,7 +68,7 @@ export const resetGlossaryInstance = () => glossaryInstance = null;
 export const getGlossaryJSON = async (glossaryUrl: string): Promise<IGlossary|null> => {
   if (!glossaryInstance) {
     try {
-      const response = await fetch(glossaryUrl);
+      const response = await fetch(ensureCorrectProtocol(glossaryUrl));
       glossaryInstance = await response.json();
     }
     // tslint:disable-next-line:no-console

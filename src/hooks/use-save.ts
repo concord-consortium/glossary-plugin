@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { saveInDemo } from "../components/model-authoring/params";
 import { IGlossary } from "../types";
+import ensureCorrectProtocol from "../utils/ensure-correct-protocol";
 
 export interface ISaveIndicatorSaving {
   mode: "saving";
@@ -50,8 +51,8 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; }) => {
       setTimeout(() => updateSaveIndicator({ mode: "saved" }), 1000);
     } else if (apiUrl) {
       try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
+        const response = await fetch(ensureCorrectProtocol(apiUrl), {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
