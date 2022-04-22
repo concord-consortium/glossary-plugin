@@ -33,8 +33,10 @@ interface IStats {
 export interface ITranslatedWordDefinition extends IWordDefinition {
   translatedWord: string;
   translatedDefinition: string;
+  translatedDiggingDeeper: string;
   translatedImageCaption: string;
   translatedVideoCaption: string;
+  translatedDiggingDeeperMP3Url: string;
   translatedDefinitionMP3Url: string;
   translatedImageCaptionMP3Url: string;
   translatedVideoCaptionMP3Url: string;
@@ -173,9 +175,11 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
 
       const translatedWord = translate(translations, lang, term[TextKey.Word](word), "");
       const translatedDefinition = translate(translations, lang, term[TextKey.Definition](word), "");
+      const translatedDiggingDeeper = translate(translations, lang, term[TextKey.DiggingDeeper](word), "");
       const translatedImageCaption = translate(translations, lang, term[TextKey.ImageCaption](word), "");
       const translatedVideoCaption = translate(translations, lang, term[TextKey.VideoCaption](word), "");
       const translatedDefinitionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
+      const translatedDiggingDeeperMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.DiggingDeeper](word), "");
       const translatedImageCaptionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), "");
       const translatedVideoCaptionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.VideoCaption](word), "");
       const hasTranslatedWord = translatedWord.length > 0
@@ -197,8 +201,10 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
       return {...definition,
         translatedWord,
         translatedDefinition,
+        translatedDiggingDeeper,
         translatedImageCaption,
         translatedVideoCaption,
+        translatedDiggingDeeperMP3Url,
         translatedDefinitionMP3Url,
         translatedImageCaptionMP3Url,
         translatedVideoCaptionMP3Url,

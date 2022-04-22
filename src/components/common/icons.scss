@@ -147,7 +147,7 @@
 .iconDeleteAudio {
   @extend %icon;
   &:before {
-    content: "\e90a";
+    content: "\e90b";
   }
 }
 .iconPause {
@@ -166,5 +166,11 @@
   @extend %icon;
   &:before {
     content: "\e907";
+  }
+}
+.iconDiggingDeeper {
+  @extend %icon;
+  &:before {
+    content: "\e910"
   }
 }

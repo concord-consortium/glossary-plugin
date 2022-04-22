@@ -18,6 +18,7 @@ export interface ITranslation {
 export interface IWordDefinition {
   word: string;
   definition: string;
+  diggingDeeper?: string;
   image?: string;
   zoomImage?: string;
   video?: string;

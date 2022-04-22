@@ -11,8 +11,8 @@ import * as css from "./shared-modal-form.scss";
 
 type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedWord" |
-  "translatedDefinition" | "translatedImageCaption" | "translatedVideoCaption" |
-  "translatedDefinitionMP3Url" | "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
+  "translatedDefinition" | "translatedDiggingDeeper" | "translatedImageCaption" | "translatedVideoCaption" |
+  "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" | "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
 export type DefinitionTranslation = Record<string, string>
 
@@ -39,6 +39,7 @@ export const TranslationForm = (props: IProps) => {
     const newTranslation: DefinitionTranslation = {
       [term[TextKey.Word](word)]: getFormValue("translatedWord"),
       [term[TextKey.Definition](word)]: getFormValue("translatedDefinition"),
+      [term[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeper"),
       [term[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaption"),
       [term[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaption"),
       [mp3UrlTerm[TextKey.Definition](word)]: getFormValue("translatedDefinitionMP3Url"),
@@ -57,6 +58,8 @@ export const TranslationForm = (props: IProps) => {
         return translate(translations, lang, term[TextKey.Word](word), "");
       case "translatedDefinition":
         return translate(translations, lang, term[TextKey.Definition](word), "");
+      case "translatedDiggingDeeper":
+        return translate(translations, lang, term[TextKey.DiggingDeeper](word), "");
       case "translatedImageCaption":
         return translate(translations, lang, term[TextKey.ImageCaption](word), "");
       case "translatedVideoCaption":
@@ -139,6 +142,12 @@ export const TranslationForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
+            <legend>Digging Deeper</legend>
+            <div>
+              <textarea name="translatedDiggingDeeper" defaultValue={getTranslatedValue("translatedDiggingDeeper")} placeholder={`Translated definition for ${word}`} className={css.diggingDeeper} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
             <legend>Image Caption</legend>
             <div>
               <textarea name="translatedImageCaption" defaultValue={getTranslatedValue("translatedImageCaption")} placeholder={`Translated image caption for ${word}`} />
@@ -154,6 +163,12 @@ export const TranslationForm = (props: IProps) => {
             <legend>Definition MP3 URL</legend>
             <div>
             <input type="text" name="translatedDefinitionMP3Url" defaultValue={getTranslatedValue("translatedDefinitionMP3Url")} placeholder={`MP3 recording of translated definition for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <legend>Digging Deeper MP3 URL</legend>
+            <div>
+            <input type="text" name="translatedDiggingDeeperMP3Url" defaultValue={getTranslatedValue("translatedDiggingDeeperMP3Url")} placeholder={`MP3 recording of translated Digging Deeper definition for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>

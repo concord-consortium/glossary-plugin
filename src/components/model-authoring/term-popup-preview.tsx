@@ -75,6 +75,7 @@ export const TermPopUpPreview = (props: IProps) => {
             <GlossaryPopup
               word={term.word}
               definition={term.definition}
+              diggingDeeper={term.diggingDeeper}
               imageUrl={term.image}
               imageCaption={term.imageCaption}
               zoomImageUrl={term.zoomImage}

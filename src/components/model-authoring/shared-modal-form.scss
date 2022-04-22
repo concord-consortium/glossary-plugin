@@ -42,7 +42,11 @@
           display: inline;
           width: 190px;
           white-space: nowrap;
-          font-weight: bold;
+          font: 700 16px 'Lato-Bold', verdana, helvetica, sans-serif;
+        }
+
+        .note {
+          font: 14px 'Lato-Regular', verdana, helvetica, sans-serif;
         }
 
         :nth-child(2) {
@@ -64,7 +68,7 @@
           height: 60px;
           font-family: 'Lato-Regular', verdana, Helvetica, sans-serif;
 
-          &.definition {
+          &.definition, &.diggingDeeper {
             height: 100px;
           }
         }

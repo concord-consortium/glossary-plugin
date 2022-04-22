@@ -34,6 +34,7 @@ interface IProps {
   enableStudentRecording?: boolean;
   autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
+  diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
   videoUrl?: string;
@@ -105,7 +106,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl, zoomImageUrl,
+    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, userDefinitions, imageUrl, zoomImageUrl,
       videoUrl, imageCaption, videoCaption, word } = this.props;
     const i18n = this.context;
     /*
@@ -129,6 +130,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         <Definition
           word={word}
           definition={definition}
+          diggingDeeper={diggingDeeper}
           imageUrl={imageUrl}
           zoomImageUrl={zoomImageUrl}
           videoUrl={videoUrl}
