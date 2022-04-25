@@ -100,6 +100,7 @@ export class GlossaryPlugin {
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
         enableStudentRecording={authoredState.enableStudentRecording || false}
         enableStudentLanguageSwitching={authoredState.enableStudentLanguageSwitching || false}
+        disableReadAloud={authoredState.disableReadAloud || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}
         studentInfo={studentInfo}

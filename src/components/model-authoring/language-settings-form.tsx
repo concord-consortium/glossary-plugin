@@ -20,11 +20,13 @@ type IProps = {
   lang: string
   glossary: IGlossary
   usedLangs: string[]
+  canEdit: boolean;
   onEdit: (settingsLang: string, languageSettings: ILanguageSettings) => void
   onCancel: () => void;
 }
 
 export const LanguageSettingsForm = (props: IProps) => {
+  const {canEdit} = props;
   const translations = props.glossary.translations || {}
   const formRef = React.useRef<HTMLFormElement>(null);
   const [lang, setLang] = useState(props.lang);
@@ -51,6 +53,11 @@ export const LanguageSettingsForm = (props: IProps) => {
     return ((formRef.current?.elements.namedItem(field) as HTMLInputElement|HTMLTextAreaElement)?.value || "").trim()
   }
 
+  const handleCancel = (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    props.onCancel()
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     props.onEdit(lang, getNewSettings())
@@ -69,7 +76,9 @@ export const LanguageSettingsForm = (props: IProps) => {
   }
 
   const handleFormChange = () => {
-    setPreviewSettings(getNewSettings())
+    if (canEdit) {
+      setPreviewSettings(getNewSettings())
+    }
   };
 
   useEffect(() => {
@@ -81,7 +90,7 @@ export const LanguageSettingsForm = (props: IProps) => {
       <div className={css.left}>
         <div className={css.header}>
           <div>
-            Edit {allLanguages[lang]} Settings
+            {canEdit ? "Edit" : "View"} {allLanguages[lang]} Settings
           </div>
           <div>
             <a href="https://docs.google.com/document/d/1HA8KaOHR3pd027UJKq96DK2TKUDA2-sYDIemZ94kN9g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open Glossary Authoring Guide in a new tab">Help</a>
@@ -112,7 +121,8 @@ export const LanguageSettingsForm = (props: IProps) => {
         </form>
 
         <div className={css.buttons}>
-          <button type="submit" onClick={handleSubmit}>Save &amp; Close</button>
+          {canEdit && <button type="submit" onClick={handleSubmit}>Save &amp; Close</button>}
+          {!canEdit && <button type="submit" onClick={handleCancel}>Close</button>}
         </div>
       </div>
       <div className={css.right}>

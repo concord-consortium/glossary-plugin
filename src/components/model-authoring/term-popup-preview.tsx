@@ -86,6 +86,7 @@ export const TermPopUpPreview = (props: IProps) => {
               askForUserDefinition={settings.askForUserDefinition}
               enableStudentRecording={settings.enableStudentRecording}
               autoShowMedia={settings.autoShowMediaInPopup}
+              disableReadAloud={settings.disableReadAloud}
               showIDontKnowButton={settings.showIDontKnowButton}
               userDefinitions={settings.askForUserDefinition ? userDefinitions : []}
               onUserDefinitionsUpdate={onUserDefinitionsUpdate}

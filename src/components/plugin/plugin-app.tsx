@@ -46,6 +46,7 @@ interface IProps {
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
   enableStudentLanguageSwitching: boolean;
+  disableReadAloud: boolean;
   showSideBar: boolean;
   translations: {
     [languageCode: string]: ITranslation
@@ -150,7 +151,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
     // student recording is enabled per student with the combination of it being enabled by the glossary
     // author along with it being enabled by the teacher in the dashboard per student
@@ -171,6 +172,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                 learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
                 languages={this.languages}
                 onLanguageChange={this.languageChanged}
+                disableReadAloud={disableReadAloud}
               />,
               this.sidebarContainer
             )

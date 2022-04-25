@@ -47,16 +47,15 @@ export interface ITranslatedWordDefinition extends IWordDefinition {
   translationRank: number;
 }
 
-
-
 interface IProps {
   lang: string;
   glossary: IGlossary;
   usedLangs: string[]
+  canEdit: boolean;
   saveTranslations: (translations: ITranslationMap) => void
 }
 
-export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslations }: IProps) => {
+export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveTranslations }: IProps) => {
   const {definitions} = glossary
   const translations = glossary.translations || {}
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "untranslated">("asc")
@@ -144,6 +143,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
                 glossary={glossary}
                 usedLangs={usedLangs}
                 translatedDefinition={modal.translatedDefinition}
+                canEdit={canEdit}
                 onEdit={handleEditTranslation}
                 onCancel={handleCloseModal}
               />
@@ -158,6 +158,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
                 lang={modal.lang}
                 glossary={glossary}
                 usedLangs={usedLangs}
+                canEdit={canEdit}
                 onEdit={handleEditLanguageSettings}
                 onCancel={handleCloseModal}
               />
@@ -242,11 +243,12 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
   const haveDefinitions = definitions.length > 0
 
   const panelLabel = `Language: ${allLanguages[lang]} (${stats.totalTranslations}/${stats.totalTerms})`
-  const headerControls = [
-    <button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>,
-    <button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>,
-  ]
-
+  
+  const headerControls = [<button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>]
+  if (canEdit) {
+    headerControls.push(<button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>)
+  }
+  
   return (
     <Panel label={panelLabel} collapsible={true} headerControls={headerControls}>
       <div className={css.glossaryTranslations}>
@@ -267,6 +269,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
             definitions={sortedTranslatedDefinitions}
             onDelete={handleDeleteTranslation}
             onEdit={handleShowEditTranslation}
+            canEdit={canEdit}
           />
         )}
         {modal && renderModal()}

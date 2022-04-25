@@ -5,6 +5,7 @@ export interface IGlossary {
   autoShowMediaInPopup: boolean;
   showIDontKnowButton: boolean;
   enableStudentRecording: boolean;
+  disableReadAloud: boolean;
   enableStudentLanguageSwitching: boolean;
   translations?: ITranslationMap;
 }
@@ -127,6 +128,7 @@ export type ExpandableInteraction = "definitions" | "supports";
 export interface IGlossaryModelAuthoringInitialData {
   name: string
   json: IGlossary
+  canEdit: boolean
 }
 
 export interface IGlossaryModelAuthoringInfo {

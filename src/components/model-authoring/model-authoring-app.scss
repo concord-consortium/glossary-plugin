@@ -25,6 +25,14 @@
     }
   }
 
+  .readonlyGlossaryNotice {
+    margin: 10px 0;
+    padding: 10px;
+    color: #fff;
+    background-color: #f00;
+    font-weight: bold;
+  }
+
   .columns {
     display: flex;
     flex-direction: row;
