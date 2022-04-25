@@ -243,12 +243,12 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
   const haveDefinitions = definitions.length > 0
 
   const panelLabel = `Language: ${allLanguages[lang]} (${stats.totalTranslations}/${stats.totalTerms})`
-  
+
   const headerControls = [<button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>]
   if (canEdit) {
     headerControls.push(<button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>)
   }
-  
+
   return (
     <Panel label={panelLabel} collapsible={true} headerControls={headerControls}>
       <div className={css.glossaryTranslations}>
