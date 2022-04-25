@@ -243,8 +243,8 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, saveTranslatio
 
   const panelLabel = `Language: ${allLanguages[lang]} (${stats.totalTranslations}/${stats.totalTerms})`
   const headerControls = [
-    <button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10}}>Language Settings</button>,
-    <button key="delete" onClick={handleDeleteLanguage}>Delete Language</button>,
+    <button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>,
+    <button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>,
   ]
 
   return (
