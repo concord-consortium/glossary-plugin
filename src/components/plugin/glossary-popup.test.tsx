@@ -134,6 +134,24 @@ describe("GlossaryPopup component", () => {
       expect(onUserSubmit).toBeCalledWith("I don't know yet");
     });
 
+    it("does not display 'I don't know' button when showIDontKnowButton is false", () => {
+      const word = "test";
+      const definition = "test def";
+      const onUserSubmit = jest.fn();
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          userDefinitions={[]}
+          askForUserDefinition={true}
+          showIDontKnowButton={false}
+          onUserDefinitionsUpdate={onUserSubmit}
+        />
+      );
+      const iDontKnowButton = wrapper.find("[data-cy='cancel']");
+      expect(iDontKnowButton.length).toEqual(0);
+    });
+
     describe("when user already answered a question", () => {
       it("still asks user to revise his answer", () => {
         const word = "test";
@@ -174,6 +192,23 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find("[data-cy='langToggle']").length).toEqual(2);
       wrapper.find("[data-cy='langToggle']").first().simulate("click");
       expect(onLangChange).toHaveBeenCalled();
+    });
+  });
+
+  describe("when secondLanguage is not provided", () => {
+    it("does not render language toggle", () => {
+      const onLangChange = jest.fn();
+      const wrapper = mount(
+        <GlossaryPopup
+          word="test"
+          definition="test"
+          userDefinitions={[]}
+          askForUserDefinition={false}
+          languages={[]}
+          onLanguageChange={onLangChange}
+        />
+      );
+      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(0);
     });
   });
 

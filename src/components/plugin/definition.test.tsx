@@ -69,6 +69,33 @@ describe("Definition component", () => {
     expect(msg.lang).toEqual("en-US"); // en gets set to en-US automatically
   });
 
+  it("doesn't render text-to-speech icon if 'Disable Read Aloud' option is true", () => {
+    const wrapper = mount(
+      <Definition
+        word="test"
+        definition="test definition"
+        disableReadAloud={true}
+      />
+    );
+    const icon = wrapper.find("." + icons.iconAudio);
+    expect(icon.length).toEqual(0);
+  });
+
+  it("renders Digging Deeper icon if Digging Deeper definition is provided and opens definition when the icon is clicked", () => {
+    const wrapper = mount(
+      <Definition
+        word="test"
+        definition="test definition"
+        diggingDeeper="test digging deeper"
+      />
+    );
+    const icon = wrapper.find("." + icons.iconDiggingDeeper);
+    expect(icon.length).toEqual(1);
+    expectToolTip(wrapper, "View Digging Deeper");
+    icon.simulate("click");
+    expect(wrapper.text()).toEqual(expect.stringContaining("test digging deeper"));
+  });
+
   it("renders image icon if imageUrl is provided and opens image when the icon is clicked", () => {
     const src = "http://test-image.png";
     const caption = "test image caption";
