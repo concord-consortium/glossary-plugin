@@ -79,6 +79,18 @@
   }
   transform: rotate(90deg);
 }
+.iconCaretUp{
+  @extend %icon;
+  &:before {
+    content: "\e90d"
+  }
+}
+.iconCaretDown{
+  @extend %icon;
+  &:before {
+    content: "\e90c"
+  }
+}
 .iconCaretRight {
   @extend %icon;
   &:before {
