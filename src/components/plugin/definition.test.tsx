@@ -93,7 +93,6 @@ describe("Definition component", () => {
     expect(icon.length).toEqual(1);
     expectToolTip(wrapper, "View Digging Deeper");
     icon.simulate("click");
-    console.log(wrapper.text());
     expect(wrapper.text()).toEqual(expect.stringContaining("test digging deeper"));
   });
 
