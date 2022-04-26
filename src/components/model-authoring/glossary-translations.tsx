@@ -42,8 +42,10 @@ export interface ITranslatedWordDefinition extends IWordDefinition {
   translatedVideoCaptionMP3Url: string;
   hasImageCaption: boolean;
   hasVideoCaption: boolean;
+  hasDiggingDeeper: boolean;
   hasTranslatedImageCaption: boolean;
   hasTranslatedVideoCaption: boolean;
+  hasTranslatedDiggingDeeper: boolean;
   translationRank: number;
 }
 
@@ -187,8 +189,10 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
       const hasTranslatedDefinition = translatedDefinition.length > 0
       const hasImageCaption = (definition.imageCaption || "").length > 0
       const hasVideoCaption = (definition.videoCaption || "").length > 0
+      const hasDiggingDeeper = (definition.diggingDeeper || "").length > 0
       const hasTranslatedImageCaption = translatedImageCaption.length > 0
       const hasTranslatedVideoCaption = translatedVideoCaption.length > 0
+      const hasTranslatedDiggingDeeper = translatedDiggingDeeper.length > 0
 
       let translationRank = 0
       if (hasTranslatedWord) { translationRank++ }
@@ -211,8 +215,10 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
         translatedVideoCaptionMP3Url,
         hasImageCaption,
         hasVideoCaption,
+        hasDiggingDeeper,
         hasTranslatedImageCaption,
         hasTranslatedVideoCaption,
+        hasTranslatedDiggingDeeper,
         translationRank
       }
     })

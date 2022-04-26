@@ -19,13 +19,14 @@ export const TranslationTableRow = (props: ITranslationTableRowProps) => {
   const {canEdit} = props
   const handleDelete = () => props.onDelete(props.definition);
   const handleEdit = () => props.onEdit(props.definition);
-  const { word, translatedWord, translatedDefinition, hasTranslatedImageCaption, hasImageCaption, hasTranslatedVideoCaption, hasVideoCaption } = props.definition;
+  const { word, translatedWord, translatedDefinition, hasTranslatedImageCaption, hasImageCaption, hasTranslatedVideoCaption, hasVideoCaption, hasTranslatedDiggingDeeper, hasDiggingDeeper } = props.definition;
 
   return (
     <tr key={word}>
       <td>{word}</td>
       <td>{translatedWord}</td>
       <td>{translatedDefinition}</td>
+      <td className={css.centered}>{hasTranslatedDiggingDeeper ? "✓" : (hasDiggingDeeper ? "✗" : "")}</td>
       <td className={css.centered}>{hasTranslatedImageCaption ? "✓" : (hasImageCaption ? "✗" : "")}</td>
       <td className={css.centered}>{hasTranslatedVideoCaption ? "✓" : (hasVideoCaption ? "✗" : "")}</td>
       <td className={css.actions}>
@@ -53,6 +54,7 @@ export const TranslationTable = ({lang, translations, definitions, canEdit, onDe
           <th>Term</th>
           <th>Translated Term</th>
           <th className={css.definition}>Translated Definition</th>
+          <th>Digging Deeper</th>
           <th>Image Caption</th>
           <th>Video Caption</th>
           <th className={css.actions}>&nbsp;</th>
