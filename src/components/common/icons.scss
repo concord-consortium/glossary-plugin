@@ -79,6 +79,20 @@
   }
   transform: rotate(90deg);
 }
+.iconCaretRight {
+  @extend %icon;
+  &:before {
+    content: "\e90a"
+  }
+  transform:scale(90%);
+}
+.iconCaretLeft {
+  @extend %icon;
+  &:before {
+    content: "\e90a"
+  }
+  transform: rotate(180deg) scale(90%);
+}
 .iconBook {
   @extend %icon;
   &:before {
@@ -90,6 +104,13 @@
   &:before {
     content: "\ea0a";
   }
+}
+.iconPlusSmall {
+  @extend %icon;
+  &:before {
+    content: "\ea0a";
+  }
+  transform:scale(75%)
 }
 .iconCross {
   @extend %icon;
@@ -103,14 +124,14 @@
     content: "\e922";
   }
 }
-.iconEnlarge2 {
+.iconEnlarge {
   @extend %icon;
   &:before {
     content: "\e98b";
   }
   transform: rotate(45deg);
 }
-.iconShrink2 {
+.iconShrink {
   @extend %icon;
   &:before {
     content: "\e98c";

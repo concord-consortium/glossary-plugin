@@ -8,10 +8,22 @@
     justify-content: space-between;
     margin: 5px 0 10px 0;
 
+    .buttons {
+      display: flex;
+      flex-direction: row;
+    }
+
     button {
       padding: 5px 10px;
       margin-right: 10px;
       margin-top: 0px;
+
+      &.addTermButton {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 132px;
+      }
     }
 
     strong {

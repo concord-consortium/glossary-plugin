@@ -4,6 +4,7 @@ import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 
 import * as css from "./shared-modal-form.scss";
+import * as icons from "../common/icons.scss";
 
 type IWordDefinitionKey = keyof IWordDefinition;
 export type IWordDefinitionFormErrors = Partial<Record<IWordDefinitionKey, string>>
@@ -114,10 +115,16 @@ export const DefinitionForm = (props: IProps) => {
     } else {
       return (
         <div className={css.buttons}>
-          <button onClick={handleEditSubmit("save and edit previous")}>&lt;&lt; Save &amp; Previous</button>
+          <button className={`${css.saveAnd} ${css.previous}`} onClick={handleEditSubmit("save and edit previous")}>
+            <span className={icons.iconCaretLeft}/>
+            <div>Save &amp; Previous</div>
+          </button>
           <button onClick={props.onCancel}>Cancel</button>
           <button type="submit" onClick={handleEditSubmit("save")}>Save &amp; Close</button>
-          <button onClick={handleEditSubmit("save and edit next")}>Save &amp; Next &gt;&gt;</button>
+          <button className={`${css.saveAnd} ${css.next}`} onClick={handleEditSubmit("save and edit next")}>
+            <div>Save &amp; Next</div>
+            <span className={icons.iconCaretRight}/>
+          </button>
         </div>
       )
     }
