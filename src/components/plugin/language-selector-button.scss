@@ -6,7 +6,11 @@
   text-align: center;
   background-color: var(--ltr-gray);
 
-  &:hover, &.selected {
+  &:hover {
+    background-color: #b4b4b4;
+  }
+
+  &.selected {
     background-color: var(--teal);
     color: #fff;
   }
