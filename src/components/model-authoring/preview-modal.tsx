@@ -5,6 +5,7 @@ import { Modal } from "./modal";
 import { TermPopUpPreview } from "./term-popup-preview";
 
 import * as css from "./preview-modal.scss";
+import * as icons from "../common/icons.scss";
 
 interface IProps {
   terms: IWordDefinition[]
@@ -37,8 +38,14 @@ export const PreviewModal = ({ terms, glossary, onClose }: IProps) => {
         <TermPopUpPreview term={sortedTerms[index]} settings={glossary} translations={glossary.translations || {}}/>
 
         <div className={css.buttons}>
-          <button onClick={handlePrev}>&lt;&lt; Previous Term</button>
-          <button onClick={handleNext}>Next Term &gt;&gt;</button>
+          <button className={css.previous} onClick={handlePrev}>
+            <span className={icons.iconCaretLeft}/>
+            <div>Previous Term</div>
+          </button>
+          <button className={css.next} onClick={handleNext}>
+            <div>Next Term</div>
+            <span className={icons.iconCaretRight}/>
+          </button>
         </div>
       </div>
     </Modal>

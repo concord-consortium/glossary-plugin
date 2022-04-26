@@ -22,5 +22,19 @@
     display: flex;
     gap: 5px;
     justify-content: center;
+
+    button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.previous {
+        width: 134px;
+      }
+
+      &.next {
+        width: 106px;
+      }
+    }
   }
 }

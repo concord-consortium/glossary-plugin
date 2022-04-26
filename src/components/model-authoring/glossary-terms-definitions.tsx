@@ -10,6 +10,7 @@ import { PreviewModal } from "./preview-modal";
 import Definition from "../plugin/definition";
 
 import * as css from "./glossary-terms-definitions.scss";
+import * as icons from "../common/icons.scss";
 import * as imageModalCss from "./image-and-video-modal.scss";
 
 interface IImageModal {
@@ -249,8 +250,12 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
     <Panel label={panelLabel} collapsible={true}>
       <div className={css.glossaryTermsDefinitions}>
         <div className={css.header}>
-          <div>
-            {canEdit && <button onClick={handleShowAddDefinition}>+ Add New Term</button>}
+          <div className={css.buttons}>
+            {canEdit &&
+            <button className={css.addTermButton} onClick={handleShowAddDefinition}>
+              <span className={icons.iconPlusSmall}/>
+              <div>Add New Term</div>
+            </button>}
             {haveDefinitions && <button onClick={handleShowPreviewTerms}>Preview Terms</button>}
           </div>
           <div>

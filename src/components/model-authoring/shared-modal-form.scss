@@ -86,6 +86,20 @@
       display: flex;
       justify-content: center;
       gap: 10px;
+
+      .saveAnd {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &.previous {
+          width: 140px;
+        }
+
+        &.next {
+          width: 112px;
+        }
+      }
     }
   }
 

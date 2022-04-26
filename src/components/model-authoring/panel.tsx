@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 
 import * as css from "./panel.scss";
+import * as icons from "../common/icons.scss";
 
 interface IProps {
   label: string;
@@ -21,7 +22,13 @@ export const Panel = ({ label, collapsible, headerControls, children }: IProps) 
         <h1>{label}</h1>
         <div>
           {headerControls}
-          {collapsible && <button className={css.toggle} onClick={handleToggleCollapse}>{collapsed ? "˅" : "˄"}</button>}  {/* using text for now but it looks like we need an icon asset  */}
+          {collapsible &&
+          <button className={css.toggle} onClick={handleToggleCollapse}>
+            {collapsed ?
+            <span className={icons.iconCaretDown} /> :
+            <span className={icons.iconCaretUp} />}
+          </button>
+          }
         </div>
       </div>
       {!collapsed && <div className={css.content}>{children}</div>}
