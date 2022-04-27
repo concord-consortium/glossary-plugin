@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
@@ -16,6 +16,7 @@ type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
 export type DefinitionTranslation = Record<string, string>
+export type IWordTranslationFormErrors = Partial<Record<ITranslatedWordDefinitionKey, string>>
 
 export type NextEditAction = ({type: "save"} | {type: "save and close"} | {type: "save and edit previous"} | {type: "save and edit next"}) & {lang: string};
 
