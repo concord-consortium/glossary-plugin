@@ -39,9 +39,11 @@ interface IProps {
   diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
-  videoUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  videoUrl?: string;
   videoCaption?: string;
+  videoAltText?: string;
   languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
   studentInfo?: IStudentInfo;
@@ -99,6 +101,18 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     return anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition");
   }
 
+  public get translatedVideoCaption() {
+    const { videoCaption, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.VideoCaption](word), videoCaption);
+  }
+
+  public get translatedVideoAltText() {
+    const { videoAltText, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.VideoAltText](word), videoAltText);
+  }
+
   public render() {
     const { questionVisible } = this.state;
     const { word, languages, onLanguageChange } = this.props;
@@ -117,8 +131,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl, zoomImageUrl,
-      videoUrl, imageCaption, videoCaption, word } = this.props;
+    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl, zoomImageUrl, imageAltText,
+      videoUrl, imageCaption, videoCaption, videoAltText, word } = this.props;
     const i18n = this.context;
     /*
       this code:
@@ -144,9 +158,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           diggingDeeper={diggingDeeper}
           imageUrl={imageUrl}
           zoomImageUrl={zoomImageUrl}
-          videoUrl={videoUrl}
           imageCaption={imageCaption}
+          imageAltText={imageAltText}
+          videoUrl={videoUrl}
           videoCaption={videoCaption}
+          videoAltText={videoAltText}
           autoShowMedia={autoShowMedia}
           disableReadAloud={disableReadAloud}
         />
@@ -162,8 +178,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestion() {
-    const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, definition,
-            videoUrl, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
+    const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, imageAltText, definition,
+            videoUrl, videoAltText, videoCaption, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
     const canSubmit = recordingState !== RecordingState.Recording;
@@ -179,13 +195,21 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            imageAltText={imageAltText}
             disableReadAloud={disableReadAloud}
           />
         }
         {
           autoShowMedia && !imageUrl && videoUrl &&
           <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true}/>
+            <video src={videoUrl} controls={true} title={videoAltText ? this.translatedVideoAltText : ""} />
+            {
+              videoCaption &&
+              <div className={css.caption}>
+                {this.translatedVideoCaption}
+                {!disableReadAloud && <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />}
+              </div>
+            }
           </div>
         }
         {this.mainPrompt}

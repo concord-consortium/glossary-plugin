@@ -14,9 +14,12 @@ interface IProps {
   diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
-  videoUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  videoUrl?: string;
   videoCaption?: string;
+  videoAltText?: string;
+  videoClosedCaptions?: string;
   autoShowMedia?: boolean;
   disableReadAloud?: boolean;
 }
@@ -64,6 +67,18 @@ export default class Definition extends React.Component<IProps, IState> {
     const { imageCaption, word } = this.props;
     const translate = this.context.translate;
     return translate(term[TextKey.ImageCaption](word), imageCaption);
+  }
+
+  public get translatedImageAltText() {
+    const { imageAltText, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.ImageAltText](word), imageAltText);
+  }
+
+  public get translatedVideoAltText() {
+    const { videoAltText, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.VideoAltText](word), videoAltText);
   }
 
   public get translatedVideoCaption() {
@@ -114,7 +129,7 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition, diggingDeeper, disableReadAloud } = this.props;
+    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, imageAltText, videoCaption, videoAltText, word, definition, diggingDeeper, disableReadAloud } = this.props;
     const { imageVisible, videoVisible, diggingDeeperVisible } = this.state;
     const hasDefinition = definition.length > 0
     return (
@@ -129,7 +144,7 @@ export default class Definition extends React.Component<IProps, IState> {
           </span>
         </div>}
         { diggingDeeperVisible &&
-          <DiggingDeeper word={word} diggingDeeper={diggingDeeper}/>
+          <DiggingDeeper word={word} diggingDeeper={diggingDeeper} disableReadAloud={disableReadAloud}/>
         }
         {
           imageVisible &&
@@ -139,13 +154,14 @@ export default class Definition extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            imageAltText={imageAltText}
             disableReadAloud={disableReadAloud}
           />
         }
         {
           videoVisible &&
           <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true}/>
+            <video src={videoUrl} title={videoAltText ? this.translatedVideoAltText : ""} controls={true}/>
             {
               videoCaption &&
               <div className={css.caption}>

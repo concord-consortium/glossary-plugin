@@ -3,12 +3,14 @@
 .modalForm {
   display: flex;
   background-color: #fff;
+  height: 100%;
 
   .left {
     min-width: 560px;
     border-right: solid var(--teal);
     display: flex;
     flex-direction: column;
+    overflow: scroll;
 
     .header {
       background-color: var(--teal);

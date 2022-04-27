@@ -21,7 +21,8 @@ export const previewTerm: IWordDefinition = {
   definition: "A domesticated carniverous mammal that typically has a long snout, an acute sense of smell, nonretractable claws, and a barking, howling, or whining voice.",
   diggingDeeper: "noun: dog; plural noun: dogs",
   image: "https://learn-resources.concord.org/tutorials/images/brogan-acadia.jpg",
-  imageCaption: "A dog named Brogan enjoying a swim at Acadia National Park."
+  imageCaption: "A dog named Brogan enjoying a swim at Acadia National Park.",
+  imageAltText: "A photograph of a golden retriever standing on a rocky shore with water behind him and a forest in the distance."
 }
 
 const previewTranslations: ITranslationMap = {
@@ -30,6 +31,7 @@ const previewTranslations: ITranslationMap = {
     "Dog.definition": "Un mamífero doméstico carnívoro que normalmente tiene un largo snout, una sensación de olfato aguda, clavos no retraibles, y una voz que ronca, ronquiendo, o gritando.",
     "Dog.digging_deeper": "sustantivo: perro; sustantivo plural: perros",
     "Dog.image_caption": "Un perro llamado Brogan disfruta de un baño en el Parque Nacional Acadia.",
+    "Dog.image_alt_text": "Una fotografía de un golden retriever parado en una orilla rocosa con agua detrás de él y un bosque en la distancia."
   }
 }
 

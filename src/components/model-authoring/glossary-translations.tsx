@@ -36,6 +36,9 @@ export interface ITranslatedWordDefinition extends IWordDefinition {
   translatedDiggingDeeper: string;
   translatedImageCaption: string;
   translatedVideoCaption: string;
+  translatedImageAltText: string;
+  translatedVideoAltText: string;
+  translatedClosedCaptionsUrl: string;
   translatedDiggingDeeperMP3Url: string;
   translatedDefinitionMP3Url: string;
   translatedImageCaptionMP3Url: string;
@@ -43,9 +46,15 @@ export interface ITranslatedWordDefinition extends IWordDefinition {
   hasImageCaption: boolean;
   hasVideoCaption: boolean;
   hasDiggingDeeper: boolean;
+  hasImageAltText: boolean;
+  hasVideoAltText: boolean;
+  hasClosedCaptionsUrl: boolean;
   hasTranslatedImageCaption: boolean;
   hasTranslatedVideoCaption: boolean;
   hasTranslatedDiggingDeeper: boolean;
+  hasTranslatedImageAltText: boolean;
+  hasTranslatedVideoAltText: boolean;
+  hasTranslatedClosedCaptionsUrl: boolean;
   translationRank: number;
 }
 
@@ -181,6 +190,9 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
       const translatedDiggingDeeper = translate(translations, lang, term[TextKey.DiggingDeeper](word), "");
       const translatedImageCaption = translate(translations, lang, term[TextKey.ImageCaption](word), "");
       const translatedVideoCaption = translate(translations, lang, term[TextKey.VideoCaption](word), "");
+      const translatedImageAltText = translate(translations, lang, term[TextKey.ImageAltText](word), "");
+      const translatedVideoAltText = translate(translations, lang, term[TextKey.VideoAltText](word), "");
+      const translatedClosedCaptionsUrl = translate(translations, lang, term[TextKey.ClosedCaptionsUrl](word), "");
       const translatedDefinitionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
       const translatedDiggingDeeperMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.DiggingDeeper](word), "");
       const translatedImageCaptionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), "");
@@ -189,10 +201,16 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
       const hasTranslatedDefinition = translatedDefinition.length > 0
       const hasImageCaption = (definition.imageCaption || "").length > 0
       const hasVideoCaption = (definition.videoCaption || "").length > 0
+      const hasImageAltText = (definition.imageAltText || "").length > 0
+      const hasVideoAltText = (definition.videoAltText || "").length > 0
+      const hasClosedCaptionsUrl = (definition.closedCaptionsUrl || "").length > 0
       const hasDiggingDeeper = (definition.diggingDeeper || "").length > 0
       const hasTranslatedImageCaption = translatedImageCaption.length > 0
       const hasTranslatedVideoCaption = translatedVideoCaption.length > 0
       const hasTranslatedDiggingDeeper = translatedDiggingDeeper.length > 0
+      const hasTranslatedImageAltText = translatedImageAltText.length > 0
+      const hasTranslatedVideoAltText = translatedVideoAltText.length > 0
+      const hasTranslatedClosedCaptionsUrl = translatedClosedCaptionsUrl.length > 0
 
       let translationRank = 0
       if (hasTranslatedWord) { translationRank++ }
@@ -209,6 +227,9 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
         translatedDiggingDeeper,
         translatedImageCaption,
         translatedVideoCaption,
+        translatedImageAltText,
+        translatedVideoAltText,
+        translatedClosedCaptionsUrl,
         translatedDiggingDeeperMP3Url,
         translatedDefinitionMP3Url,
         translatedImageCaptionMP3Url,
@@ -216,9 +237,15 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
         hasImageCaption,
         hasVideoCaption,
         hasDiggingDeeper,
+        hasImageAltText,
+        hasVideoAltText,
+        hasClosedCaptionsUrl,
         hasTranslatedImageCaption,
         hasTranslatedVideoCaption,
         hasTranslatedDiggingDeeper,
+        hasTranslatedImageAltText,
+        hasTranslatedVideoAltText,
+        hasTranslatedClosedCaptionsUrl,
         translationRank
       }
     })
@@ -256,6 +283,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
   }
 
   return (
+    <>
     <Panel label={panelLabel} collapsible={true} headerControls={headerControls}>
       <div className={css.glossaryTranslations}>
         <div className={css.header}>
@@ -278,8 +306,9 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
             canEdit={canEdit}
           />
         )}
-        {modal && renderModal()}
       </div>
     </Panel>
+    {modal && renderModal()}
+    </>
   )
 }
