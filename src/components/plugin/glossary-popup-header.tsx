@@ -9,25 +9,23 @@ export interface ILanguage {
 
 interface IProps {
   languages?: ILanguage[];
-	word: string;
-	translatedWord: string;
+  word: string;
+  translatedWord: string;
 }
 
 export default class GlossaryPopupHeader extends React.Component<IProps, {}> {
-
   public render() {
     const { languages, word, translatedWord } = this.props;
-		const languagesNotPresent = !languages || (languages.length === 0)
 
     if (!languages || (languages.length === 0) ) {
-			return (
-				<div className={css.header}>
-					<h4>Term: {word}</h4>
-				</div>
-			)
+      return (
+        <div className={css.header}>
+          <h4>Term: {word}</h4>
+        </div>
+      )
     }
 
-		const en = languages.filter(language => language.lang === "en")[0];
+    const en = languages.filter(language => language.lang === "en")[0];
 
     return (
       <div className={css.header}>
@@ -35,5 +33,4 @@ export default class GlossaryPopupHeader extends React.Component<IProps, {}> {
       </div>
     );
   }
-
 }
