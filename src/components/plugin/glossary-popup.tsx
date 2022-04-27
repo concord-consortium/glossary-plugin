@@ -80,7 +80,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   public get translatedWord() {
-    const {word} = this.props;
+    const { word } = this.props;
     const i18n = this.context;
     return i18n.translate(term[TextKey.Word](word), word);
   }
