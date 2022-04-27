@@ -199,7 +199,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   zoomImageUrl={glossaryItem.zoomImage}
                   videoUrl={glossaryItem.video}
                   imageCaption={glossaryItem.imageCaption}
+                  imageAltText={glossaryItem.imageAltText}
                   videoCaption={glossaryItem.videoCaption}
+                  videoAltText={glossaryItem.videoAltText}
+                  closedCaptionsUrl={glossaryItem.closedCaptionsUrl}
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}

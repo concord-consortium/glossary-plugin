@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
@@ -11,10 +11,12 @@ import * as css from "./shared-modal-form.scss";
 
 type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedWord" |
-  "translatedDefinition" | "translatedDiggingDeeper" | "translatedImageCaption" | "translatedVideoCaption" |
-  "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" | "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
+  "translatedDefinition" | "translatedDiggingDeeper" | "translatedImageCaption" | "translatedImageAltText" | "translatedVideoCaption" |
+  "translatedVideoAltText" | "translatedClosedCaptionsUrl" | "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" |
+  "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
 export type DefinitionTranslation = Record<string, string>
+export type IWordTranslationFormErrors = Partial<Record<ITranslatedWordDefinitionKey, string>>
 
 export type NextEditAction = ({type: "save"} | {type: "save and close"} | {type: "save and edit previous"} | {type: "save and edit next"}) & {lang: string};
 
@@ -44,6 +46,9 @@ export const TranslationForm = (props: IProps) => {
       [term[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeper"),
       [term[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaption"),
       [term[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaption"),
+      [term[TextKey.ImageAltText](word)]: getFormValue("translatedImageAltText"),
+      [term[TextKey.VideoAltText](word)]: getFormValue("translatedVideoAltText"),
+      [term[TextKey.ClosedCaptionsUrl](word)]: getFormValue("translatedClosedCaptionsUrl"),
       [mp3UrlTerm[TextKey.Definition](word)]: getFormValue("translatedDefinitionMP3Url"),
       [mp3UrlTerm[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaptionMP3Url"),
       [mp3UrlTerm[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaptionMP3Url"),
@@ -178,6 +183,12 @@ export const TranslationForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
+            <legend>Image Caption</legend>
+            <div>
+              <textarea name="translatedImageAltText" defaultValue={getTranslatedValue("translatedImageAltText")} placeholder={`Translated alt text for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
             <legend>Video Caption</legend>
             <div>
               <textarea name="translatedVideoCaption" defaultValue={getTranslatedValue("translatedVideoCaption")} placeholder={`Translated video caption for ${word}`} />
@@ -205,6 +216,15 @@ export const TranslationForm = (props: IProps) => {
             <legend>Video Caption MP3 URL</legend>
             <div>
             <input type="text" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
+              <legend>Translated Closed Captions URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <input type="text" name="videoClosedCaptions" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
             </div>
           </div>
         </form>
