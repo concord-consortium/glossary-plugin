@@ -42,7 +42,10 @@ export const DefinitionForm = (props: IProps) => {
       zoomImage: getFormValue("zoomImage"),
       video: getFormValue("video"),
       imageCaption: getFormValue("imageCaption"),
+      imageAltText: getFormValue("imageAltText"),
       videoCaption: getFormValue("videoCaption"),
+      videoAltText: getFormValue("videoAltText"),
+      closedCaptionsUrl: getFormValue("closedCaptionsUrl")
     }
     return newDefinition
   }
@@ -191,6 +194,16 @@ export const DefinitionForm = (props: IProps) => {
           </div>
           <div className={css.fieldset}>
             <div>
+              <legend>Image Alt Text</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <textarea name="imageAltText" defaultValue={getSavedValue("imageAltText")}/>
+              {renderError("imageAltText")}
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
               <legend>Zoom Image URL</legend>
               <legend className={css.note}>(Optional)</legend>
             </div>
@@ -221,12 +234,32 @@ export const DefinitionForm = (props: IProps) => {
           </div>
           <div className={css.fieldset}>
             <div>
+              <legend>Video Alt Text</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <textarea name="videoAltText" defaultValue={getSavedValue("videoAltText")}/>
+              {renderError("videoAltText")}
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
               <legend>Video Caption</legend>
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
               <textarea name="videoCaption" defaultValue={getSavedValue("videoCaption")}/>
               {renderError("videoCaption")}
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
+              <legend>Closed Captions URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <input type="text" name="videoClosedCaptions" defaultValue={getSavedValue("closedCaptionsUrl")}/>
+              {renderError("closedCaptionsUrl")}
             </div>
           </div>
         </form>

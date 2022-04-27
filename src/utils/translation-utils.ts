@@ -13,6 +13,9 @@ export enum TextKey {
   DiggingDeeper = "diggingDeeper",
   ImageCaption = "imageCaption",
   VideoCaption = "videoCaption",
+  ImageAltText = "imageAltText",
+  VideoAltText = "videoAltText",
+  ClosedCaptionsUrl = "closedCaptionsUrl",
   DiggingDeeperTitle = "diggingDeeperTitle",
   MainPrompt = "mainPrompt",
   WriteDefinition = "writeDefinition"
@@ -23,7 +26,10 @@ export const term = {
   [TextKey.Definition]: (word: string) => `${word}.definition`,
   [TextKey.DiggingDeeper]: (word: string) => `${word}.digging_deeper`,
   [TextKey.ImageCaption]: (word: string) => `${word}.image_caption`,
-  [TextKey.VideoCaption]: (word: string) => `${word}.video_caption`
+  [TextKey.VideoCaption]: (word: string) => `${word}.video_caption`,
+  [TextKey.ImageAltText]: (word: string) => `${word}.image_alt_text`,
+  [TextKey.VideoAltText]: (word: string) => `${word}.video_alt_text`,
+  [TextKey.ClosedCaptionsUrl]: (word: string) => `${word}.closed_captions_url`
 };
 
 const mp3Suffix = "_mp3_url";
@@ -33,6 +39,8 @@ export const mp3UrlTerm = {
   [TextKey.DiggingDeeper]: (word: string) => term[TextKey.DiggingDeeper](word) + mp3Suffix,
   [TextKey.ImageCaption]: (word: string) => term[TextKey.ImageCaption](word) + mp3Suffix,
   [TextKey.VideoCaption]: (word: string) => term[TextKey.VideoCaption](word) + mp3Suffix,
+  [TextKey.ImageAltText]: (word: string) => term[TextKey.ImageAltText](word) + mp3Suffix,
+  [TextKey.VideoAltText]: (word: string) => term[TextKey.VideoAltText](word) + mp3Suffix,
   [TextKey.DiggingDeeperTitle]: "digging_deeper_title_mp3_url",
   [TextKey.MainPrompt]: "main_prompt_mp3_url",
   [TextKey.WriteDefinition]: "write_definition_mp3_url",
@@ -80,14 +88,25 @@ export const isTranslationComplete = (glossary: IGlossary, langCode: string) => 
     if (def.videoCaption && !translation[term[TextKey.VideoCaption](def.word)]) {
       complete = false;
     }
+    if (def.imageAltText && !translation[term[TextKey.ImageAltText](def.word)]) {
+      complete = false;
+    }
+    if (def.videoAltText && !translation[term[TextKey.VideoAltText](def.word)]) {
+      complete = false;
+    }
   });
   return complete;
 };
 
 export const getMp3Term = (textKey: TextKey, word: string) => {
+  if (textKey === "closedCaptionsUrl"){
+    return null;
+  }
+
   if (typeof mp3UrlTerm[textKey] === "string") {
     return mp3UrlTerm[textKey] as string;
   }
+
   return (mp3UrlTerm[textKey] as (word: string) => string)(word);
 };
 

@@ -24,7 +24,10 @@ export interface IWordDefinition {
   zoomImage?: string;
   video?: string;
   imageCaption?: string;
+  imageAltText?: string;
   videoCaption?: string;
+  videoAltText?: string,
+  closedCaptionsUrl?: string,
   createdAt?: number;
   updatedAt?: number;
 }
