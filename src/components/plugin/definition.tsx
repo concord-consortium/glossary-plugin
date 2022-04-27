@@ -129,7 +129,7 @@ export default class Definition extends React.Component<IProps, IState> {
           </span>
         </div>}
         { diggingDeeperVisible &&
-          <DiggingDeeper word={word} diggingDeeper={diggingDeeper}/>
+          <DiggingDeeper word={word} diggingDeeper={diggingDeeper} disableReadAloud={disableReadAloud}/>
         }
         {
           imageVisible &&
