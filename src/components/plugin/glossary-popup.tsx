@@ -12,6 +12,7 @@ import TextToSpeech from "./text-to-speech";
 import { IStudentInfo } from "../../types";
 import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
 import LanguageSelector, { ILanguage } from "./language-selector";
+import GlossaryPopupHeader from "./glossary-popup-header";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./glossary-popup.scss";
@@ -78,6 +79,12 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     this.setState({canRecord: this.canRecord(nextProps)});
   }
 
+  public get translatedWord() {
+    const { word } = this.props;
+    const i18n = this.context;
+    return i18n.translate(term[TextKey.Word](word), word);
+  }
+
   public get mainPrompt() {
     const { word } = this.props;
     const i18n = this.context;
@@ -94,14 +101,17 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
-    const { languages, onLanguageChange } = this.props;
+    const { word, languages, onLanguageChange } = this.props;
     return (
       <div className={css.glossaryPopup}>
-        <LanguageSelector
-          languages={languages}
-          onLanguageChange={onLanguageChange}
-        />
-        {questionVisible ? this.renderQuestion() : this.renderDefinition()}
+        <GlossaryPopupHeader word={word} languages={languages} translatedWord={this.translatedWord}/>
+        <div className={css.innerPopup}>
+          <LanguageSelector
+            languages={languages}
+            onLanguageChange={onLanguageChange}
+          />
+          {questionVisible ? this.renderQuestion() : this.renderDefinition()}
+        </div>
       </div>
     );
   }

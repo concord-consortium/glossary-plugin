@@ -8,7 +8,7 @@ import { DEFAULT_LANG } from "../../i18n-context";
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
     it("renders Definition component", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup word="test" definition="test" userDefinitions={[]} askForUserDefinition={false}/>
       );
       expect(wrapper.find(Definition).length).toEqual(1);
