@@ -8,6 +8,7 @@ import * as css from "./digging-deeper.scss"
 interface IProps {
 	word: string;
 	diggingDeeper?: string;
+	disableReadAloud?: boolean;
 }
 
 class DiggingDeeper extends React.Component<IProps>{
@@ -27,13 +28,13 @@ class DiggingDeeper extends React.Component<IProps>{
 	}
 
 	render(){
-		const { diggingDeeper, word } = this.props;
+		const { word, disableReadAloud } = this.props;
 		return (
 			<div className={css.container}>
 				<h4>{this.translatedDiggingDeeperTitle}</h4>
 				<div className={css.diggingDeeper}>
 					{this.translatedDiggingDeeperDefinition}
-					<TextToSpeech text={this.translatedDiggingDeeperDefinition} word={word} textKey={TextKey.DiggingDeeper} />
+					{!disableReadAloud && <TextToSpeech text={this.translatedDiggingDeeperDefinition} word={word} textKey={TextKey.DiggingDeeper} />}
 				</div>
 			</div>
 	)

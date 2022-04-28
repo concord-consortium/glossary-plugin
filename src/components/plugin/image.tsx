@@ -69,7 +69,7 @@ export default class Image extends React.Component<IProps, IState> {
   }
 
   private renderZoomedImage() {
-    const {imageUrl, zoomImageUrl, word, imageCaption} = this.props;
+    const {imageUrl, zoomImageUrl, word, imageCaption, disableReadAloud} = this.props;
     return (
       <div className={css.zoomContainer}>
         <div className={css.zoomBackground} />
@@ -87,7 +87,7 @@ export default class Image extends React.Component<IProps, IState> {
             {imageCaption ?
               <>
                 {this.translatedImageCaption}
-                <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
+                {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
               </> : ""}
             </div>
         </div>
