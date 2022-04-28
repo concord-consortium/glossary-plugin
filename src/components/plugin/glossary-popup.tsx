@@ -45,10 +45,7 @@ interface IProps {
   videoUrl?: string;
   videoCaption?: string;
   videoAltText?: string;
-<<<<<<< HEAD
-=======
   closedCaptionsUrl?: string;
->>>>>>> 6810ddf (Closed Captions for Video. [#181993846])
   languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
   studentInfo?: IStudentInfo;
@@ -136,13 +133,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-<<<<<<< HEAD
-    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl, zoomImageUrl, imageAltText,
-      videoUrl, imageCaption, videoCaption, videoAltText, word } = this.props;
-=======
     const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl,
-      zoomImageUrl, imageAltText, videoUrl, imageCaption, videoCaption, videoAltText, word } = this.props;
->>>>>>> 6810ddf (Closed Captions for Video. [#181993846])
+      zoomImageUrl, imageAltText, videoUrl, imageCaption, videoCaption, videoAltText, closedCaptionsUrl, word } = this.props;
     const i18n = this.context;
     /*
       this code:
@@ -173,6 +165,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           videoUrl={videoUrl}
           videoCaption={videoCaption}
           videoAltText={videoAltText}
+          closedCaptionsUrl={closedCaptionsUrl}
           autoShowMedia={autoShowMedia}
           disableReadAloud={disableReadAloud}
         />
@@ -189,11 +182,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   private renderQuestion() {
     const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, imageAltText, definition,
-<<<<<<< HEAD
-            videoUrl, videoAltText, videoCaption, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
-=======
             videoUrl, videoAltText, videoCaption, closedCaptionsUrl, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
->>>>>>> 6810ddf (Closed Captions for Video. [#181993846])
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
     const canSubmit = recordingState !== RecordingState.Recording;
@@ -216,18 +205,6 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         }
         {
           autoShowMedia && !imageUrl && videoUrl &&
-<<<<<<< HEAD
-          <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true} title={videoAltText ? this.translatedVideoAltText : ""} />
-            {
-              videoCaption &&
-              <div className={css.caption}>
-                {this.translatedVideoCaption}
-                {!disableReadAloud && <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />}
-              </div>
-            }
-          </div>
-=======
             <Video
               word={word}
               definition={definition}
@@ -237,7 +214,6 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
               closedCaptionsUrl={closedCaptionsUrl}
               disableReadAloud={disableReadAloud}
             />
->>>>>>> 6810ddf (Closed Captions for Video. [#181993846])
         }
         {this.mainPrompt}
         {!disableReadAloud && <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />}
