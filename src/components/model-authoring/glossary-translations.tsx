@@ -256,6 +256,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
   }
 
   return (
+    <>
     <Panel label={panelLabel} collapsible={true} headerControls={headerControls}>
       <div className={css.glossaryTranslations}>
         <div className={css.header}>
@@ -278,8 +279,9 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
             canEdit={canEdit}
           />
         )}
-        {modal && renderModal()}
       </div>
     </Panel>
+    {modal && renderModal()}
+    </>
   )
 }
