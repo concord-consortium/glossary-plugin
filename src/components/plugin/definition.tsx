@@ -3,6 +3,7 @@ import { pluginContext } from "../../plugin-context";
 import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
 import Image from "./image";
+import Video from "./video";
 import DiggingDeeper from "./digging-deeper";
 
 import * as css from "./definition.scss";
@@ -14,9 +15,12 @@ interface IProps {
   diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
-  videoUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  videoUrl?: string;
   videoCaption?: string;
+  videoAltText?: string;
+  closedCaptionsUrl?: string;
   autoShowMedia?: boolean;
   disableReadAloud?: boolean;
 }
@@ -66,10 +70,10 @@ export default class Definition extends React.Component<IProps, IState> {
     return translate(term[TextKey.ImageCaption](word), imageCaption);
   }
 
-  public get translatedVideoCaption() {
-    const { videoCaption, word } = this.props;
+  public get translatedImageAltText() {
+    const { imageAltText, word } = this.props;
     const translate = this.context.translate;
-    return translate(term[TextKey.VideoCaption](word), videoCaption);
+    return translate(term[TextKey.ImageAltText](word), imageAltText);
   }
 
   public renderImageButton(imageUrl?: string) {
@@ -114,7 +118,7 @@ export default class Definition extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition, diggingDeeper, disableReadAloud } = this.props;
+    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, imageAltText, videoCaption, videoAltText, closedCaptionsUrl, word, definition, diggingDeeper, disableReadAloud } = this.props;
     const { imageVisible, videoVisible, diggingDeeperVisible } = this.state;
     const hasDefinition = definition.length > 0
     return (
@@ -139,21 +143,21 @@ export default class Definition extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            imageAltText={imageAltText}
             disableReadAloud={disableReadAloud}
           />
         }
         {
           videoVisible &&
-          <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true}/>
-            {
-              videoCaption &&
-              <div className={css.caption}>
-                {this.translatedVideoCaption}
-                {!disableReadAloud && <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />}
-              </div>
-            }
-          </div>
+            <Video
+              word={word}
+              definition={definition}
+              videoUrl={videoUrl}
+              videoCaption={videoCaption}
+              videoAltText={videoAltText}
+              closedCaptionsUrl={closedCaptionsUrl}
+              disableReadAloud={disableReadAloud}
+            />
         }
       </div>
     );

@@ -11,8 +11,9 @@ import * as css from "./shared-modal-form.scss";
 
 type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedWord" |
-  "translatedDefinition" | "translatedDiggingDeeper" | "translatedImageCaption" | "translatedVideoCaption" |
-  "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" | "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
+  "translatedDefinition" | "translatedDiggingDeeper" | "translatedImageCaption" | "translatedImageAltText" | "translatedVideoCaption" |
+  "translatedVideoAltText" | "translatedClosedCaptionsUrl" | "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" |
+  "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
 export type DefinitionTranslation = Record<string, string>
 
@@ -44,6 +45,9 @@ export const TranslationForm = (props: IProps) => {
       [term[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeper"),
       [term[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaption"),
       [term[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaption"),
+      [term[TextKey.ImageAltText](word)]: getFormValue("translatedImageAltText"),
+      [term[TextKey.VideoAltText](word)]: getFormValue("translatedVideoAltText"),
+      [term[TextKey.ClosedCaptionsUrl](word)]: getFormValue("translatedClosedCaptionsUrl"),
       [mp3UrlTerm[TextKey.Definition](word)]: getFormValue("translatedDefinitionMP3Url"),
       [mp3UrlTerm[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaptionMP3Url"),
       [mp3UrlTerm[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaptionMP3Url"),
@@ -66,6 +70,10 @@ export const TranslationForm = (props: IProps) => {
         return translate(translations, lang, term[TextKey.ImageCaption](word), "");
       case "translatedVideoCaption":
         return translate(translations, lang, term[TextKey.VideoCaption](word), "");
+      case "translatedImageAltText":
+        return translate(translations, lang, term[TextKey.ImageAltText](word), "");
+      case "translatedVideoAltText":
+        return translate(translations, lang, term[TextKey.VideoAltText](word), "");
       case "translatedDefinitionMP3Url":
         return translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
       case "translatedImageCaptionMP3Url":
@@ -178,9 +186,21 @@ export const TranslationForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
+            <legend>Image Alt Text</legend>
+            <div>
+              <textarea name="translatedImageAltText" defaultValue={getTranslatedValue("translatedImageAltText")} placeholder={`Translated alt text for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
             <legend>Video Caption</legend>
             <div>
               <textarea name="translatedVideoCaption" defaultValue={getTranslatedValue("translatedVideoCaption")} placeholder={`Translated video caption for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <legend>Video Alt Text</legend>
+            <div>
+              <textarea name="translatedVideoAltText" defaultValue={getTranslatedValue("translatedVideoAltText")} placeholder={`Translated video alt text for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
@@ -205,6 +225,15 @@ export const TranslationForm = (props: IProps) => {
             <legend>Video Caption MP3 URL</legend>
             <div>
             <input type="text" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <div>
+              <legend>Translated Closed Captions URL</legend>
+              <legend className={css.note}>(Optional)</legend>
+            </div>
+            <div>
+              <input type="text" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
             </div>
           </div>
         </form>

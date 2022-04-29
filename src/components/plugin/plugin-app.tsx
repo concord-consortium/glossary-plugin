@@ -133,7 +133,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
           const { translations } = this.props;
           if (translations[settings.preferredLanguage]) {
             // Preferred language is available, so we can use it.
-            this.setState({ secondLanguage: settings.preferredLanguage });
           } else {
             // Preferred language is not available, do not show second language button.
             this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
@@ -199,7 +198,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   zoomImageUrl={glossaryItem.zoomImage}
                   videoUrl={glossaryItem.video}
                   imageCaption={glossaryItem.imageCaption}
+                  imageAltText={glossaryItem.imageAltText}
                   videoCaption={glossaryItem.videoCaption}
+                  videoAltText={glossaryItem.videoAltText}
+                  closedCaptionsUrl={glossaryItem.closedCaptionsUrl}
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}
