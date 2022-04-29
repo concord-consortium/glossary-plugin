@@ -11,6 +11,7 @@ import { parseUrl } from "./utils/get-url-param";
 import { syncLogEventsToFirestore, setStudentInfo } from "./components/plugin/offline-storage";
 import { getStudentInfo } from "./utils/get-student-info";
 import { renderGlossaryModelAuthoring } from "./components/model-authoring/model-authoring-app";
+import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
 
 const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
   const defaultState: IGlossaryAuthoredState = {
@@ -32,7 +33,7 @@ const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
 
 const getGlossaryDefinition = async (authoredState: IGlossaryAuthoredState) => {
   if (typeof authoredState.s3Url === "string") {
-    const response = await fetch(authoredState.s3Url);
+    const response = await fetch(ensureCorrectProtocol(authoredState.s3Url));
     try {
       const textResponse = await response.text();
       return JSON.parse(textResponse);

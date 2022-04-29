@@ -14,6 +14,7 @@ import { IJwtResponse } from "@concord-consortium/lara-plugin-api";
 import { GLOSSARY_URL_PARAM } from "../../utils/get-url-param";
 import * as css from "./authoring-app.scss";
 import * as icons from "../common/icons.scss";
+import ensureCorrectProtocol from "../../utils/ensure-correct-protocol";
 
 export const DEFAULT_GLOSSARY: IGlossary = {
   askForUserDefinition: true,
@@ -328,7 +329,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
       s3Status: getStatusTxt("Loading JSON...")
     });
 
-    const response = await fetch(url);
+    const response = await fetch(ensureCorrectProtocol(url));
     if (response.status !== 200) {
       this.setState({
         s3ActionInProgress: false,
