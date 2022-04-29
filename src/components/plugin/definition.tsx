@@ -73,7 +73,7 @@ export default class Definition extends React.Component<IProps, IState> {
   public get translatedImageAltText() {
     const { imageAltText, word } = this.props;
     const translate = this.context.translate;
-    return translate(term[TextKey.ImageCaption](word), imageAltText);
+    return translate(term[TextKey.ImageAltText](word), imageAltText);
   }
 
   public renderImageButton(imageUrl?: string) {
