@@ -76,11 +76,7 @@ export default class Image extends React.Component<IProps, IState> {
   }
 
   private renderZoomedImage() {
-<<<<<<< HEAD
     const {imageUrl, zoomImageUrl, word, imageCaption, imageAltText, disableReadAloud} = this.props;
-=======
-    const {imageUrl, zoomImageUrl, word, imageCaption, disableReadAloud} = this.props;
->>>>>>> 88dfdc8 (Disabling read aloud on digging deeper, zoomed image [#181960614])
     return (
       <div className={css.zoomContainer}>
         <div className={css.zoomBackground} />
