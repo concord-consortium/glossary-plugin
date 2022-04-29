@@ -31,6 +31,13 @@ describe("pluginContext", () => {
       const result = replaceVariables("test replaceVariables: %{var1} %{variable_321}!", variables);
       expect(result).toEqual("test replaceVariables: 123 XYZ!");
     });
+
+    it("should work in right to left languages", () => {
+      const arabic = require("../src/lang/ar.json");
+      const result = replaceVariables(arabic.mainPrompt, {word: "test"});
+      expect(arabic.mainPrompt).toEqual("ما رأيك \"%{word}\" تعني؟");
+      expect(result).toEqual("ما رأيك \"test\" تعني؟");
+    });
   });
 
   describe("fetchGlossaryLanguages(glossaryUrl, callback)", () => {
