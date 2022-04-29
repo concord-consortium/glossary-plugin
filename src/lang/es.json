@@ -12,5 +12,9 @@
     "allWords": "Todas las palabras",
     "speechTitle": "Leer en voz alta",
     "imageTitle": "Ver foto",
-    "videoTitle": "Ver pelicula"
+    "videoTitle": "Ver pelicula",
+    "diggingDeeperTitle": "Cavando más profundo",
+    "viewDiggingDeeper": "Ver cavando más profundo",
+    "zoomInTitle": "Acercarse",
+    "record": "Grabar"
 }
