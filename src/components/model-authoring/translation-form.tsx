@@ -233,7 +233,7 @@ export const TranslationForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <input type="text" name="videoClosedCaptions" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
+              <input type="text" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
             </div>
           </div>
         </form>
