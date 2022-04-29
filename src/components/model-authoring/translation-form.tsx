@@ -70,6 +70,10 @@ export const TranslationForm = (props: IProps) => {
         return translate(translations, lang, term[TextKey.ImageCaption](word), "");
       case "translatedVideoCaption":
         return translate(translations, lang, term[TextKey.VideoCaption](word), "");
+      case "translatedImageAltText":
+        return translate(translations, lang, term[TextKey.ImageAltText](word), "");
+      case "translatedVideoAltText":
+        return translate(translations, lang, term[TextKey.VideoAltText](word), "");
       case "translatedDefinitionMP3Url":
         return translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
       case "translatedImageCaptionMP3Url":
@@ -182,7 +186,7 @@ export const TranslationForm = (props: IProps) => {
             </div>
           </div>
           <div className={css.fieldset}>
-            <legend>Image Caption</legend>
+            <legend>Image Alt Text</legend>
             <div>
               <textarea name="translatedImageAltText" defaultValue={getTranslatedValue("translatedImageAltText")} placeholder={`Translated alt text for ${word}`} />
             </div>
@@ -191,6 +195,12 @@ export const TranslationForm = (props: IProps) => {
             <legend>Video Caption</legend>
             <div>
               <textarea name="translatedVideoCaption" defaultValue={getTranslatedValue("translatedVideoCaption")} placeholder={`Translated video caption for ${word}`} />
+            </div>
+          </div>
+          <div className={css.fieldset}>
+            <legend>Video Alt Text</legend>
+            <div>
+              <textarea name="translatedVideoAltText" defaultValue={getTranslatedValue("translatedVideoAltText")} placeholder={`Translated video alt text for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
