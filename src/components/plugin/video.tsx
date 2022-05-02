@@ -3,7 +3,7 @@ import { pluginContext } from "../../plugin-context";
 import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
 
-import * as css from "./glossary-popup.scss";
+import * as css from "./video.scss";
 
 interface IProps {
   word: string;
