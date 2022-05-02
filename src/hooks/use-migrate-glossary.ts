@@ -20,10 +20,10 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
   }
 
   // ensure that the two needed collections are defined
-  if (!glossary.hasOwnProperty('definitions')) {
+  if (glossary.definitions == null) {
     glossary.definitions = [];
   }
-  if (!glossary.hasOwnProperty('translations')) {
+  if (glossary.translations == null) {
     glossary.translations = {};
   }
 
