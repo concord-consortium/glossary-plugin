@@ -4,7 +4,7 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
   let glossary = initialGlossary;
   let glossaryChanged = false;
 
-  if (Object.keys(initialGlossary).length === 0) {
+  if (Object.keys(glossary).length === 0) {
     glossary = {
       askForUserDefinition: false,
       showSideBar: false,
@@ -17,6 +17,14 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
       translations: {}
     }
     glossaryChanged = true
+  }
+
+  // ensure that the two needed collections are defined
+  if (!glossary.hasOwnProperty('definitions')) {
+    glossary.definitions = [];
+  }
+  if (!glossary.hasOwnProperty('translations')) {
+    glossary.translations = {};
   }
 
   // use the term position in the array as a proxy for the created at and updated at times since new terms are added to the end of the array
