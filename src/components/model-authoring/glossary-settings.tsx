@@ -149,7 +149,13 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
           </div>
         </div>
 
-        <TermPopUpPreview term={previewTerm} settings={glossary} translations={previewTranslations} />
+        <TermPopUpPreview
+          term={previewTerm}
+          settings={glossary}
+          translations={previewTranslations}
+          allowReset={true}
+          resetLabel="Reset Term Popup Preview"
+        />
       </div>
     </Panel>
   )

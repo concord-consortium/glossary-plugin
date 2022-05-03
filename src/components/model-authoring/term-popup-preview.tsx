@@ -14,10 +14,12 @@ interface IProps {
   term: IWordDefinition
   lang?: string
   note?: string
+  allowReset?: boolean
+  resetLabel?: string
 }
 
 export const TermPopUpPreview = (props: IProps) => {
-  const { term, settings, translations, note } = props;
+  const { term, settings, translations, note, allowReset, resetLabel } = props;
   const [lang, setLang] = useState(props.lang || "en")
   const [languages, setLanguages] = useState<ILanguage[]>([])
   const [userDefinitions, setUserDefinitions] = useState<string[]>([]);
@@ -38,6 +40,12 @@ export const TermPopUpPreview = (props: IProps) => {
 
   const onUserDefinitionsUpdate = (userDefinition: string) => {
     setUserDefinitions([...userDefinitions, userDefinition]);
+  }
+
+  const onReset = () => {
+    setUserDefinitions([]);
+    onLanguageChange(props.lang || "en");
+    forceReRender();
   }
 
   // increment this on each settings update to force a re-render as this is used as the top level key
@@ -94,6 +102,7 @@ export const TermPopUpPreview = (props: IProps) => {
           </div>
         </div>
         {note && <div className={css.note}>{note}</div>}
+        {allowReset && <button className={css.resetButton} onClick={onReset}>{resetLabel || "Reset"}</button>}
       </div>
     </pluginContext.Provider>
   )
