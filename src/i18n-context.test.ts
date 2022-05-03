@@ -44,7 +44,7 @@ describe("pluginContext", () => {
     describe("When no glossaryUrl is provided", () => {
       it("should return the full set of default languages", () => {
         fetchGlossary(null, (x) => {
-          expect(x.languageCodes.length).toBe(9);
+          expect(x.languageCodes.length).toBe(10);
           expect(x.enableRecording).toBe(false);
         });
       });
