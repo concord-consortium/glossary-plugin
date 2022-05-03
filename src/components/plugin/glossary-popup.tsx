@@ -1,8 +1,6 @@
 import * as React from "react";
 import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
-import Button from "../common/button";
-import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import { pluginContext } from "../../plugin-context";
 import { TextKey, term } from "../../utils/translation-utils";
 import { uploadRecording } from "../../db";
@@ -13,7 +11,6 @@ import TextToSpeech from "./text-to-speech";
 import { IStudentInfo } from "../../types";
 import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
 import LanguageSelector, { ILanguage } from "./language-selector";
-import GlossaryPopupHeader from "./glossary-popup-header";
 
 import * as icons from "../common/icons.scss";
 import * as css from "./glossary-popup.scss";
@@ -117,17 +114,14 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
 
   public render() {
     const { questionVisible } = this.state;
-    const { word, languages, onLanguageChange } = this.props;
+    const { languages, onLanguageChange } = this.props;
     return (
       <div className={css.glossaryPopup}>
-        <GlossaryPopupHeader word={word} languages={languages} translatedWord={this.translatedWord}/>
-        <div className={css.innerPopup}>
-          <LanguageSelector
-            languages={languages}
-            onLanguageChange={onLanguageChange}
-          />
-          {questionVisible ? this.renderQuestion() : this.renderDefinition()}
-        </div>
+        <LanguageSelector
+          languages={languages}
+          onLanguageChange={onLanguageChange}
+        />
+        {questionVisible ? this.renderQuestion() : this.renderDefinition()}
       </div>
     );
   }

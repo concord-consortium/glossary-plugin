@@ -67,27 +67,32 @@ export const TermPopUpPreview = (props: IProps) => {
   return (
     <pluginContext.Provider value={{ lang, translate: translatePreview, log }} key={renderUpdateCount}>
       <div className={css.termPopupPreview}>
-        <GlossaryPopup
-          word={term.word}
-          definition={term.definition}
-          diggingDeeper={term.diggingDeeper}
-          imageUrl={term.image}
-          imageCaption={term.imageCaption}
-          imageAltText={term.imageAltText}
-          zoomImageUrl={term.zoomImage}
-          videoUrl={term.video}
-          videoCaption={term.videoCaption}
-          videoAltText={term.videoAltText}
-          languages={languages}
-          onLanguageChange={onLanguageChange}
-          askForUserDefinition={settings.askForUserDefinition}
-          enableStudentRecording={settings.enableStudentRecording}
-          autoShowMedia={settings.autoShowMediaInPopup}
-          disableReadAloud={settings.disableReadAloud}
-          showIDontKnowButton={settings.showIDontKnowButton}
-          userDefinitions={settings.askForUserDefinition ? userDefinitions : []}
-          onUserDefinitionsUpdate={onUserDefinitionsUpdate}
-        />
+        <div className={css.outerPopup}>
+          <div className={css.header}>
+            <h4>Term: {term.word}</h4>
+          </div>
+          <div className={css.innerPopup}>
+            <GlossaryPopup
+              word={term.word}
+              definition={term.definition}
+              diggingDeeper={term.diggingDeeper}
+              imageUrl={term.image}
+              imageCaption={term.imageCaption}
+              zoomImageUrl={term.zoomImage}
+              videoUrl={term.video}
+              videoCaption={term.videoCaption}
+              languages={languages}
+              onLanguageChange={onLanguageChange}
+              askForUserDefinition={settings.askForUserDefinition}
+              enableStudentRecording={settings.enableStudentRecording}
+              autoShowMedia={settings.autoShowMediaInPopup}
+              disableReadAloud={settings.disableReadAloud}
+              showIDontKnowButton={settings.showIDontKnowButton}
+              userDefinitions={settings.askForUserDefinition ? userDefinitions : []}
+              onUserDefinitionsUpdate={onUserDefinitionsUpdate}
+            />
+          </div>
+        </div>
         {note && <div className={css.note}>{note}</div>}
       </div>
     </pluginContext.Provider>
