@@ -15,7 +15,7 @@ export const allLanguages = {
   [POEDITOR_LANG_CODE.Arabic]: "Arabic",
   [POEDITOR_LANG_CODE.Maori]: "Athabaskan", // using Maori as there is no native code for Athabaskan
   [POEDITOR_LANG_CODE.Chinese]: "Chinese",
-  [POEDITOR_LANG_CODE.Marshallese]: "Hawaiian", // using Marshallese as there is no native code for Hawaiian
+  [POEDITOR_LANG_CODE.Hawaiian]: "Hawaiian",
   [POEDITOR_LANG_CODE.Marathi]: "Inupiaq", // using Marathi as there is no native code for Inupiaq
   [POEDITOR_LANG_CODE.Portuguese]: "Portuguese",
   [POEDITOR_LANG_CODE.Russian]: "Russian",

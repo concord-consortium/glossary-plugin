@@ -7,7 +7,7 @@ import * as arLang from "./lang/ar.json";
 import * as ruLang from "./lang/ru.json";
 import * as gvLang from "./lang/gv.json";
 import * as miLang from "./lang/mi.json";
-import * as mhLang from "./lang/mh.json";
+import * as hawLang from "./lang/haw.json";
 import * as mrLang from "./lang/mr.json";
 import * as zhCNLang from "./lang/zh-CN.json";
 import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
@@ -26,7 +26,7 @@ export const UI_TRANSLATIONS: {
   "gv": gvLang,
   "mi": miLang,
   "mr": mrLang,
-  "mh": mhLang,
+  "haw": hawLang,
 };
 
 export const SUPPORTED_LANGUAGES = Object.keys(UI_TRANSLATIONS);
