@@ -1,7 +1,5 @@
 import * as React from "react";
-import { translate } from "../../i18n-context";
 import { ITranslationMap, IWordDefinition } from "../../types";
-import { term, TextKey } from "../../utils/translation-utils";
 import { ITranslatedWordDefinition } from "./glossary-translations";
 
 import * as css from "./shared-table.scss";
@@ -52,11 +50,11 @@ export const TranslationTable = ({lang, translations, definitions, canEdit, onDe
       <thead>
         <tr>
           <th>Term</th>
-          <th>Translated Term</th>
+          <th className={css.centered}>Translated Term</th>
           <th className={css.definition}>Translated Definition</th>
-          <th>Digging Deeper</th>
-          <th>Image Caption</th>
-          <th>Video Caption</th>
+          <th className={css.centered}>Digging Deeper</th>
+          <th className={css.centered}>Image Caption</th>
+          <th className={css.centered}>Video Caption</th>
           <th className={css.actions}>&nbsp;</th>
         </tr>
       </thead>

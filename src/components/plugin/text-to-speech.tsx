@@ -18,13 +18,20 @@ const textToSpeechAvailable = (langCode: string) => {
 
 interface IState {
   reading: boolean;
+  audio: HTMLAudioElement | null;
 }
 
 export default class TextToSpeech extends React.Component<IProps, IState> {
   public static contextType = pluginContext;
 
+  public componentWillUnmount() {
+    window.speechSynthesis?.cancel();
+    this.state.audio?.pause();
+  }
+
   public state: IState = {
-    reading: false
+    reading: false,
+    audio: null,
   };
 
   public get shouldRender() {
@@ -58,7 +65,15 @@ export default class TextToSpeech extends React.Component<IProps, IState> {
   private read = () => {
     const { text, word, textKey } = this.props;
     if (this.customMp3Recording) {
-      new Audio(this.customMp3Recording).play();
+      if (this.state.reading) {
+        this.state.audio?.pause();
+        this.setState({audio: null, reading: false});
+      } else {
+        const audio = new Audio(this.customMp3Recording);
+        audio.onplay = () => this.setState({audio, reading: true});
+        audio.onended = () => this.setState({audio: null, reading: false});
+        audio.play();
+      }
     } else if (textToSpeechAvailable(this.context.lang)) {
       if (this.state.reading) {
         // if currently reading in this instance stop

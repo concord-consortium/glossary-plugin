@@ -15,11 +15,15 @@ table.sharedTable {
 
       padding: 5px;
       text-align: left;
+      vertical-align: middle;
       color: #333;
       font-weight: 100;
       font-size: 0.9rem;
-      white-space: nowrap;
       border-right: 1px solid #777;
+
+      &.centered {
+        text-align: center;
+      }
 
       &.definition {
         width: 100%;
@@ -35,7 +39,7 @@ table.sharedTable {
     tr {
       font-size: 14px;
     }
-    
+
     tr:hover {
       background-color: #ddd !important;
     }
