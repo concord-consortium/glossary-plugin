@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 
@@ -32,6 +32,12 @@ export const DefinitionForm = (props: IProps) => {
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
   const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      formRef.current?.scrollTo(0, 0);
+    }
+  }, [errors, formRef.current]);
 
   const getNewDefinition = () => {
     const newDefinition: IWordDefinition = {
