@@ -36,7 +36,7 @@ const previewTranslations: ITranslationMap = {
 }
 
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
-  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud, enableStudentLanguageSwitching } = glossary;
+  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,20 +124,6 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
           <div className={css.help}>
             When this option is enabled, the read-aloud buttons will not be shown on the term popup
             or in the Glossary Sidebar.
-          </div>
-        </div>
-
-        <div className={css.settingInformation}>
-          <div className={css.checkboxRow}>
-            <input type="checkbox" checked={enableStudentLanguageSwitching}  onChange={handleChange("enableStudentLanguageSwitching")}/>
-            <label>
-              Display language switch for all students
-            </label>
-          </div>
-          <div className={css.help}>
-            This requires translations to be provided by the author. When enabled, all students
-            have the option to switch between languages in the term popup. NOTE: This will disable
-            the teacher's ability to select a secondary language per student in the Glossary Dashboard.
           </div>
         </div>
 
