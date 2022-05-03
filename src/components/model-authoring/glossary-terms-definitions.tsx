@@ -198,6 +198,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                   zoomImageUrl={image.zoomImage}
                   imageCaption={image.imageCaption}
                   autoShowMedia={true}
+                  imageAltText={image.imageAltText}
                 />
               </div>
             </Modal>
@@ -214,6 +215,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                   videoUrl={video.video}
                   videoCaption={video.videoCaption}
                   autoShowMedia={true}
+                  videoAltText={video.videoAltText}
                 />
               </div>
             </Modal>
