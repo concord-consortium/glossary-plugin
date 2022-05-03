@@ -18,7 +18,7 @@ interface IProps {
 
 export const previewTerm: IWordDefinition = {
   word: "Dog",
-  definition: "A domesticated carniverous mammal that typically has a long snout, an acute sense of smell, nonretractable claws, and a barking, howling, or whining voice.",
+  definition: "A domesticated carnivorous mammal that typically has a long snout, an acute sense of smell, nonretractable claws, and a barking, howling, or whining voice.",
   diggingDeeper: "noun: dog; plural noun: dogs",
   image: "https://learn-resources.concord.org/tutorials/images/brogan-acadia.jpg",
   imageCaption: "A dog named Brogan enjoying a swim at Acadia National Park.",
@@ -143,7 +143,7 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
         <div className={css.settingInformation}>
           <h2 className={css.termPopup}>Term Popup Preview</h2>
           <div className={css.help}>
-            This popup shows an example term popup to demonstrate these settings.
+            This preview shows an example term popup to demonstrate these settings.
             To preview the terms in this glossary, use the preview button in the
             Glossary Terms & Definitions panel.
           </div>
