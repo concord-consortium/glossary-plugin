@@ -16,5 +16,13 @@
     "diggingDeeperTitle": "حفر أعمق",
     "viewDiggingDeeper": "النظر في الحفر أعمق",
     "zoomInTitle": "تكبير",
-    "record": "تسجيل صوتي"
+    "record": "تسجيل صوتي",
+    "recording": "تسجيل",
+    "savingRecording": "حفظ التسجيل",
+    "stopRecording": "إيقاف التسجيل",
+    "playRecording": "تشغيل التسجيل",
+    "deleteRecording": "حذف التسجيل",
+    "recordingTimeLimitReached": "لقد وصلت إلى الحد الزمني للتسجيل",
+    "audioDefinition": "تعريف الصوت٪ {index}",
+    "errorSavingRecording": "خطأ في حفظ التسجيل. حاول إعادة الإرسال."
 }

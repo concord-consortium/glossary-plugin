@@ -16,5 +16,13 @@
     "diggingDeeperTitle": "Cavando más profundo",
     "viewDiggingDeeper": "Ver cavando más profundo",
     "zoomInTitle": "Acercarse",
-    "record": "Grabar"
+    "record": "Grabar",
+    "recording": "Grabación",
+    "savingRecording": "Guardar grabación",
+    "stopRecording": "Para de grabar",
+    "playRecording": "Reproducir grabación",
+    "deleteRecording": "Eliminar grabación",
+    "recordingTimeLimitReached": "Ha alcanzado el límite de tiempo de grabación",
+    "audioDefinition": "Definición de audio %{índice}",
+    "errorSavingRecording": "Error al guardar la grabación. Intente volver a enviar."
 }
