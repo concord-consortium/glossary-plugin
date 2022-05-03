@@ -18,13 +18,15 @@
       padding: 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       a {
-        margin-right: 20px;
+        margin-right: 25px;
         color: white;
       }
       span {
         cursor: pointer;
+        transform:scale(75%)
       }
     }
 
@@ -99,7 +101,7 @@
         }
 
         &.next {
-          width: 112px;
+          width: 113px;
         }
       }
     }

@@ -8,6 +8,7 @@ import { allLanguages } from "./add-translation";
 import { translate } from "../../i18n-context";
 
 import * as css from "./shared-modal-form.scss";
+import * as icons from "../common/icons.scss";
 
 type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedWord" |
@@ -120,11 +121,17 @@ export const TranslationForm = (props: IProps) => {
     if (canEdit) {
       return (
         <div className={css.buttons}>
-          <button onClick={handleEditSubmit({type: "save and edit previous", lang})}>&lt;&lt; Save &amp; Previous</button>
+          <button className={`${css.saveAnd} ${css.previous}`} onClick={handleEditSubmit({type: "save and edit previous", lang})}>
+            <span className={icons.iconCaretLeft}/>
+            Save &amp; Previous
+          </button>
           <button onClick={props.onCancel}>Cancel</button>
           <button type="submit" onClick={handleEditSubmit({type: "save", lang})}>Save</button>
           <button type="submit" onClick={handleEditSubmit({type: "save and close", lang})}>Save &amp; Close</button>
-          <button onClick={handleEditSubmit({type: "save and edit next", lang})}>Save &amp; Next &gt;&gt;</button>
+          <button className={`${css.saveAnd} ${css.next}`} onClick={handleEditSubmit({type: "save and edit next", lang})}>
+            Save &amp; Next
+            <span className={icons.iconCaretRight}/>
+          </button>
         </div>
       )
     } else {
@@ -149,7 +156,7 @@ export const TranslationForm = (props: IProps) => {
           </div>
           <div>
             <a href="https://docs.google.com/document/d/1HA8KaOHR3pd027UJKq96DK2TKUDA2-sYDIemZ94kN9g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open Glossary Authoring Guide in a new tab">Help</a>
-            <span onClick={props.onCancel} title="Close without saving"><strong>X</strong></span>
+            <span onClick={props.onCancel} title="Close without saving" className={icons.iconCross}/>
           </div>
         </div>
         <form onSubmit={handleSubmit} onChange={handleFormChange} ref={formRef}>
@@ -229,8 +236,7 @@ export const TranslationForm = (props: IProps) => {
           </div>
           <div className={css.fieldset}>
             <div>
-              <legend>Translated Closed Captions URL</legend>
-              <legend className={css.note}>(Optional)</legend>
+              <legend>Closed Captions URL</legend>
             </div>
             <div>
               <input type="text" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>

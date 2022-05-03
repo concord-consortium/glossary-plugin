@@ -160,7 +160,7 @@ export const DefinitionForm = (props: IProps) => {
           </div>
           <div>
             <a href="https://docs.google.com/document/d/1HA8KaOHR3pd027UJKq96DK2TKUDA2-sYDIemZ94kN9g/edit?usp=sharing" target="_blank" rel="noopener noreferrer" title="Open Glossary Authoring Guide in a new tab">Help</a>
-            <span onClick={props.onCancel} title="Close without saving"><strong>X</strong></span>
+            <span onClick={props.onCancel} title="Close without saving" className={icons.iconCross}/>
           </div>
         </div>
         <form onSubmit={handleSubmit} onChange={handleFormChange} ref={formRef}>

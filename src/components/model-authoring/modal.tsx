@@ -3,6 +3,7 @@ import * as React from "react";
 import { useEffect } from "react";
 
 import * as css from "./modal.scss";
+import * as icons from "../common/icons.scss";
 
 interface IProps {
   children: any
@@ -28,7 +29,7 @@ export const Modal = ({ title, contentStyle, children, onClose }: IProps) => {
       return (
         <div className={css.header}>
           {title}
-          {onClose && <span onClick={onClose}><strong>X</strong></span>}
+          {onClose && <span onClick={onClose} className={icons.iconCross}/>}
         </div>
       )
     }
