@@ -435,7 +435,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.updateRecording({nextState: RecordingState.Recording, clearRecording: true});
-        this.mediaRecorder = new MediaRecorder(stream);
+        this.mediaRecorder = new MediaRecorder(stream, {mimeType: "audio/webm"});
         this.mediaRecorder.ondataavailable = (event) => {
           this.recordedBlobs.push(event.data);
         };
