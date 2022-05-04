@@ -6,6 +6,7 @@ import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
 import { ITranslatedWordDefinition } from "./glossary-translations";
 import { allLanguages } from "./add-translation";
 import { translate } from "../../i18n-context";
+import UploadableInput from "./uploadable-input";
 
 import * as css from "./shared-modal-form.scss";
 import * as icons from "../common/icons.scss";
@@ -184,7 +185,7 @@ export const TranslationForm = (props: IProps) => {
           <div className={css.fieldset}>
             <legend>Digging Deeper</legend>
             <div>
-              <textarea name="translatedDiggingDeeper" defaultValue={getTranslatedValue("translatedDiggingDeeper")} placeholder={`Translated definition for ${word}`} className={css.diggingDeeper} />
+              <textarea name="translatedDiggingDeeper" defaultValue={getTranslatedValue("translatedDiggingDeeper")} placeholder={`Translated digging deeper text for ${word}`} className={css.diggingDeeper} />
             </div>
           </div>
           <div className={css.fieldset}>
@@ -214,25 +215,25 @@ export const TranslationForm = (props: IProps) => {
           <div className={css.fieldset}>
             <legend>Definition MP3 URL</legend>
             <div>
-            <input type="text" name="translatedDefinitionMP3Url" defaultValue={getTranslatedValue("translatedDefinitionMP3Url")} placeholder={`MP3 recording of translated definition for ${word}`} />
+              <UploadableInput type="audio" name="translatedDefinitionMP3Url" defaultValue={getTranslatedValue("translatedDefinitionMP3Url")} placeholder={`MP3 recording of translated definition for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Digging Deeper MP3 URL</legend>
             <div>
-            <input type="text" name="translatedDiggingDeeperMP3Url" defaultValue={getTranslatedValue("translatedDiggingDeeperMP3Url")} placeholder={`MP3 recording of translated Digging Deeper definition for ${word}`} />
+              <UploadableInput type="audio" name="translatedDiggingDeeperMP3Url" defaultValue={getTranslatedValue("translatedDiggingDeeperMP3Url")} placeholder={`MP3 recording of translated Digging Deeper definition for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Image Caption MP3 URL</legend>
             <div>
-            <input type="text" name="translatedImageCaptionMP3Url" defaultValue={getTranslatedValue("translatedImageCaptionMP3Url")} placeholder={`MP3 recording of translated image caption for ${word}`} />
+              <UploadableInput type="audio" name="translatedImageCaptionMP3Url" defaultValue={getTranslatedValue("translatedImageCaptionMP3Url")} placeholder={`MP3 recording of translated image caption for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Video Caption MP3 URL</legend>
             <div>
-            <input type="text" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
+              <UploadableInput type="audio" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
             </div>
           </div>
           <div className={css.fieldset}>
@@ -240,7 +241,7 @@ export const TranslationForm = (props: IProps) => {
               <legend>Closed Captions URL</legend>
             </div>
             <div>
-              <input type="text" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
+              <UploadableInput type="closed captions" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
             </div>
           </div>
         </form>

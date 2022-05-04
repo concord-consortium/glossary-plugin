@@ -12,9 +12,10 @@ import { debugJson, saveInDemo, dangerouslyEditJson } from "./params";
 import {demoGlossary} from "./demo-glossary"
 import { AddTranslation, allLanguages } from "./add-translation";
 import { GlossaryTranslations } from "./glossary-translations";
+import { DangerouslyEditJson } from "./dangerously-edit-json";
+import { getUploaderProviderValue, UploaderContext } from "../../providers/uploader";
 
 import * as css from "./model-authoring-app.scss";
-import { DangerouslyEditJson } from "./dangerously-edit-json";
 
 interface IProps {
   demo?: boolean;
@@ -72,8 +73,12 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
   const renderLeftColumn = () => {
     if (glossary.definitions) {
       return (
-        <>
-          <GlossaryTermsDefinitions glossary={glossary} saveDefinitions={saveDefinitions} canEdit={canEdit} />
+        <UploaderContext.Provider value={getUploaderProviderValue({demo})}>
+          <GlossaryTermsDefinitions
+            glossary={glossary}
+            saveDefinitions={saveDefinitions}
+            canEdit={canEdit}
+          />
           {canEdit && <AddTranslation glossary={glossary} saveTranslations={saveTranslations}/>}
           {usedLangs.map(lang => (
             <GlossaryTranslations
@@ -84,7 +89,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
               usedLangs={usedLangs}
               canEdit={canEdit}
             />))}
-        </>
+        </UploaderContext.Provider>
       )
     }
   }
