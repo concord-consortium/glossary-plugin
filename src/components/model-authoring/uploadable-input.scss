@@ -1,0 +1,27 @@
+.uploadableInput {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    flex-grow: 1;
+  }
+
+  .dropzone {
+    display: inline-block;
+    font-size: 13px;
+    flex-grow: 1;
+    border-width: 2px;
+    border-color: #666666;
+    border-style: dashed;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    text-align: justify;
+    cursor: pointer;
+  }
+
+  .inProgressMessage {
+    font-style: italic;
+    font-size: 12px;
+  }
+}

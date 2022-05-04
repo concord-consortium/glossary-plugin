@@ -2,6 +2,7 @@ import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
+import UploadableInput from "./uploadable-input";
 
 import * as css from "./shared-modal-form.scss";
 import * as icons from "../common/icons.scss";
@@ -194,7 +195,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <input type="text" name="image" defaultValue={getSavedValue("image")} />
+              <UploadableInput type="image" name="image" defaultValue={getSavedValue("image")} />
               {renderError("image")}
             </div>
           </div>
@@ -214,7 +215,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <input type="text" name="zoomImage" defaultValue={getSavedValue("zoomImage")}/>
+              <UploadableInput type="image" name="zoomImage" defaultValue={getSavedValue("zoomImage")} />
               {renderError("zoomImage")}
             </div>
           </div>
@@ -234,7 +235,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <input type="text" name="video" defaultValue={getSavedValue("video")}/>
+              <UploadableInput type="video" name="video" defaultValue={getSavedValue("video")}/>
               {renderError("video")}
             </div>
           </div>
@@ -264,7 +265,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <input type="text" name="videoClosedCaptions" defaultValue={getSavedValue("closedCaptionsUrl")}/>
+              <UploadableInput type="closed captions" name="videoClosedCaptions" defaultValue={getSavedValue("closedCaptionsUrl")}/>
               {renderError("closedCaptionsUrl")}
             </div>
           </div>
