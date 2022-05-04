@@ -221,6 +221,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                   videoCaption={video.videoCaption}
                   autoShowMedia={true}
                   videoAltText={video.videoAltText}
+                  closedCaptionsUrl={video.closedCaptionsUrl}
                 />
               </div>
             </Modal>

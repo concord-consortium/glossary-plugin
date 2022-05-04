@@ -43,7 +43,7 @@ export default class Video extends React.Component<IProps> {
       <div className={css.videoContainer}>
       {
         closedCaptionsUrl ?
-        <video src={videoUrl} title={videoAltText} controls={true}>
+        <video src={videoUrl} title={videoAltText} crossOrigin={"anonymous"} controls={true}>
           <track kind="subtitles" srcLang={lang} src={this.translatedClosedCaptionsUrl} default={true}/>
         </video> :
         <video src={videoUrl} title={videoAltText} controls={true}/>

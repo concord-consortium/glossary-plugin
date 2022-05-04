@@ -131,6 +131,7 @@ export const TermPopUpPreview = (props: IProps) => {
               zoomImageUrl={term.zoomImage}
               videoUrl={term.video}
               videoCaption={term.videoCaption}
+              closedCaptionsUrl={term.closedCaptionsUrl}
               languages={languages}
               onLanguageChange={onLanguageChange}
               askForUserDefinition={settings.askForUserDefinition}
