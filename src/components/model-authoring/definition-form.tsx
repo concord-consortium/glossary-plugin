@@ -25,10 +25,10 @@ interface IEditProps {
   onCancel: () => void;
 }
 
-type IProps = (IAddProps | IEditProps) & {glossary: IGlossary; canEdit: boolean}
+type IProps = (IAddProps | IEditProps) & {glossary: IGlossary; canEdit: boolean, selectedSecondLang: string, onSelectSecondLang: (lang: string) => void};
 
 export const DefinitionForm = (props: IProps) => {
-  const {canEdit} = props
+  const {canEdit, selectedSecondLang, onSelectSecondLang} = props
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
   const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
@@ -93,7 +93,7 @@ export const DefinitionForm = (props: IProps) => {
   }
 
   const renderPreview = () => {
-    // disable student definition in preview so defintion is visible
+    // disable student definition in preview so definition is visible
     const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false}
     return (
       <TermPopUpPreview
@@ -101,6 +101,8 @@ export const DefinitionForm = (props: IProps) => {
         settings={settings}
         translations={props.glossary.translations || {}}
         note="NOTE: This preview ignores the student-provided definitions setting in order to show the definition automatically."
+        selectedSecondLang={selectedSecondLang}
+        onSelectSecondLang={onSelectSecondLang}
       />
     )
   }

@@ -8,7 +8,7 @@ export const demoGlossary: IGlossaryModelAuthoringInitialData = {
     autoShowMediaInPopup: true,
     showIDontKnowButton: true,
     showSideBar: false,
-    enableStudentLanguageSwitching: true,
+    enableStudentLanguageSwitching: false,
     disableReadAloud: false,
     enableStudentRecording: false,
     definitions: [
