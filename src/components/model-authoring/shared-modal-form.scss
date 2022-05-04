@@ -114,6 +114,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: auto;
   }
 
   button {
@@ -124,4 +125,12 @@
     align-self: auto;
   }
 
+}
+
+@media only screen and (max-width: 950px)  {
+  .modalForm {
+    .right {
+      display: none;
+    }
+  }
 }
