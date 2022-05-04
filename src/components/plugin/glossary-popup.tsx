@@ -179,7 +179,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             videoUrl, videoAltText, videoCaption, closedCaptionsUrl, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
-    const canSubmit = recordingState !== RecordingState.Recording;
+    const canSubmit = recordingState !== RecordingState.Recording && currentUserDefinition;
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
      // tslint:disable-next-line:no-console
