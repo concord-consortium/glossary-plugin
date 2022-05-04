@@ -7,6 +7,18 @@
   justify-content: center;
   font-size: 16px;
 
+  .languageSelector {
+    margin: 10px 0 20px 0;
+    div {
+      margin: 5px 0;
+      font-weight: bold;
+    }
+    select {
+      padding: 5px;
+      width: 100%;
+    }
+  }
+
   .outerPopup {
     margin: 20px 0;
     align-self: center;

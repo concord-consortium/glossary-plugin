@@ -46,6 +46,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "created"| "updated">("asc")
   const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
   const [modal, setModal] = useState<IModal | undefined>(undefined)
+  const [selectedSecondLang, setSelectedSecondLang] = useState("")
 
   const isWordDefined = (word: string) => definitions.find(d => d.word === word) !== undefined
   const isValidUrl = (url?: string) => url ? url.startsWith("http") : true
@@ -167,6 +168,8 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 onCancel={handleCloseModal}
                 glossary={glossary}
                 canEdit={canEdit}
+                selectedSecondLang={selectedSecondLang}
+                onSelectSecondLang={setSelectedSecondLang}
               />
             </Modal>
           )
@@ -182,6 +185,8 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 onCancel={handleCloseModal}
                 glossary={glossary}
                 canEdit={canEdit}
+                selectedSecondLang={selectedSecondLang}
+                onSelectSecondLang={setSelectedSecondLang}
               />
             </Modal>
           )

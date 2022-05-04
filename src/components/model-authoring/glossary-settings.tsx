@@ -38,6 +38,7 @@ const previewTranslations: ITranslationMap = {
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
   const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
+  const [selectedSecondLang, setSelectedSecondLang] = useState("")
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
     if (canEdit) {
@@ -155,6 +156,8 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
           translations={previewTranslations}
           allowReset={true}
           resetLabel="Reset Term Popup Preview"
+          selectedSecondLang={selectedSecondLang}
+          onSelectSecondLang={setSelectedSecondLang}
         />
       </div>
     </Panel>
