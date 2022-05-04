@@ -51,6 +51,7 @@ export const TranslationForm = (props: IProps) => {
       [mp3UrlTerm[TextKey.Definition](word)]: getFormValue("translatedDefinitionMP3Url"),
       [mp3UrlTerm[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaptionMP3Url"),
       [mp3UrlTerm[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaptionMP3Url"),
+      [mp3UrlTerm[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeperMP3Url"),
     }
     return newTranslation
   }

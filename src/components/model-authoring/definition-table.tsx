@@ -75,7 +75,7 @@ export const DefinitionTable = ({ definitions, modal, canEdit, onDelete, onEdit,
         <tr>
           <th>Term</th>
           <th className={css.definition}>Definition</th>
-          <th>Digging Deeper</th>
+          <th className={css.centered}>Digging Deeper</th>
           <th>Image</th>
           <th>Video</th>
           <th className={css.actions}>&nbsp;</th>
