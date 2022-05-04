@@ -80,9 +80,11 @@ table.sharedTable {
 
         &:hover {
           fill: #B4B4B4;
+          cursor: pointer;
         }
         &:active {
           fill: #646464;
+          cursor: pointer;
         }
       }
     }

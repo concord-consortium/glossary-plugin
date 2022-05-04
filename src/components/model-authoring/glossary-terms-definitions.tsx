@@ -192,7 +192,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
             <Modal onClose={handleCloseModal} title={`Preview Image: ${image.word}`}>
               <div className={imageModalCss.imageAndVideoModal}>
                 <Definition
-                  word=""
+                  word={image.word}
                   definition=""
                   imageUrl={image.image}
                   zoomImageUrl={image.zoomImage}
