@@ -258,8 +258,8 @@ describe("GlossaryPopup component", () => {
     const mockAlert = jest.fn().mockImplementation((text) => console.log("ALERT", text));
     const mockMediaRecorderStart = jest.fn();
     let mockedMediaRecorder: any = null;
-    // tslint:disable-next-line:no-console
     const mockMediaRecorderStop = jest.fn().mockImplementation(() => mockedMediaRecorder.onstop());
+    const mockedMediaRecorderIsTypeSupported = jest.fn().mockImplementation(() => true);
     const MockedMediaRecorder = jest.fn();
     MockedMediaRecorder.mockImplementation(() => {
       mockedMediaRecorder = {
@@ -268,6 +268,9 @@ describe("GlossaryPopup component", () => {
       };
       return mockedMediaRecorder;
     });
+    // isTypeSupported is a static method of MediaRecorder
+    (MockedMediaRecorder as any).isTypeSupported = mockedMediaRecorderIsTypeSupported;
+
     let mockedFileReader: any = null;
     const fakeAudioUrl = "data:audio/mp3;base64,FOO";
     const MockedFileReader = jest.fn();
@@ -317,6 +320,7 @@ describe("GlossaryPopup component", () => {
       const recordButton = wrapper.find("[data-cy='recordButton']");
       await recordButton.simulate("click");
       expect(mockMediaRecorderStart).toBeCalled();
+      expect(mockedMediaRecorderIsTypeSupported).toBeCalledWith("audio/webm");
     });
 
     it("sets the current user definition with an audio url when the stop button is pressed", async () => {
