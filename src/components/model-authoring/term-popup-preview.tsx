@@ -122,6 +122,7 @@ export const TermPopUpPreview = (props: IProps) => {
           </div>
           <div className={css.innerPopup}>
             <GlossaryPopup
+              demoMode={true}
               word={term.word}
               definition={term.definition}
               diggingDeeper={term.diggingDeeper}
