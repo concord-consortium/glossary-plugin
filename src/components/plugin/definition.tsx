@@ -206,7 +206,12 @@ export default class Definition extends React.Component<IProps, IState> {
     });
     if (newValue) {
       this.context.log({
-        event: "digging deeper icon clicked",
+        event: "digging deeper definition opened",
+        word
+      })
+    } else {
+      this.context.log({
+        event: "digging deeper definition closed",
         word
       })
     }
