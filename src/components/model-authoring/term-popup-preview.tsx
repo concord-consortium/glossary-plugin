@@ -128,10 +128,12 @@ export const TermPopUpPreview = (props: IProps) => {
               diggingDeeper={term.diggingDeeper}
               imageUrl={term.image}
               imageCaption={term.imageCaption}
+              imageAltText={term.imageAltText}
               zoomImageUrl={term.zoomImage}
               videoUrl={term.video}
               videoCaption={term.videoCaption}
               closedCaptionsUrl={term.closedCaptionsUrl}
+              videoAltText={term.videoAltText}
               languages={languages}
               onLanguageChange={onLanguageChange}
               askForUserDefinition={settings.askForUserDefinition}
