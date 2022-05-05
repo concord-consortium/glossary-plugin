@@ -267,7 +267,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <UploadableInput type="closed captions" name="videoClosedCaptions" defaultValue={getSavedValue("closedCaptionsUrl")}/>
+              <UploadableInput type="closed captions" name="closedCaptionsUrl" defaultValue={getSavedValue("closedCaptionsUrl")}/>
               {renderError("closedCaptionsUrl")}
             </div>
           </div>
