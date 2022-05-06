@@ -270,7 +270,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
       case RecordingState.Recording:
         recordingContents = (
           <>
-            {i18n.translate("recording")} …
+            <div className={css.text}>{i18n.translate("recording")} …</div>
             <div className={css.recordingIcons}>
               <RecordProgress
                 startTime={recordingStartTime}
@@ -278,7 +278,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
                 onClick={this.handleStopRecording}
                 title={i18n.translate("stopRecording")}
               >
-                <span className={icons.iconButton + " " + icons.iconStop} />
+                <span className={icons.iconButton + " " + icons.iconStop + " " + css.stopIcon} />
               </RecordProgress>
             </div>
           </>

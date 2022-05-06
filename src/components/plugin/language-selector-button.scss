@@ -1,10 +1,11 @@
 @import '../common/base.scss';
 
 .langButton {
-  border: solid var(--font-color-default);
+  border: 2px solid #fff;
   padding: 5px 10px;
   text-align: center;
   background-color: var(--ltr-gray);
+  width: 65px;
 
   &:hover {
     background-color: #b4b4b4;

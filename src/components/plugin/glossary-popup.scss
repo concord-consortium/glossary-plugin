@@ -8,17 +8,20 @@
 
 .button {
   display: inline-block;
-  background: #bbb;
-  padding: 5px 10px;
+  background: var(--teal);
+  padding: 5px;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
   margin: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
 
   &.disabled {
     pointer-events: none;
     cursor: default;
     opacity: 0.5;
+    background: #bbb;
   }
 }
 
@@ -34,7 +37,7 @@
 }
 
 .button:hover {
-  background: #aaa;
+  background: var(--teal);
 }
 
 .userDefs {
@@ -58,21 +61,35 @@
 }
 
 .recording {
-  height: 80px;
   margin-top: 20px;
+  margin-bottom: 35px;
   padding: 5px;
   font-style: italic;
+
+  .text {
+    background-color: var(--ltr-gray);
+    padding: 5px;
+  }
+
   .recordingIcons {
     // icons
-    position: absolute;
-    bottom: 7px;
-    right: 20px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 5px;
+
+    .stopIcon {
+      position: absolute;
+      right: 0;
+      margin-top: 4px;
+      margin-right: 4px;
+    }
   }
 }
 
 .recorded {
   margin-top: 20px;
-  padding: 5px;
+  padding: 8px;
+  background-color: var(--ltr-gray);
   .recordedIcons {
     float: right;
   }
