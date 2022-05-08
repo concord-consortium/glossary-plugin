@@ -13,7 +13,7 @@ import {demoGlossary} from "./demo-glossary"
 import { AddTranslation, allLanguages } from "./add-translation";
 import { GlossaryTranslations } from "./glossary-translations";
 import { DangerouslyEditJson } from "./dangerously-edit-json";
-import { getUploaderProviderValue, UploaderContext } from "../../providers/uploader";
+import { getUploaderProviderValue, GetUploaderProviderValueOptions, UploaderContext } from "../../providers/uploader";
 
 import * as css from "./model-authoring-app.scss";
 
@@ -21,9 +21,10 @@ interface IProps {
   demo?: boolean;
   apiUrl?: string;
   initialData: IGlossaryModelAuthoringInitialData;
+  getFirebaseJwtUrl?: (appName: string) => string;
 }
 
-const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
+const ModelAuthoringApp = ({demo, apiUrl, initialData, getFirebaseJwtUrl}: IProps) => {
   const {canEdit} = initialData;
   const [name, setName] = useState<string>(initialData.name);
   const [glossary, setGlossary] = useState<IGlossary>(initialData.json);
@@ -54,6 +55,10 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
     updateGlossary({...glossary, translations})
   }, [glossary]);
 
+  const saveTokenServiceResourceId = useCallback((tokenServiceResourceId: string) => {
+    updateGlossary({...glossary, tokenServiceResourceId})
+  }, [glossary]);
+
   const handleClearSavedDemoData = () => {
     updateGlossary(demoGlossary.json);
     updateName(demoGlossary.name);
@@ -72,8 +77,15 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
 
   const renderLeftColumn = () => {
     if (glossary.definitions) {
+      const options: GetUploaderProviderValueOptions = {
+        demo,
+        tokenServiceResourceId: glossary.tokenServiceResourceId,
+        saveTokenServiceResourceId,
+        glossaryId: initialData.id,
+        getFirebaseJwtUrl
+      }
       return (
-        <UploaderContext.Provider value={getUploaderProviderValue({demo})}>
+        <UploaderContext.Provider value={getUploaderProviderValue(options)}>
           <GlossaryTermsDefinitions
             glossary={glossary}
             saveDefinitions={saveDefinitions}
@@ -117,8 +129,8 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData}: IProps) => {
 }
 
 export const renderGlossaryModelAuthoring = (info: IGlossaryModelAuthoringInfo) => {
-  const {containerId, apiUrl, initialData} = info
-  ReactDOM.render(<ModelAuthoringApp initialData={initialData} apiUrl={apiUrl} />, document.getElementById(containerId) as HTMLElement);
+  const {containerId, apiUrl, initialData, getFirebaseJwtUrl} = info
+  ReactDOM.render(<ModelAuthoringApp initialData={initialData} apiUrl={apiUrl} getFirebaseJwtUrl={getFirebaseJwtUrl} />, document.getElementById(containerId) as HTMLElement);
 }
 
 export default ModelAuthoringApp;
