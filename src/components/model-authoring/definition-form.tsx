@@ -32,45 +32,21 @@ export const DefinitionForm = (props: IProps) => {
   const {canEdit, selectedSecondLang, onSelectSecondLang} = props
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
-  const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
+  const [definition, setDefinition] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
-      formRef.current?.scrollTo(0, 0);
+      const firstError = document.getElementById("form-field-error") as HTMLDivElement | undefined
+      const top = firstError?.offsetTop || 0
+      formRef.current?.scrollTo(0, top);
     }
   }, [errors, formRef.current]);
-
-  const getNewDefinition = () => {
-    const newDefinition: IWordDefinition = {
-      word: getFormValue("word"),
-      definition: getFormValue("definition"),
-      diggingDeeper: getFormValue("diggingDeeper"),
-      image: getFormValue("image"),
-      zoomImage: getFormValue("zoomImage"),
-      video: getFormValue("video"),
-      imageCaption: getFormValue("imageCaption"),
-      imageAltText: getFormValue("imageAltText"),
-      videoCaption: getFormValue("videoCaption"),
-      videoAltText: getFormValue("videoAltText"),
-      closedCaptionsUrl: getFormValue("closedCaptionsUrl")
-    }
-    return newDefinition
-  }
-
-  const getSavedValue = (field: IWordDefinitionKey) => {
-    return props.type === "edit" ? props.definition[field] : ""
-  }
-
-  const getFormValue = (field: IWordDefinitionKey) => {
-    return ((formRef.current?.elements.namedItem(field) as HTMLInputElement|HTMLTextAreaElement)?.value || "").trim()
-  }
 
   const handleAddSubmit = (next: NextAddAction) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      const newDefinition = getNewDefinition()
       if (props.type === "add") {
-        setErrors(props.onAdd(newDefinition, next))
+        setErrors(props.onAdd(definition, next))
       }
     }
   }
@@ -78,9 +54,8 @@ export const DefinitionForm = (props: IProps) => {
   const handleEditSubmit = (next: NextEditAction) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      const newDefinition = getNewDefinition()
       if (props.type === "edit") {
-        setErrors(props.onEdit(props.definition, newDefinition, next))
+        setErrors(props.onEdit(props.definition, definition, next))
       }
     }
   }
@@ -93,12 +68,18 @@ export const DefinitionForm = (props: IProps) => {
     }
   }
 
+  const handleFieldChange = useCallback((field: IWordDefinitionKey) => {
+    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+      setDefinition({...definition, [field]: e.target.value})
+    }
+  }, [definition])
+
   const renderPreview = () => {
     // disable student definition in preview so definition is visible
     const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false}
     return (
       <TermPopUpPreview
-        term={previewTerm}
+        term={definition}
         settings={settings}
         translations={props.glossary.translations || {}}
         note="NOTE: This preview ignores the student-provided definitions setting in order to show the definition automatically."
@@ -144,15 +125,9 @@ export const DefinitionForm = (props: IProps) => {
 
   const renderError = useCallback((field: IWordDefinitionKey) => {
     if (errors[field]) {
-      return <div className={css.error}>{errors[field]}</div>
+      return <div id="form-field-error" className={css.error}>{errors[field]}</div>
     }
   }, [errors]);
-
-  const handleFormChange = () => {
-    if (canEdit) {
-      setPreviewTerm(getNewDefinition())
-    }
-  };
 
   return (
     <div className={css.modalForm}>
@@ -166,18 +141,18 @@ export const DefinitionForm = (props: IProps) => {
             <span onClick={props.onCancel} title="Close without saving" className={icons.iconCross}/>
           </div>
         </div>
-        <form onSubmit={handleSubmit} onChange={handleFormChange} ref={formRef}>
+        <form onSubmit={handleSubmit} ref={formRef}>
           <div className={css.fieldset}>
             <legend>Term</legend>
             <div>
-              <input type="text" name="word" defaultValue={getSavedValue("word")} autoFocus={props.type === "add"} />
+              <input type="text" name="word" value={definition.word} autoFocus={props.type === "add"} onChange={handleFieldChange("word")} />
               {renderError("word")}
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Definition</legend>
             <div>
-              <textarea name="definition" defaultValue={getSavedValue("definition")} autoFocus={props.type === "edit"} className={css.definition} />
+              <textarea name="definition" value={definition.definition} autoFocus={props.type === "edit"} className={css.definition} onChange={handleFieldChange("definition")} />
               {renderError("definition")}
             </div>
           </div>
@@ -187,7 +162,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="diggingDeeper" defaultValue={getSavedValue("diggingDeeper")} className={css.diggingDeeper} />
+              <textarea name="diggingDeeper" value={definition.diggingDeeper} className={css.diggingDeeper} onChange={handleFieldChange("diggingDeeper")} />
               {renderError("diggingDeeper")}
             </div>
           </div>
@@ -197,7 +172,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <UploadableInput type="image" name="image" defaultValue={getSavedValue("image")} />
+              <UploadableInput type="image" name="image" value={definition.image} onChange={handleFieldChange("image")} />
               {renderError("image")}
             </div>
           </div>
@@ -207,7 +182,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="imageAltText" defaultValue={getSavedValue("imageAltText")}/>
+              <textarea name="imageAltText" value={definition.imageAltText} onChange={handleFieldChange("imageAltText")} />
               {renderError("imageAltText")}
             </div>
           </div>
@@ -217,7 +192,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <UploadableInput type="image" name="zoomImage" defaultValue={getSavedValue("zoomImage")} />
+              <UploadableInput type="image" name="zoomImage" value={definition.zoomImage} onChange={handleFieldChange("zoomImage")} />
               {renderError("zoomImage")}
             </div>
           </div>
@@ -227,7 +202,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="imageCaption" defaultValue={getSavedValue("imageCaption")}/>
+              <textarea name="imageCaption" value={definition.imageCaption} onChange={handleFieldChange("imageCaption")} />
               {renderError("imageCaption")}
             </div>
           </div>
@@ -237,7 +212,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <UploadableInput type="video" name="video" defaultValue={getSavedValue("video")}/>
+              <UploadableInput type="video" name="video" value={definition.video} onChange={handleFieldChange("video")} />
               {renderError("video")}
             </div>
           </div>
@@ -247,7 +222,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="videoAltText" defaultValue={getSavedValue("videoAltText")}/>
+              <textarea name="videoAltText" value={definition.videoAltText} onChange={handleFieldChange("videoAltText")} />
               {renderError("videoAltText")}
             </div>
           </div>
@@ -257,7 +232,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <textarea name="videoCaption" defaultValue={getSavedValue("videoCaption")}/>
+              <textarea name="videoCaption" value={definition.videoCaption} onChange={handleFieldChange("videoCaption")} />
               {renderError("videoCaption")}
             </div>
           </div>
@@ -267,7 +242,7 @@ export const DefinitionForm = (props: IProps) => {
               <legend className={css.note}>(Optional)</legend>
             </div>
             <div>
-              <UploadableInput type="closed captions" name="closedCaptionsUrl" defaultValue={getSavedValue("closedCaptionsUrl")}/>
+              <UploadableInput type="closed captions" name="closedCaptionsUrl" value={definition.closedCaptionsUrl} onChange={handleFieldChange("closedCaptionsUrl")} />
               {renderError("closedCaptionsUrl")}
             </div>
           </div>
