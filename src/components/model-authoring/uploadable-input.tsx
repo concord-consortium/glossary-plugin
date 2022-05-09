@@ -19,7 +19,7 @@ interface IProps {
 const acceptMap: Record<AcceptableTypes, string[]> = {
   "image": ["image/png", "image/jpeg", "image/gif", "image/svg+xml", "image/webp"],
   "video": ["video/mp4", "video/webm", "video/ogg"],
-  "audio": ["audio/webm", "audio/mp3", "audio/ogg"],
+  "audio": ["audio/webm", "audio/mpeg", "audio/mp3", "audio/ogg"],
   "closed captions": ["text/vtt"]
 }
 
