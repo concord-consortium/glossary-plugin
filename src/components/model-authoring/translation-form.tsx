@@ -77,6 +77,8 @@ export const TranslationForm = (props: IProps) => {
         return translate(translations, lang, term[TextKey.ImageAltText](word), "");
       case "translatedVideoAltText":
         return translate(translations, lang, term[TextKey.VideoAltText](word), "");
+      case "translatedClosedCaptionsUrl":
+        return translate(translations, lang, term[TextKey.ClosedCaptionsUrl](word), "");
       case "translatedDefinitionMP3Url":
         return translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
       case "translatedImageCaptionMP3Url":
@@ -241,7 +243,7 @@ export const TranslationForm = (props: IProps) => {
               <legend>Closed Captions URL</legend>
             </div>
             <div>
-              <UploadableInput type="closed captions" name="closedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")}/>
+              <UploadableInput type="closed captions" name="translatedClosedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")} placeholder={`Translated closed captions for ${word}`}/>
             </div>
           </div>
         </form>
