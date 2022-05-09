@@ -1,6 +1,7 @@
 import { IGlossaryModelAuthoringInitialData } from "../../types";
 
 export const demoGlossary: IGlossaryModelAuthoringInitialData = {
+  id: 0,
   name: "Demo Glossary",
   canEdit: true,
   json: {

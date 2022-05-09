@@ -8,6 +8,7 @@ export interface IGlossary {
   disableReadAloud: boolean;
   enableStudentLanguageSwitching: boolean;
   translations?: ITranslationMap;
+  tokenServiceResourceId?: string;
 }
 
 export type ITranslationMap = Record<string, ITranslation>;
@@ -129,6 +130,7 @@ export type ExpandableInteraction = "definitions" | "supports";
 // for new model authoring
 
 export interface IGlossaryModelAuthoringInitialData {
+  id: number
   name: string
   json: IGlossary
   canEdit: boolean
@@ -138,6 +140,7 @@ export interface IGlossaryModelAuthoringInfo {
   apiUrl: string;
   containerId: string;
   initialData: IGlossaryModelAuthoringInitialData;
+  getFirebaseJwtUrl: (appName: string) => string;
 }
 
 export type IGlossarySettings = Omit<Omit<IGlossary, "definitions">, "translations">;

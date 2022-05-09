@@ -1,10 +1,10 @@
 import * as React from "react";
 import Dropzone from "react-dropzone";
-import * as PluginAPI from "@concord-consortium/lara-plugin-api";
+
+import { useContext, useRef, useState } from "react";
+import { UploaderContext } from "../../providers/uploader";
 
 import * as css from "./uploadable-input.scss";
-import { useContext, useState } from "react";
-import { UploaderContext } from "../../providers/uploader";
 
 type AcceptableTypes = "image" | "video" | "audio" | "closed captions"
 
@@ -29,6 +29,7 @@ Object.keys(acceptMap).forEach((type: AcceptableTypes) => {
 
 const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
   const { upload } = useContext(UploaderContext);
+  const inputRef = useRef<HTMLInputElement>(null)
   const [uploadInProgress, setUploadInProgress] = useState(false)
   const [uploadInProgressMessage, setUploadInProgressMessage] = useState<string|undefined>()
 
@@ -36,11 +37,16 @@ const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
     if (!files[0]) {
       return;
     }
-    upload(files[0], ({inProgress, inProgressMessage, inProgressError}) => {
+    upload(files[0], ({inProgress, inProgressMessage, inProgressError, uploadedUrl}) => {
       setUploadInProgress(inProgress)
       setUploadInProgressMessage(inProgressMessage)
+      if (uploadedUrl && inputRef.current) {
+        inputRef.current.value = uploadedUrl
+      }
       if (inProgressError) {
-        alert(inProgressError)
+        setTimeout(() => {
+          alert(inProgressError)
+        }, 10)
       }
     });
   }
@@ -76,7 +82,7 @@ const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
 
   return (
     <div className={css.uploadableInput}>
-      <input type="text" name={name} defaultValue={defaultValue} placeholder={placeholder} />
+      <input type="text" name={name} defaultValue={defaultValue} placeholder={placeholder} ref={inputRef} />
       {renderDropzone()}
     </div>
   )
