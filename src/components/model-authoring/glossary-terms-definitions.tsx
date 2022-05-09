@@ -150,6 +150,9 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
     if (!isValidUrl(updatedDefinition.video)) {
       errors.video = "Video URL does not appear to be valid"
     }
+    if (!isValidUrl(updatedDefinition.closedCaptionsUrl)) {
+      errors.closedCaptionsUrl = "Closed Captions URL does not appear to be valid"
+    }
   }
 
   const renderModal = () => {

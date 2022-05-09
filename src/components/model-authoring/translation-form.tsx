@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
@@ -17,6 +17,7 @@ type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedVideoAltText" | "translatedClosedCaptionsUrl" | "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" |
   "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
+export type TranslationFields = Record<ITranslatedWordDefinitionKey, string>
 export type DefinitionTranslation = Record<string, string>
 
 export type NextEditAction = ({type: "save"} | {type: "save and close"} | {type: "save and edit previous"} | {type: "save and edit next"}) & {lang: string};
@@ -35,62 +36,44 @@ export const TranslationForm = (props: IProps) => {
   const {canEdit} = props;
   const translations = props.glossary.translations || {}
   const formRef = React.useRef<HTMLFormElement>(null);
-  const [previewTerm, setPreviewTerm] = useState<IWordDefinition>(props.translatedDefinition);
   const [lang, setLang] = useState(props.lang);
-  const [previewTranslation, setPreviewTranslation] = useState<DefinitionTranslation>()
+  const [translation, setTranslation] = useState<TranslationFields>(props.translatedDefinition);
   const {word} = props.translatedDefinition;
 
-  const getNewTranslation = () => {
+  useEffect(() => {
+    setTranslation({
+      translatedWord: translate(translations, lang, term[TextKey.Word](word), ""),
+      translatedDefinition: translate(translations, lang, term[TextKey.Definition](word), ""),
+      translatedDiggingDeeper: translate(translations, lang, term[TextKey.DiggingDeeper](word), ""),
+      translatedImageCaption: translate(translations, lang, term[TextKey.ImageCaption](word), ""),
+      translatedVideoCaption: translate(translations, lang, term[TextKey.VideoCaption](word), ""),
+      translatedImageAltText: translate(translations, lang, term[TextKey.ImageAltText](word), ""),
+      translatedVideoAltText: translate(translations, lang, term[TextKey.VideoAltText](word), ""),
+      translatedClosedCaptionsUrl: translate(translations, lang, term[TextKey.ClosedCaptionsUrl](word), ""),
+      translatedDefinitionMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), ""),
+      translatedImageCaptionMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), ""),
+      translatedVideoCaptionMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.VideoCaption](word), ""),
+      translatedDiggingDeeperMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.DiggingDeeper](word), ""),
+    })
+  }, [lang, word, translations]);
+
+  const getNewTranslation = useCallback(() => {
     const newTranslation: DefinitionTranslation = {
-      [term[TextKey.Word](word)]: getFormValue("translatedWord"),
-      [term[TextKey.Definition](word)]: getFormValue("translatedDefinition"),
-      [term[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeper"),
-      [term[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaption"),
-      [term[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaption"),
-      [term[TextKey.ImageAltText](word)]: getFormValue("translatedImageAltText"),
-      [term[TextKey.VideoAltText](word)]: getFormValue("translatedVideoAltText"),
-      [term[TextKey.ClosedCaptionsUrl](word)]: getFormValue("translatedClosedCaptionsUrl"),
-      [mp3UrlTerm[TextKey.Definition](word)]: getFormValue("translatedDefinitionMP3Url"),
-      [mp3UrlTerm[TextKey.ImageCaption](word)]: getFormValue("translatedImageCaptionMP3Url"),
-      [mp3UrlTerm[TextKey.VideoCaption](word)]: getFormValue("translatedVideoCaptionMP3Url"),
-      [mp3UrlTerm[TextKey.DiggingDeeper](word)]: getFormValue("translatedDiggingDeeperMP3Url"),
+      [term[TextKey.Word](word)]: translation.translatedWord,
+      [term[TextKey.Definition](word)]: translation.translatedDefinition,
+      [term[TextKey.DiggingDeeper](word)]: translation.translatedDiggingDeeper,
+      [term[TextKey.ImageCaption](word)]: translation.translatedImageCaption,
+      [term[TextKey.VideoCaption](word)]: translation.translatedVideoCaption,
+      [term[TextKey.ImageAltText](word)]: translation.translatedImageAltText,
+      [term[TextKey.VideoAltText](word)]: translation.translatedVideoAltText,
+      [term[TextKey.ClosedCaptionsUrl](word)]: translation.translatedClosedCaptionsUrl,
+      [mp3UrlTerm[TextKey.Definition](word)]: translation.translatedDefinitionMP3Url,
+      [mp3UrlTerm[TextKey.ImageCaption](word)]: translation.translatedImageCaptionMP3Url,
+      [mp3UrlTerm[TextKey.VideoCaption](word)]: translation.translatedVideoCaptionMP3Url,
+      [mp3UrlTerm[TextKey.DiggingDeeper](word)]: translation.translatedDiggingDeeperMP3Url,
     }
     return newTranslation
-  }
-
-  const getTranslatedValue = (field: ITranslatedWordDefinitionKey) => {
-    if (lang === props.lang) {
-      return props.translatedDefinition[field]
-    }
-    switch (field) {
-      case "translatedWord":
-        return translate(translations, lang, term[TextKey.Word](word), "");
-      case "translatedDefinition":
-        return translate(translations, lang, term[TextKey.Definition](word), "");
-      case "translatedDiggingDeeper":
-        return translate(translations, lang, term[TextKey.DiggingDeeper](word), "");
-      case "translatedImageCaption":
-        return translate(translations, lang, term[TextKey.ImageCaption](word), "");
-      case "translatedVideoCaption":
-        return translate(translations, lang, term[TextKey.VideoCaption](word), "");
-      case "translatedImageAltText":
-        return translate(translations, lang, term[TextKey.ImageAltText](word), "");
-      case "translatedVideoAltText":
-        return translate(translations, lang, term[TextKey.VideoAltText](word), "");
-      case "translatedClosedCaptionsUrl":
-        return translate(translations, lang, term[TextKey.ClosedCaptionsUrl](word), "");
-      case "translatedDefinitionMP3Url":
-        return translate(translations, lang, mp3UrlTerm[TextKey.Definition](word), "");
-      case "translatedImageCaptionMP3Url":
-        return translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), "");
-      case "translatedVideoCaptionMP3Url":
-        return translate(translations, lang, mp3UrlTerm[TextKey.VideoCaption](word), "");
-      }
-  }
-
-  const getFormValue = (field: ITranslatedWordDefinitionKey) => {
-    return ((formRef.current?.elements.namedItem(field) as HTMLInputElement|HTMLTextAreaElement)?.value || "").trim()
-  }
+  }, [translation])
 
   const handleEditSubmit = (next: NextEditAction) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
@@ -104,22 +87,23 @@ export const TranslationForm = (props: IProps) => {
   }
 
   const handleChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    props.onEdit(props.translatedDefinition, getNewTranslation(), lang, {type: "save", lang: e.target.value})
     setLang(e.target.value)
   }
 
   const renderPreview = () => {
     const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false, enableStudentLanguageSwitching: false}
     const previewTranslations = {
-      [lang]: previewTranslation || {}
+      [lang]: getNewTranslation() || {}
     }
-    return <TermPopUpPreview key={`${lang}-${previewTerm.word}`} term={previewTerm} settings={settings} translations={previewTranslations} lang={lang}/>
+    return <TermPopUpPreview key={`${lang}-${word}`} term={props.translatedDefinition} settings={settings} translations={previewTranslations} lang={lang}/>
   }
 
-  const handleFormChange = () => {
-    if (canEdit) {
-      setPreviewTranslation(getNewTranslation())
+  const handleFieldChange = useCallback((field: ITranslatedWordDefinitionKey) => {
+    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+      setTranslation({...translation, [field]: e.target.value})
     }
-  };
+  }, [translation])
 
   const renderButtons = () => {
     if (canEdit) {
@@ -147,10 +131,6 @@ export const TranslationForm = (props: IProps) => {
     }
   }
 
-  useEffect(() => {
-    setPreviewTranslation(getNewTranslation())
-  }, [formRef.current, lang])
-
   return (
     <div className={css.modalForm} key={lang}>
       <div className={css.left}>
@@ -163,7 +143,7 @@ export const TranslationForm = (props: IProps) => {
             <span onClick={props.onCancel} title="Close without saving" className={icons.iconCross}/>
           </div>
         </div>
-        <form onSubmit={handleSubmit} onChange={handleFormChange} ref={formRef}>
+        <form onSubmit={handleSubmit} ref={formRef}>
           <div className={css.fieldset}>
             <legend>Language</legend>
             <div>
@@ -175,67 +155,130 @@ export const TranslationForm = (props: IProps) => {
           <div className={css.fieldset}>
             <legend>Term</legend>
             <div>
-              <input type="text" name="translatedWord" defaultValue={getTranslatedValue("translatedWord")} placeholder={`Translation for ${word}`} autoFocus={true} />
+              <input
+                type="text"
+                name="translatedWord"
+                value={translation.translatedWord}
+                placeholder={`Translation for ${word}`}
+                autoFocus={true}
+                onChange={handleFieldChange("translatedWord")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Definition</legend>
             <div>
-              <textarea name="translatedDefinition" defaultValue={getTranslatedValue("translatedDefinition")} placeholder={`Translated definition for ${word}`} className={css.definition} />
+              <textarea
+                name="translatedDefinition"
+                value={translation.translatedDefinition}
+                placeholder={`Translated definition for ${word}`}
+                className={css.definition}
+                onChange={handleFieldChange("translatedDefinition")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Digging Deeper</legend>
             <div>
-              <textarea name="translatedDiggingDeeper" defaultValue={getTranslatedValue("translatedDiggingDeeper")} placeholder={`Translated digging deeper text for ${word}`} className={css.diggingDeeper} />
+              <textarea
+                name="translatedDiggingDeeper"
+                value={translation.translatedDiggingDeeper}
+                placeholder={`Translated digging deeper text for ${word}`}
+                className={css.diggingDeeper}
+                onChange={handleFieldChange("translatedDiggingDeeper")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Image Caption</legend>
             <div>
-              <textarea name="translatedImageCaption" defaultValue={getTranslatedValue("translatedImageCaption")} placeholder={`Translated image caption for ${word}`} />
+              <textarea
+                name="translatedImageCaption"
+                value={translation.translatedImageCaption}
+                placeholder={`Translated image caption for ${word}`}
+                onChange={handleFieldChange("translatedImageCaption")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Image Alt Text</legend>
             <div>
-              <textarea name="translatedImageAltText" defaultValue={getTranslatedValue("translatedImageAltText")} placeholder={`Translated alt text for ${word}`} />
+              <textarea
+                name="translatedImageAltText"
+                value={translation.translatedImageAltText}
+                placeholder={`Translated alt text for ${word}`}
+                onChange={handleFieldChange("translatedImageAltText")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Video Caption</legend>
             <div>
-              <textarea name="translatedVideoCaption" defaultValue={getTranslatedValue("translatedVideoCaption")} placeholder={`Translated video caption for ${word}`} />
+              <textarea
+                name="translatedVideoCaption"
+                value={translation.translatedVideoCaption}
+                placeholder={`Translated video caption for ${word}`}
+                onChange={handleFieldChange("translatedVideoCaption")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Video Alt Text</legend>
             <div>
-              <textarea name="translatedVideoAltText" defaultValue={getTranslatedValue("translatedVideoAltText")} placeholder={`Translated video alt text for ${word}`} />
+              <textarea
+                name="translatedVideoAltText"
+                value={translation.translatedVideoAltText}
+                placeholder={`Translated video alt text for ${word}`}
+                onChange={handleFieldChange("translatedVideoAltText")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Definition MP3 URL</legend>
             <div>
-              <UploadableInput type="audio" name="translatedDefinitionMP3Url" defaultValue={getTranslatedValue("translatedDefinitionMP3Url")} placeholder={`MP3 recording of translated definition for ${word}`} />
+              <UploadableInput
+                type="audio"
+                name="translatedDefinitionMP3Url"
+                value={translation.translatedDefinitionMP3Url}
+                placeholder={`MP3 recording of translated definition for ${word}`}
+                onChange={handleFieldChange("translatedDefinitionMP3Url")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Digging Deeper MP3 URL</legend>
             <div>
-              <UploadableInput type="audio" name="translatedDiggingDeeperMP3Url" defaultValue={getTranslatedValue("translatedDiggingDeeperMP3Url")} placeholder={`MP3 recording of translated Digging Deeper definition for ${word}`} />
+              <UploadableInput
+                type="audio"
+                name="translatedDiggingDeeperMP3Url"
+                value={translation.translatedDiggingDeeperMP3Url}
+                placeholder={`MP3 recording of translated Digging Deeper definition for ${word}`}
+                onChange={handleFieldChange("translatedDiggingDeeperMP3Url")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Image Caption MP3 URL</legend>
             <div>
-              <UploadableInput type="audio" name="translatedImageCaptionMP3Url" defaultValue={getTranslatedValue("translatedImageCaptionMP3Url")} placeholder={`MP3 recording of translated image caption for ${word}`} />
+              <UploadableInput
+                type="audio"
+                name="translatedImageCaptionMP3Url"
+                value={translation.translatedImageCaptionMP3Url}
+                placeholder={`MP3 recording of translated image caption for ${word}`}
+                onChange={handleFieldChange("translatedImageCaptionMP3Url")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
             <legend>Video Caption MP3 URL</legend>
             <div>
-              <UploadableInput type="audio" name="translatedVideoCaptionMP3Url" defaultValue={getTranslatedValue("translatedVideoCaptionMP3Url")} placeholder={`MP3 recording of translated video caption for ${word}`} />
+              <UploadableInput
+                type="audio"
+                name="translatedVideoCaptionMP3Url"
+                value={translation.translatedVideoCaptionMP3Url}
+                placeholder={`MP3 recording of translated video caption for ${word}`}
+                onChange={handleFieldChange("translatedVideoCaptionMP3Url")}
+              />
             </div>
           </div>
           <div className={css.fieldset}>
@@ -243,7 +286,13 @@ export const TranslationForm = (props: IProps) => {
               <legend>Closed Captions URL</legend>
             </div>
             <div>
-              <UploadableInput type="closed captions" name="translatedClosedCaptionsUrl" defaultValue={getTranslatedValue("translatedClosedCaptionsUrl")} placeholder={`Translated closed captions for ${word}`}/>
+              <UploadableInput
+                type="closed captions"
+                name="translatedClosedCaptionsUrl"
+                value={translation.translatedClosedCaptionsUrl}
+                placeholder={`Translated closed captions url ${word}`}
+                onChange={handleFieldChange("translatedClosedCaptionsUrl")}
+              />
             </div>
           </div>
         </form>

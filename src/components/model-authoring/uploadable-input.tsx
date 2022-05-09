@@ -11,7 +11,8 @@ type AcceptableTypes = "image" | "video" | "audio" | "closed captions"
 interface IProps {
   type: AcceptableTypes
   name: string;
-  defaultValue: string|number|undefined;
+  value: string|number|undefined;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
 }
 
@@ -27,9 +28,8 @@ Object.keys(acceptMap).forEach((type: AcceptableTypes) => {
   acceptExtensions[type] = acceptMap[type].map(accept => accept.split("/")[1].split("+")[0]);
 });
 
-const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
+const UploadableInput = ({type, name, value, placeholder, onChange}: IProps) => {
   const { upload } = useContext(UploaderContext);
-  const inputRef = useRef<HTMLInputElement>(null)
   const [uploadInProgress, setUploadInProgress] = useState(false)
   const [uploadInProgressMessage, setUploadInProgressMessage] = useState<string|undefined>()
 
@@ -40,8 +40,8 @@ const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
     upload(files[0], ({inProgress, inProgressMessage, inProgressError, uploadedUrl}) => {
       setUploadInProgress(inProgress)
       setUploadInProgressMessage(inProgressMessage)
-      if (uploadedUrl && inputRef.current) {
-        inputRef.current.value = uploadedUrl
+      if (uploadedUrl) {
+        onChange({target: {value: uploadedUrl}} as any)
       }
       if (inProgressError) {
         setTimeout(() => {
@@ -82,7 +82,7 @@ const UploadableInput = ({type, name, defaultValue, placeholder}: IProps) => {
 
   return (
     <div className={css.uploadableInput}>
-      <input type="text" name={name} defaultValue={defaultValue} placeholder={placeholder} ref={inputRef} />
+      <input type="text" value={value || ""} placeholder={placeholder} onChange={onChange} />
       {renderDropzone()}
     </div>
   )
