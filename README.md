@@ -1,4 +1,4 @@
-# Glossary LARA plugin
+\# Glossary LARA plugin
 
 ## LARA Plugin URL:
 
@@ -13,7 +13,7 @@ E.g.:
 
 ## New Authoring
 
-**TODO** Update this section, tracked in this story: https://www.pivotaltracker.com/story/show/181972724
+http://glossary-plugin.concord.org/branch/new-sections/model-authoring-demo.html
 
 ### Query Parameters
 
@@ -30,6 +30,29 @@ JSON.  This is useful for debugging.
 
 3. `saveInDemo` - when this is `true` in the `model-authoring-demo.html` url any changes made in the demo
 are saved in localstorage and then re-read on page load.  This is useful for development.
+
+### Local setup in combination with LARA and AP runtime
+
+1. In your code editor, open the [activity player repo](https://github.com/concord-consortium/activity-player), cd into it and npm start.
+2. In another window of your code editor, open this repo, cd into and npm start.
+3. In a third window, open the [LARA repo](https://github.com/concord-consortium/lara) and run docker-compose-up.
+4. In your browser, navigate to http://app.lara.docker.
+5. Login to LARA at and navigate to "Plugins" > "Create New Approved Script".
+6. Paste in "http://localhost:`<PORT>`/manifest.json", with `<PORT>` as wherever you are currently hosting glossary-plugin.
+7. Click "Load Manifest JSON" and the remaining fields should auto-populate. Then click "Create Approved Script."
+8. You can now preview the glossary popup runtime in Activity Player, and the model authoring runtime in LARA.
+
+### Translations
+
+Translations for glossary terms are provided by glossary authors/editors, while translations for runtime text are stored in JSON files in the `src/lang` folder and are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
+
+### A note on updating glossary popup styling
+
+Certain elements of the Glossary Popup including the header and outer divs are styled in two places for consistency across environments.
+The styling for the relevant elements in model authoring can be found [here](https://github.com/concord-consortium/glossary-plugin/blob/new-sections/src/components/model-authoring/term-popup-preview.scss).
+In Activity Player, the elements are styled [here](https://github.com/concord-consortium/activity-player/blob/master/src/components/activity-page/plugins/glossary-plugin.scss).
+Any styling changes to the Glossary Popup that affect the shared elements should be updated in both places.
+
 
 ## Old Authoring
 ### Authoring page
