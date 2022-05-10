@@ -3,11 +3,8 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { FIREBASE_APP, signInWithToken } from "./db";
 import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
 import { IGlossary, IGlossaryModelAuthoringInfo } from "./types";
-import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
-import { parseUrl } from "./utils/get-url-param";
 import { syncLogEventsToFirestore, setStudentInfo } from "./components/plugin/offline-storage";
 import { getStudentInfo } from "./utils/get-student-info";
 import { renderGlossaryModelAuthoring } from "./components/model-authoring/model-authoring-app";
@@ -109,6 +106,7 @@ export class GlossaryPlugin {
         resourceUrl={this.context.resourceUrl}
         laraLog={this.context.log}
         offlineMode={this.context.offlineMode}
+        showIDontKnowButton={authoredState.showIDontKnowButton || false}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div
