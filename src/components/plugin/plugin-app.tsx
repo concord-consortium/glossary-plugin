@@ -56,6 +56,7 @@ interface IProps {
   resourceUrl?: string;
   laraLog?: (event: string | PluginAPI.ILogData) => void;
   offlineMode: boolean;
+  showIDontKnowButton: boolean;
 }
 
 export interface IDefinitionsByWord {
@@ -150,7 +151,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
     // student recording is enabled per student with the combination of it being enabled by the glossary
     // author along with it being enabled by the teacher in the dashboard per student
@@ -210,6 +211,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   languages={this.languages}
                   onLanguageChange={this.languageChanged}
                   studentInfo={studentInfo}
+                  disableReadAloud={disableReadAloud}
+                  showIDontKnowButton={showIDontKnowButton}
+                  diggingDeeper={glossaryItem.diggingDeeper}
                 />,
                 container
               );
