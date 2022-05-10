@@ -58,6 +58,8 @@ This generates output that looks like:
 
 The `Data.name` attribute is the glossary name (in this case "ER Glossary") and the JSON url is the ID value (in this case zE3QYVz8xJxomOQVvEbc/glossary.json )
 
+This can be extracted using `jq` using: `jq '.[] | {name: .Data.name, id: .ID, user: .Data.accessRules[0].userId, userRole: .Data.accessRules[0].role}' glossaries.json`
+
 
 ### Cull which glossaries don't need to be imported
 
