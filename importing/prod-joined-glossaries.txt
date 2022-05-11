@@ -14918,3 +14918,24 @@
     }
   }
 }
+
+
+*** OWNERS ***
+
+
+[
+  "https://learn.concord.org/users/273738",
+  "https://learn.concord.org/users/334678",
+  "https://learn.concord.org/users/1777",
+  "https://learn.concord.org/users/2919",
+  "https://learn.concord.org/users/432",
+  "https://learn.concord.org/users/301892",
+  "https://learn.concord.org/users/870951",
+  "https://learn.concord.org/users/779484",
+  "https://learn.concord.org/users/154861",
+  "https://learn.concord.org/users/7048",
+  "https://learn.concord.org/users/900",
+  "https://learn.concord.org/users/25",
+  "https://learn.concord.org/users/168492",
+  "https://learn.concord.org/users/97075"
+]

@@ -8,12 +8,16 @@ if (!["prod", "dev"].includes(env)) {
 const mysql = require(`./${env}-mysql.json`)
 const firestore = require(`./${env}-firestore.json`)
 
+const owners = new Set()
+
 const firestoreMap = firestore.reduce((acc, curr) => {
+  const owner = curr.Data.accessRules.find(rule => rule.role === "owner").userId
   acc[curr.ID] = {
     name: curr.Data.name,
     description: curr.Data.description,
-    owner: curr.Data.accessRules.find(rule => rule.role === "owner").userId,
+    owner,
   }
+  owners.add(owner)
   return acc
 }, {})
 
@@ -40,3 +44,5 @@ console.log("*** GLOSSARIES ***\n\n")
 console.log(glossaries)
 console.log("\n\n*** ACTIVITIES ***\n\n")
 console.log(JSON.stringify(activities, null ,2))
+console.log("\n\n*** OWNERS ***\n\n")
+console.log(JSON.stringify([...owners], null ,2))
