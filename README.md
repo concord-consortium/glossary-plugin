@@ -13,7 +13,15 @@ E.g.:
 
 ## New Authoring
 
-http://glossary-plugin.concord.org/branch/new-sections/model-authoring-demo.html
+Originally the glossary plugin supported an authoring class that was instantiated in a popup.  The new authoring renders a full page editing system that supports fully modeled glossaries in LARA.
+
+Authors can create glossaries in the same way they can create activities and sequences.  The edit page of the glossary creates a new window level Javascript variable off the `LARA` window variable containing init information for the new authoring.  It the loads the glossary plugin which has a check for this new variable, and if present, renders the new glossary authoring page.
+
+To support faster development a demo page is also available that acts as a fake LARA host.  When running locally it is available at:
+
+http://localhost:8080/model-authoring-demo.html
+
+There are two query parameters, described in the next section, that can be used to further ease development by allowing saves in the demo and displaying the current raw glossary JSON.
 
 ### Query Parameters
 
