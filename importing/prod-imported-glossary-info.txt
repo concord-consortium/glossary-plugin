@@ -1,0 +1,162 @@
+Production Glossaries Imported (text and json format)
+
+|id |name                                      |
+|---|------------------------------------------|
+|8  |Gas Laws 2020                             |
+|9  |Test Glossary                             |
+|10 |Wild Blueberries Lesson 1 Glossary        |
+|11 |Wild Blueberries Lesson 2 Glossary        |
+|12 |Wild Blueberries Lesson 3 Glossary        |
+|13 |Lake Ice-Out Lesson 1 Glossary            |
+|14 |Lake Ice-Out Lesson 2 Glossary            |
+|15 |Lake Ice-Out Lesson 3 Glossary            |
+|16 |The Shape of Change Lesson 1 Glossary     |
+|17 |The Shape of Change Lesson 2 Glossary     |
+|18 |Ticks & Lyme Disease Lesson 1 Glossary    |
+|19 |Ticks & Lyme Disease Lesson 2 Glossary    |
+|20 |Ticks & Lyme Disease Lesson 3 Glossary    |
+|21 |Ticks & Lyme Disease Lesson 4 Glossary    |
+|22 |Lobster & Black Sea Bass Lesson 1 Glossary|
+|23 |Lobster & Black Sea Bass Lesson 2 Glossary|
+|24 |Lobster & Black Sea Bass Lesson 3 Glossary|
+|25 |Diffusion, osmosis, and active transport  |
+|26 |Bug Test Activity Glossary                |
+|27 |Kiley's Sample Glossary                   |
+|28 |V2PluginTestGlossary                      |
+|29 |ER Glossary                               |
+|30 |test glossary                             |
+|31 |Test                                      |
+|32 |DNA to Proteins                           |
+|33 |Test Glossary 1                           |
+|34 |TestGlossaryPlugin                        |
+|35 |heat and temperature                      |
+|36 |PC Lesson 1 MA                            |
+|37 |PrecipitatingChange-AK-NE                 |
+|39 |WATERS                                    |
+
+[
+	{
+		"id" : 8,
+		"name" : "Gas Laws 2020"
+	},
+	{
+		"id" : 9,
+		"name" : "Test Glossary"
+	},
+	{
+		"id" : 10,
+		"name" : "Wild Blueberries Lesson 1 Glossary"
+	},
+	{
+		"id" : 11,
+		"name" : "Wild Blueberries Lesson 2 Glossary"
+	},
+	{
+		"id" : 12,
+		"name" : "Wild Blueberries Lesson 3 Glossary"
+	},
+	{
+		"id" : 13,
+		"name" : "Lake Ice-Out Lesson 1 Glossary"
+	},
+	{
+		"id" : 14,
+		"name" : "Lake Ice-Out Lesson 2 Glossary"
+	},
+	{
+		"id" : 15,
+		"name" : "Lake Ice-Out Lesson 3 Glossary"
+	},
+	{
+		"id" : 16,
+		"name" : "The Shape of Change Lesson 1 Glossary"
+	},
+	{
+		"id" : 17,
+		"name" : "The Shape of Change Lesson 2 Glossary"
+	},
+	{
+		"id" : 18,
+		"name" : "Ticks & Lyme Disease Lesson 1 Glossary"
+	},
+	{
+		"id" : 19,
+		"name" : "Ticks & Lyme Disease Lesson 2 Glossary"
+	},
+	{
+		"id" : 20,
+		"name" : "Ticks & Lyme Disease Lesson 3 Glossary"
+	},
+	{
+		"id" : 21,
+		"name" : "Ticks & Lyme Disease Lesson 4 Glossary"
+	},
+	{
+		"id" : 22,
+		"name" : "Lobster & Black Sea Bass Lesson 1 Glossary"
+	},
+	{
+		"id" : 23,
+		"name" : "Lobster & Black Sea Bass Lesson 2 Glossary"
+	},
+	{
+		"id" : 24,
+		"name" : "Lobster & Black Sea Bass Lesson 3 Glossary"
+	},
+	{
+		"id" : 25,
+		"name" : "Diffusion, osmosis, and active transport"
+	},
+	{
+		"id" : 26,
+		"name" : "Bug Test Activity Glossary"
+	},
+	{
+		"id" : 27,
+		"name" : "Kiley's Sample Glossary"
+	},
+	{
+		"id" : 28,
+		"name" : "V2PluginTestGlossary"
+	},
+	{
+		"id" : 29,
+		"name" : "ER Glossary"
+	},
+	{
+		"id" : 30,
+		"name" : "test glossary"
+	},
+	{
+		"id" : 31,
+		"name" : "Test"
+	},
+	{
+		"id" : 32,
+		"name" : "DNA to Proteins"
+	},
+	{
+		"id" : 33,
+		"name" : "Test Glossary 1"
+	},
+	{
+		"id" : 34,
+		"name" : "TestGlossaryPlugin"
+	},
+	{
+		"id" : 35,
+		"name" : "heat and temperature"
+	},
+	{
+		"id" : 36,
+		"name" : "PC Lesson 1 MA"
+	},
+	{
+		"id" : 37,
+		"name" : "PrecipitatingChange-AK-NE"
+	},
+	{
+		"id" : 39,
+		"name" : "WATERS"
+	}
+]

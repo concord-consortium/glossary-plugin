@@ -1,7 +1,7 @@
 const env = process.argv[2]
 
 if (!["prod", "dev"].includes(env)) {
-  console.log("Usage: join-glossaries.js <prod|dev>")
+  console.log("Usage: join-glossary-data.js <prod|dev>")
   process.exit(1)
 }
 

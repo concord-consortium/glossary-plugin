@@ -60,14 +60,13 @@ The `Data.name` attribute is the glossary name (in this case "ER Glossary") and 
 
 This can be extracted using `jq` using: `jq '.[] | {name: .Data.name, id: .ID, user: .Data.accessRules[0].userId, userRole: .Data.accessRules[0].role}' glossaries.json`
 
+### Create a joiner script that joins mysql and firebase data
 
-### Cull which glossaries don't need to be imported
-
-This is manual.
+Create `join-glossary-data.js` which reads in the mysql and firebase data and logs a few constructed objects to help map glossaries to activities and to generate a user map.
 
 ### Manually create logins on the lara2 servers for all glossary authors and gather a mapping of emails to user ids
 
-This is manual.  Once the culled glossaries are found an admin can "become" each user on the portal and then login to the lara2 servers to create an account.  A computer readable document will need to be kept mapping emails to user ids.
+This is manual.  Using the user map generated in the previous step each user on the portal and then login to the lara2 servers to create an account.  A computer readable document will need to be kept mapping emails to user ids in `ENV-user-map.json`.
 
 ### Write a script that reads the list of glossaries and the Firebase data and creates SQL statements to create the glossaries attributed to the original authors
 
