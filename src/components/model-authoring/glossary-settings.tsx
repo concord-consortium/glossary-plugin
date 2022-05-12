@@ -144,9 +144,9 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
         <div className={css.settingInformation}>
           <h2 className={css.termPopup}>Term Popup Preview</h2>
           <div className={css.help}>
-            This preview shows an example term popup to demonstrate these settings.
-            To preview the terms in this glossary, use the preview button in the
-            Glossary Terms & Definitions panel.
+            This preview shows an example term popup to demonstrate these settings along with an optional Spanish translation.
+            To preview the terms in this glossary, along with other language translations, use the preview button in the
+            Glossary Terms &amp; Definitions panel on the left.
           </div>
         </div>
 
