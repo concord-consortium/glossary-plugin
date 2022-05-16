@@ -1,0 +1,971 @@
+[
+  {
+      "CreateTime": "2021-01-14T20:45:29.273716Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lobster \u0026 Black Sea Bass Lesson 3",
+          "name": "Lobster \u0026 Black Sea Bass Lesson 3 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "1VKwXksQNLj7JBjRzbNe",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/1VKwXksQNLj7JBjRzbNe",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T20:45:29.273716Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-12-28T19:49:11.908134Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/334678"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Group 1 teachers access only.",
+          "folder": "glossary-resources",
+          "name": "WATERSGroup1Glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "2zczcPVd0YpvLlZejmOP",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/2zczcPVd0YpvLlZejmOP",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-12-28T19:49:11.908134Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-22T09:29:05.877008Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/1777"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/168492"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/68"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "V2PluginTestGlossary",
+          "folder": "glossary-resources",
+          "name": "V2PluginTestGlossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "3Bn1CgFVH2oIpjV6242q",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/3Bn1CgFVH2oIpjV6242q",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-22T10:47:50.671748Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-30T16:42:10.035966Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/2919"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Used in the GeoHazard Hurricane Module",
+          "folder": "glossary-resources",
+          "name": "Hurricane Glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "50nO0PVO7855BBoEXTti",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/50nO0PVO7855BBoEXTti",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-30T16:42:10.035966Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T11:53:10.403896Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lake Ice-Out Lesson 3",
+          "name": "Lake Ice-Out Lesson 3 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "7WaEBOXFakRRoXOUDnDk",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/7WaEBOXFakRRoXOUDnDk",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T11:53:10.403896Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-22T09:25:43.493958Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/1777"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "PC Lesson 1 MA",
+          "folder": "glossary-resources",
+          "name": "PC Lesson 1 MA",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "862154P6gx3V6oKtJRZw",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/862154P6gx3V6oKtJRZw",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-22T09:25:43.493958Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-29T18:45:03.5853Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/2919"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Hurricane Module Glossary",
+          "folder": "glossary-resources",
+          "name": "Hurricane Module Glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "8mUxX0a3BsGaOLYSNzGA",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/8mUxX0a3BsGaOLYSNzGA",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-29T18:45:03.5853Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T12:10:39.397065Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for The Shape of Change Lesson 1",
+          "name": "The Shape of Change Lesson 1 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "8smLeISuOtZ7ICCDgxGt",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/8smLeISuOtZ7ICCDgxGt",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T12:10:39.397065Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-19T17:22:16.257291Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/432"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "MW updated activities 2020",
+          "folder": "glossary-resources",
+          "name": "Diffusion, osmosis, and active transport",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "CBpP9TUgUGuUdDhliQNn",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/CBpP9TUgUGuUdDhliQNn",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-05-19T17:22:16.257291Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-22T09:32:35.455429Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/1777"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/323292"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "test glossary",
+          "folder": "glossary-resources",
+          "name": "test glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "D9afwcpQ834e3XvKoak3",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/D9afwcpQ834e3XvKoak3",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-22T10:49:32.014803Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-22T16:11:18.468078Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/301892"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "UDL features",
+          "folder": "glossary-resources",
+          "name": "Mainland Alaska Glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "DC4CSsOdO547tvS44QR3",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/DC4CSsOdO547tvS44QR3",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-22T16:11:18.468078Z"
+  }
+  ,
+  {
+      "CreateTime": "2022-04-07T11:16:10.918143Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/870951"
+              }
+          ],
+          "description": "Test Example",
+          "name": "Test",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "FLC50FXJVHBLjSMBkQks",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/FLC50FXJVHBLjSMBkQks",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2022-04-07T11:16:10.918143Z"
+  }
+  ,
+  {
+      "CreateTime": "2022-02-10T19:40:18.39036Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/779484"
+              }
+          ],
+          "description": "TestGlossaryPlugin",
+          "name": "TestGlossaryPlugin",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "H7yFsp4riXPRT8bRXd2J",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/H7yFsp4riXPRT8bRXd2J",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2022-02-10T19:40:18.39036Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T18:37:58.898528Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Ticks \u0026 Lyme Disease Lesson 3",
+          "name": "Ticks \u0026 Lyme Disease Lesson 3 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "JaN86XReZl45mvcliiMY",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/JaN86XReZl45mvcliiMY",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T18:37:58.898528Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-27T20:26:26.065575Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/154861"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/28"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "glossary",
+          "folder": "glossary-resources",
+          "name": "heat and temperature",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "Laz2d1NFDQTQ5uxvSNQd",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/Laz2d1NFDQTQ5uxvSNQd",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-09-08T21:20:57.059013Z"
+  }
+  ,
+  {
+      "CreateTime": "2022-03-02T15:24:44.010409Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/7048"
+              }
+          ],
+          "description": "glossary for kiley's bug test activity on production",
+          "name": "Bug Test Activity Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "LvcQrzVvnl1Bm8sRKtHw",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/LvcQrzVvnl1Bm8sRKtHw",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2022-03-02T15:24:44.010409Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T12:19:19.360257Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for The Shape of Change Lesson 2",
+          "name": "The Shape of Change Lesson 2 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "Mk3yfHrJbBRGDxNnGIS8",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/Mk3yfHrJbBRGDxNnGIS8",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T12:19:19.360257Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-19T15:32:05.638759Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/432"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Glossary",
+          "folder": "glossary-resources",
+          "name": "Gas Laws 2020",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "NciBizL2HUI7qiv3XdAB",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/NciBizL2HUI7qiv3XdAB",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-05-19T15:32:05.638759Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-12-08T12:03:05.454996Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "definition",
+          "name": "Test Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "OsuYZYOHoZKMVXMV2ijr",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/OsuYZYOHoZKMVXMV2ijr",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-12-08T12:03:05.454996Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T12:33:54.455165Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Ticks \u0026 Lyme Disease Lesson 2",
+          "name": "Ticks \u0026 Lyme Disease Lesson 2 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "SKFnWkgfxXcTJaugMng4",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/SKFnWkgfxXcTJaugMng4",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T12:33:54.455165Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-31T18:02:39.244328Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/2919"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Hurricane V2 Module Glossary",
+          "folder": "glossary-resources",
+          "name": "Hurricane V2",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "VHqvp6C10kxQLE1WX1MU",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/VHqvp6C10kxQLE1WX1MU",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-10-31T18:02:39.244328Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T11:35:21.628255Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lake Ice-Out Lesson 1",
+          "name": "Lake Ice-Out Lesson 1 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "WKGIe87AR1lBp56SmakN",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/WKGIe87AR1lBp56SmakN",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T11:35:21.628255Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-12-08T13:00:51.725657Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary terms for Wild Blueberries Lesson 1",
+          "name": "Wild Blueberries Lesson 1 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "aSkyVRFkmrnVDqIbxyIN",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/aSkyVRFkmrnVDqIbxyIN",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-12-08T13:00:51.725657Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T18:47:25.668237Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Ticks \u0026 Lyme Disease Lesson 4",
+          "name": "Ticks \u0026 Lyme Disease Lesson 4 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "bfR5f6egaMAKaTHWXY0x",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/bfR5f6egaMAKaTHWXY0x",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T18:47:25.668237Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T12:25:34.101715Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Ticks \u0026 Lyme Disease Lesson 1",
+          "name": "Ticks \u0026 Lyme Disease Lesson 1 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "cIjkFpLdV0bMLgHHHiem",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/cIjkFpLdV0bMLgHHHiem",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T12:25:34.101715Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-27T20:24:55.758378Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/900"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Dino Glossary",
+          "folder": "glossary-resources",
+          "name": "TrudiMagicGlossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "dlpE9oaWNFXbPEcCZUo6",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/dlpE9oaWNFXbPEcCZUo6",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-05-27T20:24:55.758378Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-12-09T11:33:13.974866Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary words for Wild Blueberries Lesson 3: Summer",
+          "name": "Wild Blueberries Lesson 3 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "fl8EYoUvUH5GX6D9qVik",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/fl8EYoUvUH5GX6D9qVik",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-12-09T11:33:13.974866Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-18T19:04:09.165374Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/25"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Glossary for DNA to Proteins",
+          "folder": "glossary-resources",
+          "name": "DNA to Proteins",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "hcV6fLyzTbRtB4KYFhxE",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/hcV6fLyzTbRtB4KYFhxE",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-05-18T19:04:09.165374Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-06-25T16:08:42.614491Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/779484"
+              }
+          ],
+          "description": "This is a test glossary",
+          "name": "Test Glossary 1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "iWA7lhVgJX2ZyLoG7HXa",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/iWA7lhVgJX2ZyLoG7HXa",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-06-25T16:08:42.614491Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-12-09T11:42:54.365759Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary words for Wild Blueberries Lesson 2: Spring",
+          "name": "Wild Blueberries Lesson 2 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "lVXWBw9Wa1mTBkIlExXs",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/lVXWBw9Wa1mTBkIlExXs",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-12-09T11:42:54.365759Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T11:39:49.405755Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lake Ice-Out Lesson 2",
+          "name": "Lake Ice-Out Lesson 2 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "ldArmSwDXRWM1viTO1c7",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/ldArmSwDXRWM1viTO1c7",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T11:39:49.405755Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-12-09T18:20:16.496967Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/334678"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "WATERS",
+          "folder": "glossary-resources",
+          "name": "WATERS",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "oRKDulC2nuAoBjeIaAIh",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/oRKDulC2nuAoBjeIaAIh",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-12-09T18:20:16.496967Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-01-10T17:22:16.100015Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/168492"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "Test glossary for glossary guide",
+          "folder": "glossary-resources",
+          "name": "Glossary Guide Example",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "qUShZ5W1oNMvMqqSYL3J",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/qUShZ5W1oNMvMqqSYL3J",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-01-10T17:22:16.100015Z"
+  }
+  ,
+  {
+      "CreateTime": "2022-02-24T15:36:55.458291Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/7048"
+              }
+          ],
+          "description": "This is a sample glossary to be used in Kiley's test activities.",
+          "name": "Kiley's Sample Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "uGyUKyevEzJldnyYx4I0",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/uGyUKyevEzJldnyYx4I0",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2022-02-24T15:36:55.458291Z"
+  }
+  ,
+  {
+      "CreateTime": "2019-10-22T09:36:31.184642Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/1777"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/354"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/28"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/38730"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/323292"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/168492"
+              },
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/301892"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "PrecipitatingChange-AK-NE",
+          "folder": "glossary-resources",
+          "name": "PrecipitatingChange-AK-NE",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "upZ83jqTZAZuoQqRAfAb",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/upZ83jqTZAZuoQqRAfAb",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2019-12-06T11:36:44.025815Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T20:45:16.728424Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lobster \u0026 Black Sea Bass Lesson 3",
+          "name": "Lobster \u0026 Black Sea Bass Lesson 3 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "vV8w6LCdk7Os0gM1h86l",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/vV8w6LCdk7Os0gM1h86l",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T20:45:16.728424Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T18:53:52.053745Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lobster \u0026 Black Sea Bass Lesson 2",
+          "name": "Lobster \u0026 Black Sea Bass Lesson 2 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "wCUHdGfa7JnCuaWRujzF",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/wCUHdGfa7JnCuaWRujzF",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T18:53:52.053745Z"
+  }
+  ,
+  {
+      "CreateTime": "2021-01-14T18:50:00.332081Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/273738"
+              }
+          ],
+          "description": "Vocabulary for Lobster \u0026 Black Sea Bass Lesson 1",
+          "name": "Lobster \u0026 Black Sea Bass Lesson 1 Glossary",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "yBtnXkC6fIfXZ61zAjUg",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/yBtnXkC6fIfXZ61zAjUg",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2021-01-14T18:50:00.332081Z"
+  }
+  ,
+  {
+      "CreateTime": "2020-05-20T18:51:02.607457Z",
+      "Data": {
+          "accessRules": [
+              {
+                  "platformId": "https://learn.concord.org",
+                  "role": "owner",
+                  "type": "user",
+                  "userId": "https://learn.concord.org/users/97075"
+              }
+          ],
+          "bucket": "models-resources",
+          "description": "For Activities 1-10 in Evolution Readiness",
+          "folder": "glossary-resources",
+          "name": "ER Glossary",
+          "region": "us-east-1",
+          "tool": "glossary",
+          "type": "s3Folder"
+      },
+      "ID": "zE3QYVz8xJxomOQVvEbc",
+      "Path": "projects/token-service-62822/databases/(default)/documents/production:resources/zE3QYVz8xJxomOQVvEbc",
+      "ReadTime": "2022-05-10T11:30:43.037546Z",
+      "UpdateTime": "2020-05-20T18:51:02.607457Z"
+  }
+  ]
+
