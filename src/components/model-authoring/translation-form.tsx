@@ -290,7 +290,7 @@ export const TranslationForm = (props: IProps) => {
                 type="closed captions"
                 name="translatedClosedCaptionsUrl"
                 value={translation.translatedClosedCaptionsUrl}
-                placeholder={`Translated closed captions url ${word}`}
+                placeholder={`Translated closed captions url for ${word}`}
                 onChange={handleFieldChange("translatedClosedCaptionsUrl")}
               />
             </div>
