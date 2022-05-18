@@ -2,7 +2,7 @@ import * as React from "react";
 import Dropzone from "react-dropzone";
 
 import { useContext, useRef, useState } from "react";
-import { UploaderContext } from "../../providers/uploader";
+import { getUploader, UploaderContext } from "../../providers/uploader";
 
 import * as css from "./uploadable-input.scss";
 
@@ -29,7 +29,7 @@ Object.keys(acceptMap).forEach((type: AcceptableTypes) => {
 });
 
 const UploadableInput = ({type, name, value, placeholder, onChange}: IProps) => {
-  const { upload } = useContext(UploaderContext);
+  const options = useContext(UploaderContext);
   const [uploadInProgress, setUploadInProgress] = useState(false)
   const [uploadInProgressMessage, setUploadInProgressMessage] = useState<string|undefined>()
 
@@ -37,7 +37,8 @@ const UploadableInput = ({type, name, value, placeholder, onChange}: IProps) => 
     if (!files[0]) {
       return;
     }
-    upload(files[0], ({inProgress, inProgressMessage, inProgressError, uploadedUrl}) => {
+    const uploader = getUploader(options)
+    uploader(files[0], ({inProgress, inProgressMessage, inProgressError, uploadedUrl}) => {
       setUploadInProgress(inProgress)
       setUploadInProgressMessage(inProgressMessage)
       if (uploadedUrl) {

@@ -9,9 +9,9 @@ import { TranslationTable } from "./translation-table";
 import { translate } from "../../i18n-context";
 import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
 import { DefinitionTranslation, NextEditAction, TranslationForm } from "./translation-form";
+import { ILanguageSettings, LanguageSettingsForm, NextSettingsAction } from "./language-settings-form";
 
 import * as css from "./glossary-translations.scss";
-import { ILanguageSettings, LanguageSettingsForm } from "./language-settings-form";
 
 interface IEditModal {
   type: "edit"
@@ -137,9 +137,13 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
     }
   }
 
-  const handleEditLanguageSettings = (settingsLang: string, languageSettings: ILanguageSettings) => {
+  const handleEditLanguageSettings = (settingsLang: string, languageSettings: ILanguageSettings, next: NextSettingsAction) => {
     saveTranslations({...translations, [settingsLang]: {...translations[settingsLang], ...languageSettings}})
-    handleCloseModal()
+    if (next.type === "save") {
+      setModal({type: "language settings", lang: next.lang})
+    } else {
+      handleCloseModal()
+    }
   }
 
   const renderModal = () => {

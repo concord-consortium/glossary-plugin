@@ -13,7 +13,7 @@ import {demoGlossary} from "./demo-glossary"
 import { AddTranslation, allLanguages } from "./add-translation";
 import { GlossaryTranslations } from "./glossary-translations";
 import { DangerouslyEditJson } from "./dangerously-edit-json";
-import { getUploaderProviderValue, GetUploaderProviderValueOptions, UploaderContext } from "../../providers/uploader";
+import { IUploaderOptions, UploaderContext } from "../../providers/uploader";
 
 import * as css from "./model-authoring-app.scss";
 
@@ -77,7 +77,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData, getFirebaseJwtUrl}: IProp
 
   const renderLeftColumn = () => {
     if (glossary.definitions) {
-      const options: GetUploaderProviderValueOptions = {
+      const options: IUploaderOptions = {
         demo,
         tokenServiceResourceId: glossary.tokenServiceResourceId,
         saveTokenServiceResourceId,
@@ -85,7 +85,7 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData, getFirebaseJwtUrl}: IProp
         getFirebaseJwtUrl
       }
       return (
-        <UploaderContext.Provider value={getUploaderProviderValue(options)}>
+        <UploaderContext.Provider value={options}>
           <GlossaryTermsDefinitions
             glossary={glossary}
             saveDefinitions={saveDefinitions}
