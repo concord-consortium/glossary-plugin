@@ -11,11 +11,9 @@ interface IUploaderProgress {
   uploadedUrl?: string;
 }
 
-interface IUploader {
-  upload: (file: File, callback: (progress: IUploaderProgress) => void) => void;
-}
+type Uploader = (file: File, callback: (progress: IUploaderProgress) => void) => void;
 
-export interface GetUploaderProviderValueOptions {
+export interface IUploaderOptions {
   demo?: boolean;
   glossaryId: number;
   tokenServiceResourceId?: string;
@@ -46,75 +44,72 @@ const getTokenServiceClient = async (getFirebaseJwtUrl?: (appName: string) => st
   return _tokenServiceClient;
 }
 
-export const UploaderContext = createContext<IUploader>({
-  upload: () => {
-    // no-op
-  }
+export const UploaderContext = createContext<IUploaderOptions>({
+  demo: true,
+  saveTokenServiceResourceId: (tokenServiceResourceId: string) => undefined,
+  glossaryId: 0,
+  getFirebaseJwtUrl: (appName: string) => ""
 });
 
-export const getUploaderProviderValue = (options: GetUploaderProviderValueOptions): IUploader => {
+export const getUploader = (options: IUploaderOptions): Uploader => {
   const {demo, getFirebaseJwtUrl, glossaryId, tokenServiceResourceId, saveTokenServiceResourceId} = options;
 
   if (demo) {
-    return {
-      upload: (file, callback) => {
-        callback({inProgress: true, inProgressMessage: `Uploading ${file.name}... Please wait.`});
+    return (file, callback) => {
+      callback({inProgress: true, inProgressMessage: `Uploading ${file.name}... Please wait.`});
+      setTimeout(() => {
+        callback({inProgress: true, inProgressMessage: "(this is a demo, nothing actually got uploaded)"});
         setTimeout(() => {
-          callback({inProgress: true, inProgressMessage: "(this is a demo, nothing actually got uploaded)"});
-          setTimeout(() => {
-            callback({inProgress: false});
-          }, 2000);
+          callback({inProgress: false});
         }, 2000);
-      }
+      }, 2000);
     }
   } else {
-    return {
-      upload: async (file, callback) => {
-        try {
-          callback({inProgress: true, inProgressMessage: "Connecting to token service..."});
-          const client = await getTokenServiceClient(getFirebaseJwtUrl);
+    return async (file, callback) => {
+      try {
+        callback({inProgress: true, inProgressMessage: "Connecting to token service..."});
+        const client = await getTokenServiceClient(getFirebaseJwtUrl);
 
-          let glossaryResource: S3Resource | undefined;
-          if (tokenServiceResourceId) {
-            try {
-              glossaryResource = await client.getResource(tokenServiceResourceId) as S3Resource;
-            } catch (e) {
-              // no-op - will be created below
-            }
+        let glossaryResource: S3Resource | undefined;
+        if (tokenServiceResourceId) {
+          try {
+            glossaryResource = await client.getResource(tokenServiceResourceId) as S3Resource;
+          } catch (e) {
+            // no-op - will be created below
           }
-
-          if (!glossaryResource) {
-            glossaryResource = await client.createResource({
-              tool: "glossary",
-              type: "s3Folder",
-              name: `glossary-${glossaryId}`,
-              description: "attachment",
-              accessRuleType: "user",
-              accessRuleRole: "owner"
-            }) as S3Resource;
-
-            saveTokenServiceResourceId(glossaryResource.id)
-          }
-
-          callback({inProgress: true, inProgressMessage: "Getting S3 credentials from token service..."});
-          const credentials = await client.getCredentials(glossaryResource.id);
-
-          callback({inProgress: true, inProgressMessage: `Uploading ${file.name}... Please wait.`});
-
-          const uploadedUrl = await s3Upload({
-            client,
-            glossaryResource,
-            credentials,
-            filename: uuid() + "-" + file.name,
-            body: file,
-            contentType: file.type,
-            cacheControl: "max-age=31536000" // 1 year
-          });
-
-          callback({inProgress: false, uploadedUrl});
-        } catch(e) {
-          callback({inProgress: false, inProgressError: `Uploading ${file.name} failed. ${e.toString()}.  Please try again.`});
         }
+
+        if (!glossaryResource) {
+          glossaryResource = await client.createResource({
+            tool: "glossary",
+            type: "s3Folder",
+            name: `glossary-${glossaryId}`,
+            description: "attachment",
+            accessRuleType: "user",
+            accessRuleRole: "owner"
+          }) as S3Resource;
+
+          saveTokenServiceResourceId(glossaryResource.id)
+        }
+
+        callback({inProgress: true, inProgressMessage: "Getting S3 credentials from token service..."});
+        const credentials = await client.getCredentials(glossaryResource.id);
+
+        callback({inProgress: true, inProgressMessage: `Uploading ${file.name}... Please wait.`});
+
+        const uploadedUrl = await s3Upload({
+          client,
+          glossaryResource,
+          credentials,
+          filename: uuid() + "-" + file.name,
+          body: file,
+          contentType: file.type,
+          cacheControl: "max-age=31536000" // 1 year
+        });
+
+        callback({inProgress: false, uploadedUrl});
+      } catch(e) {
+        callback({inProgress: false, inProgressError: `Uploading ${file.name} failed. ${e.toString()}.  Please try again.`});
       }
     }
   }

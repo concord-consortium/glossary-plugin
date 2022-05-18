@@ -14,21 +14,20 @@ export interface ILanguageSettings {
   write_definition_mp3_url: string;
 }
 
-type ILanguageSettingsFields = "mainPromptMP3Url" | "writeDefinitionMP3Url";
+export type NextSettingsAction = {type: "save", lang: string} | {type: "save and close"};
 
 type IProps = {
   lang: string
   glossary: IGlossary
   usedLangs: string[]
   canEdit: boolean;
-  onEdit: (settingsLang: string, languageSettings: ILanguageSettings) => void
+  onEdit: (settingsLang: string, languageSettings: ILanguageSettings, next: NextSettingsAction) => void
   onCancel: () => void;
 }
 
 export const LanguageSettingsForm = (props: IProps) => {
-  const {canEdit} = props;
+  const {canEdit, lang} = props;
   const translations = props.glossary.translations || {}
-  const [lang, setLang] = useState(props.lang);
   const [mainPromptMP3Url, setMainPromptMP3Url] = useState("")
   const [writeDefinitionMP3Url, setWriteDefinitionMP3Url] = useState("")
 
@@ -47,7 +46,7 @@ export const LanguageSettingsForm = (props: IProps) => {
     props.onEdit(lang, {
       main_prompt_mp3_url: mainPromptMP3Url,
       write_definition_mp3_url: writeDefinitionMP3Url,
-    })
+    }, {type: "save and close"})
   }
 
   const handleChangeMainPromptMP3Url = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +58,10 @@ export const LanguageSettingsForm = (props: IProps) => {
   }
 
   const handleChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLang(e.target.value)
+    props.onEdit(lang, {
+      main_prompt_mp3_url: mainPromptMP3Url,
+      write_definition_mp3_url: writeDefinitionMP3Url,
+    }, {type: "save", lang: e.target.value})
   }
 
   const renderPreview = () => {
