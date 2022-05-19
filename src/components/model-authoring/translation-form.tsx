@@ -99,11 +99,10 @@ export const TranslationForm = (props: IProps) => {
     return <TermPopUpPreview key={`${lang}-${word}`} term={props.translatedDefinition} settings={settings} translations={previewTranslations} lang={lang}/>
   }
 
-  const handleFieldChange = useCallback((field: ITranslatedWordDefinitionKey) => {
-    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
-      setTranslation({...translation, [field]: e.target.value})
-    }
-  }, [translation])
+  const handleFieldChange = (field: ITranslatedWordDefinitionKey) => {
+    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
+      setTranslation((prev) => ({...prev, [field]: e.target.value}));
+  }
 
   const renderButtons = () => {
     if (canEdit) {
