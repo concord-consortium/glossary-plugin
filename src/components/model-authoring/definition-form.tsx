@@ -68,11 +68,10 @@ export const DefinitionForm = (props: IProps) => {
     }
   }
 
-  const handleFieldChange = useCallback((field: IWordDefinitionKey) => {
-    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
-      setDefinition({...definition, [field]: e.target.value})
-    }
-  }, [definition])
+  const handleFieldChange = (field: IWordDefinitionKey) => {
+    return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
+      setDefinition((prev) => ({...prev, [field]: e.target.value}))
+  }
 
   const renderPreview = () => {
     // disable student definition in preview so definition is visible
