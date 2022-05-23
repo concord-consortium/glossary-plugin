@@ -116,7 +116,7 @@
     "aws-sdk": "^2.814.0",
     "client-oauth2": "^4.2.5",
     "clone": "^2.1.2",
-    "dexie": "^3.0.3",
+    "dexie": "^3.2.2",
     "file-saver": "^2.0.2",
     "firebase": "^6.6.2",
     "jsonwebtoken": "^8.5.1",
