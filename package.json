@@ -17,7 +17,10 @@
     "strings:pull:usage": "echo 'Usage: npm run strings:pull -- -a <poeditor_api_key>'",
     "strings:pull": "./poeditor-scripts/strings-pull-project.sh",
     "strings:push:usage": "echo 'Usage: npm run strings:push -- -a <poeditor_api_key>'",
-    "strings:push": "./poeditor-scripts/strings-push-project.sh"
+    "strings:push": "./poeditor-scripts/strings-push-project.sh",
+    "test:cypress": "cypress run",
+    "test:cypress:open": "cypress open",
+    "test:full": "npm-run-all test test:cypress"
   },
   "repository": {
     "type": "git",
@@ -75,6 +78,7 @@
     "autoprefixer": "^9.5.1",
     "copy-webpack-plugin": "^9.1.0",
     "css-loader": "^1.0.1",
+    "cypress": "^9.7.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "fork-ts-checker-webpack-plugin": "^7.2.1",
@@ -118,7 +122,7 @@
     "clone": "^2.1.2",
     "dexie": "^3.0.3",
     "file-saver": "^2.0.2",
-    "firebase": "^6.6.2",
+    "firebase": "^7.0.0",
     "jsonwebtoken": "^8.5.1",
     "pluralize": "^8.0.0",
     "react-dropzone": "^6.2.4",
