@@ -132,15 +132,15 @@ export default class PluginApp extends React.Component<IProps, IState> {
       if (studentInfo) {
         watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
           const { translations } = this.props;
-          if (translations[settings.preferredLanguage]) {
-            // Preferred language is available, so we can use it.
-          } else {
-            // Preferred language is not available, do not show second language button.
-            this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
-          }
+          const { preferredLanguage, enableRecording } = settings;
 
-          // add per-student recording toggle
-          this.setState({enableStudentRecording: settings.enableRecording});
+          // ensure the second language set by the teacher is available in the translations before setting
+          // and add per-student recording toggle set by the teacher
+          this.setState({
+            lang: DEFAULT_LANG,
+            secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined,
+            enableStudentRecording: enableRecording
+           });
         }));
 
         this.log({
