@@ -142,11 +142,15 @@ export default class PluginApp extends React.Component<IProps, IState> {
             enableStudentRecording: enableRecording
            });
         }));
-
-        this.log({
-          event: "plugin init"
-        });
+      } else {
+        // default student recording to true - it then must also be set in the glossary settings
+        // for it to be enabled in the user interface
+        this.setState({enableStudentRecording: true});
       }
+
+      this.log({
+        event: "plugin init"
+      });
     });
   }
 
