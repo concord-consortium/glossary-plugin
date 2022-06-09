@@ -71,7 +71,6 @@ interface IState {
   secondLanguage?: string;
   otherLanguages: string[];
   definitionsByWord: IDefinitionsByWord;
-  enableStudentRecording: boolean;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
@@ -82,8 +81,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     lang: DEFAULT_LANG,
     secondLanguage: undefined,
     otherLanguages: [],
-    definitionsByWord: {},
-    enableStudentRecording: false
+    definitionsByWord: {}
   };
   private sidebarContainer: HTMLElement;
   private sidebarIconContainer: HTMLElement;
@@ -138,14 +136,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
           // and add per-student recording toggle set by the teacher
           this.setState({
             lang: DEFAULT_LANG,
-            secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined,
-            enableStudentRecording: enableRecording
+            secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined
            });
         }));
-      } else {
-        // default student recording to true - it then must also be set in the glossary settings
-        // for it to be enabled in the user interface
-        this.setState({enableStudentRecording: true});
       }
 
       this.log({
@@ -155,11 +148,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton, enableStudentRecording } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
-    // student recording is enabled per student with the combination of it being enabled by the glossary
-    // author along with it being enabled by the teacher in the dashboard per student
-    const enableStudentRecording = this.props.enableStudentRecording && this.state.enableStudentRecording;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
