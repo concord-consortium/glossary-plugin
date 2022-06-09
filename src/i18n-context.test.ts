@@ -45,7 +45,6 @@ describe("pluginContext", () => {
       it("should return the full set of default languages", () => {
         fetchGlossary(null, (x) => {
           expect(x.languageCodes.length).toBe(10);
-          expect(x.enableRecording).toBe(false);
         });
       });
     });
@@ -72,7 +71,6 @@ describe("pluginContext", () => {
         fetchGlossary(glossaryUrl, (x) => {
           expect(x.languageCodes).toContain("fr");
           expect(x.languageCodes).toContain("es");
-          expect(x.enableRecording).toBe(true);
         });
       });
     });

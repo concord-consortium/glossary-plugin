@@ -14,14 +14,12 @@ interface IProps {
 }
 
 interface IState {
-  supportedLanguageCodes: string[];
-  enableRecording: boolean;
+  supportedLanguageCodes: string[]
 }
 
 export default class DashboardApp extends React.Component<IProps, IState> {
   public state: IState = {
-    supportedLanguageCodes: SUPPORTED_LANGUAGES,
-    enableRecording: false
+    supportedLanguageCodes: SUPPORTED_LANGUAGES
   };
 
   public componentDidMount() {
@@ -30,7 +28,7 @@ export default class DashboardApp extends React.Component<IProps, IState> {
 
   public render() {
     const { classInfo, resourceUrl } = this.props;
-    const { supportedLanguageCodes, enableRecording } = this.state;
+    const { supportedLanguageCodes } = this.state;
     return (
       <div className={css.dashboardApp}>
         <div className={css.header}>
@@ -40,7 +38,6 @@ export default class DashboardApp extends React.Component<IProps, IState> {
           <LanguageSelector
             classInfo={classInfo}
             supportedLanguageCodes={supportedLanguageCodes}
-            enableRecording={enableRecording}
           />
           <StatsTableContainer classInfo={classInfo} resourceUrl={resourceUrl} />
         </div>
@@ -55,8 +52,8 @@ export default class DashboardApp extends React.Component<IProps, IState> {
   private loadGlossary = () => {
     const glossaryUrl = getHashParam(GLOSSARY_URL_PARAM);
     const callback = (options: IFetchGlossaryCallbackOptions) => {
-      const {languageCodes, enableRecording} = options;
-      this.setState({supportedLanguageCodes: languageCodes, enableRecording});
+      const {languageCodes} = options;
+      this.setState({supportedLanguageCodes: languageCodes});
     };
     fetchGlossary(glossaryUrl, callback);
   }
