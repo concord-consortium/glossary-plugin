@@ -23,12 +23,10 @@ const students = [
 const settings: IStudentSettings[] = [{
   userId: "student-a",
   preferredLanguage: "en",
-  enableRecording: true,
   scaffoldedQuestionLevel: 2
 }, {
   userId: "student-b",
   preferredLanguage: "es",
-  enableRecording: false,
   scaffoldedQuestionLevel: 3
 }];
 
@@ -45,7 +43,7 @@ describe("LanguageSelector component", () => {
   describe("when languages are not specified", () => {
     it("renders all the language options", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("en")).length).toEqual(0);
@@ -59,7 +57,7 @@ describe("LanguageSelector component", () => {
   describe("When languages are specified", () => {
     it("renders only the language defined in the glossary", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]} enableRecording={false}/>
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]} />
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("es")).length).toEqual(1);
@@ -71,7 +69,7 @@ describe("LanguageSelector component", () => {
   describe("Scaffolded Question Level slider", () => {
     it("has value based on student settings", async () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
       );
 
       wrapper.find(cyTanslationsSel).simulate("click");
@@ -90,7 +88,7 @@ describe("LanguageSelector component", () => {
 
     it("updates student settings when moved", async () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} enableRecording={false} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
       );
 
       wrapper.find(cyTanslationsSel).simulate("click");

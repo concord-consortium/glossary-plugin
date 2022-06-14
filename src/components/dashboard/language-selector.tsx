@@ -11,7 +11,6 @@ interface IProps {
   classInfo: IClassInfo;
   supportedLanguageCodes: string[];
   disableAria?: boolean;
-  enableRecording: boolean;
 }
 interface IState {
   studentSettings: IStudentSettings[];
@@ -34,14 +33,13 @@ const langName = (langCode: string) => POEDITOR_LANG_NAME[langCode] || langCode;
 const DEF_STUDENT_SETTINGS: IStudentSettings = {
   userId: "",
   preferredLanguage: NONE,
-  enableRecording: false,
   scaffoldedQuestionLevel: SCAFFOLDED_LEVEL_MIN
 };
 
 // 2019-11-19 NP: used to be '#app', but was failing under jest tests.
 Modal.setAppElement("body");
 
-type SettingName = "preferredLanguage" | "enableRecording" | "scaffoldedQuestionLevel";
+type SettingName = "preferredLanguage" | "scaffoldedQuestionLevel";
 
 export default class LanguageSelector extends React.Component<IProps, IState> {
   public state: IState = {
@@ -56,7 +54,7 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   public render() {
     const { modalIsOpen } = this.state;
-    const { classInfo, supportedLanguageCodes, enableRecording } = this.props;
+    const { classInfo, supportedLanguageCodes } = this.props;
     const { students } = classInfo;
     const languages = supportedLanguageCodes.concat(NONE).filter(s => s !== "en");
     return (
@@ -79,7 +77,6 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                 <tr>
                   {/* First empty header is for student names */}
                   <th />
-                  {enableRecording && <th />}
                   <th colSpan={languages.length} style={{textAlign: "center"}}>2nd Language</th>
                   <th colSpan={SCAFFOLDED_QUESTION_LEVELS.length} style={{textAlign: "center"}}>
                     Scaffolded Question Level
@@ -88,7 +85,6 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                 <tr>
                   {/* First empty header is for student names */}
                   <th />
-                  {enableRecording ? <th>Enable Recording</th> : undefined}
                   {
                     languages.map(lang =>
                       <th key={lang} data-cy={`language-${lang}`} className={css.langName}>
@@ -108,16 +104,6 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                   students.map((s: IStudent) =>
                     <tr key={s.id}>
                       <th>{s.name}</th>
-                      {enableRecording ?
-                        <td>
-                          <input
-                            type="checkbox"
-                            onChange={this.handleEnableRecordingChange(s)}
-                            checked={this.getStudentSettings(s).enableRecording}
-                          />
-                        </td>
-                        : undefined
-                      }
                       {
                         languages.map(lang =>
                           <td key={lang}>
@@ -174,7 +160,6 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
       const newSettings: IStudentSettings = {
         userId: student.id,
         preferredLanguage: setting === "preferredLanguage" ? e.target.value : studentSettings.preferredLanguage,
-        enableRecording: setting === "enableRecording" ? e.target.checked : studentSettings.enableRecording,
         scaffoldedQuestionLevel: setting === "scaffoldedQuestionLevel" ?
           // Note that steps are listed in reverse order: 5, 4, 3, 2, 1.
           scaffoldedLevelReversed(parseInt(e.target.value, 10)) : studentSettings.scaffoldedQuestionLevel
@@ -185,10 +170,6 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   private handleLangChange = (student: IStudent) => {
     return this.handleSaveStudentSetting(student, "preferredLanguage");
-  }
-
-  private handleEnableRecordingChange = (student: IStudent) => {
-    return this.handleSaveStudentSetting(student, "enableRecording");
   }
 
   private handleScaffoldedQuestionLevelChange = (student: IStudent) => {

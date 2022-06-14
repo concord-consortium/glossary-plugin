@@ -67,7 +67,6 @@ export const translate = (translations: any, lang: string, key: string, fallback
 
 export interface IFetchGlossaryCallbackOptions {
   languageCodes: string[];
-  enableRecording: boolean;
 }
 
 // Check glossary at glossaryUrl for `translations` keys and recording enabled.
@@ -82,8 +81,7 @@ export const fetchGlossary = (
       ? Object.keys(translations)
       : SUPPORTED_LANGUAGES;
     callback({
-      languageCodes,
-      enableRecording: !!glossary.enableStudentRecording
+      languageCodes
     });
   };
 
@@ -97,7 +95,7 @@ export const fetchGlossary = (
       console.warn(e);
     });
   } else {
-    callback({languageCodes: SUPPORTED_LANGUAGES, enableRecording: false});
+    callback({languageCodes: SUPPORTED_LANGUAGES});
   }
 };
 
