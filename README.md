@@ -50,10 +50,6 @@ are saved in localstorage and then re-read on page load.  This is useful for dev
 7. Click "Load Manifest JSON" and the remaining fields should auto-populate. Then click "Create Approved Script."
 8. You can now preview the glossary popup runtime in Activity Player, and the model authoring runtime in LARA.
 
-### Translations
-
-Translations for glossary terms are provided by glossary authors/editors, while translations for runtime text are stored in JSON files in the `src/lang` folder and are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
-
 ### A note on updating glossary popup styling
 
 Certain elements of the Glossary Popup including the header and outer divs are styled in two places for consistency across environments.
@@ -116,7 +112,7 @@ Note that you can define glossary inline or specify URL to a JSON that contains 
 
 ### Translations
 
-Translations are stored in JSON files in the `src/lang` folder are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
+Translations for glossary terms are provided by glossary authors/editors, while translations for runtime text are stored in JSON files in the `src/lang` folder and are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
 
 #### Translation Mappings
 
@@ -128,6 +124,15 @@ Due to the need to support translations of languages not available on poeditor.c
 | Maori (mi)        | Athabaskan      |
 | Marathi (mr)      | Inupiaq         |
 
+#### Adding a new translation
+
+1. Determine the language code and check if it is supported in POEditor by checking the `POEDITOR_LANG_CODE` map in the `poeditor-language-list.ts` file.
+2. If the language is NOT supported in POEditor choose a obscure language as an alias for the language and add a mapping for it in the `CUSTOM_LANG_NAME_MAPPING` map in the `poeditor-language-list.ts` file.
+3. In the poeditor.com web interface add a language using the language code selected.
+4. In `strings-pull-project.sh` add the new language code to the `LANGUAGES=(...)` list.
+5. Run `npm run strings:pull` after exporting the `POEDITOR_API_TOKEN` to pull down the new language json file.  Without any translations POEditor will use the English terms.  You can then run this again in the future when the translations have been entered in POEditor to update the json.
+6. In `add-translation.tsx` add a mapping for the new language in the `allLanguages` map.
+7. In `i8n-context.ts` add an import line to import the new language json file and then add a mapping of the new language code to the import in the `UI_TRANSLATIONS` map.
 
 #### Translations in the Dashboard (reporting)
 If you would like to limit the language selection choices in the dashboard to only languages that exist
