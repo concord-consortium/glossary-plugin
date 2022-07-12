@@ -7,8 +7,10 @@ import * as arLang from "./lang/ar.json";
 import * as ruLang from "./lang/ru.json";
 import * as gvLang from "./lang/gv.json";
 import * as miLang from "./lang/mi.json";
+import * as hawLang from "./lang/haw.json";
 import * as mrLang from "./lang/mr.json";
 import * as zhCNLang from "./lang/zh-CN.json";
+import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
 
 type ITranslateFunc = (key: string, fallback?: string | null, variables?: {[key: string]: string}) => string | null;
 
@@ -24,6 +26,7 @@ export const UI_TRANSLATIONS: {
   "gv": gvLang,
   "mi": miLang,
   "mr": mrLang,
+  "haw": hawLang,
 };
 
 export const SUPPORTED_LANGUAGES = Object.keys(UI_TRANSLATIONS);
@@ -46,9 +49,24 @@ export const defaultTranslate: ITranslateFunc = (key, fallback = null, variables
   return replaceVariables(result, variables);
 };
 
+export const translate = (translations: any, lang: string, key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
+  // Note that `translations` consist of authored translations like terms or image captions.
+  // UI translations consists of UI elements translations that are built into the app.
+  // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
+  // of some UI elements or prompts.
+  const result = translations[lang] && translations[lang][key] ||
+    translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
+    UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
+    UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
+    fallback;
+  if (!result) {
+    return result;
+  }
+  return replaceVariables(result, variables);
+}
+
 export interface IFetchGlossaryCallbackOptions {
   languageCodes: string[];
-  enableRecording: boolean;
 }
 
 // Check glossary at glossaryUrl for `translations` keys and recording enabled.
@@ -63,13 +81,12 @@ export const fetchGlossary = (
       ? Object.keys(translations)
       : SUPPORTED_LANGUAGES;
     callback({
-      languageCodes,
-      enableRecording: !!glossary.enableStudentRecording
+      languageCodes
     });
   };
 
   if (glossaryUrl) {
-    fetch(glossaryUrl)
+    fetch(ensureCorrectProtocol(glossaryUrl))
     .then( (response: Response) => {
       response.json().then(setLangs);
     })
@@ -78,7 +95,7 @@ export const fetchGlossary = (
       console.warn(e);
     });
   } else {
-    callback({languageCodes: SUPPORTED_LANGUAGES, enableRecording: false});
+    callback({languageCodes: SUPPORTED_LANGUAGES});
   }
 };
 

@@ -1,0 +1,25 @@
+.addTranslation {
+  margin: 30px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+
+  strong {
+    color: #0592af;
+  }
+
+  div, button {
+    white-space: nowrap;
+  }
+
+  button {
+    padding: 5px;
+    margin-top: 0px;
+  }
+
+  select {
+    padding: 5px;
+    width: 100%;
+  }
+}

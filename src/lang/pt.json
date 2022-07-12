@@ -12,5 +12,17 @@
     "allWords": "Todas as palavras",
     "speechTitle": "Leia em voz alta",
     "imageTitle": "Ver foto",
-    "videoTitle": "Ver filme"
+    "videoTitle": "Ver filme",
+    "diggingDeeperTitle": "Cavando mais fundo",
+    "viewDiggingDeeper": "Veja cavando mais fundo",
+    "zoomInTitle": "Ampliar",
+    "record": "Gravar",
+    "recording": "Gravação",
+    "savingRecording": "Salvando gravação",
+    "stopRecording": "Pare de gravar",
+    "playRecording": "Reproduzir gravação",
+    "deleteRecording": "Excluir gravação",
+    "recordingTimeLimitReached": "Você atingiu o limite de tempo de gravação",
+    "audioDefinition": "Definição de áudio %{index}",
+    "errorSavingRecording": "Erro ao salvar a gravação. Tente reenviar."
 }

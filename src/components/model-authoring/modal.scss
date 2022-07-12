@@ -1,0 +1,47 @@
+@import '../common/base.scss';
+
+.container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  height: 100vh;
+}
+
+.background {
+  background-color: #000a;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.content {
+  z-index: 2;
+  height: 85vh;
+  .header {
+    background-color: var(--teal);
+    color: white;
+    font: 700 18px 'Lato-Bold', helvetica, verdana, sans-serif;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    a {
+      margin-right: 20px;
+      color: white;
+    }
+    span {
+      margin-left: 20px;
+      cursor: pointer;
+      transform:scale(75%)
+    }
+  }
+}

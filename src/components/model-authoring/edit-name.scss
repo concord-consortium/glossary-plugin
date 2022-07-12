@@ -1,0 +1,22 @@
+.editName {
+  .inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    input {
+      flex-grow: 1;
+      padding: 5px;
+    }
+
+    button {
+      margin-right: 5px;
+      margin-top: 0px;
+    }
+  }
+
+  .error {
+    margin-top: 5px;
+    color: red;
+  }
+}

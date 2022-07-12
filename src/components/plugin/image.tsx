@@ -11,6 +11,8 @@ interface IProps {
   imageUrl?: string;
   zoomImageUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  disableReadAloud?: boolean;
 }
 
 interface IState {
@@ -38,15 +40,21 @@ export default class Image extends React.Component<IProps, IState> {
     return translate(term[TextKey.ImageCaption](word), imageCaption);
   }
 
+  public get translatedImageAltText() {
+    const { imageAltText, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.ImageAltText](word), imageAltText);
+  }
+
   public render() {
-    const { imageUrl, imageCaption, word } = this.props;
+    const { imageUrl, imageCaption, word, imageAltText, disableReadAloud } = this.props;
     const { imageZoomed } = this.state;
     const translate = this.context.translate;
     return (
       <>
         <div className={css.imageContainer}>
           <div className={css.imageWrapper} onClick={this.toggleImageZoom}>
-            <img src={imageUrl}/>
+            <img src={imageUrl} title={imageAltText ? this.translatedImageAltText : ""} alt={imageAltText ? this.translatedImageAltText : ""}/>
             <div className={css.zoomButton}>
               <span
                 className={icons.iconButton + " " + icons.iconZoomIn}
@@ -58,7 +66,7 @@ export default class Image extends React.Component<IProps, IState> {
             imageCaption &&
             <div className={css.caption}>
               {this.translatedImageCaption}
-              <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
+              {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
             </div>
           }
         </div>
@@ -68,7 +76,7 @@ export default class Image extends React.Component<IProps, IState> {
   }
 
   private renderZoomedImage() {
-    const {imageUrl, zoomImageUrl, word, imageCaption} = this.props;
+    const {imageUrl, zoomImageUrl, word, imageCaption, imageAltText, disableReadAloud} = this.props;
     return (
       <div className={css.zoomContainer}>
         <div className={css.zoomBackground} />
@@ -80,13 +88,13 @@ export default class Image extends React.Component<IProps, IState> {
           </div>
           </div>
           <div className={css.zoomImage} onClick={this.toggleImageZoom}>
-            <img src={zoomImageUrl || imageUrl} />
+            <img src={zoomImageUrl || imageUrl} title={imageAltText ? this.translatedImageAltText : ""} alt={imageAltText ? this.translatedImageAltText : ""}/>
           </div>
           <div className={css.zoomCaption}>
             {imageCaption ?
               <>
                 {this.translatedImageCaption}
-                <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />
+                {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
               </> : ""}
             </div>
         </div>

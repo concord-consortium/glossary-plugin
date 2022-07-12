@@ -87,7 +87,7 @@ describe("GlossaryPlugin", () => {
       // Also, it means that this function is being called twice - once by constructor and once here.
       // But it's designed to be idempotent, so that's fine.
       await plugin.renderPluginApp();
-      expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
+      expect(fetch).toHaveBeenCalledWith("https://test.url.com/state.json");
       expect(plugin.pluginAppComponent.props.definitions).toEqual(definitions);
       expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(true);
     });
@@ -100,7 +100,7 @@ describe("GlossaryPlugin", () => {
       // Also, it means that this function is being called twice - once by constructor and once here.
       // But it's designed to be idempotent, so that's fine.
       await plugin.renderPluginApp();
-      expect(fetch).toHaveBeenCalledWith("http://test.url.com/state.json");
+      expect(fetch).toHaveBeenCalledWith("https://test.url.com/state.json");
       expect(plugin.pluginAppComponent.props.definitions).toEqual([]);
       expect(plugin.pluginAppComponent.props.askForUserDefinition).toEqual(false);
     });

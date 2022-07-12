@@ -3,13 +3,12 @@ import * as ReactDOM from "react-dom";
 import PluginApp from "./components/plugin/plugin-app";
 import "whatwg-fetch"; // window.fetch polyfill for older browsers (IE)
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { FIREBASE_APP, signInWithToken } from "./db";
 import AuthoringApp, { IGlossaryAuthoredState } from "./components/authoring/authoring-app";
-import { IGlossary } from "./types";
-import { IJwtClaims } from "@concord-consortium/lara-plugin-api";
-import { parseUrl } from "./utils/get-url-param";
+import { IGlossary, IGlossaryModelAuthoringInfo } from "./types";
 import { syncLogEventsToFirestore, setStudentInfo } from "./components/plugin/offline-storage";
 import { getStudentInfo } from "./utils/get-student-info";
+import { renderGlossaryModelAuthoring } from "./components/model-authoring/model-authoring-app";
+import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
 
 const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
   const defaultState: IGlossaryAuthoredState = {
@@ -31,7 +30,7 @@ const getGlossaryInfo = (context: PluginAPI.IPluginRuntimeContext) => {
 
 const getGlossaryDefinition = async (authoredState: IGlossaryAuthoredState) => {
   if (typeof authoredState.s3Url === "string") {
-    const response = await fetch(authoredState.s3Url);
+    const response = await fetch(ensureCorrectProtocol(authoredState.s3Url));
     try {
       const textResponse = await response.text();
       return JSON.parse(textResponse);
@@ -99,6 +98,7 @@ export class GlossaryPlugin {
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
         enableStudentRecording={authoredState.enableStudentRecording || false}
         enableStudentLanguageSwitching={authoredState.enableStudentLanguageSwitching || false}
+        disableReadAloud={authoredState.disableReadAloud || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}
         studentInfo={studentInfo}
@@ -106,6 +106,7 @@ export class GlossaryPlugin {
         resourceUrl={this.context.resourceUrl}
         laraLog={this.context.log}
         offlineMode={this.context.offlineMode}
+        showIDontKnowButton={authoredState.showIDontKnowButton || false}
       />,
       // It can be any other element in the document. Note that PluginApp render everything using React Portals.
       // It renders child components into external containers sent to LARA, not into context.div
@@ -143,6 +144,13 @@ export class GlossaryAuthoringPlugin {
 }
 
 export const initPlugin = () => {
+  // check if we are being loaded in the LARA glossary edit page
+  const glossaryModelAuthoring = (window as any).LARA?.GlossaryModelAuthoring as IGlossaryModelAuthoringInfo | undefined;
+  if (glossaryModelAuthoring) {
+    renderGlossaryModelAuthoring(glossaryModelAuthoring)
+    return
+  }
+
   if (!PluginAPI || !PluginAPI.registerPlugin) {
     // tslint:disable-next-line:no-console
     console.warn("LARA Plugin API not available, GlossaryPlugin terminating");

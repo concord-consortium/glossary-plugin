@@ -4,7 +4,7 @@ import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
 import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
-import { UI_TRANSLATIONS, DEFAULT_LANG, replaceVariables,  } from "../../i18n-context";
+import { DEFAULT_LANG, translate } from "../../i18n-context";
 import { pluginContext } from "../../plugin-context";
 import { watchStudentSettings, sendLogEventToFirestore } from "../../db";
 import { ILogEvent, ILogEventPartial } from "../../types";
@@ -46,6 +46,7 @@ interface IProps {
   autoShowMediaInPopup: boolean;
   enableStudentRecording: boolean;
   enableStudentLanguageSwitching: boolean;
+  disableReadAloud: boolean;
   showSideBar: boolean;
   translations: {
     [languageCode: string]: ITranslation
@@ -55,6 +56,7 @@ interface IProps {
   resourceUrl?: string;
   laraLog?: (event: string | PluginAPI.ILogData) => void;
   offlineMode: boolean;
+  showIDontKnowButton: boolean;
 }
 
 export interface IDefinitionsByWord {
@@ -69,7 +71,6 @@ interface IState {
   secondLanguage?: string;
   otherLanguages: string[];
   definitionsByWord: IDefinitionsByWord;
-  enableStudentRecording: boolean;
 }
 
 export default class PluginApp extends React.Component<IProps, IState> {
@@ -80,8 +81,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     lang: DEFAULT_LANG,
     secondLanguage: undefined,
     otherLanguages: [],
-    definitionsByWord: {},
-    enableStudentRecording: false
+    definitionsByWord: {}
   };
   private sidebarContainer: HTMLElement;
   private sidebarIconContainer: HTMLElement;
@@ -130,31 +130,26 @@ export default class PluginApp extends React.Component<IProps, IState> {
       if (studentInfo) {
         watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
           const { translations } = this.props;
-          if (translations[settings.preferredLanguage]) {
-            // Preferred language is available, so we can use it.
-            this.setState({ secondLanguage: settings.preferredLanguage });
-          } else {
-            // Preferred language is not available, do not show second language button.
-            this.setState({ lang: DEFAULT_LANG, secondLanguage: undefined });
-          }
+          const { preferredLanguage } = settings;
 
-          // add per-student recording toggle
-          this.setState({enableStudentRecording: settings.enableRecording});
+          // ensure the second language set by the teacher is available in the translations before setting
+          // and add per-student recording toggle set by the teacher
+          this.setState({
+            lang: DEFAULT_LANG,
+            secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined
+           });
         }));
-
-        this.log({
-          event: "plugin init"
-        });
       }
+
+      this.log({
+        event: "plugin init"
+      });
     });
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton, enableStudentRecording } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
-    // student recording is enabled per student with the combination of it being enabled by the glossary
-    // author along with it being enabled by the teacher in the dashboard per student
-    const enableStudentRecording = this.props.enableStudentRecording && this.state.enableStudentRecording;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
     // It's possible to return array instead, but it seems to cause some cryptic errors in tests.
@@ -171,6 +166,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
                 learnerDefinitions={askForUserDefinition ? learnerState.definitions : {}}
                 languages={this.languages}
                 onLanguageChange={this.languageChanged}
+                disableReadAloud={disableReadAloud}
               />,
               this.sidebarContainer
             )
@@ -197,7 +193,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   zoomImageUrl={glossaryItem.zoomImage}
                   videoUrl={glossaryItem.video}
                   imageCaption={glossaryItem.imageCaption}
+                  imageAltText={glossaryItem.imageAltText}
                   videoCaption={glossaryItem.videoCaption}
+                  videoAltText={glossaryItem.videoAltText}
+                  closedCaptionsUrl={glossaryItem.closedCaptionsUrl}
                   userDefinitions={learnerState.definitions[word]}
                   askForUserDefinition={askForUserDefinition}
                   autoShowMedia={autoShowMediaInPopup}
@@ -206,6 +205,9 @@ export default class PluginApp extends React.Component<IProps, IState> {
                   languages={this.languages}
                   onLanguageChange={this.languageChanged}
                   studentInfo={studentInfo}
+                  disableReadAloud={disableReadAloud}
+                  showIDontKnowButton={showIDontKnowButton}
+                  diggingDeeper={glossaryItem.diggingDeeper}
                 />,
                 container
               );
@@ -236,21 +238,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
-    const { translations } = this.props;
-    const { lang } = this.state;
-    // Note that `translations` consist of authored translations like terms or image captions.
-    // UI translations consists of UI elements translations that are built into the app.
-    // It's okay mix these two, as keys are distinct and actually authors might want to customize translations
-    // of some UI elements or prompts.
-    const result = translations[lang] && translations[lang][key] ||
-      translations[DEFAULT_LANG] && translations[DEFAULT_LANG][key] ||
-      UI_TRANSLATIONS[lang] && UI_TRANSLATIONS[lang][key] ||
-      UI_TRANSLATIONS[DEFAULT_LANG] && UI_TRANSLATIONS[DEFAULT_LANG][key] ||
-      fallback;
-    if (!result) {
-      return result;
-    }
-    return replaceVariables(result, variables);
+    return translate(this.props.translations, this.state.lang, key, fallback, variables);
   }
 
   public log = (event: ILogEventPartial) => {

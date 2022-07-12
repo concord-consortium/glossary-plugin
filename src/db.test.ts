@@ -100,7 +100,6 @@ describe("db / Firestore helpers", () => {
       const settings: IStudentSettings = {
         userId: "testStudent123",
         preferredLanguage: "es",
-        enableRecording: true,
         scaffoldedQuestionLevel: 1
       };
       db.saveStudentSettings("test.portal", "testClass", settings);

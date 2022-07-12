@@ -1,0 +1,40 @@
+@import '../common/base.scss';
+
+.previewModal {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--lt-gray);
+  padding: 20px;
+  justify-content: center;
+
+  .select {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    select {
+      padding: 5px;
+      width: 100%;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+
+    button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.previous {
+        width: 134px;
+      }
+
+      &.next {
+        width: 106px;
+      }
+    }
+  }
+}

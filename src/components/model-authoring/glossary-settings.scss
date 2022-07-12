@@ -1,0 +1,48 @@
+@import '../common/base.scss';
+
+.glossarySettings {
+  background-color: var(--lt-gray);
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    font: 700 16px 'Lato-Bold', helvetica, verdana, sans-serif;
+    margin-block-start: 10px;
+    margin-block-end: 10px;
+  }
+
+  h2.termPopup {
+    margin-block-start: 0px;
+  }
+
+  .settingInformation {
+    padding-top: 20px;
+
+    .checkboxRow {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 10px;
+
+      label {
+        padding-left: 5px;
+        font: 700 16px 'Lato-Bold', helvetica, verdana, sans-serif;
+      }
+    }
+
+    .help {
+      color: #666;
+      font-size: .95em;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  .nestedOptions {
+    margin-left: 20px;
+  }
+
+  .disabled {
+    opacity: 50%;
+  }
+}

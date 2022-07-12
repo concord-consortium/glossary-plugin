@@ -3,12 +3,15 @@ export interface IGlossary {
   showSideBar: boolean;
   definitions: IWordDefinition[];
   autoShowMediaInPopup: boolean;
+  showIDontKnowButton: boolean;
   enableStudentRecording: boolean;
+  disableReadAloud: boolean;
   enableStudentLanguageSwitching: boolean;
-  translations?: {
-    [languageCode: string]: ITranslation
-  };
+  translations?: ITranslationMap;
+  tokenServiceResourceId?: string;
 }
+
+export type ITranslationMap = Record<string, ITranslation>;
 
 export interface ITranslation {
   [word: string]: string;
@@ -17,11 +20,17 @@ export interface ITranslation {
 export interface IWordDefinition {
   word: string;
   definition: string;
+  diggingDeeper?: string;
   image?: string;
   zoomImage?: string;
   video?: string;
   imageCaption?: string;
+  imageAltText?: string;
   videoCaption?: string;
+  videoAltText?: string,
+  closedCaptionsUrl?: string,
+  createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface ILearnerDefinitions {
@@ -42,7 +51,6 @@ export interface IClassInfo {
 export interface IStudentSettings {
   userId: string;
   preferredLanguage: string;
-  enableRecording: boolean;
   scaffoldedQuestionLevel: number;
 }
 
@@ -117,3 +125,21 @@ export type ILogEventPartial = ISimpleEventPartial | ITermClickedEventPartial | 
   IDefinitionSavedEventPartial | ITextToSpeechClickedEventPartial | ILanguageChangedPartial;
 
 export type ExpandableInteraction = "definitions" | "supports";
+
+// for new model authoring
+
+export interface IGlossaryModelAuthoringInitialData {
+  id: number
+  name: string
+  json: IGlossary
+  canEdit: boolean
+}
+
+export interface IGlossaryModelAuthoringInfo {
+  apiUrl: string;
+  containerId: string;
+  initialData: IGlossaryModelAuthoringInitialData;
+  getFirebaseJwtUrl: (appName: string) => string;
+}
+
+export type IGlossarySettings = Omit<Omit<IGlossary, "definitions">, "translations">;

@@ -1,4 +1,4 @@
-# Glossary LARA plugin
+\# Glossary LARA plugin
 
 ## LARA Plugin URL:
 
@@ -10,7 +10,56 @@ E.g.:
 - https://glossary-plugin.concord.org/version/1.0.0/plugin.js
 - https://glossary-plugin.concord.org/version/1.1.0/plugin.js
 
-## Authoring page
+
+## New Authoring
+
+Originally the glossary plugin supported an authoring class that was instantiated in a popup.  The new authoring renders a full page editing system that supports fully modeled glossaries in LARA.
+
+Authors can create glossaries in the same way they can create activities and sequences.  The edit page of the glossary creates a new window level Javascript variable off the `LARA` window variable containing init information for the new authoring.  It the loads the glossary plugin which has a check for this new variable, and if present, renders the new glossary authoring page.
+
+To support faster development a demo page is also available that acts as a fake LARA host.  When running locally it is available at:
+
+http://localhost:8080/model-authoring-demo.html
+
+There are two query parameters, described in the next section, that can be used to further ease development by allowing saves in the demo and displaying the current raw glossary JSON.
+
+### Query Parameters
+
+There are a few query query parameters that are checked in the glossary model authoring:
+
+1. `dangerouslyEditJson` - when this is `true` a textarea is shown at the top of the page that allows
+direct edits of the glossary JSON.  As noted by the parameter name this can be dangerous as no validation
+is done other than to validate it parses as JSON.  This will be used to port over existing glossaries.
+NOTE: the JSON shown is the initial glossary JSON, any updates done in the UI are not reflected in the
+textarea.
+
+2. `debugJson` - when this is `true` a div is shown at the bottom of the page with a static view of the
+JSON.  This is useful for debugging.
+
+3. `saveInDemo` - when this is `true` in the `model-authoring-demo.html` url any changes made in the demo
+are saved in localstorage and then re-read on page load.  This is useful for development.
+
+### Local setup in combination with LARA and AP runtime
+
+1. In your code editor, open the [activity player repo](https://github.com/concord-consortium/activity-player), cd into it and npm start.
+2. In another window of your code editor, open this repo, cd into and npm start.
+3. In a third window, open the [LARA repo](https://github.com/concord-consortium/lara) and run docker-compose-up.
+4. In your browser, navigate to http://app.lara.docker.
+5. Login to LARA at and navigate to "Plugins" > "Create New Approved Script".
+6. Paste in "http://localhost:`<PORT>`/manifest.json", with `<PORT>` as wherever you are currently hosting glossary-plugin.
+7. Click "Load Manifest JSON" and the remaining fields should auto-populate. Then click "Create Approved Script."
+8. You can now preview the glossary popup runtime in Activity Player, and the model authoring runtime in LARA.
+
+### A note on updating glossary popup styling
+
+Certain elements of the Glossary Popup including the header and outer divs are styled in two places for consistency across environments.
+The styling for the relevant elements in model authoring can be found [here](https://github.com/concord-consortium/glossary-plugin/blob/new-sections/src/components/model-authoring/term-popup-preview.scss).
+In Activity Player, the elements are styled [here](https://github.com/concord-consortium/activity-player/blob/master/src/components/activity-page/plugins/glossary-plugin.scss).
+Any styling changes to the Glossary Popup that affect the shared elements should be updated in both places.
+
+
+## Old Authoring
+### Authoring page
 
 https://glossary-plugin.concord.org/authoring.html
 
@@ -29,7 +78,7 @@ https://console.aws.amazon.com/iam/home#/groups/Glossary-S3-Access
 
 It limits access to their own directory based on the username (IAM username and username on the authoring page have to match).
 
-## Authored state format
+### Authored state format
 
 Authoring page UI should always generate a correct JSON. Existing format example:
 
@@ -61,11 +110,11 @@ Note that you can define glossary inline or specify URL to a JSON that contains 
 }
 ```
 
-## Translations
+### Translations
 
-Translations are stored in JSON files in the `src/lang` folder are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
+Translations for glossary terms are provided by glossary authors/editors, while translations for runtime text are stored in JSON files in the `src/lang` folder and are managed using poeditor.com.  To add new strings update the `en.json` file and run `npm run strings:push` after running `export POEDITOR_API_TOKEN=<TOKEN>` where `<TOKEN>` can be found under your user settings in poeditor.com.  To pull down translations run  `npm run strings:pull` after exporting the api token.
 
-### Translation Mappings
+#### Translation Mappings
 
 Due to the need to support translations of languages not available on poeditor.com we have coopted existing languages we don't plan to use and mapped them to the unsupported languages.  Here is the current mapping:
 
@@ -75,8 +124,17 @@ Due to the need to support translations of languages not available on poeditor.c
 | Maori (mi)        | Athabaskan      |
 | Marathi (mr)      | Inupiaq         |
 
+#### Adding a new translation
 
-### Translations in the Dashboard (reporting)
+1. Determine the language code and check if it is supported in POEditor by checking the `POEDITOR_LANG_CODE` map in the `poeditor-language-list.ts` file.
+2. If the language is NOT supported in POEditor choose a obscure language as an alias for the language and add a mapping for it in the `CUSTOM_LANG_NAME_MAPPING` map in the `poeditor-language-list.ts` file.
+3. In the poeditor.com web interface add a language using the language code selected.
+4. In `strings-pull-project.sh` add the new language code to the `LANGUAGES=(...)` list.
+5. Run `npm run strings:pull` after exporting the `POEDITOR_API_TOKEN` to pull down the new language json file.  Without any translations POEditor will use the English terms.  You can then run this again in the future when the translations have been entered in POEditor to update the json.
+6. In `add-translation.tsx` add a mapping for the new language in the `allLanguages` map.
+7. In `i8n-context.ts` add an import line to import the new language json file and then add a mapping of the new language code to the import in the `UI_TRANSLATIONS` map.
+
+#### Translations in the Dashboard (reporting)
 If you would like to limit the language selection choices in the dashboard to only languages that exist
 in the glossary definition then you can append a hash parameter to the dashboard report url in the portal.
 To specify the glossary URL in the external-report url, add  `#glossaryUrl=<uri-encoded glossary url>`

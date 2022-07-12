@@ -18,7 +18,8 @@ module.exports = (env, argv) => {
       demo: './src/demo.tsx',
       plugin: './src/plugin.tsx',
       authoring: './src/authoring.tsx',
-      dashboard: './src/dashboard.tsx'
+      dashboard: './src/dashboard.tsx',
+      'model-authoring-demo': './src/model-authoring-demo.tsx'
     },
     mode: devMode ? 'development' : 'production',
     performance: { hints: false },

@@ -22,7 +22,7 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
     return (
       <Button
         data-cy="langToggle"
-        className={`${css.langButton} ${selected ? css.selected : ""}`}
+        className={`${css.langButton} ${lang === "en" ? css.en : css.secondLang } ${selected ? css.selected : ""}`}
         label={POEDITOR_LANG_NAME[lang].replace("_", " ")}
         onClick={this.handleButtonClick}
       />

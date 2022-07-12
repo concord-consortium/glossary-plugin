@@ -13,6 +13,8 @@ describe("#glossaryToPOEditorTerms", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      showIDontKnowButton: false,
+      disableReadAloud: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false
     });
@@ -37,6 +39,8 @@ describe("#isTranslationComplete", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      showIDontKnowButton: false,
+      disableReadAloud: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false,
       translations: {
@@ -61,7 +65,9 @@ describe("#isTranslationComplete", () => {
       askForUserDefinition: false,
       showSideBar: false,
       autoShowMediaInPopup: false,
+      showIDontKnowButton: false,
       enableStudentRecording: false,
+      disableReadAloud: false,
       enableStudentLanguageSwitching: false,
       translations: {
         es: {

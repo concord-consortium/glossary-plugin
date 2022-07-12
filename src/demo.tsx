@@ -6,8 +6,6 @@ import GlossarySidebar from "./components/plugin/glossary-sidebar";
 const userDefinitions = ["I don't know", "Still not sure", "Something in the ear", "A membrane"];
 const newUserDefinition = (userDefinition: string) => {
   userDefinitions.push(userDefinition);
-  // tslint:disable-next-line:no-console
-  console.log("User definition:", userDefinition);
 };
 
 // tslint:disable-next-line:max-line-length
@@ -27,6 +25,7 @@ ReactDOM.render(
     videoCaption="Source: Wikimedia. This video is unrelated to an eardrum. This is a test caption."
     userDefinitions={[]}
     demoMode={true}
+    disableReadAloud={false}
   />,
   document.getElementById("popup1") as HTMLElement
 );
@@ -43,6 +42,7 @@ ReactDOM.render(
     userDefinitions={[]}
     autoShowMedia={true}
     demoMode={true}
+    disableReadAloud={false}
   />,
   document.getElementById("popup2") as HTMLElement
 );
@@ -61,6 +61,7 @@ ReactDOM.render(
     enableStudentRecording={true}
     onUserDefinitionsUpdate={newUserDefinition}
     demoMode={true}
+    disableReadAloud={false}
   />,
   document.getElementById("popup3") as HTMLElement
 );
@@ -82,6 +83,7 @@ ReactDOM.render(
       }
     ]}
     learnerDefinitions={{cloud: ["I don't know", "Still not sure", "Something in the air", "White fluffy thing"]}}
+    disableReadAloud={false}
   />,
   document.getElementById("sidebar") as HTMLElement
 );
@@ -691,6 +693,7 @@ ReactDOM.render(
   <GlossarySidebar
     definitions={bigGlossary}
     learnerDefinitions={{morbi: ["diam elementum posuere nunc"], justo: ["rhoncus nullam egestas bibendum"]}}
+    disableReadAloud={false}
   />,
   document.getElementById("sidebar-big") as HTMLElement
 );

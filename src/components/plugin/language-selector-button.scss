@@ -1,9 +1,30 @@
+@import '../common/base.scss';
+
 .langButton {
+  border: 2px solid #fff;
   padding: 5px 10px;
   text-align: center;
-}
-
-.selected {
-  background-color: #777;
   color: #fff;
+  background-color: var(#c9c9c9);
+  width: 65px;
+
+  &:hover {
+    background-color: #b4b4b4;
+  }
+
+  &.selected {
+    background-color: var(--teal);
+    color: #fff;
+  }
+
+  &.en{
+    border-radius: 5px 0px 0px 5px;
+    border-width: 1px;
+  }
+
+  &.secondLang {
+    margin-left: 0px;
+    border-width: 1px 1px 1px 0px;
+    border-radius: 0px 5px 5px 0px;
+  }
 }

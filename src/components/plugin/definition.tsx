@@ -1,25 +1,34 @@
 import * as React from "react";
-import * as css from "./definition.scss";
-import * as icons from "../common/icons.scss";
 import { pluginContext } from "../../plugin-context";
 import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
 import Image from "./image";
+import Video from "./video";
+import DiggingDeeper from "./digging-deeper";
+
+import * as css from "./definition.scss";
+import * as icons from "../common/icons.scss";
 
 interface IProps {
   word: string;
   definition: string;
+  diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
-  videoUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  videoUrl?: string;
   videoCaption?: string;
+  videoAltText?: string;
+  closedCaptionsUrl?: string;
   autoShowMedia?: boolean;
+  disableReadAloud?: boolean;
 }
 
 interface IState {
   imageVisible: boolean;
   videoVisible: boolean;
+  diggingDeeperVisible: boolean;
 }
 
 export default class Definition extends React.Component<IProps, IState> {
@@ -29,6 +38,7 @@ export default class Definition extends React.Component<IProps, IState> {
     imageVisible: !!this.props.imageUrl && !!this.props.autoShowMedia,
     // Video is loaded automatically only if there's no image.
     videoVisible: !!this.props.videoUrl && !this.props.imageUrl && !!this.props.autoShowMedia,
+    diggingDeeperVisible: false,
   };
 
   public componentDidMount() {
@@ -48,16 +58,22 @@ export default class Definition extends React.Component<IProps, IState> {
     return translate(term[TextKey.Definition](word), definition);
   }
 
+  public get translatedDiggingDeeper() {
+    const { diggingDeeper, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.DiggingDeeper](word), diggingDeeper)
+  }
+
   public get translatedImageCaption() {
     const { imageCaption, word } = this.props;
     const translate = this.context.translate;
     return translate(term[TextKey.ImageCaption](word), imageCaption);
   }
 
-  public get translatedVideoCaption() {
-    const { videoCaption, word } = this.props;
+  public get translatedImageAltText() {
+    const { imageAltText, word } = this.props;
     const translate = this.context.translate;
-    return translate(term[TextKey.VideoCaption](word), videoCaption);
+    return translate(term[TextKey.ImageAltText](word), imageAltText);
   }
 
   public renderImageButton(imageUrl?: string) {
@@ -88,20 +104,37 @@ export default class Definition extends React.Component<IProps, IState> {
     return null;
   }
 
+  public renderDiggingDeeperButton(diggingDeeper?: string) {
+    if (diggingDeeper) {
+      const translate = this.context.translate;
+      return(
+        <span
+          className={icons.iconButton + " " + icons.iconDiggingDeeper}
+          onClick={this.toggleDiggingDeeper}
+          title={translate("viewDiggingDeeper")}
+        />
+      )
+    }
+  }
+
   public render() {
-    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, videoCaption, word, definition } = this.props;
-    const { imageVisible, videoVisible, } = this.state;
-    const translate = this.context.translate;
+    const { imageUrl, zoomImageUrl, videoUrl, imageCaption, imageAltText, videoCaption, videoAltText, closedCaptionsUrl, word, definition, diggingDeeper, disableReadAloud } = this.props;
+    const { imageVisible, videoVisible, diggingDeeperVisible } = this.state;
+    const hasDefinition = definition.length > 0
     return (
       <div>
-        <div>
+        {hasDefinition && <div>
           <span className={css.disableSelect}>{this.translatedDefinition}</span>
           <span className={css.icons}>
-          <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />
-          {this.renderImageButton(imageUrl)}
-          {this.renderVideoButton(videoUrl)}
-        </span>
-        </div>
+            {!disableReadAloud && <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />}
+            {this.renderImageButton(imageUrl)}
+            {this.renderVideoButton(videoUrl)}
+            {this.renderDiggingDeeperButton(diggingDeeper)}
+          </span>
+        </div>}
+        { diggingDeeperVisible &&
+          <DiggingDeeper word={word} diggingDeeper={diggingDeeper} disableReadAloud={disableReadAloud}/>
+        }
         {
           imageVisible &&
           <Image
@@ -110,20 +143,21 @@ export default class Definition extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            imageAltText={imageAltText}
+            disableReadAloud={disableReadAloud}
           />
         }
         {
           videoVisible &&
-          <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true}/>
-            {
-              videoCaption &&
-              <div className={css.caption}>
-                {this.translatedVideoCaption}
-                <TextToSpeech text={this.translatedVideoCaption} word={word} textKey={TextKey.VideoCaption} />
-              </div>
-            }
-          </div>
+            <Video
+              word={word}
+              definition={definition}
+              videoUrl={videoUrl}
+              videoCaption={videoCaption}
+              videoAltText={videoAltText}
+              closedCaptionsUrl={closedCaptionsUrl}
+              disableReadAloud={disableReadAloud}
+            />
         }
       </div>
     );
@@ -160,6 +194,26 @@ export default class Definition extends React.Component<IProps, IState> {
         event: "video icon clicked",
         word
       });
+    }
+  }
+
+  private toggleDiggingDeeper = () => {
+    const { diggingDeeperVisible } = this.state;
+    const { word } = this.props;
+    const newValue = !diggingDeeperVisible;
+    this.setState({
+      diggingDeeperVisible: newValue,
+    });
+    if (newValue) {
+      this.context.log({
+        event: "digging deeper definition opened",
+        word
+      })
+    } else {
+      this.context.log({
+        event: "digging deeper definition closed",
+        word
+      })
     }
   }
 }

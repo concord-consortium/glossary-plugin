@@ -1,13 +1,12 @@
 import * as React from "react";
 import Definition from "./definition";
 import UserDefinitions from "./user-definitions";
-import Button from "../common/button";
-import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
 import { pluginContext } from "../../plugin-context";
 import { TextKey, term } from "../../utils/translation-utils";
 import { uploadRecording } from "../../db";
 import RecordProgress from "./record-progress";
 import Image from "./image";
+import Video from "./video";
 import TextToSpeech from "./text-to-speech";
 import { IStudentInfo } from "../../types";
 import { isAudioUrl, getAudio, isAudioOrRecordingUrl } from "../../utils/audio";
@@ -30,14 +29,20 @@ interface IProps {
   definition: string;
   userDefinitions?: string[];
   askForUserDefinition?: boolean;
+  disableReadAloud?: boolean;
+  showIDontKnowButton?: boolean;
   enableStudentRecording?: boolean;
   autoShowMedia?: boolean;
   onUserDefinitionsUpdate?: (userDefinitions: string) => void;
+  diggingDeeper?: string;
   imageUrl?: string;
   zoomImageUrl?: string;
-  videoUrl?: string;
   imageCaption?: string;
+  imageAltText?: string;
+  videoUrl?: string;
   videoCaption?: string;
+  videoAltText?: string;
+  closedCaptionsUrl?: string;
   languages?: ILanguage[];
   onLanguageChange?: (newLang: string) => void;
   studentInfo?: IStudentInfo;
@@ -75,6 +80,12 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     this.setState({canRecord: this.canRecord(nextProps)});
   }
 
+  public get translatedWord() {
+    const { word } = this.props;
+    const i18n = this.context;
+    return i18n.translate(term[TextKey.Word](word), word);
+  }
+
   public get mainPrompt() {
     const { word } = this.props;
     const i18n = this.context;
@@ -87,6 +98,18 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
     return anyUserDef ? i18n.translate("writeNewDefinition") : i18n.translate("writeDefinition");
+  }
+
+  public get translatedVideoCaption() {
+    const { videoCaption, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.VideoCaption](word), videoCaption);
+  }
+
+  public get translatedVideoAltText() {
+    const { videoAltText, word } = this.props;
+    const translate = this.context.translate;
+    return translate(term[TextKey.VideoAltText](word), videoAltText);
   }
 
   public render() {
@@ -104,8 +127,8 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderDefinition() {
-    const { askForUserDefinition, autoShowMedia, definition, userDefinitions, imageUrl, zoomImageUrl,
-      videoUrl, imageCaption, videoCaption, word } = this.props;
+    const { askForUserDefinition, autoShowMedia, definition, diggingDeeper, disableReadAloud, userDefinitions, imageUrl,
+      zoomImageUrl, imageAltText, videoUrl, imageCaption, videoCaption, videoAltText, closedCaptionsUrl, word } = this.props;
     const i18n = this.context;
     /*
       this code:
@@ -128,12 +151,17 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         <Definition
           word={word}
           definition={definition}
+          diggingDeeper={diggingDeeper}
           imageUrl={imageUrl}
           zoomImageUrl={zoomImageUrl}
-          videoUrl={videoUrl}
           imageCaption={imageCaption}
+          imageAltText={imageAltText}
+          videoUrl={videoUrl}
           videoCaption={videoCaption}
+          videoAltText={videoAltText}
+          closedCaptionsUrl={closedCaptionsUrl}
           autoShowMedia={autoShowMedia}
+          disableReadAloud={disableReadAloud}
         />
         {
           askForUserDefinition && userDefinitions && userDefinitions.length > 0 &&
@@ -147,13 +175,14 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestion() {
-    const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, definition,
-            videoUrl, autoShowMedia } = this.props;
+    const { word, userDefinitions, imageUrl, zoomImageUrl, imageCaption, imageAltText, definition,
+            videoUrl, videoAltText, videoCaption, closedCaptionsUrl, autoShowMedia, showIDontKnowButton, disableReadAloud } = this.props;
     const { currentUserDefinition, recordingState } = this.state;
     const recording = recordingState !== RecordingState.NotRecording;
-    const canSubmit = recordingState !== RecordingState.Recording;
+    const canSubmit = recordingState !== RecordingState.Recording && currentUserDefinition;
     const i18n = this.context;
     const anyUserDef = userDefinitions && userDefinitions.length > 0;
+     // tslint:disable-next-line:no-console
     return (
       <div>
         {
@@ -164,16 +193,24 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             imageUrl={imageUrl}
             zoomImageUrl={zoomImageUrl}
             imageCaption={imageCaption}
+            imageAltText={imageAltText}
+            disableReadAloud={disableReadAloud}
           />
         }
         {
           autoShowMedia && !imageUrl && videoUrl &&
-          <div className={css.imageContainer}>
-            <video src={videoUrl} controls={true}/>
-          </div>
+            <Video
+              word={word}
+              definition={definition}
+              videoUrl={videoUrl}
+              videoCaption={videoCaption}
+              videoAltText={videoAltText}
+              closedCaptionsUrl={closedCaptionsUrl}
+              disableReadAloud={disableReadAloud}
+            />
         }
         {this.mainPrompt}
-        <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />
+        {!disableReadAloud && <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />}
         <div className={css.answerTextarea}>
           {recording && this.renderRecording()}
           {!recording &&
@@ -204,6 +241,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
             {i18n.translate("submit")}
           </div>
           {/* Button is different depending whether user sees the question for the fist time or not */}
+          { showIDontKnowButton &&
           <div
             className={css.button}
             data-cy="cancel"
@@ -211,6 +249,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           >
             {anyUserDef ? i18n.translate("cancel") : i18n.translate("iDontKnowYet")}
           </div>
+          }
         </div>
       </div>
     );
@@ -231,7 +270,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
       case RecordingState.Recording:
         recordingContents = (
           <>
-            {i18n.translate("recording")} …
+            <div className={css.text}>{i18n.translate("recording")} …</div>
             <div className={css.recordingIcons}>
               <RecordProgress
                 startTime={recordingStartTime}
@@ -239,7 +278,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
                 onClick={this.handleStopRecording}
                 title={i18n.translate("stopRecording")}
               >
-                <span className={icons.iconButton + " " + icons.iconStop} />
+                <span className={icons.iconButton + " " + icons.iconStop + " " + css.stopIcon} />
               </RecordProgress>
             </div>
           </>
@@ -289,13 +328,13 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
   }
 
   private renderQuestionIcons() {
-    const { word } = this.props;
+    const { word, disableReadAloud } = this.props;
     const { currentUserDefinition, canRecord } = this.state;
     const i18n = this.context;
     if (!currentUserDefinition) {
       return (
         <div className={css.answerTextareaIcons}>
-          <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />
+          {!disableReadAloud && <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />}
           {canRecord && <span
             data-cy="recordButton"
             className={icons.iconButton + " " + icons.iconRecord}
@@ -396,7 +435,9 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.updateRecording({nextState: RecordingState.Recording, clearRecording: true});
-        this.mediaRecorder = new MediaRecorder(stream);
+        // find the first supported audio format in the order of most supported cross browser
+        const audioMimeType = ["audio/webm", "audio/mpeg", "audio/mp4", "audio/ogg"].find(m => MediaRecorder.isTypeSupported(m));
+        this.mediaRecorder = new MediaRecorder(stream, {mimeType: audioMimeType});
         this.mediaRecorder.ondataavailable = (event) => {
           this.recordedBlobs.push(event.data);
         };

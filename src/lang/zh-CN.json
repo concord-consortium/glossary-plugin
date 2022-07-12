@@ -12,5 +12,17 @@
     "allWords": "所有的话",
     "speechTitle": "大声朗读",
     "imageTitle": "查看照片",
-    "videoTitle": "观看电影"
+    "videoTitle": "观看电影",
+    "diggingDeeperTitle": "深层发掘",
+    "viewDiggingDeeper": "看到更深入的挖掘",
+    "zoomInTitle": "图片放大",
+    "record": "录音",
+    "recording": "录音",
+    "savingRecording": "保存录音",
+    "stopRecording": "停止录制",
+    "playRecording": "播放录音",
+    "deleteRecording": "删除录音",
+    "recordingTimeLimitReached": "您已达到录制时间限制",
+    "audioDefinition": "音频定义 %{index}",
+    "errorSavingRecording": "保存录音时出错。尝试重新提交。"
 }

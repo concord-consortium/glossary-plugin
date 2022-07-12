@@ -1,0 +1,25 @@
+.glossaryTranslations {
+  padding: 10px;
+  margin-bottom: 20px;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    margin: 5px 0 10px 0;
+
+    button {
+      padding: 5px 10px;
+      margin-right: 10px;
+    }
+
+    strong {
+      margin-right: 10px;
+    }
+
+    select {
+      padding: 5px;
+    }
+
+  }
+}

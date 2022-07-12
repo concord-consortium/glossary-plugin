@@ -1,0 +1,15 @@
+.saveIndicator {
+  flex-grow: 1;
+  padding-left: 20px;
+  font-style: italic;
+
+  .saving {
+    color: #000a;
+  }
+  .saved {
+    color: #000a;
+  }
+  .error {
+    color: red;
+  }
+}

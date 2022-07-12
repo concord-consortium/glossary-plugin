@@ -12,5 +12,17 @@
     "allWords": "Все слова",
     "speechTitle": "Читать вслух",
     "imageTitle": "Посмотреть фото",
-    "videoTitle": "Посмотреть фильм"
+    "videoTitle": "Посмотреть фильм",
+    "diggingDeeperTitle": "Копаем глубже",
+    "viewDiggingDeeper": "Просмотр Копать глубже",
+    "zoomInTitle": "Увеличьте изображение",
+    "record": "говори и записывай аудио",
+    "recording": "Запись",
+    "savingRecording": "Сохранение записи",
+    "stopRecording": "Остановить запись",
+    "playRecording": "Воспроизвести запись",
+    "deleteRecording": "Удалить запись",
+    "recordingTimeLimitReached": "Вы достигли предела времени записи",
+    "audioDefinition": "Определение аудио %{index}",
+    "errorSavingRecording": "Ошибка сохранения записи. Попробуйте подать повторно."
 }

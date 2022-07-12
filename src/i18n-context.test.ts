@@ -31,14 +31,20 @@ describe("pluginContext", () => {
       const result = replaceVariables("test replaceVariables: %{var1} %{variable_321}!", variables);
       expect(result).toEqual("test replaceVariables: 123 XYZ!");
     });
+
+    it("should work in right to left languages", () => {
+      const arabic = require("../src/lang/ar.json");
+      const result = replaceVariables(arabic.mainPrompt, {word: "test"});
+      expect(arabic.mainPrompt).toEqual("ما رأيك \"%{word}\" تعني؟");
+      expect(result).toEqual("ما رأيك \"test\" تعني؟");
+    });
   });
 
   describe("fetchGlossaryLanguages(glossaryUrl, callback)", () => {
     describe("When no glossaryUrl is provided", () => {
       it("should return the full set of default languages", () => {
         fetchGlossary(null, (x) => {
-          expect(x.languageCodes.length).toBe(9);
-          expect(x.enableRecording).toBe(false);
+          expect(x.languageCodes.length).toBe(10);
         });
       });
     });
@@ -53,6 +59,8 @@ describe("pluginContext", () => {
         askForUserDefinition: true,
         showSideBar: true,
         autoShowMediaInPopup: true,
+        showIDontKnowButton: true,
+        disableReadAloud: false,
         enableStudentRecording: true,
         enableStudentLanguageSwitching: true
       };
@@ -63,7 +71,6 @@ describe("pluginContext", () => {
         fetchGlossary(glossaryUrl, (x) => {
           expect(x.languageCodes).toContain("fr");
           expect(x.languageCodes).toContain("es");
-          expect(x.enableRecording).toBe(true);
         });
       });
     });

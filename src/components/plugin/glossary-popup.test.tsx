@@ -8,7 +8,7 @@ import { DEFAULT_LANG } from "../../i18n-context";
 describe("GlossaryPopup component", () => {
   describe("when askForUserDefinition=false", () => {
     it("renders Definition component", () => {
-      const wrapper = shallow(
+      const wrapper = mount(
         <GlossaryPopup word="test" definition="test" userDefinitions={[]} askForUserDefinition={false}/>
       );
       expect(wrapper.find(Definition).length).toEqual(1);
@@ -113,7 +113,7 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find(`img[src='${zoomImageSrc}']`).length).toEqual(0);
     });
 
-    it("user can click 'I don't know' button", () => {
+    it("user can click 'I don't know' button when showIDontKnowButton is true", () => {
       const word = "test";
       const definition = "test def";
       const onUserSubmit = jest.fn();
@@ -123,6 +123,7 @@ describe("GlossaryPopup component", () => {
           definition={definition}
           userDefinitions={[]}
           askForUserDefinition={true}
+          showIDontKnowButton={true}
           onUserDefinitionsUpdate={onUserSubmit}
         />
       );
@@ -131,6 +132,24 @@ describe("GlossaryPopup component", () => {
 
       expect(onUserSubmit).toHaveBeenCalledTimes(1);
       expect(onUserSubmit).toBeCalledWith("I don't know yet");
+    });
+
+    it("does not display 'I don't know' button when showIDontKnowButton is false", () => {
+      const word = "test";
+      const definition = "test def";
+      const onUserSubmit = jest.fn();
+      const wrapper = mount(
+        <GlossaryPopup
+          word={word}
+          definition={definition}
+          userDefinitions={[]}
+          askForUserDefinition={true}
+          showIDontKnowButton={false}
+          onUserDefinitionsUpdate={onUserSubmit}
+        />
+      );
+      const iDontKnowButton = wrapper.find("[data-cy='cancel']");
+      expect(iDontKnowButton.length).toEqual(0);
     });
 
     describe("when user already answered a question", () => {
@@ -165,7 +184,7 @@ describe("GlossaryPopup component", () => {
           askForUserDefinition={false}
           languages={[
             {lang: DEFAULT_LANG, selected: true},
-            {lang: "es", selected: false}
+            {lang: "es", selected: false},
           ]}
           onLanguageChange={onLangChange}
         />
@@ -173,6 +192,23 @@ describe("GlossaryPopup component", () => {
       expect(wrapper.find("[data-cy='langToggle']").length).toEqual(2);
       wrapper.find("[data-cy='langToggle']").first().simulate("click");
       expect(onLangChange).toHaveBeenCalled();
+    });
+  });
+
+  describe("when secondLanguage is not provided", () => {
+    it("does not render language toggle", () => {
+      const onLangChange = jest.fn();
+      const wrapper = mount(
+        <GlossaryPopup
+          word="test"
+          definition="test"
+          userDefinitions={[]}
+          askForUserDefinition={false}
+          languages={[]}
+          onLanguageChange={onLangChange}
+        />
+      );
+      expect(wrapper.find("[data-cy='langToggle']").length).toEqual(0);
     });
   });
 
@@ -222,8 +258,8 @@ describe("GlossaryPopup component", () => {
     const mockAlert = jest.fn().mockImplementation((text) => console.log("ALERT", text));
     const mockMediaRecorderStart = jest.fn();
     let mockedMediaRecorder: any = null;
-    // tslint:disable-next-line:no-console
     const mockMediaRecorderStop = jest.fn().mockImplementation(() => mockedMediaRecorder.onstop());
+    const mockedMediaRecorderIsTypeSupported = jest.fn().mockImplementation(() => true);
     const MockedMediaRecorder = jest.fn();
     MockedMediaRecorder.mockImplementation(() => {
       mockedMediaRecorder = {
@@ -232,6 +268,9 @@ describe("GlossaryPopup component", () => {
       };
       return mockedMediaRecorder;
     });
+    // isTypeSupported is a static method of MediaRecorder
+    (MockedMediaRecorder as any).isTypeSupported = mockedMediaRecorderIsTypeSupported;
+
     let mockedFileReader: any = null;
     const fakeAudioUrl = "data:audio/mp3;base64,FOO";
     const MockedFileReader = jest.fn();
@@ -281,6 +320,7 @@ describe("GlossaryPopup component", () => {
       const recordButton = wrapper.find("[data-cy='recordButton']");
       await recordButton.simulate("click");
       expect(mockMediaRecorderStart).toBeCalled();
+      expect(mockedMediaRecorderIsTypeSupported).toBeCalledWith("audio/webm");
     });
 
     it("sets the current user definition with an audio url when the stop button is pressed", async () => {
