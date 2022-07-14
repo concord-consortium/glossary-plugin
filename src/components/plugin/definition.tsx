@@ -104,8 +104,10 @@ export default class Definition extends React.Component<IProps, IState> {
     return null;
   }
 
-  public renderDiggingDeeperButton(diggingDeeper?: string) {
-    if (diggingDeeper) {
+  public renderDiggingDeeperButton() {
+    // Check translatedDiggingDeeper instead of diggingDeeper prop, so the button is still shown when Digging Deeper
+    // is not defined for English, but it's defined for currently selected language.
+    if (this.translatedDiggingDeeper) {
       const translate = this.context.translate;
       return(
         <span
@@ -129,7 +131,7 @@ export default class Definition extends React.Component<IProps, IState> {
             {!disableReadAloud && <TextToSpeech text={this.translatedDefinition} word={word} textKey={TextKey.Definition} />}
             {this.renderImageButton(imageUrl)}
             {this.renderVideoButton(videoUrl)}
-            {this.renderDiggingDeeperButton(diggingDeeper)}
+            {this.renderDiggingDeeperButton()}
           </span>
         </div>}
         { diggingDeeperVisible &&
