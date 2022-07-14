@@ -105,8 +105,8 @@
     "webpack-dev-server": "^4.7.4"
   },
   "peerDependencies": {
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react": ">=16.14.0",
+    "react-dom": ">=16.14.0"
   },
   "dependencies": {
     "@concord-consortium/lara-plugin-api": "3.3.1",
