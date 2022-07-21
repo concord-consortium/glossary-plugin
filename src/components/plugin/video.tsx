@@ -37,25 +37,25 @@ export default class Video extends React.Component<IProps> {
   }
 
   render () {
-    const {word, videoUrl, videoCaption, videoAltText, closedCaptionsUrl, disableReadAloud} = this.props;
+    const {word, videoUrl, disableReadAloud} = this.props;
     const {lang} = this.context;
 
     return (
       <div className={css.videoContainer}>
       {
-        closedCaptionsUrl || this.translatedClosedCaptionsUrl ?
-        <video src={videoUrl} title={videoAltText} crossOrigin={"anonymous"} controls={true}>
+        this.translatedClosedCaptionsUrl ?
+        <video src={videoUrl} title={this.translatedVideoAltText} crossOrigin={"anonymous"} controls={true}>
           <track
             kind="subtitles"
             srcLang={lang}
-            src={lang === "en" ? closedCaptionsUrl : this.translatedClosedCaptionsUrl}
+            src={this.translatedClosedCaptionsUrl}
             default={false}
           />
         </video> :
-        <video src={videoUrl} title={videoAltText} controls={true}/>
+        <video src={videoUrl} title={this.translatedVideoAltText} controls={true}/>
       }
       {
-        videoCaption &&
+        this.translatedVideoCaption &&
         <div className={css.caption}>
           {this.translatedVideoCaption}
           {
