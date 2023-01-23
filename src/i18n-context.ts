@@ -10,6 +10,7 @@ import * as miLang from "./lang/mi.json";
 import * as hawLang from "./lang/haw.json";
 import * as mrLang from "./lang/mr.json";
 import * as zhCNLang from "./lang/zh-CN.json";
+import * as anLang from "./lang/an.json";
 import ensureCorrectProtocol from "./utils/ensure-correct-protocol";
 
 type ITranslateFunc = (key: string, fallback?: string | null, variables?: {[key: string]: string}) => string | null;
@@ -27,6 +28,7 @@ export const UI_TRANSLATIONS: {
   "mi": miLang,
   "mr": mrLang,
   "haw": hawLang,
+  "an": anLang,
 };
 
 export const SUPPORTED_LANGUAGES = Object.keys(UI_TRANSLATIONS);

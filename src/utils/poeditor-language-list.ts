@@ -9,6 +9,7 @@ export const CUSTOM_LANG_NAME_MAPPING: {[langName: string]: string} = {
   Manx: "Yugtun",
   Maori: "Athabaskan",
   Marathi: "Inupiaq",   // note, there is an ik code for Inupiaq but we want to reuse existing glossaries with mr
+  Aragonese: "Alutiiq",
 };
 
 export const POEDITOR_LANG_CODE: {[langName: string]: string} = {

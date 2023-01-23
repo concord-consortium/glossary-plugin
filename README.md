@@ -131,7 +131,7 @@ Due to the need to support translations of languages not available on poeditor.c
 3. In the poeditor.com web interface add a language using the language code selected.
 4. In `strings-pull-project.sh` add the new language code to the `LANGUAGES=(...)` list.
 5. Run `npm run strings:pull` after exporting the `POEDITOR_API_TOKEN` to pull down the new language json file.  Without any translations POEditor will use the English terms.  You can then run this again in the future when the translations have been entered in POEditor to update the json.
-6. In `add-translation.tsx` add a mapping for the new language in the `allLanguages` map.
+6. In `add-translation.tsx` add a mapping for the new language in the `allLanguages` map in alphabetical value order (the value is displayed).
 7. In `i8n-context.ts` add an import line to import the new language json file and then add a mapping of the new language code to the import in the `UI_TRANSLATIONS` map.
 
 #### Translations in the Dashboard (reporting)
