@@ -12,6 +12,7 @@ interface IProps {
 }
 
 export const allLanguages = {
+  [POEDITOR_LANG_CODE.Aragonese]: "Alutiiq", // using Aragonese as there is no native code for Alutiiq
   [POEDITOR_LANG_CODE.Arabic]: "Arabic",
   [POEDITOR_LANG_CODE.Maori]: "Athabaskan", // using Maori as there is no native code for Athabaskan
   [POEDITOR_LANG_CODE.Chinese]: "Chinese",
