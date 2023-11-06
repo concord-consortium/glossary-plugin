@@ -98,6 +98,8 @@ export class GlossaryPlugin {
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
         enableStudentRecording={authoredState.enableStudentRecording || false}
         enableStudentLanguageSwitching={authoredState.enableStudentLanguageSwitching || false}
+        showSecondLanguageFirst={authoredState.showSecondLanguageFirst || false}
+        secondLanguageCode={authoredState.secondLanguageCode || ""}
         disableReadAloud={authoredState.disableReadAloud || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}

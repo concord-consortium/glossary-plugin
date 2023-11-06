@@ -9,6 +9,8 @@ export interface IGlossary {
   enableStudentLanguageSwitching: boolean;
   translations?: ITranslationMap;
   tokenServiceResourceId?: string;
+  showSecondLanguageFirst: boolean;
+  secondLanguageCode?: string;
 }
 
 export type ITranslationMap = Record<string, ITranslation>;

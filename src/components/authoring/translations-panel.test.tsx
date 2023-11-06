@@ -30,6 +30,7 @@ const defGlossary: IGlossary = {
   disableReadAloud: false,
   enableStudentRecording: false,
   enableStudentLanguageSwitching: false,
+  showSecondLanguageFirst: false,
   translations: {
     es: {
       "cloud.word": "a",
@@ -118,6 +119,7 @@ describe("TranslationsPanel component", () => {
       disableReadAloud: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false,
+      showSecondLanguageFirst: false,
       translations: {
         es: {
           "cloud.word": "a",

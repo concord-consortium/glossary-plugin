@@ -62,7 +62,8 @@ describe("pluginContext", () => {
         showIDontKnowButton: true,
         disableReadAloud: false,
         enableStudentRecording: true,
-        enableStudentLanguageSwitching: true
+        enableStudentLanguageSwitching: true,
+        showSecondLanguageFirst: false,
       };
       beforeEach(() => {
         fetch.mockResponse(JSON.stringify(glossary));

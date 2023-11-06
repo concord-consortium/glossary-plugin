@@ -8,6 +8,7 @@ import * as css from "./language-selector-button.scss";
 interface IProps {
   language: ILanguage;
   onClick: (lang: string) => void;
+  index: number;
 }
 
 export default class LanguageSelectorButton extends React.Component<IProps, {}> {
@@ -18,11 +19,12 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
   }
 
   public render() {
+    const { index } = this.props;
     const { lang, selected } = this.props.language;
     return (
       <Button
         data-cy="langToggle"
-        className={`${css.langButton} ${lang === "en" ? css.en : css.secondLang } ${selected ? css.selected : ""}`}
+        className={`${css.langButton} ${index === 0 ? css.firstLang : css.secondLang } ${selected ? css.selected : ""}`}
         label={POEDITOR_LANG_NAME[lang].replace("_", " ")}
         onClick={this.handleButtonClick}
       />

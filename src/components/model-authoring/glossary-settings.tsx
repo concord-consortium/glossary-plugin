@@ -5,6 +5,7 @@ import { IGlossary, IGlossarySettings, ITranslationMap, IWordDefinition } from "
 import { Panel } from "./panel";
 import { EditName } from "./edit-name";
 import { TermPopUpPreview } from "./term-popup-preview";
+import { allLanguages } from "./add-translation";
 
 import * as css from "./glossary-settings.scss";
 
@@ -36,9 +37,9 @@ const previewTranslations: ITranslationMap = {
 }
 
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
-  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording, disableReadAloud } = glossary;
+  const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording,
+    disableReadAloud, showSecondLanguageFirst, secondLanguageCode, translations } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
-  const [selectedSecondLang, setSelectedSecondLang] = useState("")
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
     if (canEdit) {
@@ -52,7 +53,19 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
   }
 
   const handleChange = (setting: keyof IGlossarySettings ) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    saveSettings({...glossary, [setting]: e.target.checked});
+    // clear second language if showSecondLanguageFirst is disabled
+    if (setting === "showSecondLanguageFirst" && !e.target.checked) {
+      saveSettings({...glossary, [setting]: e.target.checked, "secondLanguageCode": undefined});
+    } else if (setting === "showSecondLanguageFirst" && e.target.checked && translations) {
+      const secondLang = Object.keys(translations)[0];
+      saveSettings({...glossary, [setting]: e.target.checked, "secondLanguageCode": secondLang});
+    } else {
+      saveSettings({...glossary, [setting]: e.target.checked});
+    }
+  }
+
+  const handleSecondLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    saveSettings({...glossary, "secondLanguageCode": e.target.value});
   }
 
   return (
@@ -142,6 +155,34 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
         </div>
 
         <div className={css.settingInformation}>
+          <div className={css.checkboxRow}>
+            <input type="checkbox" checked={showSecondLanguageFirst} onChange={handleChange("showSecondLanguageFirst")}/>
+            <label>
+              Display Second Language First
+            </label>
+          </div>
+          <div className={css.help}>
+            When this option is enabled, students will see the selected secondary language first in the term popup.
+          </div>
+          { showSecondLanguageFirst &&
+            <div className={css.dropDown}>
+              <label>Select Second Language</label>
+              <select
+                value={secondLanguageCode}
+                onChange={handleSecondLanguageChange}
+              >
+                {translations && Object.keys(translations).map(lang => {
+                    const langName = allLanguages[lang as keyof typeof allLanguages];
+                    return (
+                      <option key={lang} value={lang}>{langName}</option>
+                    );
+                })}
+              </select>
+            </div>
+          }
+        </div>
+
+        <div className={css.settingInformation}>
           <h2 className={css.termPopup}>Term Popup Preview</h2>
           <div className={css.help}>
             This preview shows an example term popup to demonstrate these settings along with an optional Spanish translation.
@@ -156,8 +197,6 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
           translations={previewTranslations}
           allowReset={true}
           resetLabel="Reset Term Popup Preview"
-          selectedSecondLang={selectedSecondLang}
-          onSelectSecondLang={setSelectedSecondLang}
         />
       </div>
     </Panel>

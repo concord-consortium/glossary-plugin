@@ -48,6 +48,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -78,6 +79,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -109,6 +111,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -136,6 +139,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -165,6 +169,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -192,6 +197,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -222,6 +228,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -247,6 +254,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -272,6 +280,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -307,6 +316,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -331,6 +341,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -357,6 +368,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);
@@ -378,6 +390,7 @@ describe("PluginApp component", () => {
           offlineMode={false}
           enableStudentLanguageSwitching={false}
           showIDontKnowButton={false}
+          showSecondLanguageFirst={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
@@ -405,12 +418,40 @@ describe("PluginApp component", () => {
           offlineMode={false}
           enableStudentLanguageSwitching={false}
           showIDontKnowButton={false}
+          showSecondLanguageFirst={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
       expect(pluginApp.translate("submit")).toEqual("Submit");
       pluginApp.setState({ lang: "es" });
       expect(pluginApp.translate("submit")).toEqual("Enviar?!!");
+    });
+
+    it("should make the secondary language the default one if option is selected by author", () => {
+      const wrapper = mount(
+        <PluginApp
+          saveState={saveState}
+          definitions={definitions}
+          initialLearnerState={initialLearnerState}
+          askForUserDefinition={true}
+          autoShowMediaInPopup={false}
+          enableStudentRecording={false}
+          showSideBar={false}
+          disableReadAloud={false}
+          translations={{
+            es: {
+              submit: "Enviar?!!"
+            }
+          }}
+          offlineMode={false}
+          enableStudentLanguageSwitching={false}
+          showIDontKnowButton={false}
+          showSecondLanguageFirst={true}
+          secondLanguageCode="es"
+        />
+      );
+      const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
+      expect(pluginApp.state.lang).toEqual("es");
     });
   });
 });

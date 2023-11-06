@@ -57,6 +57,8 @@ interface IProps {
   laraLog?: (event: string | PluginAPI.ILogData) => void;
   offlineMode: boolean;
   showIDontKnowButton: boolean;
+  showSecondLanguageFirst: boolean;
+  secondLanguageCode?: string;
 }
 
 export interface IDefinitionsByWord {
@@ -89,7 +91,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   get languages(): ILanguage[] {
     const { lang, secondLanguage } = this.state;
-    const { translations, enableStudentLanguageSwitching } = this.props;
+    const { translations, enableStudentLanguageSwitching, showSecondLanguageFirst, secondLanguageCode } = this.props;
     let langs: string[] = [];
 
     if (enableStudentLanguageSwitching) {
@@ -100,6 +102,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
       }
     } else if (secondLanguage) {
       langs = [DEFAULT_LANG, secondLanguage];
+    } else if (showSecondLanguageFirst && secondLanguageCode) {
+      langs = [secondLanguageCode, DEFAULT_LANG];
     }
 
     return langs.map<ILanguage>(langItem => ({lang: langItem, selected: langItem === lang}));
@@ -107,7 +111,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     const {definitionsByWord} = this.state;
-    const { showSideBar, studentInfo, definitions } = this.props;
+    const { showSideBar, studentInfo, definitions, showSecondLanguageFirst, secondLanguageCode } = this.props;
     definitions.forEach(entry => {
       const word = entry.word.toLowerCase();
       definitionsByWord[word] = entry;
@@ -127,17 +131,31 @@ export default class PluginApp extends React.Component<IProps, IState> {
       if (showSideBar) {
         this.addSidebar();
       }
+
+      if (showSecondLanguageFirst && secondLanguageCode) {
+        this.setState({
+          lang: secondLanguageCode
+        });
+      }
+
       if (studentInfo) {
         watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
           const { translations } = this.props;
           const { preferredLanguage } = settings;
 
-          // ensure the second language set by the teacher is available in the translations before setting
-          // and add per-student recording toggle set by the teacher
-          this.setState({
-            lang: DEFAULT_LANG,
-            secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined
-           });
+          if (showSecondLanguageFirst && secondLanguageCode) {
+            // if these options are selected in glossary settings, they should override per-student settings
+            this.setState({
+              lang: secondLanguageCode
+            });
+          } else {
+            // ensure the second language set by the teacher is available in the translations before setting
+            // and add per-student recording toggle set by the teacher
+            this.setState({
+              lang: DEFAULT_LANG,
+              secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined
+            });
+          }
         }));
       }
 
@@ -148,7 +166,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton, enableStudentRecording } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton,
+      enableStudentRecording } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
@@ -364,6 +383,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private languageChanged = (newLang: string) => {
     const { lang } = this.state;
     this.setState({ lang: newLang });
+
     this.log({
       event: "language changed",
       previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),

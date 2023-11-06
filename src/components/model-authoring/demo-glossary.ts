@@ -12,6 +12,7 @@ export const demoGlossary: IGlossaryModelAuthoringInitialData = {
     enableStudentLanguageSwitching: false,
     disableReadAloud: false,
     enableStudentRecording: false,
+    showSecondLanguageFirst: false,
     definitions: [
       {
         "word": "cluster housing",
