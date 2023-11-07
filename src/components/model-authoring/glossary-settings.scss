@@ -36,18 +36,6 @@
       padding-left: 10px;
       padding-right: 10px;
     }
-
-    .dropDown {
-      display: flex;
-      flex-direction: column;
-      label {
-        margin-top: 5px;
-      }
-      select {
-        margin-top: 5px;
-        align-self: flex-start;
-      }
-    }
   }
 
   .nestedOptions {
