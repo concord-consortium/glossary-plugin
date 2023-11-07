@@ -38,7 +38,7 @@ const previewTranslations: ITranslationMap = {
 
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
   const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording,
-    disableReadAloud, showSecondLanguageFirst, secondLanguageCode, translations } = glossary;
+    disableReadAloud, showSecondLanguageFirst, translations } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
 
   const handleUserDefinitionChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,19 +53,7 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
   }
 
   const handleChange = (setting: keyof IGlossarySettings ) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    // clear second language if showSecondLanguageFirst is disabled
-    if (setting === "showSecondLanguageFirst" && !e.target.checked) {
-      saveSettings({...glossary, [setting]: e.target.checked, "secondLanguageCode": undefined});
-    } else if (setting === "showSecondLanguageFirst" && e.target.checked && translations) {
-      const secondLang = Object.keys(translations)[0];
-      saveSettings({...glossary, [setting]: e.target.checked, "secondLanguageCode": secondLang});
-    } else {
       saveSettings({...glossary, [setting]: e.target.checked});
-    }
-  }
-
-  const handleSecondLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    saveSettings({...glossary, "secondLanguageCode": e.target.value});
   }
 
   return (
@@ -162,24 +150,9 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
             </label>
           </div>
           <div className={css.help}>
-            When this option is enabled, students will see the selected secondary language first in the term popup.
+            When this option is enabled, students will see their assigned second language first in the term popup.
+            Second language is set per student by the teacher via the Glossary Dashboard in the Portal.
           </div>
-          { showSecondLanguageFirst &&
-            <div className={css.dropDown}>
-              <label>Select Second Language</label>
-              <select
-                value={secondLanguageCode}
-                onChange={handleSecondLanguageChange}
-              >
-                {translations && Object.keys(translations).map(lang => {
-                    const langName = allLanguages[lang as keyof typeof allLanguages];
-                    return (
-                      <option key={lang} value={lang}>{langName}</option>
-                    );
-                })}
-              </select>
-            </div>
-          }
         </div>
 
         <div className={css.settingInformation}>

@@ -10,7 +10,6 @@ export interface IGlossary {
   translations?: ITranslationMap;
   tokenServiceResourceId?: string;
   showSecondLanguageFirst: boolean;
-  secondLanguageCode?: string;
 }
 
 export type ITranslationMap = Record<string, ITranslation>;
