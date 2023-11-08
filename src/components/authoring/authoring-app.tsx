@@ -24,6 +24,7 @@ export const DEFAULT_GLOSSARY: IGlossary = {
   showIDontKnowButton: false,
   enableStudentRecording: false,
   enableStudentLanguageSwitching: false,
+  showSecondLanguageFirst: false,
   definitions: []
 };
 

@@ -57,6 +57,7 @@ interface IProps {
   laraLog?: (event: string | PluginAPI.ILogData) => void;
   offlineMode: boolean;
   showIDontKnowButton: boolean;
+  showSecondLanguageFirst: boolean;
 }
 
 export interface IDefinitionsByWord {
@@ -89,7 +90,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   get languages(): ILanguage[] {
     const { lang, secondLanguage } = this.state;
-    const { translations, enableStudentLanguageSwitching } = this.props;
+    const { translations, enableStudentLanguageSwitching, showSecondLanguageFirst } = this.props;
     let langs: string[] = [];
 
     if (enableStudentLanguageSwitching) {
@@ -98,8 +99,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
         // add the default language to the translations
         langs.unshift(DEFAULT_LANG);
       }
-    } else if (secondLanguage) {
+    } else if (secondLanguage && !showSecondLanguageFirst) {
       langs = [DEFAULT_LANG, secondLanguage];
+    } else if (secondLanguage && showSecondLanguageFirst) {
+      langs = [secondLanguage, DEFAULT_LANG];
     }
 
     return langs.map<ILanguage>(langItem => ({lang: langItem, selected: langItem === lang}));
@@ -107,7 +110,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
 
   public componentDidMount() {
     const {definitionsByWord} = this.state;
-    const { showSideBar, studentInfo, definitions } = this.props;
+    const { showSideBar, studentInfo, definitions, showSecondLanguageFirst } = this.props;
     definitions.forEach(entry => {
       const word = entry.word.toLowerCase();
       definitionsByWord[word] = entry;
@@ -127,6 +130,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
       if (showSideBar) {
         this.addSidebar();
       }
+
       if (studentInfo) {
         watchStudentSettings(studentInfo.source, studentInfo.contextId, studentInfo.userId, (settings => {
           const { translations } = this.props;
@@ -135,9 +139,10 @@ export default class PluginApp extends React.Component<IProps, IState> {
           // ensure the second language set by the teacher is available in the translations before setting
           // and add per-student recording toggle set by the teacher
           this.setState({
-            lang: DEFAULT_LANG,
+            lang: showSecondLanguageFirst && translations[preferredLanguage] ? preferredLanguage : DEFAULT_LANG,
             secondLanguage: translations[preferredLanguage] ? preferredLanguage : undefined
-           });
+          });
+
         }));
       }
 
@@ -148,7 +153,8 @@ export default class PluginApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton, enableStudentRecording } = this.props;
+    const { askForUserDefinition, autoShowMediaInPopup, definitions, studentInfo, disableReadAloud, showIDontKnowButton,
+      enableStudentRecording } = this.props;
     const { openPopups, learnerState, sidebarPresent, lang, definitionsByWord } = this.state;
 
     // Note that returned div will be empty in fact. We render only into React Portals.
@@ -364,6 +370,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
   private languageChanged = (newLang: string) => {
     const { lang } = this.state;
     this.setState({ lang: newLang });
+
     this.log({
       event: "language changed",
       previousLanguage: POEDITOR_LANG_NAME[lang].replace("_", " "),

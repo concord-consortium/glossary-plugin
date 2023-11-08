@@ -98,6 +98,7 @@ export class GlossaryPlugin {
         autoShowMediaInPopup={authoredState.autoShowMediaInPopup || false}
         enableStudentRecording={authoredState.enableStudentRecording || false}
         enableStudentLanguageSwitching={authoredState.enableStudentLanguageSwitching || false}
+        showSecondLanguageFirst={authoredState.showSecondLanguageFirst || false}
         disableReadAloud={authoredState.disableReadAloud || false}
         translations={authoredState.translations || {}}
         showSideBar={authoredState.showSideBar || false}

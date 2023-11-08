@@ -24,11 +24,12 @@ export default class LanguageSelector extends React.Component<IProps, {}> {
 
     return (
       <div className={css.languageSelector}>
-        {languages.map(language => (
+        {languages.map((language, idx) => (
           <LanguageSelectorButton
             key={language.lang}
             language={language}
             onClick={onLanguageChange}
+            index={idx}
           />))}
       </div>
     );

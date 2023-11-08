@@ -48,6 +48,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -78,6 +79,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -109,6 +111,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -136,6 +139,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -165,6 +169,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -192,6 +197,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -222,6 +228,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -247,6 +254,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -272,6 +280,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -307,6 +316,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
     expect(MockPluginAPI.addSidebar).toHaveBeenCalledTimes(1);
@@ -331,6 +341,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
 
@@ -357,6 +368,7 @@ describe("PluginApp component", () => {
         offlineMode={false}
         enableStudentLanguageSwitching={false}
         showIDontKnowButton={false}
+        showSecondLanguageFirst={false}
       />
     );
     expect(wrapper.find(GlossarySidebar).length).toEqual(0);
@@ -378,6 +390,7 @@ describe("PluginApp component", () => {
           offlineMode={false}
           enableStudentLanguageSwitching={false}
           showIDontKnowButton={false}
+          showSecondLanguageFirst={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
@@ -405,6 +418,7 @@ describe("PluginApp component", () => {
           offlineMode={false}
           enableStudentLanguageSwitching={false}
           showIDontKnowButton={false}
+          showSecondLanguageFirst={false}
         />
       );
       const pluginApp: PluginApp = (wrapper.instance() as PluginApp);
@@ -412,5 +426,6 @@ describe("PluginApp component", () => {
       pluginApp.setState({ lang: "es" });
       expect(pluginApp.translate("submit")).toEqual("Enviar?!!");
     });
+
   });
 });

@@ -14,7 +14,8 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
       showIDontKnowButton: false,
       enableStudentRecording: false,
       enableStudentLanguageSwitching: false,
-      translations: {}
+      translations: {},
+      showSecondLanguageFirst: false
     }
     glossaryChanged = true
   }
