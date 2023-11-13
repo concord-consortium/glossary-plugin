@@ -3,6 +3,7 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const ESLintPlugin = require('eslint-webpack-plugin');
 
 // DEPLOY_PATH is set by the s3-deploy-action its value will be:
 // `branch/[branch-name]/` or `version/[tag-name]/`
@@ -31,16 +32,16 @@ module.exports = (env, argv) => {
     performance: { hints: false },
     module: {
       rules: [
-        {
-          test: /\.tsx?$/,
-          enforce: 'pre',
-          use: [
-            {
-              loader: 'tslint-loader',
-              options: {}
-            }
-          ]
-        },
+        // {
+        //   test: /\.tsx?$/,
+        //   enforce: 'pre',
+        //   use: [
+        //     {
+        //       loader: 'tslint-loader',
+        //       options: {}
+        //     }
+        //   ]
+        // },
         {
           test: /\.tsx?$/,
           loader: 'ts-loader',
@@ -58,21 +59,23 @@ module.exports = (env, argv) => {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                sourceMap: true,
-                importLoaders: 1,
-                localIdentName: '[name]--[local]--[hash:base64:8]'
+                esModule: false,
+                modules: {
+                  // required for :import from scss files
+                  // cf. https://github.com/webpack-contrib/css-loader#separating-interoperable-css-only-and-css-module-features
+                  mode: 'icss',
+                }
               }
             },
             'postcss-loader',
             'sass-loader'
           ]
         },
-        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' }
+        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, type: 'asset' }
       ]
     },
     resolve: {
-      extensions: [ '.ts', '.tsx', '.js' ]
+      extensions: ['.ts', '.tsx', '.js']
     },
     stats: {
       // suppress "export not found" warnings about re-exported types
@@ -84,6 +87,9 @@ module.exports = (env, argv) => {
       '@concord-consortium/lara-plugin-api': 'LARA.PluginAPI_V3'
     },
     plugins: [
+      // new ESLintPlugin({
+      //   extensions: ['ts', 'tsx', 'js', 'jsx'],
+      // }),
       new ForkTsCheckerWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: "plugin.css"

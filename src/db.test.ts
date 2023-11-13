@@ -1,7 +1,7 @@
-import * as firebase from "firebase";
+import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import * as db from "./db";
-import {getFirestore} from "./db";
+import { getFirestore } from "./db";
 import { IStudentSettings } from "./types";
 
 describe("db / Firestore helpers", () => {
