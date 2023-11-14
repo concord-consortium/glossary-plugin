@@ -8,7 +8,7 @@ import * as css from "./shared-modal-form.scss";
 import * as icons from "../common/icons.scss";
 
 type IWordDefinitionKey = keyof IWordDefinition;
-export type IWordDefinitionFormErrors = Partial<Record<IWordDefinitionKey, string>>
+export type IWordDefinitionFormErrors = Partial<Record<IWordDefinitionKey, string>>;
 
 export type NextAddAction = "save" | "save and add another";
 export type NextEditAction = "save" | "save and edit previous" | "save and edit next";
@@ -29,15 +29,15 @@ interface IEditProps {
 type IProps = (IAddProps | IEditProps) & {glossary: IGlossary; canEdit: boolean, selectedSecondLang: string, onSelectSecondLang: (lang: string) => void};
 
 export const DefinitionForm = (props: IProps) => {
-  const {canEdit, selectedSecondLang, onSelectSecondLang} = props
+  const {canEdit, selectedSecondLang, onSelectSecondLang} = props;
   const formRef = React.useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<IWordDefinitionFormErrors>({});
   const [definition, setDefinition] = useState<IWordDefinition>(props.type === "edit" ? props.definition : {word: "", definition: ""});
 
   useEffect(() => {
     if (Object.keys(errors).length > 0) {
-      const firstError = document.getElementById("form-field-error") as HTMLDivElement | undefined
-      const top = firstError?.offsetTop || 0
+      const firstError = document.getElementById("form-field-error") as HTMLDivElement | undefined;
+      const top = firstError?.offsetTop || 0;
       formRef.current?.scrollTo(0, top);
     }
   }, [errors, formRef.current]);
@@ -46,36 +46,36 @@ export const DefinitionForm = (props: IProps) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       if (props.type === "add") {
-        setErrors(props.onAdd(definition, next))
+        setErrors(props.onAdd(definition, next));
       }
-    }
-  }
+    };
+  };
 
   const handleEditSubmit = (next: NextEditAction) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       if (props.type === "edit") {
-        setErrors(props.onEdit(props.definition, definition, next))
+        setErrors(props.onEdit(props.definition, definition, next));
       }
-    }
-  }
+    };
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     if (props.type === "add") {
-      handleAddSubmit("save")(e)
+      handleAddSubmit("save")(e);
     } else {
-      handleEditSubmit("save")(e)
+      handleEditSubmit("save")(e);
     }
-  }
+  };
 
   const handleFieldChange = (field: IWordDefinitionKey) => {
     return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
-      setDefinition((prev) => ({...prev, [field]: e.target.value}))
-  }
+      setDefinition((prev) => ({...prev, [field]: e.target.value}));
+  };
 
   const renderPreview = () => {
     // disable student definition in preview so definition is visible
-    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false}
+    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false};
     return (
       <TermPopUpPreview
         term={definition}
@@ -85,8 +85,8 @@ export const DefinitionForm = (props: IProps) => {
         selectedSecondLang={selectedSecondLang}
         onSelectSecondLang={onSelectSecondLang}
       />
-    )
-  }
+    );
+  };
 
   const renderButtons = () => {
     if (!canEdit) {
@@ -94,7 +94,7 @@ export const DefinitionForm = (props: IProps) => {
         <div className={css.buttons}>
           <button onClick={props.onCancel}>Close</button>
         </div>
-      )
+      );
     }
     else if (props.type === "add") {
       return (
@@ -103,7 +103,7 @@ export const DefinitionForm = (props: IProps) => {
           <button type="submit" onClick={handleAddSubmit("save")}>Save &amp; Close</button>
           <button onClick={handleAddSubmit("save and add another")}>Save &amp; Add Another</button>
         </div>
-      )
+      );
     } else {
       return (
         <div className={css.buttons}>
@@ -118,13 +118,13 @@ export const DefinitionForm = (props: IProps) => {
             <span className={icons.iconCaretRight}/>
           </button>
         </div>
-      )
+      );
     }
-  }
+  };
 
   const renderError = useCallback((field: IWordDefinitionKey) => {
     if (errors[field]) {
-      return <div id="form-field-error" className={css.error}>{errors[field]}</div>
+      return <div id="form-field-error" className={css.error}>{errors[field]}</div>;
     }
   }, [errors]);
 

@@ -2,7 +2,14 @@
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+
+// DEPLOY_PATH is set by the s3-deploy-action its value will be:
+// `branch/[branch-name]/` or `version/[tag-name]/`
+// See the following documentation for more detail:
+//   https://github.com/concord-consortium/s3-deploy-action/blob/main/README.md#top-branch-example
+const DEPLOY_PATH = process.env.DEPLOY_PATH;
 
 module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production';
@@ -25,16 +32,16 @@ module.exports = (env, argv) => {
     performance: { hints: false },
     module: {
       rules: [
-        {
-          test: /\.tsx?$/,
-          enforce: 'pre',
-          use: [
-            {
-              loader: 'tslint-loader',
-              options: {}
-            }
-          ]
-        },
+        // {
+        //   test: /\.tsx?$/,
+        //   enforce: 'pre',
+        //   use: [
+        //     {
+        //       loader: 'tslint-loader',
+        //       options: {}
+        //     }
+        //   ]
+        // },
         {
           test: /\.tsx?$/,
           loader: 'ts-loader',
@@ -52,21 +59,23 @@ module.exports = (env, argv) => {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                sourceMap: true,
-                importLoaders: 1,
-                localIdentName: '[name]--[local]--[hash:base64:8]'
+                esModule: false,
+                modules: {
+                  // required for :import from scss files
+                  // cf. https://github.com/webpack-contrib/css-loader#separating-interoperable-css-only-and-css-module-features
+                  mode: 'icss',
+                }
               }
             },
             'postcss-loader',
             'sass-loader'
           ]
         },
-        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader' }
+        { test: /\.(png|woff|woff2|eot|ttf|svg)$/, type: 'asset' }
       ]
     },
     resolve: {
-      extensions: [ '.ts', '.tsx', '.js' ]
+      extensions: ['.ts', '.tsx', '.js']
     },
     stats: {
       // suppress "export not found" warnings about re-exported types
@@ -78,15 +87,53 @@ module.exports = (env, argv) => {
       '@concord-consortium/lara-plugin-api': 'LARA.PluginAPI_V3'
     },
     plugins: [
+      new ESLintPlugin({
+        extensions: ['ts', 'tsx', 'js', 'jsx'],
+      }),
       new ForkTsCheckerWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: "plugin.css"
       }),
-      new CopyWebpackPlugin({
-        patterns: [
-          {from: 'src/public'}
-        ]
-      })
+      new HtmlWebpackPlugin({
+        filename: 'authoring.html',
+        template: 'src/public/authoring.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'authoring-top.html',
+        template: 'src/public/authoring.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'dashboard.html',
+        template: 'src/public/dashboard.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'dashboard-top.html',
+        template: 'src/public/dashboard.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'demo.html',
+        template: 'src/public/demo.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'demo-top.html',
+        template: 'src/public/demo.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'model-authoring-demo.html',
+        template: 'src/public/model-authoring-demo.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'model-authoring-demo-top.html',
+        template: 'src/public/model-authoring-demo.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
     ]
   };
 };

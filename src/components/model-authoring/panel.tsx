@@ -33,5 +33,5 @@ export const Panel = ({ label, collapsible, headerControls, children }: IProps) 
       </div>
       {!collapsed && <div className={css.content}>{children}</div>}
     </div>
-  )
-}
+  );
+};

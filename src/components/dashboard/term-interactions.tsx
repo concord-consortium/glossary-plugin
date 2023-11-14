@@ -62,5 +62,5 @@ export default class StatsTable extends React.Component<IProps, {}> {
   private setInteractionExpanded = (term: string, interaction: ExpandableInteraction, val: boolean) => {
     const { setInteractionExpanded } = this.props;
     setInteractionExpanded(term, interaction, val);
-  }
+  };
 }

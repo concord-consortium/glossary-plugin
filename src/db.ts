@@ -1,8 +1,7 @@
-import * as firebase from "firebase";
+import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import { v4 as uuid } from "uuid";
-import { IStudentSettings, IStudentInfo, IClassInfo } from "./types";
-import { ILogEvent } from "./types";
+import { IStudentSettings, IStudentInfo, ILogEvent } from "./types";
 import { createRecordingUrl } from "./utils/audio";
 
 export const FIREBASE_APP = "glossary-plugin";
@@ -198,8 +197,8 @@ export const uploadRecording = (options: IUploadRecordingOptions) => {
     const createdAt = firebase.firestore.FieldValue.serverTimestamp();
     const id = uuid();
 
-    const recording: IRecording = {userId, createdAt};
-    const recordingData: IRecordingData = {userId, createdAt, audioBlobUrl};
+    const recording: IRecording = { userId, createdAt };
+    const recordingData: IRecordingData = { userId, createdAt, audioBlobUrl };
 
     db.collection(recordingsPath(source, contextId)).doc(id)
       // create a lightweight record with the user and date that can be queried
@@ -207,7 +206,7 @@ export const uploadRecording = (options: IUploadRecordingOptions) => {
       // upload the large audio blob url to same key in a parallel collection
       .then(() => db.collection(recordingDataPath(source, contextId)).doc(id).set(recordingData))
       // return an url representing the recording
-      .then(() => resolve(createRecordingUrl({source, contextId, id})))
+      .then(() => resolve(createRecordingUrl({ source, contextId, id })))
       .catch(reject);
   });
 };

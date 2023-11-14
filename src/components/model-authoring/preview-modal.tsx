@@ -14,16 +14,16 @@ interface IProps {
 }
 
 export const PreviewModal = ({ terms, glossary, onClose }: IProps) => {
-  const [index, setIndex] = useState(0)
-  const [sortedTerms, setSortedTerms] = useState<IWordDefinition[]>(terms)
+  const [index, setIndex] = useState(0);
+  const [sortedTerms, setSortedTerms] = useState<IWordDefinition[]>(terms);
 
   useEffect(() => {
-    setSortedTerms(terms.slice().sort((a, b) => a.word.localeCompare(b.word)))
-  }, [terms])
+    setSortedTerms(terms.slice().sort((a, b) => a.word.localeCompare(b.word)));
+  }, [terms]);
 
-  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setIndex(parseInt(e.target.value, 10))
-  const handleNext = () => setIndex((index + 1) % sortedTerms.length)
-  const handlePrev = () => setIndex(index === 0 ? sortedTerms.length - 1 : index - 1)
+  const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => setIndex(parseInt(e.target.value, 10));
+  const handleNext = () => setIndex((index + 1) % sortedTerms.length);
+  const handlePrev = () => setIndex(index === 0 ? sortedTerms.length - 1 : index - 1);
 
   return (
     <Modal onClose={onClose} title="Preview Terms" contentStyle={{width: 600}}>
@@ -49,5 +49,5 @@ export const PreviewModal = ({ terms, glossary, onClose }: IProps) => {
         </div>
       </div>
     </Modal>
-  )
-}
+  );
+};

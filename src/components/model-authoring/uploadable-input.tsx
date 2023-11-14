@@ -6,7 +6,7 @@ import { getUploader, UploaderContext } from "../../providers/uploader";
 
 import * as css from "./uploadable-input.scss";
 
-type AcceptableTypes = "image" | "video" | "audio" | "closed captions"
+type AcceptableTypes = "image" | "video" | "audio" | "closed captions";
 
 interface IProps {
   type: AcceptableTypes
@@ -21,7 +21,7 @@ const acceptMap: Record<AcceptableTypes, string[]> = {
   "video": ["video/mp4", "video/webm", "video/ogg"],
   "audio": ["audio/webm", "audio/mpeg", "audio/mp3", "audio/ogg"],
   "closed captions": ["text/vtt"]
-}
+};
 
 const acceptExtensions: any = {};
 Object.keys(acceptMap).forEach((type: AcceptableTypes) => {
@@ -30,27 +30,27 @@ Object.keys(acceptMap).forEach((type: AcceptableTypes) => {
 
 const UploadableInput = ({type, name, value, placeholder, onChange}: IProps) => {
   const options = useContext(UploaderContext);
-  const [uploadInProgress, setUploadInProgress] = useState(false)
-  const [uploadInProgressMessage, setUploadInProgressMessage] = useState<string|undefined>()
+  const [uploadInProgress, setUploadInProgress] = useState(false);
+  const [uploadInProgressMessage, setUploadInProgressMessage] = useState<string|undefined>();
 
   const handleDropAccepted = (files: File[]) => {
     if (!files[0]) {
       return;
     }
-    const uploader = getUploader(options)
+    const uploader = getUploader(options);
     uploader(files[0], ({inProgress, inProgressMessage, inProgressError, uploadedUrl}) => {
-      setUploadInProgress(inProgress)
-      setUploadInProgressMessage(inProgressMessage)
+      setUploadInProgress(inProgress);
+      setUploadInProgressMessage(inProgressMessage);
       if (uploadedUrl) {
-        onChange({target: {value: uploadedUrl}} as any)
+        onChange({target: {value: uploadedUrl}} as any);
       }
       if (inProgressError) {
         setTimeout(() => {
-          alert(inProgressError)
-        }, 10)
+          alert(inProgressError);
+        }, 10);
       }
     });
-  }
+  };
 
   const handleDropRejected = (rejected: File[]) => {
     alert(`File ${rejected[0].name} can't be uploaded. Please use one of the supported file types.`);
@@ -77,16 +77,16 @@ const UploadableInput = ({type, name, value, placeholder, onChange}: IProps) => 
           Drop a file here, or click to select a file to upload. Only popular {type} formats are supported
           (e.g. {acceptExtensions[type].join(", ")}).
         </Dropzone>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className={css.uploadableInput}>
       <input type="text" value={value || ""} placeholder={placeholder} onChange={onChange} />
       {renderDropzone()}
     </div>
-  )
-}
+  );
+};
 
 export default UploadableInput;

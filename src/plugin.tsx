@@ -113,7 +113,7 @@ export class GlossaryPlugin {
       // It renders child components into external containers sent to LARA, not into context.div
       // or anything else that we provide here.
       this.context.container);
-  }
+  };
 }
 
 export class GlossaryAuthoringPlugin {
@@ -141,15 +141,15 @@ export class GlossaryAuthoringPlugin {
         getFirebaseJwt={this.context.getFirebaseJwt}
       />,
       this.context.container);
-  }
+  };
 }
 
 export const initPlugin = () => {
   // check if we are being loaded in the LARA glossary edit page
   const glossaryModelAuthoring = (window as any).LARA?.GlossaryModelAuthoring as IGlossaryModelAuthoringInfo | undefined;
   if (glossaryModelAuthoring) {
-    renderGlossaryModelAuthoring(glossaryModelAuthoring)
-    return
+    renderGlossaryModelAuthoring(glossaryModelAuthoring);
+    return;
   }
 
   if (!PluginAPI || !PluginAPI.registerPlugin) {

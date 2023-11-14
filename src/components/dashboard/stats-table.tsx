@@ -197,9 +197,9 @@ export default class StatsTable extends React.Component<IProps, IState> {
   }
 
   private setTermExpanded = (term: string, val: boolean) => {
-    const expandedTerms = Object.assign({}, this.state.expandedTerms, {[term]: val});
+    const expandedTerms = { ...this.state.expandedTerms, [term]: val};
     if (!val) {
-      const expandedInteractions = Object.assign({}, this.state.expandedInteractions);
+      const expandedInteractions = { ...this.state.expandedInteractions};
       expandedInteractions[term] = {};
       this.setState({ expandedInteractions });
     }
@@ -210,10 +210,10 @@ export default class StatsTable extends React.Component<IProps, IState> {
         this.setStudentsExpanded(false);
       }
     });
-  }
+  };
 
   private setStudentExpanded = (studentId: string, val: boolean) => {
-    const expandedStudents = Object.assign({}, this.state.expandedStudents, {[studentId]: val});
+    const expandedStudents = { ...this.state.expandedStudents, [studentId]: val};
     this.setState({ expandedStudents }, () => {
       // When user expands student row, check if there's at least one expanded term.
       // If not, expand the fist one.
@@ -221,7 +221,7 @@ export default class StatsTable extends React.Component<IProps, IState> {
         this.setTermExpanded(this.getTerms()[0], true);
       }
     });
-  }
+  };
 
   private setStudentsExpanded = (val: boolean) => {
     const { students } = this.props;
@@ -234,34 +234,34 @@ export default class StatsTable extends React.Component<IProps, IState> {
         this.setTermExpanded(this.getTerms()[0], true);
       }
     });
-  }
+  };
 
   private setInteractionExpanded = (term: string, interaction: ExpandableInteraction, val: boolean) => {
-    const newInt = Object.assign({}, this.state.expandedInteractions[term], {[interaction]: val});
-    const expandedInteractions = Object.assign({}, this.state.expandedInteractions);
+    const newInt = { ...this.state.expandedInteractions[term], [interaction]: val};
+    const expandedInteractions = { ...this.state.expandedInteractions};
     expandedInteractions[term] = newInt;
     this.setState({ expandedInteractions });
-  }
+  };
 
   private onResize = () => {
     // Make sure that the verticalScrollContainer fits the window height.
     const bb = this.mainContainer.current!.getBoundingClientRect() as DOMRect;
     this.mainContainer.current!.style.height = (window.innerHeight - bb.y - BOTTOM_MARGIN) + "px";
-  }
+  };
 
   private onHorizontalContainerScroll = () => {
     // Synchronize scrolling of headers and horizontalScrollContainer.
     // Make sure there's no loop of scroll events. It causes weird effects and containers end up out of sync.
     this.ignoreNextScrollEvent(this.termHeaders.current!, this.onHeadersScroll);
     this.termHeaders.current!.scrollLeft = this.horizontalScrollingContainer.current!.scrollLeft;
-  }
+  };
 
   private onHeadersScroll = () => {
     // Synchronize scrolling of headers and horizontalScrollContainer.
     // Make sure there's no loop of scroll events. It causes weird effects and containers end up out of sync.
     this.ignoreNextScrollEvent(this.horizontalScrollingContainer.current!, this.onHorizontalContainerScroll);
     this.horizontalScrollingContainer.current!.scrollLeft = this.termHeaders.current!.scrollLeft;
-  }
+  };
 
   private ignoreNextScrollEvent(element: HTMLElement, originalHandler: any) {
     // Temporarily replace scroll handler and restore it after it's triggered once.

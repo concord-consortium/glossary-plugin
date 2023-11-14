@@ -146,7 +146,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         this.setState({jwt}, () => this.setState({uiState: UIState.PromptForSelectOrCreateResource}));
       }
     }
-  }
+  };
 
   private renderUserSuppliedJWTForm() {
     return (
@@ -190,13 +190,13 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         this.setState({error: "No client available"});
       }
     }
-  }
+  };
 
   private handleCreateNewGlossary = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     this.setState({uiState: UIState.CreateResource});
-  }
+  };
 
   private renderPromptForSelectOrCreateResource() {
     const {resources} = this.state;
@@ -230,7 +230,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         this.setGlossary(resource);
       }
     }
-  }
+  };
 
   private renderSelectResource() {
     const resources = this.state.resources || [];
@@ -238,7 +238,8 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
       <form className={css.selectResource} onSubmit={this.handleSelectResource}>
         Glossary: <select ref={this.glossarySelectFieldRef}>{resources.map((resource) => {
           return <option key={resource.id} value={resource.id}>{resource.name}</option>;
-        })}</select>
+        })}
+                  </select>
         <p>
           <Button label="Select Glossary" data-cy="select-glossary" onClick={this.handleSelectResource} />
           <Button label="Create New Glossary" data-cy="create-glossary" onClick={this.handleCreateNewGlossary}/>
@@ -271,7 +272,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         }
       }
     }
-  }
+  };
 
   private renderCreateResource() {
     return (
@@ -302,13 +303,13 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
     e.preventDefault();
     e.stopPropagation();
     this.props.uploadJSONToS3();
-  }
+  };
 
   private handleLoad = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.loadJSONFromS3();
-  }
+  };
 
   private renderSelectedResource() {
     const {glossary} = this.state;
@@ -344,7 +345,7 @@ export default class GlossaryResourceSelector extends React.Component<IProps, IS
         this.setState({error: "No client available"});
       }
     });
-  }
+  };
 
   private getClient() {
     if (!this.client) {

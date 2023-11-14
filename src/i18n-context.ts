@@ -65,7 +65,7 @@ export const translate = (translations: any, lang: string, key: string, fallback
     return result;
   }
   return replaceVariables(result, variables);
-}
+};
 
 export interface IFetchGlossaryCallbackOptions {
   languageCodes: string[];

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { IGlossary, IGlossarySettings, IWordDefinition } from "../../types";
+import { IGlossary, IGlossarySettings } from "../../types";
 import { TermPopUpPreview } from "./term-popup-preview";
 import { mp3UrlTerm, term, TextKey } from "../../utils/translation-utils";
 import { ITranslatedWordDefinition } from "./glossary-translations";
@@ -17,8 +17,8 @@ type ITranslatedWordDefinitionKey = keyof Pick<ITranslatedWordDefinition,
   "translatedVideoAltText" | "translatedClosedCaptionsUrl" | "translatedDiggingDeeperMP3Url" | "translatedDefinitionMP3Url" |
   "translatedImageCaptionMP3Url" | "translatedVideoCaptionMP3Url"
   >;
-export type TranslationFields = Record<ITranslatedWordDefinitionKey, string>
-export type DefinitionTranslation = Record<string, string>
+export type TranslationFields = Record<ITranslatedWordDefinitionKey, string>;
+export type DefinitionTranslation = Record<string, string>;
 
 export type NextEditAction = ({type: "save"} | {type: "save and close"} | {type: "save and edit previous"} | {type: "save and edit next"}) & {lang: string};
 
@@ -30,11 +30,11 @@ type IProps = {
   canEdit: boolean;
   onEdit: (translatedDefinition: ITranslatedWordDefinition, definitionTranslation: DefinitionTranslation, lang: string, next: NextEditAction) => void
   onCancel: () => void;
-}
+};
 
 export const TranslationForm = (props: IProps) => {
   const {canEdit} = props;
-  const translations = props.glossary.translations || {}
+  const translations = props.glossary.translations || {};
   const formRef = React.useRef<HTMLFormElement>(null);
   const [lang, setLang] = useState(props.lang);
   const [translation, setTranslation] = useState<TranslationFields>(props.translatedDefinition);
@@ -54,7 +54,7 @@ export const TranslationForm = (props: IProps) => {
       translatedImageCaptionMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), ""),
       translatedVideoCaptionMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.VideoCaption](word), ""),
       translatedDiggingDeeperMP3Url: translate(translations, lang, mp3UrlTerm[TextKey.DiggingDeeper](word), ""),
-    })
+    });
   }, [lang, word, translations]);
 
   const getNewTranslation = useCallback(() => {
@@ -71,38 +71,38 @@ export const TranslationForm = (props: IProps) => {
       [mp3UrlTerm[TextKey.ImageCaption](word)]: translation.translatedImageCaptionMP3Url,
       [mp3UrlTerm[TextKey.VideoCaption](word)]: translation.translatedVideoCaptionMP3Url,
       [mp3UrlTerm[TextKey.DiggingDeeper](word)]: translation.translatedDiggingDeeperMP3Url,
-    }
-    return newTranslation
-  }, [translation])
+    };
+    return newTranslation;
+  }, [translation]);
 
   const handleEditSubmit = (next: NextEditAction) => {
     return (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
-      props.onEdit(props.translatedDefinition, getNewTranslation(), lang, next)
-    }
-  }
+      props.onEdit(props.translatedDefinition, getNewTranslation(), lang, next);
+    };
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    handleEditSubmit({type: "save", lang})(e)
-  }
+    handleEditSubmit({type: "save", lang})(e);
+  };
 
   const handleChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    props.onEdit(props.translatedDefinition, getNewTranslation(), lang, {type: "save", lang: e.target.value})
-    setLang(e.target.value)
-  }
+    props.onEdit(props.translatedDefinition, getNewTranslation(), lang, {type: "save", lang: e.target.value});
+    setLang(e.target.value);
+  };
 
   const renderPreview = () => {
-    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false, enableStudentLanguageSwitching: false}
+    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: false, enableStudentLanguageSwitching: false};
     const previewTranslations = {
       [lang]: getNewTranslation() || {}
-    }
-    return <TermPopUpPreview key={`${lang}-${word}`} term={props.translatedDefinition} settings={settings} translations={previewTranslations} lang={lang}/>
-  }
+    };
+    return <TermPopUpPreview key={`${lang}-${word}`} term={props.translatedDefinition} settings={settings} translations={previewTranslations} lang={lang}/>;
+  };
 
   const handleFieldChange = (field: ITranslatedWordDefinitionKey) => {
     return (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
       setTranslation((prev) => ({...prev, [field]: e.target.value}));
-  }
+  };
 
   const renderButtons = () => {
     if (canEdit) {
@@ -120,15 +120,15 @@ export const TranslationForm = (props: IProps) => {
             <span className={icons.iconCaretRight}/>
           </button>
         </div>
-      )
+      );
     } else {
       return (
         <div className={css.buttons}>
           <button onClick={props.onCancel}>Close</button>
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className={css.modalForm} key={lang}>

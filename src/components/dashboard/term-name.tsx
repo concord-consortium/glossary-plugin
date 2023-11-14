@@ -29,5 +29,5 @@ export default class TermName extends React.Component<IProps, {}> {
   private onTermNameClick = () => {
     const { term, expanded, setTermExpanded } = this.props;
     setTermExpanded(term, !expanded);
-  }
+  };
 }

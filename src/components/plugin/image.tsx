@@ -85,7 +85,7 @@ export default class Image extends React.Component<IProps, IState> {
             <div className={css.zoomTitleLabel}>{word}</div>
             <div className={css.zoomTitleIcon}>
               <span className={icons.iconCross} onClick={this.toggleImageZoom} />
-          </div>
+            </div>
           </div>
           <div className={css.zoomImage} onClick={this.toggleImageZoom}>
             <img src={zoomImageUrl || imageUrl} title={this.translatedImageAltText} alt={this.translatedImageAltText}/>
@@ -96,7 +96,7 @@ export default class Image extends React.Component<IProps, IState> {
                 {this.translatedImageCaption}
                 {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
               </> : ""}
-            </div>
+          </div>
         </div>
       </div>
     );
@@ -113,5 +113,5 @@ export default class Image extends React.Component<IProps, IState> {
       event: `"image zoomed ${newValue ? "in" : "out"}`,
       word
     });
-  }
+  };
 }

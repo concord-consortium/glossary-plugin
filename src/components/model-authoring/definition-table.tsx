@@ -96,5 +96,5 @@ export const DefinitionTable = ({ definitions, modal, canEdit, onDelete, onEdit,
         ))}
       </tbody>
     </table>
-  )
-}
+  );
+};

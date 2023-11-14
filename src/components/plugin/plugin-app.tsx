@@ -2,12 +2,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import GlossaryPopup from "./glossary-popup";
 import GlossarySidebar from "./glossary-sidebar";
-import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo } from "../../types";
+import { IWordDefinition, ILearnerDefinitions, ITranslation, IStudentInfo, ILogEvent, ILogEventPartial } from "../../types";
 import * as PluginAPI from "@concord-consortium/lara-plugin-api";
 import { DEFAULT_LANG, translate } from "../../i18n-context";
 import { pluginContext } from "../../plugin-context";
 import { watchStudentSettings, sendLogEventToFirestore } from "../../db";
-import { ILogEvent, ILogEventPartial } from "../../types";
 import { IGlossaryAuthoredState } from "../authoring/authoring-app";
 import * as pluralize from "pluralize";
 import { POEDITOR_LANG_NAME } from "../../utils/poeditor-language-list";
@@ -70,7 +69,6 @@ interface IState {
   sidebarPresent: boolean;
   lang: string;
   secondLanguage?: string;
-  otherLanguages: string[];
   definitionsByWord: IDefinitionsByWord;
 }
 
@@ -81,7 +79,6 @@ export default class PluginApp extends React.Component<IProps, IState> {
     sidebarPresent: false,
     lang: DEFAULT_LANG,
     secondLanguage: undefined,
-    otherLanguages: [],
     definitionsByWord: {}
   };
   private sidebarContainer: HTMLElement;
@@ -228,7 +225,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     const { saveState } = this.props;
     const { learnerState } = this.state;
     // Make sure that reference is updated, so React can detect changes. ImmutableJS could be helpful.
-    const newLearnerState = Object.assign({}, learnerState);
+    const newLearnerState = { ...learnerState};
     if (!newLearnerState.definitions[word]) {
       newLearnerState.definitions[word] = [];
     }
@@ -241,11 +238,11 @@ export default class PluginApp extends React.Component<IProps, IState> {
       definition: newDefinition,
       definitions: newLearnerState.definitions[word]
     });
-  }
+  };
 
   public translate = (key: string, fallback: string | null = null, variables: {[key: string]: string} = {}) => {
     return translate(this.props.translations, this.state.lang, key, fallback, variables);
-  }
+  };
 
   public log = (event: ILogEventPartial) => {
     const { studentInfo, glossaryInfo, laraLog, resourceUrl, offlineMode } = this.props;
@@ -257,14 +254,12 @@ export default class PluginApp extends React.Component<IProps, IState> {
     const { contextId, userId } = studentInfo
       ? studentInfo
       : { contextId: OfflineStorageTBDMarker, userId: OfflineStorageTBDMarker };
-    const completeEvent: ILogEvent = Object.assign({}, event, {
-      userId,
+    const completeEvent: ILogEvent = { ...event, userId,
       contextId,
       resourceUrl,
       glossaryUrl: glossaryInfo.s3Url!,
       glossaryResourceId: glossaryInfo.glossaryResourceId!,
-      timestamp: Date.now()
-    });
+      timestamp: Date.now()};
     if (offlineMode) {
       saveLogEventInIndexDB(completeEvent);
     } else if (studentInfo) {
@@ -273,7 +268,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     if (laraLog) {
       laraLog(completeEvent);
     }
-  }
+  };
 
   private decorate() {
     const words = Object.keys(this.state.definitionsByWord);
@@ -314,7 +309,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
     openPopups.forEach((desc: IOpenPopupDesc) => {
       desc.popupController.close();
     });
-  }
+  };
 
   private wordClicked = (evt: Event | IPluginEvent) => {
     const {definitionsByWord} = this.state;
@@ -357,7 +352,7 @@ export default class PluginApp extends React.Component<IProps, IState> {
       clickedWord,
       popupState: popupOpen ? "already open" : "opening"
     });
-  }
+  };
 
   private popupClosed(container: HTMLElement) {
     // Keep state in sync. Popup can be closed using X sign in LARA. We don't control that.
@@ -378,5 +373,5 @@ export default class PluginApp extends React.Component<IProps, IState> {
       previousLanguageCode: lang,
       newLanguageCode: newLang
     });
-  }
+  };
 }

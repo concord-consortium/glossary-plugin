@@ -28,7 +28,7 @@ const ModelAuthoringDemo = () => {
       </div>
       <ModelAuthoringApp demo={true} initialData={initialData} />
     </div>
-  )
-}
+  );
+};
 
 ReactDOM.render(<ModelAuthoringDemo />, document.getElementById("app") as HTMLElement);

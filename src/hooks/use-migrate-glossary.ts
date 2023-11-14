@@ -16,8 +16,8 @@ export const useMigrateGlossary = (initialGlossary: IGlossary, updateGlossary: (
       enableStudentLanguageSwitching: false,
       translations: {},
       showSecondLanguageFirst: false
-    }
-    glossaryChanged = true
+    };
+    glossaryChanged = true;
   }
 
   // ensure that the two needed collections are defined

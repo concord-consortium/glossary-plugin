@@ -56,5 +56,5 @@ export default class DashboardApp extends React.Component<IProps, IState> {
       this.setState({supportedLanguageCodes: languageCodes});
     };
     fetchGlossary(glossaryUrl, callback);
-  }
+  };
 }

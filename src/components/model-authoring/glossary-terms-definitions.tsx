@@ -42,124 +42,124 @@ interface IProps {
 }
 
 export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }: IProps) => {
-  const {definitions} = glossary
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "created"| "updated">("asc")
-  const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions)
-  const [modal, setModal] = useState<IModal | undefined>(undefined)
-  const [selectedSecondLang, setSelectedSecondLang] = useState("")
+  const {definitions} = glossary;
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "created"| "updated">("asc");
+  const [sortedDefinitions, setSortedDefinitions] = useState<IWordDefinition[]>(definitions);
+  const [modal, setModal] = useState<IModal | undefined>(undefined);
+  const [selectedSecondLang, setSelectedSecondLang] = useState("");
 
-  const isWordDefined = (word: string) => definitions.find(d => d.word === word) !== undefined
-  const isValidUrl = (url?: string) => url ? url.startsWith("http") : true
+  const isWordDefined = (word: string) => definitions.find(d => d.word === word) !== undefined;
+  const isValidUrl = (url?: string) => url ? url.startsWith("http") : true;
 
   const handleSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOrder(e.target.value as any)
-  }
+    setSortOrder(e.target.value as any);
+  };
 
   const handleDeleteDefinition = (definition: IWordDefinition) => {
     if (confirm(`Are you sure you want to permanently delete the definition of ${definition.word}?`)) {
-      const remaining = definitions.filter(d => d !== definition)
-      saveDefinitions(remaining)
+      const remaining = definitions.filter(d => d !== definition);
+      saveDefinitions(remaining);
     }
-  }
+  };
 
-  const handleShowPreviewTerms = () => setModal({type: "preview terms"})
+  const handleShowPreviewTerms = () => setModal({type: "preview terms"});
 
-  const handleShowAddDefinition = () => setModal({type: "add term", now: Date.now()}) // Date.now() ensures that we redraw the form on each new add term click as we use it as the model key
+  const handleShowAddDefinition = () => setModal({type: "add term", now: Date.now()}); // Date.now() ensures that we redraw the form on each new add term click as we use it as the model key
 
-  const handleShowEditDefinition = (definition: IWordDefinition) => setModal({type: "edit term", definition})
+  const handleShowEditDefinition = (definition: IWordDefinition) => setModal({type: "edit term", definition});
 
-  const handleShowImageClick = (definition: IWordDefinition) => setModal({type: "image", definition})
+  const handleShowImageClick = (definition: IWordDefinition) => setModal({type: "image", definition});
 
-  const handleShowVideoClick = (definition: IWordDefinition) => setModal({type: "video", definition})
+  const handleShowVideoClick = (definition: IWordDefinition) => setModal({type: "video", definition});
 
-  const handleCloseModal = () => setModal(undefined)
+  const handleCloseModal = () => setModal(undefined);
 
   const handleAddDefinition = (newDefinition: IWordDefinition, next: NextAddAction) => {
-    const errors: IWordDefinitionFormErrors = {}
+    const errors: IWordDefinitionFormErrors = {};
 
-    checkUpdatedDefinition(newDefinition, errors, true)
+    checkUpdatedDefinition(newDefinition, errors, true);
 
     if (Object.keys(errors).length === 0) {
-      newDefinition.createdAt = Date.now()
-      newDefinition.updatedAt = Date.now()
-      const newDefinitions = definitions.slice()
-      newDefinitions.push(newDefinition)
+      newDefinition.createdAt = Date.now();
+      newDefinition.updatedAt = Date.now();
+      const newDefinitions = definitions.slice();
+      newDefinitions.push(newDefinition);
 
-      saveDefinitions(newDefinitions)
+      saveDefinitions(newDefinitions);
 
       switch (next) {
         case "save":
-          handleCloseModal()
-          break
+          handleCloseModal();
+          break;
         case "save and add another":
-          handleShowAddDefinition()
-          break
+          handleShowAddDefinition();
+          break;
       }
     }
 
     return errors;
-  }
+  };
 
   const handleEditDefinition = (existingDefinition: IWordDefinition, updatedDefinition: IWordDefinition, next: NextEditAction) => {
-    const errors: IWordDefinitionFormErrors = {}
+    const errors: IWordDefinitionFormErrors = {};
 
-    checkUpdatedDefinition(updatedDefinition, errors, existingDefinition.word !== updatedDefinition.word)
+    checkUpdatedDefinition(updatedDefinition, errors, existingDefinition.word !== updatedDefinition.word);
 
     if (Object.keys(errors).length === 0) {
-      updatedDefinition.updatedAt = Date.now()
-      const newDefinitions = definitions.slice()
-      const index = definitions.findIndex(d => d.word === existingDefinition.word)
-      newDefinitions[index] = updatedDefinition
-      saveDefinitions(newDefinitions)
+      updatedDefinition.updatedAt = Date.now();
+      const newDefinitions = definitions.slice();
+      const index = definitions.findIndex(d => d.word === existingDefinition.word);
+      newDefinitions[index] = updatedDefinition;
+      saveDefinitions(newDefinitions);
 
-      const sortedIndex = sortedDefinitions.findIndex(d => d.word === existingDefinition.word)
-      const nextIndex = (sortedIndex + 1) % sortedDefinitions.length
-      const prevIndex = sortedIndex === 0 ? sortedDefinitions.length - 1 : sortedIndex - 1
+      const sortedIndex = sortedDefinitions.findIndex(d => d.word === existingDefinition.word);
+      const nextIndex = (sortedIndex + 1) % sortedDefinitions.length;
+      const prevIndex = sortedIndex === 0 ? sortedDefinitions.length - 1 : sortedIndex - 1;
 
       switch (next) {
         case "save":
-          handleCloseModal()
-          break
+          handleCloseModal();
+          break;
         case "save and edit previous":
-          setModal({type: "edit term", definition: sortedDefinitions[prevIndex]})
-          break
+          setModal({type: "edit term", definition: sortedDefinitions[prevIndex]});
+          break;
         case "save and edit next":
-          setModal({type: "edit term", definition: sortedDefinitions[nextIndex]})
-          break
+          setModal({type: "edit term", definition: sortedDefinitions[nextIndex]});
+          break;
       }
     }
 
     return errors;
-  }
+  };
 
   const checkUpdatedDefinition = (updatedDefinition: IWordDefinition, errors: IWordDefinitionFormErrors, checkForExistingWord: boolean) => {
     if (updatedDefinition.word === "") {
-      errors.word = "Term is required"
+      errors.word = "Term is required";
     } else if (checkForExistingWord && isWordDefined(updatedDefinition.word)) {
-      errors.word = "Term is already defined"
+      errors.word = "Term is already defined";
     }
     if (updatedDefinition.definition === "") {
-      errors.definition = "Definition is required"
+      errors.definition = "Definition is required";
     }
     if (!isValidUrl(updatedDefinition.image)) {
-      errors.image = "Image URL does not appear to be valid"
+      errors.image = "Image URL does not appear to be valid";
     }
     if (!isValidUrl(updatedDefinition.zoomImage)) {
-      errors.zoomImage = "Zoom Image URL does not appear to be valid"
+      errors.zoomImage = "Zoom Image URL does not appear to be valid";
     }
     if (!isValidUrl(updatedDefinition.video)) {
-      errors.video = "Video URL does not appear to be valid"
+      errors.video = "Video URL does not appear to be valid";
     }
     if (!isValidUrl(updatedDefinition.closedCaptionsUrl)) {
-      errors.closedCaptionsUrl = "Closed Captions URL does not appear to be valid"
+      errors.closedCaptionsUrl = "Closed Captions URL does not appear to be valid";
     }
-  }
+  };
 
   const renderModal = () => {
     if (modal) {
       switch (modal.type) {
         case "preview terms":
-          return <PreviewModal terms={definitions} glossary={glossary} onClose={handleCloseModal} />
+          return <PreviewModal terms={definitions} glossary={glossary} onClose={handleCloseModal} />;
 
         case "add term":
           return (
@@ -175,7 +175,7 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 onSelectSecondLang={setSelectedSecondLang}
               />
             </Modal>
-          )
+          );
 
         case "edit term":
           return (
@@ -192,10 +192,10 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 onSelectSecondLang={setSelectedSecondLang}
               />
             </Modal>
-          )
+          );
 
         case "image":
-          const image = modal.definition
+          const image = modal.definition;
           return (
             <Modal onClose={handleCloseModal} title={`Preview Image: ${image.word}`}>
               <div className={imageModalCss.imageAndVideoModal}>
@@ -210,10 +210,10 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 />
               </div>
             </Modal>
-          )
+          );
 
         case "video":
-          const video = modal.definition
+          const video = modal.definition;
           return (
             <Modal onClose={handleCloseModal}  title={`Preview Video: ${video.word}`}>
               <div className={imageModalCss.imageAndVideoModal}>
@@ -228,34 +228,34 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
                 />
               </div>
             </Modal>
-          )
+          );
       }
     }
-  }
+  };
 
   useEffect(() => {
-    const sorted = definitions.slice()
+    const sorted = definitions.slice();
     sorted.sort((a, b) => {
-      let result: number
+      let result: number;
       switch (sortOrder) {
         case "asc":
-          return a.word.localeCompare(b.word)
+          return a.word.localeCompare(b.word);
         case "desc":
-          return b.word.localeCompare(a.word)
+          return b.word.localeCompare(a.word);
         case "created":
-          result = (b.createdAt || 0) - (a.createdAt || 0)
-          return result || a.word.localeCompare(b.word)
+          result = (b.createdAt || 0) - (a.createdAt || 0);
+          return result || a.word.localeCompare(b.word);
         case "updated":
-          result = (b.updatedAt || 0) - (a.updatedAt || 0)
-          return result || a.word.localeCompare(b.word)
+          result = (b.updatedAt || 0) - (a.updatedAt || 0);
+          return result || a.word.localeCompare(b.word);
       }
-    })
-    setSortedDefinitions(sorted)
-  }, [definitions, sortOrder])
+    });
+    setSortedDefinitions(sorted);
+  }, [definitions, sortOrder]);
 
-  const haveDefinitions = definitions.length > 0
+  const haveDefinitions = definitions.length > 0;
 
-  const panelLabel = `Glossary Terms & Definitions (${definitions.length})`
+  const panelLabel = `Glossary Terms & Definitions (${definitions.length})`;
 
   return (
     <Panel label={panelLabel} collapsible={true}>
@@ -293,5 +293,5 @@ export const GlossaryTermsDefinitions = ({ glossary, canEdit, saveDefinitions }:
         {modal && renderModal()}
       </div>
     </Panel>
-  )
-}
+  );
+};

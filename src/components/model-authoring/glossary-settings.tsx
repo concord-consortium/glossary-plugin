@@ -24,7 +24,7 @@ export const previewTerm: IWordDefinition = {
   image: "https://learn-resources.concord.org/tutorials/images/brogan-acadia.jpg",
   imageCaption: "A dog named Brogan enjoying a swim at Acadia National Park.",
   imageAltText: "A photograph of a golden retriever standing on a rocky shore with water behind him and a forest in the distance."
-}
+};
 
 const previewTranslations: ITranslationMap = {
   es: {
@@ -34,7 +34,7 @@ const previewTranslations: ITranslationMap = {
     "Dog.image_caption": "Un perro llamado Brogan disfruta de un baño en el Parque Nacional Acadia.",
     "Dog.image_alt_text": "Una fotografía de un golden retriever parado en una orilla rocosa con agua detrás de él y un bosque en la distancia."
   }
-}
+};
 
 export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
   const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording,
@@ -45,16 +45,16 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
     if (canEdit) {
       setEnabled(e.target.checked);
       if (!e.target.checked){
-        saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false, "showIDontKnowButton": false})
+        saveSettings({...glossary, "askForUserDefinition": false, "enableStudentRecording": false, "showIDontKnowButton": false});
       } else {
-        saveSettings({...glossary, "askForUserDefinition": e.target.checked})
+        saveSettings({...glossary, "askForUserDefinition": e.target.checked});
       }
     }
-  }
+  };
 
   const handleChange = (setting: keyof IGlossarySettings ) => (e: React.ChangeEvent<HTMLInputElement>) => {
       saveSettings({...glossary, [setting]: e.target.checked});
-  }
+  };
 
   return (
     <Panel label="Glossary Settings" collapsible={false}>
@@ -173,5 +173,5 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
         />
       </div>
     </Panel>
-  )
-}
+  );
+};

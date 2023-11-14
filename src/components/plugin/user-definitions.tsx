@@ -143,5 +143,5 @@ export default class UserDefinitions extends React.Component<IProps, IState> {
     this.setState({
       allUserDefsVisible: !allUserDefsVisible,
     });
-  }
+  };
 }

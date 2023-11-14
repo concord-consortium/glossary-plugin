@@ -33,5 +33,5 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
 
   private handleButtonClick = () => {
     this.props.onClick(this.props.language.lang);
-  }
+  };
 }

@@ -1,7 +1,6 @@
 import * as React from "react";
-import { IClassInfo } from "../../types";
+import { IClassInfo, ILogEvent } from "../../types";
 import { watchClassEvents } from "../../db";
-import { ILogEvent } from "../../types";
 import StatsTable from "./stats-table";
 import TermsFilter from "./terms-filter";
 import { getUsageStats, IUsageStats } from "../../utils/usage-stats-helpers";
@@ -57,13 +56,13 @@ export default class StatsTableContainer extends React.Component<IProps, IState>
     const processedFilters = termsFilter.split(",").filter(t => t !== "").map(t => t.trim());
     const stats = await getUsageStats(classInfo.students, events, processedFilters);
     this.setState({ notStarted: events.length === 0, stats });
-  }
+  };
 
   private onEventsUpdate = async (events: ILogEvent[]) => {
     this.setState({ events }, this.updateStats);
-  }
+  };
 
   private onTermsFilterUpdate = (termsFilter: string) => {
     this.setState({ termsFilter }, this.updateStats);
-  }
+  };
 }

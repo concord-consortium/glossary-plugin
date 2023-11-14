@@ -198,7 +198,8 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                           onSave={this.editDef}
                           onCancel={this.toggleDefinitionEditor.bind(this, def.word)}
                         />
-                      </td></tr>;
+                                                                        </td>
+                             </tr>;
                     } else {
                       return <tr key={def.word} className={css.wordRow}>
                         <td className={css.definitionWord}>{def.word}</td>
@@ -211,7 +212,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
                           <Button label="Edit" onClick={this.toggleDefinitionEditor.bind(this, def.word)}/>
                           <Button label="Remove" onClick={this.removeDef.bind(this, def.word)}/>
                         </td>
-                      </tr>;
+                             </tr>;
                     }
                   })
                 }
@@ -304,7 +305,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     // Also, if user was editing this word, make sure that we disable editor.
     definitionEditors[newDef.word] = false;
     this.setState({ glossary, definitionEditors, newDefEditor: false, glossaryDirty: this.s3LoadFeaturesAvailable});
-  }
+  };
 
   public removeDef = (word: string) => {
     const glossary: IGlossary = clone(this.state.glossary);
@@ -316,7 +317,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     // Also, if user was editing this word, make sure that we disable editor (in case this word is added again later).
     definitionEditors[word] = false;
     this.setState({ glossary, definitionEditors, glossaryDirty: this.s3LoadFeaturesAvailable });
-  }
+  };
 
   public loadJSONFromS3 = async () => {
     const {client, glossaryResource} = this.state;
@@ -358,7 +359,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
         s3Status: getStatusTxt("Loading JSON failed: unexpected/malformed content")
       });
     }
-  }
+  };
 
   public uploadJSONToS3 = () => {
     const {client, glossaryResource} = this.state;
@@ -398,7 +399,7 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
           s3Status: getStatusTxt(err)
         });
       });
-  }
+  };
 
   private get s3LoadFeaturesAvailable() {
     const { s3ActionInProgress, client, glossaryResource } = this.state;
@@ -414,42 +415,42 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.askForUserDefinition = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
-  }
+  };
 
   private handleAutoShowMediaInPopupChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.autoShowMediaInPopup = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
-  }
+  };
 
   private handleShowSideBarChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.showSideBar = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
-  }
+  };
 
   private handleEnableStudentRecordingChange = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.enableStudentRecording = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
-  }
+  };
 
   private handleEnableStudentLanguageSwitching = (event: React.ChangeEvent) => {
     const glossary: IGlossary = clone(this.state.glossary);
     glossary.enableStudentLanguageSwitching = (event.target as HTMLInputElement).checked;
     this.setState({ glossary });
-  }
+  };
 
   private toggleDefinitionEditor = (word: string) => {
     const definitionEditors = clone(this.state.definitionEditors);
     definitionEditors[word] = !definitionEditors[word];
     this.setState({ definitionEditors });
-  }
+  };
 
   private toggleNewDef = () => {
     const { newDefEditor } = this.state;
     this.setState({ newDefEditor: !newDefEditor });
-  }
+  };
 
   private editDef = (newDef: IWordDefinition) => {
     const glossary: IGlossary = clone(this.state.glossary);
@@ -459,11 +460,11 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     // Disable editor.
     definitionEditors[newDef.word] = false;
     this.setState({ glossary, definitionEditors, glossaryDirty: this.s3LoadFeaturesAvailable });
-  }
+  };
 
   private saveGlossary = (newGlossary: IGlossary) => {
     this.setState({ glossary: newGlossary, glossaryDirty: this.s3LoadFeaturesAvailable });
-  }
+  };
 
   private saveAuthoredState = () => {
     if (!this.props.inlineAuthoring) {
@@ -475,11 +476,11 @@ export default class AuthoringApp extends React.Component<IProps, IState> {
     const s3Url = client && glossaryResource ? client.getPublicS3Url(glossaryResource, GLOSSARY_FILENAME) : null;
     const authoredState: IGlossaryAuthoredState = { version, glossaryResourceId, s3Url };
     this.props.inlineAuthoring.saveAuthoredPluginState(JSON.stringify(authoredState));
-  }
+  };
 
   private setClientAndResource = (client: TokenServiceClient, glossaryResource: S3Resource) => {
     return new Promise<void>((resolve, reject) => {
       this.setState({client, glossaryResource}, () => resolve());
     });
-  }
+  };
 }

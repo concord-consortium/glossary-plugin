@@ -3,7 +3,7 @@ import { pluginContext } from "../../plugin-context";
 import { term, TextKey } from "../../utils/translation-utils";
 import TextToSpeech from "./text-to-speech";
 
-import * as css from "./digging-deeper.scss"
+import * as css from "./digging-deeper.scss";
 
 interface IProps {
 	word: string;
@@ -18,7 +18,7 @@ class DiggingDeeper extends React.Component<IProps>{
     const { word } = this.props;
     const translate = this.context.translate;
     const translatedWord = translate(term[TextKey.Word](word), word);
-    return translate("diggingDeeperTitle", null, {word: translatedWord, wordInEnglish: word })
+    return translate("diggingDeeperTitle", null, {word: translatedWord, wordInEnglish: word });
   }
 
 	public get translatedDiggingDeeperDefinition() {
@@ -37,7 +37,7 @@ class DiggingDeeper extends React.Component<IProps>{
 					{!disableReadAloud && <TextToSpeech text={this.translatedDiggingDeeperDefinition} word={word} textKey={TextKey.DiggingDeeper} />}
 				</div>
 			</div>
-	)
+	);
 	}
 }
 
