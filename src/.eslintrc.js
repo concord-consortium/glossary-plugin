@@ -54,7 +54,7 @@ module.exports = {
         "import/no-cycle": ["warn"],
         "import/no-extraneous-dependencies":[ "warn"],
         "import/no-useless-path-segments": ["warn"],
-        "import/no-unresolved": "off",
+        "import/no-unresolved": "warn",
         "jsx-quotes": "off",
         "max-len": ["off"],
         "no-bitwise": "error",

@@ -74,6 +74,7 @@ describe("TranslationsPanel component", () => {
       showIDontKnowButton: false,
       disableReadAloud: false,
       enableStudentRecording: false,
+      showSecondLanguageFirst: false,
       enableStudentLanguageSwitching: false,
       translations: {}
     } as IGlossary);
