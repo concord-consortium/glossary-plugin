@@ -3,7 +3,7 @@
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const ESLintPlugin = require('eslint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 // DEPLOY_PATH is set by the s3-deploy-action its value will be:
 // `branch/[branch-name]/` or `version/[tag-name]/`
@@ -87,9 +87,9 @@ module.exports = (env, argv) => {
       '@concord-consortium/lara-plugin-api': 'LARA.PluginAPI_V3'
     },
     plugins: [
-      // new ESLintPlugin({
-      //   extensions: ['ts', 'tsx', 'js', 'jsx'],
-      // }),
+      new ESLintPlugin({
+        extensions: ['ts', 'tsx', 'js', 'jsx'],
+      }),
       new ForkTsCheckerWebpackPlugin(),
       new MiniCssExtractPlugin({
         filename: "plugin.css"

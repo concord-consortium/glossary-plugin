@@ -353,11 +353,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     if (this.props.onUserDefinitionsUpdate) {
       this.props.onUserDefinitionsUpdate(userDefinition);
     }
-  }
+  };
 
   private handleTextareaChange = (evt: any) => {
     this.setState({ currentUserDefinition: evt.target.value });
-  }
+  };
 
   private handleSubmit = async () => {
     const { currentUserDefinition, recordingState } = this.state;
@@ -390,22 +390,22 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
     } else {
       this.addUserDefinition(currentUserDefinition);
     }
-  }
+  };
 
   private handleIDontKnow = () => {
     const i18n = this.context;
     this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
     this.addUserDefinition(i18n.translate("iDontKnowYet"));
-  }
+  };
 
   private handleCancel = () => {
     this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
     this.setState({ questionVisible: false, errorSavingRecording: false });
-  }
+  };
 
   private handleRevise = () => {
     this.setState({ questionVisible: true, errorSavingRecording: false });
-  }
+  };
 
   private updateRecording(options: {nextState: RecordingState, clearRecording: boolean}) {
     let {currentUserDefinition, recordingStartTime} = this.state;
@@ -471,14 +471,14 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         this.mediaRecorder.start();
       })
       .catch(err => alert(err.toString()));
-  }
+  };
 
   private handleStopRecording = () => {
     clearTimeout(this.recordingTimeout);
     if (this.mediaRecorder) {
       this.mediaRecorder.stop();
     }
-  }
+  };
 
   private handlePlayRecording = () => {
     const logPlay = () => this.context.log({event: "play unsubmitted recording"});
@@ -500,11 +500,11 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         })
         .catch((err) => alert(err.toString()));
     }
-  }
+  };
 
   private handleDeleteRecording = () => {
     this.updateRecording({nextState: RecordingState.NotRecording, clearRecording: true});
-  }
+  };
 
   private canRecord(props: IProps) {
     return !!props.enableStudentRecording

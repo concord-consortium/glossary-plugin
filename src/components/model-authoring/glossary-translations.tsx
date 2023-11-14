@@ -67,84 +67,84 @@ interface IProps {
 }
 
 export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveTranslations }: IProps) => {
-  const {definitions} = glossary
-  const translations = glossary.translations || {}
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "untranslated">("asc")
-  const [translatedDefinitions, setTranslatedDefinitions] = useState<ITranslatedWordDefinition[]>([])
-  const [sortedTranslatedDefinitions, setSortedTranslatedDefinitions] = useState<ITranslatedWordDefinition[]>([])
-  const [modal, setModal] = useState<IModal | undefined>(undefined)
-  const [stats, setStats] = useState<IStats>({totalTerms: 0, totalTranslations: 0})
+  const {definitions} = glossary;
+  const translations = glossary.translations || {};
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | "untranslated">("asc");
+  const [translatedDefinitions, setTranslatedDefinitions] = useState<ITranslatedWordDefinition[]>([]);
+  const [sortedTranslatedDefinitions, setSortedTranslatedDefinitions] = useState<ITranslatedWordDefinition[]>([]);
+  const [modal, setModal] = useState<IModal | undefined>(undefined);
+  const [stats, setStats] = useState<IStats>({totalTerms: 0, totalTranslations: 0});
 
   const handleSortOrder = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOrder(e.target.value as any)
-  }
+    setSortOrder(e.target.value as any);
+  };
 
   const handleDeleteLanguage = () => {
-    const {totalTranslations} = stats
-    const haveTranslations = totalTranslations > 0
-    const translationCount = totalTranslations === 1 ? "1 translation" : `all ${totalTranslations} translations`
-    const confirmation = `Are you sure you want to permanently delete this language?${haveTranslations ? `  You will lose ${translationCount}!` : ""}`
+    const {totalTranslations} = stats;
+    const haveTranslations = totalTranslations > 0;
+    const translationCount = totalTranslations === 1 ? "1 translation" : `all ${totalTranslations} translations`;
+    const confirmation = `Are you sure you want to permanently delete this language?${haveTranslations ? `  You will lose ${translationCount}!` : ""}`;
     if (confirm(confirmation)) {
-      const promptText = `PERMANENTLY DELETE THIS LANGUAGE WITH ${translationCount}`.toUpperCase()
+      const promptText = `PERMANENTLY DELETE THIS LANGUAGE WITH ${translationCount}`.toUpperCase();
       if (!haveTranslations || (prompt(`Please type '${promptText}' to confirm`) === promptText)) {
-        const remaining = {...translations}
-        delete remaining[lang]
-        saveTranslations(remaining)
+        const remaining = {...translations};
+        delete remaining[lang];
+        saveTranslations(remaining);
       }
     }
-  }
+  };
 
   const handleDeleteTranslation = (definition: IWordDefinition) => {
-    const {word} = definition
+    const {word} = definition;
     if (confirm(`Are you sure you want to permanently delete the translation of ${word}?`)) {
-      const prefix = `${word}.`
-      const translation = {...(translations[lang] || {})}
+      const prefix = `${word}.`;
+      const translation = {...(translations[lang] || {})};
       Object.keys(translation).forEach(key => {
         if (key.startsWith(prefix)) {
-          delete translation[key]
+          delete translation[key];
         }
       });
-      saveTranslations({...translations, [lang]: translation})
+      saveTranslations({...translations, [lang]: translation});
     }
-  }
+  };
 
-  const handleShowEditTranslation = (translatedDefinition: ITranslatedWordDefinition) => setModal({type: "edit", lang, translatedDefinition})
+  const handleShowEditTranslation = (translatedDefinition: ITranslatedWordDefinition) => setModal({type: "edit", lang, translatedDefinition});
 
-  const handleShowLanguageSettings = () => setModal({type: "language settings", lang})
+  const handleShowLanguageSettings = () => setModal({type: "language settings", lang});
 
-  const handleCloseModal = () => setModal(undefined)
+  const handleCloseModal = () => setModal(undefined);
 
   const handleEditTranslation = (translatedDefinition: ITranslatedWordDefinition, definitionTranslation: DefinitionTranslation, translatedLang: string, next: NextEditAction) => {
-    saveTranslations({...translations, [translatedLang]: {...translations[translatedLang], ...definitionTranslation}})
+    saveTranslations({...translations, [translatedLang]: {...translations[translatedLang], ...definitionTranslation}});
 
-    const sortedIndex = sortedTranslatedDefinitions.findIndex(d => d.word === translatedDefinition.word)
-    const nextIndex = (sortedIndex + 1) % sortedTranslatedDefinitions.length
-    const prevIndex = sortedIndex === 0 ? sortedTranslatedDefinitions.length - 1 : sortedIndex - 1
+    const sortedIndex = sortedTranslatedDefinitions.findIndex(d => d.word === translatedDefinition.word);
+    const nextIndex = (sortedIndex + 1) % sortedTranslatedDefinitions.length;
+    const prevIndex = sortedIndex === 0 ? sortedTranslatedDefinitions.length - 1 : sortedIndex - 1;
 
     switch (next.type) {
       case "save":
         // noop
-        break
+        break;
       case "save and close":
-        handleCloseModal()
-        break
+        handleCloseModal();
+        break;
       case "save and edit previous":
-        setModal({type: "edit", lang: next.lang, translatedDefinition: sortedTranslatedDefinitions[prevIndex]})
-        break
+        setModal({type: "edit", lang: next.lang, translatedDefinition: sortedTranslatedDefinitions[prevIndex]});
+        break;
       case "save and edit next":
-        setModal({type: "edit", lang: next.lang, translatedDefinition: sortedTranslatedDefinitions[nextIndex]})
-        break
+        setModal({type: "edit", lang: next.lang, translatedDefinition: sortedTranslatedDefinitions[nextIndex]});
+        break;
     }
-  }
+  };
 
   const handleEditLanguageSettings = (settingsLang: string, languageSettings: ILanguageSettings, next: NextSettingsAction) => {
-    saveTranslations({...translations, [settingsLang]: {...translations[settingsLang], ...languageSettings}})
+    saveTranslations({...translations, [settingsLang]: {...translations[settingsLang], ...languageSettings}});
     if (next.type === "save") {
-      setModal({type: "language settings", lang: next.lang})
+      setModal({type: "language settings", lang: next.lang});
     } else {
-      handleCloseModal()
+      handleCloseModal();
     }
-  }
+  };
 
   const renderModal = () => {
     if (modal) {
@@ -163,7 +163,7 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
                 onCancel={handleCloseModal}
               />
             </Modal>
-          )
+          );
 
         case "language settings":
           return (
@@ -178,16 +178,16 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
                 onCancel={handleCloseModal}
               />
             </Modal>
-          )
+          );
       }
     }
-  }
+  };
 
   useEffect(() => {
-    let totalTranslations = 0
+    let totalTranslations = 0;
 
     const withStats: ITranslatedWordDefinition[] = definitions.map(definition => {
-      const {word} = definition
+      const {word} = definition;
 
       const translatedWord = translate(translations, lang, term[TextKey.Word](word), "");
       const translatedDefinition = translate(translations, lang, term[TextKey.Definition](word), "");
@@ -201,28 +201,28 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
       const translatedDiggingDeeperMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.DiggingDeeper](word), "");
       const translatedImageCaptionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.ImageCaption](word), "");
       const translatedVideoCaptionMP3Url = translate(translations, lang, mp3UrlTerm[TextKey.VideoCaption](word), "");
-      const hasTranslatedWord = translatedWord.length > 0
-      const hasTranslatedDefinition = translatedDefinition.length > 0
-      const hasImageCaption = (definition.imageCaption || "").length > 0
-      const hasVideoCaption = (definition.videoCaption || "").length > 0
-      const hasImageAltText = (definition.imageAltText || "").length > 0
-      const hasVideoAltText = (definition.videoAltText || "").length > 0
-      const hasClosedCaptionsUrl = (definition.closedCaptionsUrl || "").length > 0
-      const hasDiggingDeeper = (definition.diggingDeeper || "").length > 0
-      const hasTranslatedImageCaption = translatedImageCaption.length > 0
-      const hasTranslatedVideoCaption = translatedVideoCaption.length > 0
-      const hasTranslatedDiggingDeeper = translatedDiggingDeeper.length > 0
-      const hasTranslatedImageAltText = translatedImageAltText.length > 0
-      const hasTranslatedVideoAltText = translatedVideoAltText.length > 0
-      const hasTranslatedClosedCaptionsUrl = translatedClosedCaptionsUrl.length > 0
+      const hasTranslatedWord = translatedWord.length > 0;
+      const hasTranslatedDefinition = translatedDefinition.length > 0;
+      const hasImageCaption = (definition.imageCaption || "").length > 0;
+      const hasVideoCaption = (definition.videoCaption || "").length > 0;
+      const hasImageAltText = (definition.imageAltText || "").length > 0;
+      const hasVideoAltText = (definition.videoAltText || "").length > 0;
+      const hasClosedCaptionsUrl = (definition.closedCaptionsUrl || "").length > 0;
+      const hasDiggingDeeper = (definition.diggingDeeper || "").length > 0;
+      const hasTranslatedImageCaption = translatedImageCaption.length > 0;
+      const hasTranslatedVideoCaption = translatedVideoCaption.length > 0;
+      const hasTranslatedDiggingDeeper = translatedDiggingDeeper.length > 0;
+      const hasTranslatedImageAltText = translatedImageAltText.length > 0;
+      const hasTranslatedVideoAltText = translatedVideoAltText.length > 0;
+      const hasTranslatedClosedCaptionsUrl = translatedClosedCaptionsUrl.length > 0;
 
-      let translationRank = 0
-      if (hasTranslatedWord) { translationRank++ }
-      if (hasTranslatedDefinition) { translationRank++ }
-      if (!hasImageCaption || hasTranslatedImageCaption) { translationRank++ }
-      if (!hasVideoCaption || hasTranslatedVideoCaption) { translationRank++ }
+      let translationRank = 0;
+      if (hasTranslatedWord) { translationRank++; }
+      if (hasTranslatedDefinition) { translationRank++; }
+      if (!hasImageCaption || hasTranslatedImageCaption) { translationRank++; }
+      if (!hasVideoCaption || hasTranslatedVideoCaption) { translationRank++; }
       if (translationRank === 4) {
-        totalTranslations++
+        totalTranslations++;
       }
 
       return {...definition,
@@ -251,39 +251,39 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
         hasTranslatedVideoAltText,
         hasTranslatedClosedCaptionsUrl,
         translationRank
-      }
-    })
-    setTranslatedDefinitions(withStats)
+      };
+    });
+    setTranslatedDefinitions(withStats);
     setStats({
       totalTerms: definitions.length,
       totalTranslations
-    })
-  }, [definitions, translations])
+    });
+  }, [definitions, translations]);
 
   useEffect(() => {
-    const sorted = translatedDefinitions.slice()
+    const sorted = translatedDefinitions.slice();
     sorted.sort((a, b) => {
-      let result: number
+      let result: number;
       switch (sortOrder) {
         case "asc":
-          return a.word.localeCompare(b.word)
+          return a.word.localeCompare(b.word);
         case "desc":
-          return b.word.localeCompare(a.word)
+          return b.word.localeCompare(a.word);
         case "untranslated":
-          result = a.translationRank - b.translationRank
-          return result || a.word.localeCompare(b.word)
+          result = a.translationRank - b.translationRank;
+          return result || a.word.localeCompare(b.word);
       }
-    })
-    setSortedTranslatedDefinitions(sorted)
-  }, [translatedDefinitions, sortOrder])
+    });
+    setSortedTranslatedDefinitions(sorted);
+  }, [translatedDefinitions, sortOrder]);
 
-  const haveDefinitions = definitions.length > 0
+  const haveDefinitions = definitions.length > 0;
 
-  const panelLabel = `Language: ${allLanguages[lang]} (${stats.totalTranslations}/${stats.totalTerms})`
+  const panelLabel = `Language: ${allLanguages[lang]} (${stats.totalTranslations}/${stats.totalTerms})`;
 
-  const headerControls = [<button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>]
+  const headerControls = [<button key="settings" onClick={handleShowLanguageSettings} style={{marginRight: 10, marginTop: 0}}>Language Settings</button>];
   if (canEdit) {
-    headerControls.push(<button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>)
+    headerControls.push(<button key="delete" onClick={handleDeleteLanguage} style={{marginTop: 0}}>Delete Language</button>);
   }
 
   return (
@@ -314,5 +314,5 @@ export const GlossaryTranslations = ({ glossary, lang, usedLangs, canEdit, saveT
     </Panel>
     {modal && renderModal()}
     </>
-  )
-}
+  );
+};

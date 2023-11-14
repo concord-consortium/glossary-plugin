@@ -22,7 +22,7 @@ export const allLanguages = {
   [POEDITOR_LANG_CODE.Russian]: "Russian",
   [POEDITOR_LANG_CODE.Spanish]: "Spanish",
   [POEDITOR_LANG_CODE.Manx]: "Yugtun", // using Manx as there is no native code for Yugtun
-}
+};
 
 export const AddTranslation = ({ glossary, saveTranslations }: IProps) => {
   const selectRef = useRef<HTMLSelectElement|null>(null);
@@ -31,20 +31,20 @@ export const AddTranslation = ({ glossary, saveTranslations }: IProps) => {
   const handleAddLanguage = () => {
     if (selectRef.current) {
       const newLang = selectRef.current.value;
-      const translations = glossary.translations || {}
+      const translations = glossary.translations || {};
       if (!translations[newLang]) {
         translations[newLang] = {};
-        saveTranslations(translations)
+        saveTranslations(translations);
       }
     }
-  }
+  };
 
   useEffect(() => {
-    const languages = {...allLanguages}
+    const languages = {...allLanguages};
     Object.keys(glossary.translations || {}).forEach(lang => {
       delete languages[lang];
-    })
-    setUnusedLanguages(languages)
+    });
+    setUnusedLanguages(languages);
   }, [glossary]);
 
   if (Object.keys(unusedLanguages).length === 0) {
@@ -57,10 +57,10 @@ export const AddTranslation = ({ glossary, saveTranslations }: IProps) => {
       <select ref={selectRef}>
         {Object.keys(unusedLanguages).map(lang => {
           const name = unusedLanguages[lang as keyof typeof unusedLanguages];
-          return <option key={lang} value={lang}>{name}</option>
+          return <option key={lang} value={lang}>{name}</option>;
         })}
       </select>
       <button onClick={handleAddLanguage}>Add Language</button>
     </div>
- )
-}
+ );
+};

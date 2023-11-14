@@ -61,7 +61,7 @@ export default class JSONEditor extends React.Component<IProps, IState> {
     if (this.customValidation(data.jsObject) && onChange) {
       onChange(data.jsObject);
     }
-  }
+  };
 
   private customValidation(jsObject: any) {
     const { validate } = this.props;

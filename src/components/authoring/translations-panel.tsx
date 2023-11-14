@@ -60,7 +60,8 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
                 <tr key={langCode}>
                   <td><b>{POEDITOR_LANG_NAME[langCode]}</b></td>
                   <td>{isTranslationComplete(glossary, langCode) ?
-                      "up to date ✓" : "some strings haven't been translated ✖"}</td>
+                      "up to date ✓" : "some strings haven't been translated ✖"}
+                  </td>
                   <td><Button label="Remove" onClick={this.removeTranslation.bind(this, langCode)}/></td>
                 </tr>)
             }
@@ -114,7 +115,7 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
       .catch((e) => {
         alert(e);
       });
-  }
+  };
 
   private removeTranslation = (langCode: string) => {
     const { glossary, onGlossaryUpdate } = this.props;
@@ -124,12 +125,12 @@ export default class TranslationsPanel extends React.Component<IProps, IState> {
     const newGlossary = clone(glossary);
     delete newGlossary.translations![langCode];
     onGlossaryUpdate(newGlossary);
-  }
+  };
 
   private exportPOEditorJSON = () => {
     const { glossary } = this.props;
     const terms = glossaryToPOEditorTerms(glossary);
     const blob = new Blob([JSON.stringify(terms, null, 2)], { type: "application/json;charset=utf-8" });
     saveAs(blob, "terms.json", { autoBom: true });
-  }
+  };
 }

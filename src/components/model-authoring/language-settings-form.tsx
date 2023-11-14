@@ -23,58 +23,58 @@ type IProps = {
   canEdit: boolean;
   onEdit: (settingsLang: string, languageSettings: ILanguageSettings, next: NextSettingsAction) => void
   onCancel: () => void;
-}
+};
 
 export const LanguageSettingsForm = (props: IProps) => {
   const {canEdit, lang} = props;
-  const translations = props.glossary.translations || {}
-  const [mainPromptMP3Url, setMainPromptMP3Url] = useState("")
-  const [writeDefinitionMP3Url, setWriteDefinitionMP3Url] = useState("")
+  const translations = props.glossary.translations || {};
+  const [mainPromptMP3Url, setMainPromptMP3Url] = useState("");
+  const [writeDefinitionMP3Url, setWriteDefinitionMP3Url] = useState("");
 
   useEffect(() => {
-    setMainPromptMP3Url(translate(translations, lang, "main_prompt_mp3_url", ""))
-    setWriteDefinitionMP3Url(translate(translations, lang, "write_definition_mp3_url", ""))
-  }, [translations, lang])
+    setMainPromptMP3Url(translate(translations, lang, "main_prompt_mp3_url", ""));
+    setWriteDefinitionMP3Url(translate(translations, lang, "write_definition_mp3_url", ""));
+  }, [translations, lang]);
 
   const handleCancel = (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    props.onCancel()
-  }
+    props.onCancel();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>|React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     props.onEdit(lang, {
       main_prompt_mp3_url: mainPromptMP3Url,
       write_definition_mp3_url: writeDefinitionMP3Url,
-    }, {type: "save and close"})
-  }
+    }, {type: "save and close"});
+  };
 
   const handleChangeMainPromptMP3Url = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMainPromptMP3Url(e.target.value);
-  }
+  };
 
   const handleChangeWriteDefinitionMP3Url = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWriteDefinitionMP3Url(e.target.value);
-  }
+  };
 
   const handleChangeLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
     props.onEdit(lang, {
       main_prompt_mp3_url: mainPromptMP3Url,
       write_definition_mp3_url: writeDefinitionMP3Url,
-    }, {type: "save", lang: e.target.value})
-  }
+    }, {type: "save", lang: e.target.value});
+  };
 
   const renderPreview = () => {
-    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: true, enableStudentLanguageSwitching: false}
+    const settings: IGlossarySettings = {...props.glossary, askForUserDefinition: true, enableStudentLanguageSwitching: false};
     const previewSettings: ILanguageSettings = {
       main_prompt_mp3_url: mainPromptMP3Url,
       write_definition_mp3_url: writeDefinitionMP3Url
-    }
+    };
     const previewTranslations = {
       [lang]: {...translations[lang], ...previewSettings }
-    }
-    return <TermPopUpPreview key={lang} term={previewTerm} settings={settings} translations={previewTranslations} lang={lang}/>
-  }
+    };
+    return <TermPopUpPreview key={lang} term={previewTerm} settings={settings} translations={previewTranslations} lang={lang}/>;
+  };
 
   return (
     <div className={css.modalForm} key={lang}>

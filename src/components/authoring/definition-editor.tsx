@@ -46,14 +46,12 @@ const wrongFileTypeAlert = (rejected: File[]) => {
 
 export default class DefinitionEditor extends React.Component<IProps, IState> {
   public state: IState = {
-    definition: Object.assign({
-      word: "",
+    definition: {word: "",
       definition: "",
       image: "",
       imageCaption: "",
       video: "",
-      videoCaption: ""
-    }, this.props.initialDefinition),
+      videoCaption: "", ...this.props.initialDefinition},
     imageFile: null,
     zoomImageFile: null,
     videoFile: null,
@@ -145,7 +143,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
                 value={definition.imageCaption}
                 name="imageCaption"
                 onChange={this.handleInputChange}
-              /></td>
+              />
+              </td>
             </tr>
             <tr>
               <td>Video URL</td>
@@ -176,7 +175,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
                 value={definition.videoCaption}
                 name="videoCaption"
                 onChange={this.handleInputChange}
-              /></td>
+              />
+              </td>
             </tr>
           </tbody>
         </table>
@@ -227,14 +227,14 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       // Rethrow error, so we can interrupt saving too.
       throw e;
     }
-  }
+  };
 
   private handleInputChange = (event: React.ChangeEvent) => {
     const name = (event.target as HTMLInputElement).name;
     const value = (event.target as HTMLInputElement).value;
     const { definition } = this.state;
-    this.setState({ definition: Object.assign({}, definition, {[name]: value}) });
-  }
+    this.setState({ definition: { ...definition, [name]: value} });
+  };
 
   private handleImageDrop = (files: File[]) => {
     if (!files[0]) {
@@ -243,8 +243,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     const { definition } = this.state;
     // Cleanup anything that user typed into "Image URL" field before to avoid subtle bugs (e.g. when this string
     // doesn't pass validation).
-    this.setState({ imageFile: files[0], definition: Object.assign({}, definition, {image: ""}) });
-  }
+    this.setState({ imageFile: files[0], definition: { ...definition, image: ""} });
+  };
 
   private handleZoomImageDrop = (files: File[]) => {
     if (!files[0]) {
@@ -253,8 +253,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     const { definition } = this.state;
     // Cleanup anything that user typed into "Zoom Image URL" field before to avoid subtle bugs (e.g. when this string
     // doesn't pass validation).
-    this.setState({ zoomImageFile: files[0], definition: Object.assign({}, definition, {zoomImage: ""}) });
-  }
+    this.setState({ zoomImageFile: files[0], definition: { ...definition, zoomImage: ""} });
+  };
 
   private handleVideoDrop = (files: File[]) => {
     if (!files[0]) {
@@ -263,8 +263,8 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     const { definition } = this.state;
     // Cleanup anything that user typed into "Video URL" field before to avoid subtle bugs (e.g. when this string
     // doesn't pass validation).
-    this.setState({ videoFile: files[0], definition: Object.assign({}, definition, {video: ""}) });
-  }
+    this.setState({ videoFile: files[0], definition: { ...definition, video: ""} });
+  };
 
   private handleSave = async () => {
     // Hide old errors first.
@@ -272,7 +272,7 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
     const { definition, videoFile, imageFile, zoomImageFile } = this.state;
     // Definition passed to a parent has a bit different format that internally stored object that is used
     // to control text inputs.
-    let finalDefinition = Object.assign({}, definition);
+    let finalDefinition = { ...definition};
     // Note that we don't want empty strings to be present in the final definition. JSON Schema validation would fail.
     finalDefinition = removeEmptyProps(finalDefinition);
     const validation = validateDefinition(finalDefinition);
@@ -312,5 +312,5 @@ export default class DefinitionEditor extends React.Component<IProps, IState> {
       }
     }
     this.props.onSave(finalDefinition);
-  }
+  };
 }

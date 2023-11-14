@@ -44,5 +44,5 @@ export default class TermsFilter extends React.Component<IProps, IState> {
     this.timeoutId = window.setTimeout(() => {
       onTermsFilterUpdate(newValue);
     }, DELAY);
-  }
+  };
 }

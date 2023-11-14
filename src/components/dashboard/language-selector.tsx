@@ -139,19 +139,19 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   private toggleModal = () => {
     this.setState({ modalIsOpen: !this.state.modalIsOpen });
-  }
+  };
 
   private getStudentSettings = (student: IStudent) => {
     const { studentSettings } = this.state;
     const existingSettings = studentSettings.find(s => s.userId === student.id);
     // This line will ensure that each time we add some new settings, a default value will be provided even to
     // previously saved settings.
-    return Object.assign({}, DEF_STUDENT_SETTINGS, existingSettings, {userId: student.id});
-  }
+    return { ...DEF_STUDENT_SETTINGS, ...existingSettings, userId: student.id};
+  };
 
   private onSettingsUpdate = (studentSettings: IStudentSettings[]) => {
     this.setState({ studentSettings });
-  }
+  };
 
   private handleSaveStudentSetting = (student: IStudent, setting: SettingName) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,13 +166,13 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
       };
       saveStudentSettings(classInfo.source, classInfo.contextId, newSettings);
     };
-  }
+  };
 
   private handleLangChange = (student: IStudent) => {
     return this.handleSaveStudentSetting(student, "preferredLanguage");
-  }
+  };
 
   private handleScaffoldedQuestionLevelChange = (student: IStudent) => {
     return this.handleSaveStudentSetting(student, "scaffoldedQuestionLevel");
-  }
+  };
 }

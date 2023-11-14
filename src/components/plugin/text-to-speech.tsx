@@ -94,5 +94,5 @@ export default class TextToSpeech extends React.Component<IProps, IState> {
       word,
       textType: textKey
     });
-  }
+  };
 }

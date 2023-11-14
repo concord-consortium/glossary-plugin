@@ -20,7 +20,7 @@ const SaveIndicator = ({status}: IProps) => {
       {status && status.mode === "error" && <div className={css.error}>{status.message}</div>}
       {status && status.mode === "savingDisabled" && <div className={css.saving}>Saving is disabled!</div>}
     </div>
-  )
-}
+  );
+};
 
 export default SaveIndicator;

@@ -28,5 +28,5 @@ export default class ExpandStudents extends React.Component<IProps, {}> {
   private handleClick = () => {
     const { setStudentsExpanded, anyStudentExpanded } = this.props;
     setStudentsExpanded(!anyStudentExpanded);
-  }
+  };
 }

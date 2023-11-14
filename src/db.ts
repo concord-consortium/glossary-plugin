@@ -1,8 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/firestore";
 import { v4 as uuid } from "uuid";
-import { IStudentSettings, IStudentInfo, IClassInfo } from "./types";
-import { ILogEvent } from "./types";
+import { IStudentSettings, IStudentInfo, ILogEvent } from "./types";
 import { createRecordingUrl } from "./utils/audio";
 
 export const FIREBASE_APP = "glossary-plugin";

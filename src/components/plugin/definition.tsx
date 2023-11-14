@@ -61,7 +61,7 @@ export default class Definition extends React.Component<IProps, IState> {
   public get translatedDiggingDeeper() {
     const { diggingDeeper, word } = this.props;
     const translate = this.context.translate;
-    return translate(term[TextKey.DiggingDeeper](word), diggingDeeper)
+    return translate(term[TextKey.DiggingDeeper](word), diggingDeeper);
   }
 
   public get translatedImageCaption() {
@@ -115,14 +115,14 @@ export default class Definition extends React.Component<IProps, IState> {
           onClick={this.toggleDiggingDeeper}
           title={translate("viewDiggingDeeper")}
         />
-      )
+      );
     }
   }
 
   public render() {
     const { imageUrl, zoomImageUrl, videoUrl, imageCaption, imageAltText, videoCaption, videoAltText, closedCaptionsUrl, word, definition, diggingDeeper, disableReadAloud } = this.props;
     const { imageVisible, videoVisible, diggingDeeperVisible } = this.state;
-    const hasDefinition = definition.length > 0
+    const hasDefinition = definition.length > 0;
     return (
       <div>
         {hasDefinition && <div>
@@ -133,7 +133,7 @@ export default class Definition extends React.Component<IProps, IState> {
             {this.renderVideoButton(videoUrl)}
             {this.renderDiggingDeeperButton()}
           </span>
-        </div>}
+                          </div>}
         { diggingDeeperVisible &&
           <DiggingDeeper word={word} diggingDeeper={diggingDeeper} disableReadAloud={disableReadAloud}/>
         }
@@ -180,7 +180,7 @@ export default class Definition extends React.Component<IProps, IState> {
         word
       });
     }
-  }
+  };
 
   private toggleVideo = () => {
     const { videoVisible } = this.state;
@@ -197,7 +197,7 @@ export default class Definition extends React.Component<IProps, IState> {
         word
       });
     }
-  }
+  };
 
   private toggleDiggingDeeper = () => {
     const { diggingDeeperVisible } = this.state;
@@ -210,12 +210,12 @@ export default class Definition extends React.Component<IProps, IState> {
       this.context.log({
         event: "digging deeper definition opened",
         word
-      })
+      });
     } else {
       this.context.log({
         event: "digging deeper definition closed",
         word
-      })
+      });
     }
-  }
+  };
 }

@@ -24,5 +24,5 @@ export default class Button extends React.Component<IProps, {}> {
       return;
     }
     onClick(event);
-  }
+  };
 }

@@ -15,20 +15,20 @@ export const EditName = ({ name, canEdit, saveName }: IProps) => {
   const [error, setError] = useState<string|null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const focusInput = () => setTimeout(() => inputRef.current?.focus(), 1)
+  const focusInput = () => setTimeout(() => inputRef.current?.focus(), 1);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(e.target.value);
-  }
+  };
 
   const handleEdit = () => {
-    setEditing(true)
+    setEditing(true);
     setError(null);
-    focusInput()
-  }
+    focusInput();
+  };
 
   const handleSave = () => {
-    const trimmedName = newName.trim()
+    const trimmedName = newName.trim();
     if (trimmedName.length) {
       saveName(trimmedName);
       setNewName(trimmedName);
@@ -36,15 +36,15 @@ export const EditName = ({ name, canEdit, saveName }: IProps) => {
       setError(null);
     } else {
       setError("Glossary name cannot be empty");
-      focusInput()
+      focusInput();
     }
-  }
+  };
 
   const handleCancel = () => {
     setNewName(name);
     setEditing(false);
     setError(null);
-  }
+  };
 
   const renderButtons = () => {
     if (canEdit) {
@@ -55,9 +55,9 @@ export const EditName = ({ name, canEdit, saveName }: IProps) => {
           <button onClick={handleCancel}>Cancel</button>
         </>
         ) : <button onClick={handleEdit}>Edit Name</button>
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className={css.editName}>
@@ -67,5 +67,5 @@ export const EditName = ({ name, canEdit, saveName }: IProps) => {
       </div>
       {error && <div className={css.error}>{error}</div>}
     </div>
-  )
-}
+  );
+};

@@ -17,12 +17,12 @@ export const Modal = ({ title, contentStyle, children, onClose }: IProps) => {
   useEffect(() => {
     const listenForEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose()
+        onClose();
       }
-    }
-    window.addEventListener("keydown", listenForEscape)
-    return () => window.removeEventListener("keydown", listenForEscape)
-  }, [])
+    };
+    window.addEventListener("keydown", listenForEscape);
+    return () => window.removeEventListener("keydown", listenForEscape);
+  }, []);
 
   const renderTitle = () => {
     if (title) {
@@ -31,19 +31,17 @@ export const Modal = ({ title, contentStyle, children, onClose }: IProps) => {
           {title}
           {onClose && <span onClick={onClose} className={icons.iconCross}/>}
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
-    <>
-      <div className={css.container}>
+    <div className={css.container}>
         <div className={css.background} onClick={onClose}/>
         <div className={css.content} style={contentStyle}>
           {renderTitle()}
           {children}
         </div>
-      </div>
-    </>
-  )
-}
+    </div>
+  );
+};

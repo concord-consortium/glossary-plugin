@@ -66,6 +66,7 @@ export interface IBasicEvent {
   contextId: string;
   resourceUrl: string;
   glossaryUrl: string;
+  glossaryResourceId: string;
   timestamp: number;
 }
 

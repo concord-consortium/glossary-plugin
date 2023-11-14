@@ -14,10 +14,9 @@ module.exports = {
             "@typescript-eslint/parser": [".ts", ".tsx"]
         },
         "import/resolver": {
-            typescript: {
-                alwaysTryTypes: true,
-                project: "."
-            }
+          "node": {
+            "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          }
         },
         react: {
             pragma: "React",
@@ -39,6 +38,7 @@ module.exports = {
     ],
     rules: {
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/no-confusing-non-null-assertion": "error",
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -51,24 +51,27 @@ module.exports = {
         "eol-last": "warn",
         "eqeqeq": ["error", "smart"],
         "eslint-comments/no-unused-disable": "off",   // enabled in .eslintrc.build.js
-        "import/no-cycle": "warn",
-        "import/no-extraneous-dependencies": "warn",
-        "import/no-useless-path-segments": "warn",
-        "jsx-quotes": ["error", "prefer-double"],
-        "max-len": ["warn", { code: 120, ignoreUrls: true }],
+        "import/no-cycle": ["warn"],
+        "import/no-extraneous-dependencies":[ "warn"],
+        "import/no-useless-path-segments": ["warn"],
+        "import/no-unresolved": "off",
+        "jsx-quotes": "off",
+        "max-len": ["off"],
         "no-bitwise": "error",
+        "no-case-declarations": "off",
         "no-debugger": "off",
         "no-duplicate-imports": "error",
         "no-sequences": "error",
         "no-shadow": "off", // superseded by @typescript-eslint/no-shadow
-        "no-tabs": "error",
+        "no-tabs": "off",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": ["error", { allowShortCircuit: true }],
         "no-unused-vars": "off",  // superseded by @typescript-eslint/no-unused-vars
-        "no-useless-call": "error",
-        "no-useless-concat": "error",
-        "no-useless-rename": "error",
-        "no-useless-return": "error",
+        "no-useless-call": "warn",
+        "no-useless-concat": "warn",
+        "no-useless-escape": "off",
+        "no-useless-rename": "warn",
+        "no-useless-return": "off",
         "no-var": "error",
         "no-whitespace-before-property": "error",
         "object-shorthand": "error",
@@ -81,11 +84,14 @@ module.exports = {
         "radix": "error",
         "react/jsx-closing-tag-location": "error",
         "react/jsx-handler-names": "off",
-        "react/jsx-no-useless-fragment": "error",
-        "react/no-access-state-in-setstate": "error",
+        "react/jsx-no-useless-fragment": "warn",
+        "react-hooks/rules-of-hooks": "warn",
+        "react/no-access-state-in-setstate": "warn",
         "react/no-danger": "error",
+        "react/no-render-return-value": "warn",
+        "react/no-unescaped-entities": "off",
         "react/no-unsafe": ["off", { checkAliases: true }],
-        "react/no-unused-state": "error",
+        "react/no-unused-state": "warn",
         "react/prop-types": "off",
         "semi": "off" // superseded by @typescript-eslint/semi
     },

@@ -14,7 +14,7 @@ interface ITranslationTableRowProps {
 }
 
 export const TranslationTableRow = (props: ITranslationTableRowProps) => {
-  const {canEdit} = props
+  const {canEdit} = props;
   const handleDelete = () => props.onDelete(props.definition);
   const handleEdit = () => props.onEdit(props.definition);
   const { word, translatedWord, translatedDefinition, hasTranslatedImageCaption, hasImageCaption, hasTranslatedVideoCaption, hasVideoCaption, hasTranslatedDiggingDeeper, hasDiggingDeeper } = props.definition;
@@ -72,5 +72,5 @@ export const TranslationTable = ({lang, translations, definitions, canEdit, onDe
         ))}
       </tbody>
     </table>
-  )
-}
+  );
+};

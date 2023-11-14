@@ -64,7 +64,7 @@ export default class Video extends React.Component<IProps> {
           }
         </div>
       }
-    </div>
-    )
+      </div>
+    );
   }
 }

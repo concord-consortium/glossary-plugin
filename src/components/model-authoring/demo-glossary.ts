@@ -1062,4 +1062,4 @@ export const demoGlossary: IGlossaryModelAuthoringInitialData = {
       }
     }
   }
-}
+};

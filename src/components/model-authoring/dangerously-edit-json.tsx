@@ -19,7 +19,7 @@ export const DangerouslyEditJson = ({ glossary, saveGlossary }: IProps) => {
     } catch (e) {
       alert(`Error parsing JSON: ${e.message}`);
     }
-  }
+  };
 
   return (
     <div className={css.dangerouslyEditJson}>
@@ -27,5 +27,5 @@ export const DangerouslyEditJson = ({ glossary, saveGlossary }: IProps) => {
       <textarea defaultValue={JSON.stringify(glossary, null, 2)} ref={textareaRef} />
       <button onClick={handleSave}>Save Edited JSON</button>
     </div>
-  )
-}
+  );
+};

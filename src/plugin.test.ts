@@ -56,7 +56,7 @@ describe("GlossaryPlugin", () => {
   });
 
   it("provides reasonable fallback state if provided values are malformed", async () => {
-    const context = Object.assign({}, defaultContext, {authoredState: "foo", learnerState: "bar"});
+    const context = { ...defaultContext, authoredState: "foo", learnerState: "bar"};
     const plugin = new GlossaryPlugin(context);
     // Note that this function doesn't have to be called manually in most cases. Constructor does it,
     // but it does not wait for it to complete (as it can't). So, we need to do it by hand while testing.
@@ -71,9 +71,7 @@ describe("GlossaryPlugin", () => {
       fetch.resetMocks();
     });
 
-    const context = Object.assign({}, defaultContext, {
-      authoredState: JSON.stringify({s3Url: "http://test.url.com/state.json"})
-    });
+    const context = { ...defaultContext, authoredState: JSON.stringify({s3Url: "http://test.url.com/state.json"})};
 
     it("fetches JSON at this URL and uses it as an authored state", async () => {
       const definitions = [{word: "test1", definition: "test 1"}];
@@ -118,10 +116,8 @@ describe("GlossaryPlugin", () => {
           }
         }
       };
-      const context = Object.assign({}, defaultContext, {
-        remoteEndpoint: "endpoint",
-        getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>((resolve) => resolve(jwtResp as any))
-      });
+      const context = { ...defaultContext, remoteEndpoint: "endpoint",
+        getFirebaseJwt: (appName: string) => new Promise<PluginAPI.IJwtResponse>((resolve) => resolve(jwtResp as any))};
       const plugin = new GlossaryPlugin(context);
       await plugin.renderPluginApp();
       expect(signInWithToken).toHaveBeenCalledWith(jwtResp.token);

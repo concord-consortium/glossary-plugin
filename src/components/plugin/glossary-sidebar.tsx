@@ -203,13 +203,13 @@ export default class GlossarySidebar extends React.Component<IProps, IState> {
     if (text) {
       this.goToLetter(text[0]);
     }
-  }
+  };
 
   private ownWordsClicked = () => {
     this.setState({ filter: Filter.WithUserDefinitionOnly });
-  }
+  };
 
   private allWordsClicked = () => {
     this.setState({ filter: Filter.AllWords });
-  }
+  };
 }

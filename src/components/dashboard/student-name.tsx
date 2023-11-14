@@ -29,5 +29,5 @@ export default class StudentName extends React.Component<IProps, {}> {
   private onStudentNameClick = () => {
     const { student, studentExpanded, setStudentExpanded  } = this.props;
     setStudentExpanded(student.id, !studentExpanded);
-  }
+  };
 }

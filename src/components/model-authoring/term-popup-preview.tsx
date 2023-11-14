@@ -7,7 +7,7 @@ import { pluginContext } from "../../plugin-context";
 import { translate } from "../../i18n-context";
 import { allLanguages } from "./add-translation";
 
-import * as css from './term-popup-preview.scss';
+import * as css from "./term-popup-preview.scss";
 
 interface IProps {
   settings: IGlossarySettings;
@@ -23,11 +23,11 @@ interface IProps {
 
 export const TermPopUpPreview = (props: IProps) => {
   const {term, settings, translations, note, allowReset, resetLabel, selectedSecondLang, onSelectSecondLang } = props;
-  const [lang, setLang] = useState(props.lang || "en")
-  const [languages, setLanguages] = useState<ILanguage[]>([])
+  const [lang, setLang] = useState(props.lang || "en");
+  const [languages, setLanguages] = useState<ILanguage[]>([]);
   const [availableLangs, setAvailableLangs] = useState<string[]>([]);
   const [userDefinitions, setUserDefinitions] = useState<string[]>([]);
-  const [renderUpdateCount, setRenderUpdateCount] = useState(0)
+  const [renderUpdateCount, setRenderUpdateCount] = useState(0);
 
   const enableLanguageSwitch = (newLang: string) => {
     if (newLang.length > 0) {
@@ -38,7 +38,7 @@ export const TermPopUpPreview = (props: IProps) => {
     } else {
       setLanguages([]);
     }
-  }
+  };
 
   const onLanguageChange = useCallback((newLang: string) => {
     if (selectedSecondLang) {
@@ -48,54 +48,54 @@ export const TermPopUpPreview = (props: IProps) => {
         { lang: selectedSecondLang, selected: newLang !== "en" }
       ]);
     }
-  }, [settings, selectedSecondLang])
+  }, [settings, selectedSecondLang]);
 
   const onUserDefinitionsUpdate = (userDefinition: string) => {
     setUserDefinitions([...userDefinitions, userDefinition]);
-  }
+  };
 
   const onReset = () => {
     setUserDefinitions([]);
     onLanguageChange(props.lang || "en");
     forceReRender();
-  }
+  };
 
   // increment this on each settings update to force a re-render as this is used as the top level key
   const forceReRender = () => setRenderUpdateCount(prev => prev + 1);
 
   useEffect(() => {
-    onLanguageChange(lang)
-    forceReRender()
+    onLanguageChange(lang);
+    forceReRender();
   }, [settings]);
 
   useEffect(() => {
     setUserDefinitions([]);
-    forceReRender()
-  }, [term])
+    forceReRender();
+  }, [term]);
 
   useEffect(() => {
-    forceReRender()
-  }, [translations])
+    forceReRender();
+  }, [translations]);
 
   useEffect(() => {
     const langs = Object.keys(translations);
     langs.sort((a, b) => allLanguages[a].localeCompare(allLanguages[b]));
     setAvailableLangs(langs);
-  }, [translations])
+  }, [translations]);
 
   const translatePreview = (key: string, fallback: string | null = null, variables: { [key: string]: string } = {}) => {
     return translate(translations, props.lang || lang, key, fallback, variables);
-  }
+  };
 
   // drop log message
-  const log = () => undefined
+  const log = () => undefined;
 
   const handleLanguageSelectorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     enableLanguageSwitch(e.target.value);
     onSelectSecondLang?.(e.target.value);
     // reset language to default
     setLang(props.lang || "en");
-  }
+  };
 
   const renderLanguageSelector = () => {
     if (onSelectSecondLang && availableLangs.length > 0) {
@@ -109,9 +109,9 @@ export const TermPopUpPreview = (props: IProps) => {
             {availableLangs.map(l => <option value={l} key={l}>{allLanguages[l]}</option>)}
           </select>
         </div>
-      )
+      );
     }
-  }
+  };
 
   return (
     <pluginContext.Provider value={{ lang, translate: translatePreview, log }} key={renderUpdateCount}>
@@ -151,5 +151,5 @@ export const TermPopUpPreview = (props: IProps) => {
         {allowReset && <button className={css.resetButton} onClick={onReset}>{resetLabel || "Reset"}</button>}
       </div>
     </pluginContext.Provider>
-  )
-}
+  );
+};

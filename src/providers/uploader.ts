@@ -1,8 +1,8 @@
-import { S3Resource, TokenServiceClient } from '@concord-consortium/token-service';
-import { createContext } from 'react';
+import { S3Resource, TokenServiceClient } from "@concord-consortium/token-service";
+import { createContext } from "react";
 import { v4 as uuid } from "uuid";
-import { getTokenServiceEnv } from '../components/authoring/glossary-resource-selector';
-import { s3Upload } from '../utils/s3-helpers';
+import { getTokenServiceEnv } from "../components/authoring/glossary-resource-selector";
+import { s3Upload } from "../utils/s3-helpers";
 
 interface IUploaderProgress {
   inProgress: boolean;
@@ -29,20 +29,20 @@ const getTokenServiceClient = async (getFirebaseJwtUrl?: (appName: string) => st
   }
 
   if (!getFirebaseJwtUrl) {
-    throw new Error("No Firebase JWT url provided!")
+    throw new Error("No Firebase JWT url provided!");
   }
 
-  const url = getFirebaseJwtUrl(TokenServiceClient.FirebaseAppName)
-  const response = await fetch(url, {method: "POST", credentials: "include"})
-  const json = await response.json()
+  const url = getFirebaseJwtUrl(TokenServiceClient.FirebaseAppName);
+  const response = await fetch(url, {method: "POST", credentials: "include"});
+  const json = await response.json();
 
   if (json.error) {
-    throw new Error(json.error)
+    throw new Error(json.error);
   }
 
   _tokenServiceClient = new TokenServiceClient({ env: getTokenServiceEnv(), jwt: json.token });
   return _tokenServiceClient;
-}
+};
 
 export const UploaderContext = createContext<IUploaderOptions>({
   demo: true,
@@ -63,7 +63,7 @@ export const getUploader = (options: IUploaderOptions): Uploader => {
           callback({inProgress: false});
         }, 2000);
       }, 2000);
-    }
+    };
   } else {
     return async (file, callback) => {
       try {
@@ -89,7 +89,7 @@ export const getUploader = (options: IUploaderOptions): Uploader => {
             accessRuleRole: "owner"
           }) as S3Resource;
 
-          saveTokenServiceResourceId(glossaryResource.id)
+          saveTokenServiceResourceId(glossaryResource.id);
         }
 
         callback({inProgress: true, inProgressMessage: "Getting S3 credentials from token service..."});
@@ -111,8 +111,8 @@ export const getUploader = (options: IUploaderOptions): Uploader => {
       } catch(e) {
         callback({inProgress: false, inProgressError: `Uploading ${file.name} failed. ${e.toString()}.  Please try again.`});
       }
-    }
+    };
   }
-}
+};
 
 
