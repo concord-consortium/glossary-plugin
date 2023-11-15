@@ -17,10 +17,6 @@ jobs:
         run: npm run build
       - name: Run Jest Tests w/ Coverage
         run: npm run test:coverage -- --runInBand
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
-      #   with:
-      #     flags: jest
   s3-deploy:
     name: S3 Deploy
     needs:
