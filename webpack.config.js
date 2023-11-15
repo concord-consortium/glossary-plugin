@@ -2,7 +2,13 @@
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// DEPLOY_PATH is set by the s3-deploy-action its value will be:
+// `branch/[branch-name]/` or `version/[tag-name]/`
+// See the following documentation for more detail:
+//   https://github.com/concord-consortium/s3-deploy-action/blob/main/README.md#top-branch-example
+const DEPLOY_PATH = process.env.DEPLOY_PATH;
 
 module.exports = (env, argv) => {
   const devMode = argv.mode !== 'production';
@@ -82,11 +88,46 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: "plugin.css"
       }),
-      new CopyWebpackPlugin({
-        patterns: [
-          {from: 'src/public'}
-        ]
-      })
+      new HtmlWebpackPlugin({
+        filename: 'authoring.html',
+        template: 'src/public/authoring.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'authoring-top.html',
+        template: 'src/public/authoring.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'dashboard.html',
+        template: 'src/public/dashboard.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'dashboard-top.html',
+        template: 'src/public/dashboard.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'demo.html',
+        template: 'src/public/demo.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'demo-top.html',
+        template: 'src/public/demo.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
+      new HtmlWebpackPlugin({
+        filename: 'model-authoring-demo.html',
+        template: 'src/public/model-authoring-demo.html',
+        publicPath: '.',
+      }),
+      ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
+        filename: 'model-authoring-demo-top.html',
+        template: 'src/public/model-authoring-demo.html',
+        publicPath: DEPLOY_PATH
+      })] : []),
     ]
   };
 };
