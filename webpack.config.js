@@ -2,6 +2,7 @@
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // DEPLOY_PATH is set by the s3-deploy-action its value will be:
@@ -88,41 +89,26 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: "plugin.css"
       }),
-      new HtmlWebpackPlugin({
-        filename: 'authoring.html',
-        template: 'src/public/authoring.html',
-        publicPath: '.',
+      new CopyWebpackPlugin({
+        patterns: [
+          {from: 'src/public'}
+        ]
       }),
       ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
         filename: 'authoring-top.html',
         template: 'src/public/authoring.html',
         publicPath: DEPLOY_PATH
       })] : []),
-      new HtmlWebpackPlugin({
-        filename: 'dashboard.html',
-        template: 'src/public/dashboard.html',
-        publicPath: '.',
-      }),
       ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
         filename: 'dashboard-top.html',
         template: 'src/public/dashboard.html',
         publicPath: DEPLOY_PATH
       })] : []),
-      new HtmlWebpackPlugin({
-        filename: 'demo.html',
-        template: 'src/public/demo.html',
-        publicPath: '.',
-      }),
       ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
         filename: 'demo-top.html',
         template: 'src/public/demo.html',
         publicPath: DEPLOY_PATH
       })] : []),
-      new HtmlWebpackPlugin({
-        filename: 'model-authoring-demo.html',
-        template: 'src/public/model-authoring-demo.html',
-        publicPath: '.',
-      }),
       ...(DEPLOY_PATH ? [new HtmlWebpackPlugin({
         filename: 'model-authoring-demo-top.html',
         template: 'src/public/model-authoring-demo.html',
