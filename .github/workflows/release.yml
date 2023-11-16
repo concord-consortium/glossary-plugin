@@ -8,7 +8,7 @@ on:
 env:
   BUCKET: models-resources
   PREFIX: glossary-plugin
-  SRC_FILE: index-top.html
+  SRC_FILE: demo-top.html
   DEST_FILE: index.html
 jobs:
   release:
