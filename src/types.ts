@@ -132,6 +132,8 @@ export type ExpandableInteraction = "definitions" | "supports";
 export interface IGlossaryModelAuthoringInitialData {
   id: number
   name: string
+  project: IProject
+  projects: IProject[]
   json: IGlossary
   canEdit: boolean
 }
@@ -141,6 +143,11 @@ export interface IGlossaryModelAuthoringInfo {
   containerId: string;
   initialData: IGlossaryModelAuthoringInitialData;
   getFirebaseJwtUrl: (appName: string) => string;
+}
+
+export interface IProject {
+  id: number
+  title: string
 }
 
 export type IGlossarySettings = Omit<Omit<IGlossary, "definitions">, "translations">;
