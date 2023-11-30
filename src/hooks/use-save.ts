@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { saveInDemo } from "../components/model-authoring/params";
-import { IGlossary } from "../types";
+import { IGlossary, IProject } from "../types";
 import ensureCorrectProtocol from "../utils/ensure-correct-protocol";
 
 export interface ISaveIndicatorSavingDisabled {
@@ -21,6 +21,7 @@ export type ISaveIndicatorStatus = ISaveIndicatorSaving | ISaveIndicatorSaved | 
 
 export const demoGlossaryNameKey = "demoGlossaryName";
 export const demoGlossaryJSONKey = "demoGlossaryJSON";
+export const demoGlossaryProjectKey = "demoGlossaryProject";
 
 export const useSave = (options: { demo?: boolean; apiUrl?: string; canEdit: boolean }) => {
   const { demo, apiUrl, canEdit } = options;
@@ -37,7 +38,7 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; canEdit: boo
 
   // the glossary api endpoint accepts either/or a post body of name and json,
   // where json is the glossary data
-  const save = async (body: ({ json: IGlossary; }) | ({ name: string; })) => {
+  const save = async (body: ({ json: IGlossary; }) | ({ name: string; }) | ({ project: IProject; })) => {
     if (!canEdit) {
       return;
     }
@@ -47,11 +48,13 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; canEdit: boo
     if (demo) {
       // save to local storage for easier development
       if (saveInDemo) {
-        const {json, name} = body as any;
+        const {json, name, project} = body as any;
         if (json) {
           window.localStorage.setItem(demoGlossaryJSONKey, JSON.stringify(json));
         } else if (name) {
           window.localStorage.setItem(demoGlossaryNameKey, name);
+        } else if (project !== undefined) { // allow save of "null"
+          window.localStorage.setItem(demoGlossaryProjectKey, JSON.stringify(project));
         }
       }
 
@@ -80,6 +83,7 @@ export const useSave = (options: { demo?: boolean; apiUrl?: string; canEdit: boo
 
   const saveGlossary = async (glossary: IGlossary) => save({ json: glossary });
   const saveName = async (name: string) => save({ name });
+  const saveProject = async (project: IProject) => save({ project });
 
-  return { saveIndicatorStatus, saveGlossary, saveName };
+  return { saveIndicatorStatus, saveGlossary, saveName, saveProject };
 };

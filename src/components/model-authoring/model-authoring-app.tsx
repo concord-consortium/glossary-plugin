@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import * as ReactDOM from "react-dom";
 
 import SaveIndicator from "./save-indicator";
-import { IGlossary, IGlossaryModelAuthoringInfo, IGlossaryModelAuthoringInitialData, IGlossarySettings, ITranslationMap, IWordDefinition } from "../../types";
+import { IGlossary, IGlossaryModelAuthoringInfo, IGlossaryModelAuthoringInitialData, IGlossarySettings, IProject, ITranslationMap, IWordDefinition } from "../../types";
 import { GlossaryTermsDefinitions } from "./glossary-terms-definitions";
 import { GlossarySettings } from "./glossary-settings";
 import { useSave } from "../../hooks/use-save";
@@ -27,13 +27,20 @@ interface IProps {
 const ModelAuthoringApp = ({demo, apiUrl, initialData, getFirebaseJwtUrl}: IProps) => {
   const {canEdit} = initialData;
   const [name, setName] = useState<string>(initialData.name);
+  const [project, setProject] = useState<IProject>(initialData.project);
   const [glossary, setGlossary] = useState<IGlossary>(initialData.json);
-  const {saveIndicatorStatus, saveGlossary, saveName} = useSave({demo, apiUrl, canEdit});
+  const {saveIndicatorStatus, saveGlossary, saveName, saveProject} = useSave({demo, apiUrl, canEdit});
   const [usedLangs, setUsedLangs] = useState<string[]>([]);
+  const projects = initialData.projects;
 
   const updateName = (newName: string) => {
     setName(newName);
     saveName(newName);
+  }
+
+  const updateProject = (newProject: IProject) => {
+    setProject(newProject);
+    saveProject(newProject);
   }
 
   const updateGlossary = useCallback((newGlossary: IGlossary) => {
@@ -120,7 +127,16 @@ const ModelAuthoringApp = ({demo, apiUrl, initialData, getFirebaseJwtUrl}: IProp
           {renderLeftColumn()}
         </div>
         <div className={css.rightColumn}>
-          <GlossarySettings name={name} glossary={glossary} saveSettings={saveSettings} saveName={updateName} canEdit={canEdit}/>
+          <GlossarySettings
+            name={name}
+            project={project}
+            projects={projects}
+            glossary={glossary}
+            saveSettings={saveSettings}
+            saveName={updateName}
+            saveProject={updateProject}
+            canEdit={canEdit}
+          />
         </div>
       </div>
       {debugJson && <div className={css.debugJson}>{JSON.stringify(glossary, null, 2)}</div>}

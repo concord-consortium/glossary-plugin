@@ -1,8 +1,25 @@
-import { IGlossaryModelAuthoringInitialData } from "../../types";
+import { IGlossaryModelAuthoringInitialData, IProject } from "../../types";
+
+const projects: IProject[] = [
+  {
+    id: 1,
+    title: "Demo Project"
+  },
+  {
+    id: 2,
+    title: "Second Project"
+  },
+  {
+    id: 3,
+    title: "Third Project"
+  },
+]
 
 export const demoGlossary: IGlossaryModelAuthoringInitialData = {
   id: 0,
   name: "Demo Glossary",
+  project: projects[0],
+  projects,
   canEdit: true,
   json: {
     askForUserDefinition: true,

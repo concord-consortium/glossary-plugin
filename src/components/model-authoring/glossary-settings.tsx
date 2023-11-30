@@ -1,20 +1,23 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { IGlossary, IGlossarySettings, ITranslationMap, IWordDefinition } from "../../types";
+import { IGlossary, IGlossarySettings, ITranslationMap, IWordDefinition, IProject } from "../../types";
 import { Panel } from "./panel";
 import { EditName } from "./edit-name";
 import { TermPopUpPreview } from "./term-popup-preview";
-import { allLanguages } from "./add-translation";
+import { EditProject } from "./edit-project";
 
 import * as css from "./glossary-settings.scss";
 
 interface IProps {
   name: string;
   glossary: IGlossary;
+  project: IProject|null;
+  projects: IProject[];
   canEdit: boolean;
   saveSettings: (settings: IGlossarySettings) => void;
   saveName: (name: string) => void;
+  saveProject: (project: IProject|null) => void;
 }
 
 export const previewTerm: IWordDefinition = {
@@ -36,7 +39,7 @@ const previewTranslations: ITranslationMap = {
   }
 }
 
-export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveName }: IProps) => {
+export const GlossarySettings = ({ name, glossary, project, projects, canEdit, saveSettings, saveName, saveProject }: IProps) => {
   const { askForUserDefinition, showSideBar, autoShowMediaInPopup, showIDontKnowButton, enableStudentRecording,
     disableReadAloud, showSecondLanguageFirst, translations } = glossary;
   const [enabled, setEnabled] = useState<boolean>(askForUserDefinition);
@@ -62,6 +65,10 @@ export const GlossarySettings = ({ name, glossary, canEdit, saveSettings, saveNa
         <div>
           <h2>Glossary Name</h2>
           <EditName name={name} saveName={saveName} canEdit={canEdit}/>
+        </div>
+        <div>
+          <h2>Project</h2>
+          <EditProject project={project} projects={projects} saveProject={saveProject} canEdit={canEdit}/>
         </div>
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
