@@ -55,12 +55,20 @@ export const EditProject = ({ project, projects, canEdit, saveProject }: IProps)
     }
   }
 
+  // ensure that the selected project is in the project list so that is displayed even if the user doesn't have access to the project
+  const projectList = [...projects];
+  if (project) {
+    if (!projectList.find(p => p.id === project.id)) {
+      projectList.push(project);
+    }
+  }
+
   return (
     <div className={css.editProject}>
       <div className={css.inputs}>
-        <select value={newProject?.id} disabled={!editing} onChange={handleChange} ref={selectRef}>
+        <select value={newProject?.id || 0} disabled={!editing} onChange={handleChange} ref={selectRef}>
           <option key="0" value={0} />
-          {projects.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+          {projectList.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
         </select>
         {renderButtons()}
       </div>
