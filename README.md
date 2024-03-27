@@ -202,8 +202,7 @@ To see log messages in the console in that context add DEBUG_LOG to the url quer
 
 ## Deployment
 
-Production releases to S3 are based on the contents of the /dist folder and are built automatically by Travis
-for each branch pushed to GitHub and each merge into production.
+Production releases to S3 are based on the contents of the /dist folder and are built automatically by GitHub.
 
 Merges into production are deployed to https://glossary-plugin.concord.org.
 

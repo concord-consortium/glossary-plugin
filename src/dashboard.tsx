@@ -10,6 +10,7 @@ import { extractResourceUrl } from "./utils/extract-resource-url";
 const getClassInfoUrl = () => getQueryParam("class");
 const getOfferingInfoUrl = () => getQueryParam("offering");
 const getAuthHeader = () => `Bearer ${getQueryParam("token")}`;
+const getIsResearcher = () => getQueryParam("researcher") === "true";
 
 const getPortalBaseUrl = () => {
   const portalUrl = getClassInfoUrl();
@@ -25,7 +26,7 @@ const getPortalFirebaseJWTUrl = (classHash: string) => {
   if (!baseUrl) {
     return null;
   }
-  return `${baseUrl}/api/v1/jwt/firebase?firebase_app=${FIREBASE_APP}&class_hash=${classHash}`;
+  return `${baseUrl}/api/v1/jwt/firebase?firebase_app=${FIREBASE_APP}&class_hash=${classHash}${getIsResearcher() ? "&researcher=true" : ""}`;
 };
 
 const initError = () => {
@@ -48,6 +49,8 @@ const compareStudentsByName = (
 const init = async () => {
   const classUrl = getClassInfoUrl();
   const offeringUrl = getOfferingInfoUrl();
+  const isResearcher = getIsResearcher();
+
   if (!classUrl || !offeringUrl) {
     return initError();
   }
@@ -63,7 +66,7 @@ const init = async () => {
     source: parseUrl(classUrl).hostname,
     contextId: classInfoRaw.class_hash,
     students: classInfoRaw.students.map((s: any) => ({
-      name: `${s.last_name}, ${s.first_name}`,
+      name: isResearcher ? `${s.first_name} ${s.last_name}` : `${s.last_name}, ${s.first_name}`,
       firstName: s.first_name,
       lastName: s.last_name,
       id: s.user_id.toString()
@@ -87,6 +90,7 @@ const init = async () => {
     <DashboardApp
       classInfo={classInfo}
       resourceUrl={resourceUrl}
+      isResearcher={isResearcher}
     />
   , document.getElementById("app") as HTMLElement);
 };
