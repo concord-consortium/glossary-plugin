@@ -6,7 +6,7 @@ service cloud.firestore {
     }
 
     match /sources/{source}/contextId/{contextId}/events/{document=**} {
-    	allow read: if request.auth.token.user_type == 'teacher' && request.auth.token.class_hash == contextId;
+    	allow read: if (request.auth.token.user_type == 'teacher' || request.auth.token.user_type == 'researcher') && request.auth.token.class_hash == contextId;
     	allow write: if request.auth.token.class_hash == contextId;
   	}
 
@@ -24,5 +24,6 @@ service cloud.firestore {
     	allow write: if request.auth.token.class_hash == contextId;
       allow read: if request.auth.token.class_hash == contextId;
   	}
+
   }
 }
