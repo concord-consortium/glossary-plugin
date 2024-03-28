@@ -11,6 +11,7 @@ import * as css from "./dashboard-app.scss";
 interface IProps {
   classInfo: IClassInfo;
   resourceUrl: string;
+  isResearcher: boolean;
 }
 
 interface IState {
@@ -27,7 +28,7 @@ export default class DashboardApp extends React.Component<IProps, IState> {
   }
 
   public render() {
-    const { classInfo, resourceUrl } = this.props;
+    const { classInfo, resourceUrl, isResearcher } = this.props;
     const { supportedLanguageCodes } = this.state;
     return (
       <div className={css.dashboardApp}>
@@ -38,6 +39,7 @@ export default class DashboardApp extends React.Component<IProps, IState> {
           <LanguageSelector
             classInfo={classInfo}
             supportedLanguageCodes={supportedLanguageCodes}
+            isResearcher={isResearcher}
           />
           <StatsTableContainer classInfo={classInfo} resourceUrl={resourceUrl} />
         </div>

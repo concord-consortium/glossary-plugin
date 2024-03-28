@@ -11,6 +11,7 @@ interface IProps {
   classInfo: IClassInfo;
   supportedLanguageCodes: string[];
   disableAria?: boolean;
+  isResearcher: boolean;
 }
 interface IState {
   studentSettings: IStudentSettings[];
@@ -54,18 +55,20 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   public render() {
     const { modalIsOpen } = this.state;
-    const { classInfo, supportedLanguageCodes } = this.props;
+    const { classInfo, supportedLanguageCodes, isResearcher } = this.props;
     const { students } = classInfo;
     const languages = supportedLanguageCodes.concat(NONE).filter(s => s !== "en");
+    const buttonLabel = isResearcher ? "View Student Access" : "Set Student Access";
+
     return (
       <div className={css.langSelector}>
         <Button onClick={this.toggleModal} data-cy="setTranslations" className={css.modalToggle}>
-          Set Student Access
+          {buttonLabel}
         </Button>
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={this.toggleModal}
-          contentLabel="Set Student Access"
+          contentLabel={buttonLabel}
         >
           <div className={css.modalContent}>
             <Button onClick={this.toggleModal} className={css.closeModal}>Close</Button>
@@ -112,6 +115,7 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                               value={lang}
                               onChange={this.handleLangChange(s)}
                               checked={this.getStudentSettings(s).preferredLanguage === lang}
+                              disabled={isResearcher}
                             />
                           </td>
                         )
@@ -125,6 +129,7 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
                           onChange={this.handleScaffoldedQuestionLevelChange(s)}
                           // Note that steps are listed in reverse order: 5, 4, 3, 2, 1.
                           value={scaffoldedLevelReversed(this.getStudentSettings(s).scaffoldedQuestionLevel)}
+                          disabled={isResearcher}
                         />
                       </td>
                     </tr>
@@ -155,7 +160,10 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
 
   private handleSaveStudentSetting = (student: IStudent, setting: SettingName) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { classInfo } = this.props;
+      const { classInfo, isResearcher } = this.props;
+      if (isResearcher) {
+        return;
+      }
       const studentSettings = this.getStudentSettings(student);
       const newSettings: IStudentSettings = {
         userId: student.id,
@@ -169,10 +177,16 @@ export default class LanguageSelector extends React.Component<IProps, IState> {
   }
 
   private handleLangChange = (student: IStudent) => {
+    if (this.props.isResearcher) {
+      return;
+    }
     return this.handleSaveStudentSetting(student, "preferredLanguage");
   }
 
   private handleScaffoldedQuestionLevelChange = (student: IStudent) => {
+    if (this.props.isResearcher) {
+      return;
+    }
     return this.handleSaveStudentSetting(student, "scaffoldedQuestionLevel");
   }
 }

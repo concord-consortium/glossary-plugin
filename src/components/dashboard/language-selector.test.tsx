@@ -43,7 +43,7 @@ describe("LanguageSelector component", () => {
   describe("when languages are not specified", () => {
     it("renders all the language options", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} isResearcher={false} />
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("en")).length).toEqual(0);
@@ -57,7 +57,7 @@ describe("LanguageSelector component", () => {
   describe("When languages are specified", () => {
     it("renders only the language defined in the glossary", () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={["es"]} isResearcher={false} />
       );
       wrapper.find(cyTanslationsSel).simulate("click");
       expect(wrapper.find(languageSelector("es")).length).toEqual(1);
@@ -69,7 +69,7 @@ describe("LanguageSelector component", () => {
   describe("Scaffolded Question Level slider", () => {
     it("has value based on student settings", async () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} isResearcher={false} />
       );
 
       wrapper.find(cyTanslationsSel).simulate("click");
@@ -86,9 +86,9 @@ describe("LanguageSelector component", () => {
         .toEqual(scaffoldedLevelReversed(settings[1].scaffoldedQuestionLevel));
     });
 
-    it("updates student settings when moved", async () => {
+    it("updates student settings when moved and the user is not a researcher", async () => {
       const wrapper = shallow(
-        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} />
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} isResearcher={false} />
       );
 
       wrapper.find(cyTanslationsSel).simulate("click");
@@ -103,5 +103,22 @@ describe("LanguageSelector component", () => {
         scaffoldedQuestionLevel: newLevel
       }));
     });
+
+
+    it("does not update student settings when moved and the user is a researcher", async () => {
+      const wrapper = shallow(
+        <LanguageSelector classInfo={classInfo} supportedLanguageCodes={SUPPORTED_LANGUAGES} isResearcher={true} />
+      );
+
+      wrapper.find(cyTanslationsSel).simulate("click");
+
+      const newLevel = 5;
+      wrapper.find("input[type='range']").at(0).simulate("change",
+        { target: { value: scaffoldedLevelReversed(newLevel) }}
+      );
+
+      expect(saveStudentSettingsMock).toHaveBeenCalledTimes(0);
+    });
+
   });
 });
