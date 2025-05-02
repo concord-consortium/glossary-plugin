@@ -211,7 +211,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         }
         {this.mainPrompt}
         {!disableReadAloud && <TextToSpeech text={this.mainPrompt} word={word} textKey={TextKey.MainPrompt} />}
-        <div className={css.answerTextarea}>
+        <div className={css.answerTextarea} data-testid="term-popup-preview-answer-textarea">
           {recording && this.renderRecording()}
           {!recording &&
             <>
@@ -235,7 +235,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         <div className={css.buttons}>
           <div
             className={`${css.button} ${canSubmit ? "" : css.disabled}`}
-            data-cy="submit"
+            data-testid="term-popup-preview-submit-button"
             onClick={canSubmit ? this.handleSubmit : undefined}
           >
             {i18n.translate("submit")}
@@ -244,7 +244,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
           { showIDontKnowButton &&
           <div
             className={css.button}
-            data-cy="cancel"
+            data-testid="cancel"
             onClick={anyUserDef ? this.handleCancel : this.handleIDontKnow}
           >
             {anyUserDef ? i18n.translate("cancel") : i18n.translate("iDontKnowYet")}
@@ -336,7 +336,7 @@ export default class GlossaryPopup extends React.Component<IProps, IState> {
         <div className={css.answerTextareaIcons}>
           {!disableReadAloud && <TextToSpeech text={this.answerPlaceholder} word={word} textKey={TextKey.WriteDefinition} />}
           {canRecord && <span
-            data-cy="recordButton"
+            data-testid="record-button"
             className={icons.iconButton + " " + icons.iconRecord}
             onClick={this.handleStartRecording}
             title={i18n.translate("record")}

@@ -58,6 +58,7 @@ export default class TextToSpeech extends React.Component<IProps, IState> {
         className={icons.iconButton + " " + (reading ? icons.iconStop : icons.iconAudio)}
         onClick={this.read}
         title={translate("speechTitle")}
+        data-testid="text-to-speech-button"
       />
     );
   }

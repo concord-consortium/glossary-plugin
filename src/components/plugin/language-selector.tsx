@@ -23,7 +23,7 @@ export default class LanguageSelector extends React.Component<IProps, {}> {
     }
 
     return (
-      <div className={css.languageSelector}>
+      <div className={css.languageSelector} data-testid="language-selector">
         {languages.map((language, idx) => (
           <LanguageSelectorButton
             key={language.lang}
