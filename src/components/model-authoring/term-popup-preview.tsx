@@ -120,7 +120,7 @@ export const TermPopUpPreview = (props: IProps) => {
           <div className={css.header}>
             <h4>Term: {term.word}</h4>
           </div>
-          <div className={css.innerPopup}>
+          <div className={css.innerPopup} data-testid="term-popup-preview-inner">
             <GlossaryPopup
               demoMode={true}
               word={term.word}
@@ -148,7 +148,7 @@ export const TermPopUpPreview = (props: IProps) => {
         </div>
         {renderLanguageSelector()}
         {note && <div className={css.note}>{note}</div>}
-        {allowReset && <button className={css.resetButton} onClick={onReset}>{resetLabel || "Reset"}</button>}
+        {allowReset && <button className={css.resetButton} onClick={onReset} data-testid="reset-term-popup-preview">{resetLabel || "Reset"}</button>}
       </div>
     </pluginContext.Provider>
   )

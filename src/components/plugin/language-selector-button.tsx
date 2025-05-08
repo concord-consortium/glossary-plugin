@@ -23,6 +23,7 @@ export default class LanguageSelectorButton extends React.Component<IProps, {}> 
     const { lang, selected } = this.props.language;
     return (
       <Button
+        data-testid={`language-selector-button-${lang}`}
         data-cy="langToggle"
         className={`${css.langButton} ${index === 0 ? css.firstLang : css.secondLang } ${selected ? css.selected : ""}`}
         label={POEDITOR_LANG_NAME[lang].replace("_", " ")}

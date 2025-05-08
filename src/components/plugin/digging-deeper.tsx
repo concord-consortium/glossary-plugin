@@ -30,9 +30,9 @@ class DiggingDeeper extends React.Component<IProps>{
 	render(){
 		const { word, disableReadAloud } = this.props;
 		return (
-			<div className={css.container}>
-				<h4>{this.translatedDiggingDeeperTitle}</h4>
-				<div className={css.diggingDeeper}>
+			<div className={css.container} data-testid="digging-deeper">
+				<h4 data-testid="digging-deeper-title">{this.translatedDiggingDeeperTitle}</h4>
+				<div className={css.diggingDeeper} data-testid="digging-deeper-content">
 					{this.translatedDiggingDeeperDefinition}
 					{!disableReadAloud && <TextToSpeech text={this.translatedDiggingDeeperDefinition} word={word} textKey={TextKey.DiggingDeeper} />}
 				</div>

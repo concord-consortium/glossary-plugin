@@ -72,7 +72,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
         </div>
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" checked={askForUserDefinition} onChange={handleUserDefinitionChange()} />
+            <input type="checkbox" data-testid="student-provided-definitions-checkbox" checked={askForUserDefinition} onChange={handleUserDefinitionChange()} />
             <label>
               Require student-provided definitions
             </label>
@@ -85,7 +85,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={`${css.settingInformation} ${css.nestedOptions}`}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" disabled={!enabled} checked={showIDontKnowButton} onChange={handleChange("showIDontKnowButton")} />
+            <input type="checkbox" data-testid="display-i-dont-know-checkbox" disabled={!enabled} checked={showIDontKnowButton} onChange={handleChange("showIDontKnowButton")} />
             <label className={`${!enabled && css.disabled}`}>
               Display "I Don't Know" button
             </label>
@@ -98,7 +98,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={`${css.settingInformation} ${css.nestedOptions}`}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" disabled={!enabled} checked={enableStudentRecording} onChange={handleChange("enableStudentRecording")} />
+            <input type="checkbox" data-testid="student-audio-recording-checkbox" disabled={!enabled} checked={enableStudentRecording} onChange={handleChange("enableStudentRecording")} />
             <label className={`${!enabled && css.disabled}`}>
               Enable student audio recording for definitions
             </label>
@@ -110,7 +110,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" checked={autoShowMediaInPopup} onChange={handleChange("autoShowMediaInPopup")}/>
+            <input type="checkbox" data-testid="show-media-checkbox" checked={autoShowMediaInPopup} onChange={handleChange("autoShowMediaInPopup")}/>
             <label>
               Automatically show media (image or video)
             </label>
@@ -125,7 +125,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" checked={disableReadAloud} onChange={handleChange("disableReadAloud")}/>
+            <input type="checkbox" data-testid="disable-read-aloud-checkbox" checked={disableReadAloud} onChange={handleChange("disableReadAloud")}/>
             <label>
               Disable read-aloud buttons
             </label>
@@ -138,7 +138,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" checked={showSideBar} onChange={handleChange("showSideBar")}/>
+            <input type="checkbox" data-testid="show-glossary-sidebar-checkbox" checked={showSideBar} onChange={handleChange("showSideBar")}/>
             <label>
               Show Glossary Sidebar on activity pages
             </label>
@@ -151,7 +151,7 @@ export const GlossarySettings = ({ name, glossary, project, projects, canEdit, s
 
         <div className={css.settingInformation}>
           <div className={css.checkboxRow}>
-            <input type="checkbox" checked={showSecondLanguageFirst} onChange={handleChange("showSecondLanguageFirst")}/>
+            <input type="checkbox" data-testid="display-second-language-first-checkbox" checked={showSecondLanguageFirst} onChange={handleChange("showSecondLanguageFirst")}/>
             <label>
               Display Second Language First
             </label>

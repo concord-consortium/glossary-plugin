@@ -52,19 +52,20 @@ export default class Image extends React.Component<IProps, IState> {
     const translate = this.context.translate;
     return (
       <>
-        <div className={css.imageContainer}>
-          <div className={css.imageWrapper} onClick={this.toggleImageZoom}>
-            <img src={imageUrl} title={this.translatedImageAltText} alt={this.translatedImageAltText}/>
+        <div className={css.imageContainer} data-testid="image-container">
+          <div className={css.imageWrapper} onClick={this.toggleImageZoom} data-testid="image-wrapper">
+            <img src={imageUrl} title={this.translatedImageAltText} alt={this.translatedImageAltText} data-testid="image"/>
             <div className={css.zoomButton}>
               <span
                 className={icons.iconButton + " " + icons.iconZoomIn}
                 title={translate("zoomInTitle")}
+                data-testid="zoom-button"
               />
             </div>
           </div>
           {
             this.translatedImageCaption &&
-            <div className={css.caption}>
+            <div className={css.caption} data-testid="image-caption">
               {this.translatedImageCaption}
               {!disableReadAloud && <TextToSpeech text={this.translatedImageCaption} word={word} textKey={TextKey.ImageCaption} />}
             </div>
